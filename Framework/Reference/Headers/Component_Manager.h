@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "VIBuffer_Rect.h"
 #include "Shader.h"
+#include "Transform.h"
 
 BEGIN(Engine)
 

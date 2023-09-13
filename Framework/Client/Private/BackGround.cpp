@@ -27,7 +27,22 @@ HRESULT CBackGround::Initialize(void* pArg)
 
 void CBackGround::Tick(_float fTimeDelta)
 {
- 
+    if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+    {
+        m_pTransformCom->Go_Left(fTimeDelta);
+    }
+    if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+    {
+        m_pTransformCom->Go_Right(fTimeDelta);
+    }
+    if (GetAsyncKeyState(VK_UP) & 0x8000)
+    {
+        m_pTransformCom->Go_Up(fTimeDelta);
+    }
+    if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+    {
+        m_pTransformCom->Go_Down(fTimeDelta);
+    }
 }
 
 void CBackGround::LateTick(_float fTimeDelta)
@@ -69,6 +84,17 @@ HRESULT CBackGround::Ready_Component(void* pArg)
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
         return E_FAIL;
 
+    /* Com_Transform */
+    CTransform::TRANSFORM_DESC      tTransformDesc;
+    ZeroMemory(&tTransformDesc, sizeof(tTransformDesc));
+
+    tTransformDesc.fSpeedPerSec = 5.f;
+    tTransformDesc.fRotRadianPerSec = XMConvertToRadians(90.f);
+
+    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+        TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &tTransformDesc)))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -77,7 +103,9 @@ HRESULT CBackGround::Bind_ShaderResources()
     _float4x4   matIdentity;
     XMStoreFloat4x4(&matIdentity, XMMatrixIdentity());
 
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &matIdentity)))
+    _float4x4   matWorld = m_pTransformCom->Get_WorldMatrix();
+
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &matWorld)))
         return E_FAIL;
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &matIdentity)))
         return E_FAIL;
@@ -128,5 +156,6 @@ void CBackGround::Free()
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pVIBufferCom);
     Safe_Release(m_pTextureCom);
+    Safe_Release(m_pTransformCom);
     Safe_Release(m_pRendererCom);
 }

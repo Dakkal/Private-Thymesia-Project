@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CRenderer;
+class CTransform;
 class CTexture;
 class CShader;
 class CVIBuffer_Rect;
@@ -31,6 +32,7 @@ private:
 	CTexture*			m_pTextureCom = { nullptr };
 	CShader*			m_pShaderCom = { nullptr };
 	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
+	CTransform*			m_pTransformCom = { nullptr };
 
 private:
 	HRESULT	Ready_Component(void* pArg);

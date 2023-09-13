@@ -65,6 +65,9 @@ HRESULT CMainApp::Render()
 
 #ifdef _DEBUG
 	m_pImgui_Manager->Render();
+
+
+
 #endif // _DEBUG
 
 	m_pGameInstance->Present();
@@ -97,8 +100,12 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		, CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	Safe_AddRef(m_pRenderer);
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform")
+		, CTransform::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
+
+	Safe_AddRef(m_pRenderer);
 
 	return S_OK;
 }
