@@ -22,14 +22,18 @@ private:
 	virtual ~CTransform() = default;
 
 public:
-	_float4x4	Get_WorldMatrix() { return m_WorldMatrix; }
-	_vector		Get_State(STATE eState) { return XMLoadFloat4x4(&m_WorldMatrix).r[eState];}
+	const _vector&		Get_State(STATE eState) const	{ return XMLoadFloat4x4(&m_WorldMatrix).r[eState];}
+	const _float3&		Get_Scale() const;
 
-	void		Set_State(STATE eState, _fvector vState);
+	void				Set_State(STATE eState, _fvector vState);
+	void				Set_Scale(const _float3& vScale);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+
+public:
+	HRESULT		Bind_ShaderReSources(class CShader* pShader, const char* pConstantName);
 
 public:
 	void Go_Forward(_float fTimeDelta);
@@ -41,6 +45,9 @@ public:
 
 	void Fix_Rotation(_fvector vAxis, _float fRadian);
 	void Turn(_fvector vAxis, _float fTimeDelta);
+	void Turn_Invert(_fvector vAxis, _float fTimeDelta);
+	void LookAt(_fvector vPoint);
+	void Chase(_fvector vPoint, _float fTimeDelta, _float fDis = 0.1f);
 
 private:
 	_float4x4			m_WorldMatrix;

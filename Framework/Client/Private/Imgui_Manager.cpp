@@ -12,7 +12,7 @@ CImgui_Manager::CImgui_Manager()
 {
 }
 
-HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT CImgui_Manager::Ready_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	if (nullptr == pDevice || nullptr == pContext)
 		return E_FAIL;
@@ -36,11 +36,13 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 HRESULT CImgui_Manager::Tick(_float fTimeDelta)
 {
+
 	return S_OK;
 }
 
 HRESULT CImgui_Manager::LateTick(_float fTimeDelta)
 {
+
 	return S_OK;
 }
 
@@ -66,6 +68,7 @@ void CImgui_Manager::Free()
 #ifdef _DEBUG
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

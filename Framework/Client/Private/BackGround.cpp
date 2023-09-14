@@ -22,11 +22,25 @@ HRESULT CBackGround::Initialize(void* pArg)
     if (FAILED(Ready_Component(pArg)))
         return E_FAIL;
 
+    m_fSizeX = 100;
+    m_fSizeY = 100;
+    m_fX = g_iWinSizeX * 0.5;
+    m_fY = g_iWinSizeY * 0.5;
+
+    m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
+    m_pTransformCom->Set_State(CTransform::STATE_POS
+        , XMVectorSet(m_fX - g_iWinSizeX * 0.5, -m_fY + g_iWinSizeY * 0.5, 0.f, 1.f));
+
+    XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_ProjMatrix, XMMatrixPerspectiveFovLH(90.f, g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f));
+    //XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+
     return S_OK;
 }
 
 void CBackGround::Tick(_float fTimeDelta)
 {
+    /* Move */
     if (GetAsyncKeyState(VK_LEFT) & 0x8000)
     {
         m_pTransformCom->Go_Left(fTimeDelta);
@@ -43,6 +57,43 @@ void CBackGround::Tick(_float fTimeDelta)
     {
         m_pTransformCom->Go_Down(fTimeDelta);
     }
+    if (GetAsyncKeyState('W') & 0x8000)
+    {
+        m_pTransformCom->Go_Forward(fTimeDelta);
+    }
+    if (GetAsyncKeyState('S') & 0x8000)
+    {
+        m_pTransformCom->Go_Backward(fTimeDelta);
+    }
+
+
+
+    /* Rotation */
+    if (GetAsyncKeyState('Q') & 0x8000)
+    {
+        m_pTransformCom->Turn(AXIS::Y,fTimeDelta);
+    }
+    if (GetAsyncKeyState('E') & 0x8000)
+    {
+        m_pTransformCom->Turn_Invert(AXIS::Y, fTimeDelta);
+    }
+    if (GetAsyncKeyState('A') & 0x8000)
+    {
+        m_pTransformCom->Turn(AXIS::Z, fTimeDelta);
+    }
+    if (GetAsyncKeyState('D') & 0x8000)
+    {
+        m_pTransformCom->Turn_Invert(AXIS::Z, fTimeDelta);
+    }
+    if (GetAsyncKeyState('Z') & 0x8000)
+    {
+        m_pTransformCom->Turn(AXIS::X, fTimeDelta);
+    }
+    if (GetAsyncKeyState('X') & 0x8000)
+    {
+        m_pTransformCom->Turn_Invert(AXIS::X, fTimeDelta);
+    }
+    
 }
 
 void CBackGround::LateTick(_float fTimeDelta)
@@ -53,6 +104,7 @@ void CBackGround::LateTick(_float fTimeDelta)
 
 HRESULT CBackGround::Render()
 {
+
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 
@@ -100,16 +152,12 @@ HRESULT CBackGround::Ready_Component(void* pArg)
 
 HRESULT CBackGround::Bind_ShaderResources()
 {
-    _float4x4   matIdentity;
-    XMStoreFloat4x4(&matIdentity, XMMatrixIdentity());
 
-    _float4x4   matWorld = m_pTransformCom->Get_WorldMatrix();
-
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &matWorld)))
+    if (FAILED(m_pTransformCom->Bind_ShaderReSources(m_pShaderCom, "g_WorldMatrix")))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &matIdentity)))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &matIdentity)))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
         return E_FAIL;
 
 

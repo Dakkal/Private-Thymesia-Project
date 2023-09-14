@@ -1,6 +1,8 @@
 #pragma once
 
 #include <process.h>
+#include <thread>
+#include <mutex>
 
 namespace Client
 {

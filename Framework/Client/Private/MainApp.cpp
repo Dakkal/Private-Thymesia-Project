@@ -33,7 +33,7 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	if (FAILED(m_pImgui_Manager->Initialize(m_pDevice, m_pContext)))
+	if (FAILED(m_pImgui_Manager->Ready_Manager(m_pDevice, m_pContext)))
 		return E_FAIL;
 #endif // _DEBUG
 

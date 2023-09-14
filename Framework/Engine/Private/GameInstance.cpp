@@ -49,7 +49,6 @@ void CGameInstance::Tick(_float fTimeDelta)
 
 	m_pObject_Manager->LateTick(fTimeDelta);
 	m_pLevel_Manager->LateTick(fTimeDelta);
-
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -199,5 +198,4 @@ void CGameInstance::Free()
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pGraphic_Device);
-
 }

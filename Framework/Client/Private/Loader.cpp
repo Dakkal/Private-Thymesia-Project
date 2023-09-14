@@ -8,6 +8,7 @@ _uint APIENTRY ThreadEntry(void* pArg)
 {
 	CoInitializeEx(nullptr, 0);
 
+
 	CLoader* pLoader = reinterpret_cast<CLoader*>(pArg);
 
 	pLoader->Loading();
@@ -19,12 +20,11 @@ _uint APIENTRY ThreadEntry(void* pArg)
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
+	, m_pGameInstance(CGameInstance::GetInstance())
 {
+	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
-
-	ZeroMemory(&m_Critical_Section, sizeof(m_Critical_Section));
-
 }
 
 HRESULT CLoader::Initialize(LEVELID eNextLevel)
@@ -72,38 +72,23 @@ _int CLoader::Loading()
 
 HRESULT CLoader::Loading_For_Level_Logo()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_BackGround"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
-	{
-		Safe_Release(pGameInstance);
-		return E_FAIL;
-	}
-		
+	Loading_Texture();
 
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+	Loading_Mesh();
 
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+	Loading_Sahder();
 
-	/* For.BackGround */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
-	{
-		Safe_Release(pGameInstance);
-		return E_FAIL;
-	}
+	/* For.Object */
+	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
+	Loading_Object();
+	
 		
-
-
-
-	Safe_Release(pGameInstance);
-
 	m_strLoading = TEXT("로딩 끝.");
 	m_isFinished = true;
 
@@ -114,15 +99,103 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 {
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+	Loading_Texture();
 
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+	Loading_Mesh();
 
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+	Loading_Sahder();
+
+	/* For.Object */
+	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
+	Loading_Object();
+
 
 	m_strLoading = TEXT("로딩 끝.");
 	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Texture()
+{
+	if (m_eNextLevel >= LEVEL_END)
+		return E_FAIL;
+
+	switch (m_eNextLevel)
+	{
+	case Client::LEVEL_LOGO:
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_BackGround"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_GAMEPLAY:
+		break;
+	default:
+		break;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Mesh()
+{
+	if (m_eNextLevel >= LEVEL_END)
+		return E_FAIL;
+
+	switch (m_eNextLevel)
+	{
+	case Client::LEVEL_LOGO:
+		break;
+	case Client::LEVEL_GAMEPLAY:
+		break;
+	default:
+		break;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Sahder()
+{
+	if (m_eNextLevel >= LEVEL_END)
+		return E_FAIL;
+
+	switch (m_eNextLevel)
+	{
+	case Client::LEVEL_LOGO:
+		break;
+	case Client::LEVEL_GAMEPLAY:
+		break;
+	default:
+		break;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Object()
+{
+	if (m_eNextLevel >= LEVEL_END)
+		return E_FAIL;
+
+	switch (m_eNextLevel)
+	{
+	case Client::LEVEL_LOGO:
+		/* For.BackGround */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_GAMEPLAY:
+		break;
+	default:
+		break;
+	}
+
+	
 
 	return S_OK;
 }
@@ -150,6 +223,7 @@ void CLoader::Free()
 
 	CloseHandle(m_hThread);
 
+	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 }

@@ -35,6 +35,12 @@ private:
 	CTransform*			m_pTransformCom = { nullptr };
 
 private:
+	_float				m_fX, m_fY, m_fSizeX, m_fSizeY;
+	_float4x4			m_ViewMatrix, m_ProjMatrix;
+
+
+
+private:
 	HRESULT	Ready_Component(void* pArg);
 	HRESULT Bind_ShaderResources();
 

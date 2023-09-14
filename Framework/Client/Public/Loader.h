@@ -2,6 +2,10 @@
 #include "Client_Defines.h"
 #include "Base.h"
 
+BEGIN(Engine)
+class CGameInstance;
+END
+
 BEGIN(Client)
 
 class CLoader final : public CBase
@@ -26,12 +30,20 @@ private:
 	_bool					m_isFinished = { false };
 
 private:
+	CGameInstance*			m_pGameInstance = { nullptr };
+
 	HANDLE					m_hThread = { 0 };
 	CRITICAL_SECTION		m_Critical_Section;
 
 private:
 	HRESULT Loading_For_Level_Logo();
 	HRESULT Loading_For_Level_GamePlay();
+	
+	/* For.Loading */
+	HRESULT Loading_Texture();
+	HRESULT Loading_Mesh();
+	HRESULT Loading_Sahder();
+	HRESULT Loading_Object();
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVELID eNextLevel);

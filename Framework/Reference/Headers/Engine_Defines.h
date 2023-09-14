@@ -17,7 +17,7 @@ using namespace DirectX;
 #include "fmod.hpp"
 
 #include <io.h>
-#include <iostream>
+
 
 enum class CHANNELID {
 	CHANNEL_BGM,
@@ -31,7 +31,7 @@ enum class CHANNELID {
 };
 
 
-
+#include <iostream>
 #include <vector> 
 #include <list> 
 #include <map> 

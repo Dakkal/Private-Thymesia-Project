@@ -14,7 +14,8 @@ private:
 	virtual ~CImgui_Manager() = default;
 
 public:
-	HRESULT	Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	HRESULT	Ready_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+
 	HRESULT Tick(_float fTimeDelta);
 	HRESULT LateTick(_float fTimeDelta);
 	HRESULT Render();
