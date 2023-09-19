@@ -2,14 +2,15 @@
 #include "Client_Defines.h"
 #include "Camera.h"
 
-BEGIN(Engine)
-class CTransform;
-END
-
 BEGIN(Client)
 
 class CGameCamera final : public CCamera
 {
+public:
+	typedef struct tagCamera_Game_Desc : public CCamera::CAMERA_DESC
+	{
+		_float			fMouseSensitive = { 0.0f };
+	}CAMERA_GAME_DESC;
 private:
 	CGameCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameCamera(const CGameCamera& rhs);
@@ -22,10 +23,7 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 
 private:
-	CTransform* m_pTransformCom = { nullptr };
-
-private:
-	HRESULT	Ready_Components();
+	_float			m_fMouseSensitive = { 0.0f };
 
 public:
 	static CGameCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -6,6 +6,7 @@
 #include "Level_Manager.h"
 #include "Object_Manager.h"
 #include "Sound_Manager.h"
+#include "PipeLine.h"
 
 BEGIN(Engine)
 
@@ -50,6 +51,9 @@ public: /* For.Sound_Manager */
 	HRESULT StopSoundAll();
 	HRESULT SetChannelVolume(CHANNELID eCh, _float fVolume);
 
+public: /* For.PipeLine */
+	HRESULT Bind_TransformToShader(class CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORM_STATE eState);
+
 private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -57,6 +61,7 @@ private:
 	class CObject_Manager*		m_pObject_Manager = { nullptr };
 	class CComponent_Manager*	m_pComponent_Manager = { nullptr };
 	class CSound_Manager*		m_pSound_Manager = { nullptr };
+	class CPipeLine*			m_pPipeLine = { nullptr };
 
 public:
 	static void Release_Engine();

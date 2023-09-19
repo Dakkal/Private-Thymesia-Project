@@ -22,17 +22,13 @@ private:
 	virtual ~CTransform() = default;
 
 public:
-	_vector Get_State(STATE eState);
-	_vector Get_Scale();
-	_matrix Get_WorldMatrix() const {
-		return m_WorldMatrix;
-	}
-	_matrix Get_WorldMatrix_Inverse() const {
-		return m_WorldMatrix.Invert();
-	}
+	_vector		Get_State(STATE eState);
+	_vector		Get_Scale();
+	_matrix		Get_WorldMatrix() const { return m_WorldMatrix;}
+	_matrix		Get_WorldMatrix_Inverse() const { return m_WorldMatrix.Invert();}
 
-	void				Set_State(STATE eState, _vector vState);
-	void				Set_Scale(const _vector& vScale);
+	void		Set_State(STATE eState, _vector vState);
+	void		Set_Scale(const _vector& vScale);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

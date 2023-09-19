@@ -2,6 +2,7 @@
 #include "..\Public\Level_GamePlay.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "GameCamera.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -49,7 +50,20 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring& strLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera"))))
+	CGameCamera::CAMERA_GAME_DESC			CameraGameDesc;
+	ZeroMemory(&CameraGameDesc, sizeof CameraGameDesc);
+
+	CameraGameDesc.fMouseSensitive = 1.f;
+	CameraGameDesc.vEye = _vector(0.f, 0.f, -1.f, 1.f);
+	CameraGameDesc.vAt = _vector(0.f, 0.f, 0.f, 1.f);
+	CameraGameDesc.fFovy = XMConvertToRadians(90.0f);
+	CameraGameDesc.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
+	CameraGameDesc.fNear = 0.2f;
+	CameraGameDesc.fFar = 1000.f;
+	CameraGameDesc.fSpeedPerSec = 50.f;
+	CameraGameDesc.fRotRadianPerSec = XMConvertToRadians(60.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera"), &CameraGameDesc)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

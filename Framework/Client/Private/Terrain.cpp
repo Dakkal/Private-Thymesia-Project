@@ -79,26 +79,23 @@ HRESULT CTerrain::Ready_Components()
 
 HRESULT CTerrain::Bind_ShaderResources()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	auto iter = pGameInstance->GetInstance()->Find_GameObject(LEVEL_GAMEPLAY, TEXT("Layer_Camera"));
-
-	_matrix	matView = dynamic_cast<CCamera*>(iter)->Get_View();
-	_matrix	matProj = dynamic_cast<CCamera*>(iter)->Get_Proj();
-
 	if (FAILED(m_pTransformCom->Bind_ShaderResources(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &matView)))
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &matProj)))
+	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	
 
 	return S_OK;
 }

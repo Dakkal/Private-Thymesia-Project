@@ -144,7 +144,6 @@ void CTransform::Fix_Rotation(_vector vAxis, _float fRadian)
 {
 	_vector		vScaled = Get_Scale();
 
-
 	_vector		vRight = _vector(1.f, 0.f, 0.f, 0.f) * vScaled.x;
 	_vector		vUp = _vector(0.f, 1.f, 0.f, 0.f) * vScaled.y;
 	_vector		vLook = _vector(0.f, 0.f, 1.f, 0.f) * vScaled.z;
@@ -188,7 +187,7 @@ void CTransform::Turn_Invert(_vector vAxis, _float fTimeDelta)
 	_vector		vLook = Get_State(STATE_LOOK);
 
 	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, -m_fRotRadianPerSec * fTimeDelta);
-	_vector			vQuaternionData = XMQuaternionRotationMatrix(RotationMatrix);
+	_vector		vQuaternionData = XMQuaternionRotationMatrix(RotationMatrix);
 	_matrix		QuaternionMatrix = XMMatrixRotationQuaternion(vQuaternionData);
 
 	vRight = XMVector4Transform(vRight, QuaternionMatrix);

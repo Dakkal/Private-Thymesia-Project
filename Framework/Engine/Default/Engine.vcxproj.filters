@@ -88,6 +88,9 @@
     <Filter Include="01.Utility\03.GameObject\Camera">
       <UniqueIdentifier>{14da895c-2925-465f-935b-ac0c1329549e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\05.PipeLine">
+      <UniqueIdentifier>{b4fd4721-4ea2-49cf-9825-e28afd864618}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -168,6 +171,9 @@
     <ClInclude Include="..\Public\Camera.h">
       <Filter>01.Utility\03.GameObject\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PipeLine.h">
+      <Filter>01.Utility\05.PipeLine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -235,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera.cpp">
       <Filter>01.Utility\03.GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PipeLine.cpp">
+      <Filter>01.Utility\05.PipeLine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

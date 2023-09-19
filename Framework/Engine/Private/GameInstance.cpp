@@ -9,7 +9,9 @@ CGameInstance::CGameInstance()
 	, m_pObject_Manager(CObject_Manager::GetInstance())
 	, m_pComponent_Manager(CComponent_Manager::GetInstance())
 	, m_pSound_Manager(CSound_Manager::GetInstance())
+	, m_pPipeLine(CPipeLine::GetInstance())
 {
+	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pTimer_Manager);
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pLevel_Manager);
@@ -39,6 +41,10 @@ HRESULT CGameInstance::Initialize_Engine(const GRAPHIC_DESC& GraphicDesc, _Inout
 	if (FAILED(m_pComponent_Manager->Reserve_Manager(iLevelIndex)))
 		return E_FAIL;
 
+	/* 파이프라인 생성 */
+	if (FAILED(m_pPipeLine->Initialize()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -46,6 +52,8 @@ void CGameInstance::Tick(_float fTimeDelta)
 {
 	m_pObject_Manager->Tick(fTimeDelta);
 	m_pLevel_Manager->Tick(fTimeDelta);
+
+	m_pPipeLine->Tick();
 
 	m_pObject_Manager->LateTick(fTimeDelta);
 	m_pLevel_Manager->LateTick(fTimeDelta);
@@ -185,6 +193,11 @@ HRESULT CGameInstance::SetChannelVolume(CHANNELID eCh, _float fVolume)
 	return m_pSound_Manager->SetChannelVolume(eCh, fVolume);
 }
 
+HRESULT CGameInstance::Bind_TransformToShader(CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORM_STATE eState)
+{
+	return m_pPipeLine->Bind_TransformToShader(pShader, pConstantName, eState);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -193,6 +206,7 @@ void CGameInstance::Release_Engine()
 	CComponent_Manager::GetInstance()->DestroyInstance();
 	CTimer_Manager::GetInstance()->DestroyInstance();
 	CSound_Manager::GetInstance()->DestroyInstance();
+	CPipeLine::GetInstance()->DestroyInstance();
 	CGraphic_Device::GetInstance()->DestroyInstance();
 }
 
@@ -200,6 +214,7 @@ void CGameInstance::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pComponent_Manager);
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pLevel_Manager);
