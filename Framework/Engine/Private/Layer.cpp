@@ -40,6 +40,14 @@ void CLayer::LateTick(_float fTimeDelta)
 
 }
 
+CGameObject* CLayer::Get_FirstObject()
+{
+	if (nullptr == m_listGameObject.front())
+		return nullptr;
+	else
+		return m_listGameObject.front();
+}
+
 CLayer* CLayer::Create()
 {
 	CLayer* pInstance = new CLayer();

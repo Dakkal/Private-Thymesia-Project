@@ -72,7 +72,7 @@ HRESULT CGameInstance::Add_Timer(const wstring& strTimerTag)
 	return m_pTimer_Manager->Add_Timer(strTimerTag);
 }
 
-HRESULT CGameInstance::Clear_BackBuffer_View(_float4 vClearColor)
+HRESULT CGameInstance::Clear_BackBuffer_View(_vector vClearColor)
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
@@ -118,6 +118,14 @@ HRESULT CGameInstance::Add_GameObject(_uint iLevelIndex, const wstring& strLayer
 		return E_FAIL;
 
 	return m_pObject_Manager->Add_GameObject(iLevelIndex, strLayerTag, strPrototypeTag, pArg);
+}
+
+CGameObject* CGameInstance::Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Find_GameObject(iLevelIndex, strLayerTag);
 }
 
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, CComponent* pPrototype)

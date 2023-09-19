@@ -7,6 +7,8 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& rhs)
 	: CVIBuffer(rhs)
+	, m_iNumVerticesX(rhs.m_iNumVerticesX)
+	, m_iNumVerticesZ(rhs.m_iNumVerticesZ)
 {
 
 }
@@ -41,14 +43,6 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 
 #pragma region VERTEX_BUFFER
 
-	ZeroMemory(&m_tBufferDesc, sizeof m_tBufferDesc);
-
-	m_tBufferDesc.ByteWidth = m_iStride * m_iNumVertices;
-	m_tBufferDesc.Usage = D3D11_USAGE_DEFAULT; 
-	m_tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	m_tBufferDesc.CPUAccessFlags = 0;
-	m_tBufferDesc.MiscFlags = 0;
-	m_tBufferDesc.StructureByteStride = m_iStride;
 
 	VTXPOSNORTEX* pVertices = new VTXPOSNORTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXPOSNORTEX) * m_iNumVertices);
@@ -59,13 +53,80 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
-			//pVertices[iIndex].vPosition = _float3(j, /*pPixel[iIndex] & 0x000000ff*/);
-			//pVertices[iIndex].vNormal = ;
-			//pVertices[iIndex].vTexcoord = ;
+			pVertices[iIndex].vPosition = _float3(j, (pPixel[iIndex] & 0x000000ff) / 10.f, i);
+			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
+			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
 		}
 	}
 
+	Safe_Delete_Array(pPixel);
 
+#pragma endregion
+
+#pragma region INDEX_BUFFER
+
+	_uint* pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
+
+	_uint		iNumIndices = 0;
+
+	for (size_t i = 0; i < m_iNumVerticesZ - 1; i++)
+	{
+		for (size_t j = 0; j < m_iNumVerticesX - 1; j++)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			_uint		iIndices[4] = {
+				iIndex + m_iNumVerticesX,		//5
+				iIndex + m_iNumVerticesX + 1,	//6
+				iIndex + 1,						//1
+				iIndex							//0
+			};
+
+			_vector		vSourDir, vDestDir, vNormal;
+
+			pIndices[iNumIndices++] = iIndices[0];
+			pIndices[iNumIndices++] = iIndices[1];
+			pIndices[iNumIndices++] = iIndices[2];
+
+			vSourDir = _vector(pVertices[iIndices[1]].vPosition - pVertices[iIndices[0]].vPosition);
+
+			vDestDir = _vector(pVertices[iIndices[2]].vPosition - pVertices[iIndices[1]].vPosition);
+
+			vNormal = XMVector3Normalize(XMVector3Cross(vSourDir, vDestDir));
+
+			pVertices[iIndices[0]].vNormal = pVertices[iIndices[0]].vNormal + vNormal;
+			pVertices[iIndices[1]].vNormal = pVertices[iIndices[1]].vNormal + vNormal;
+			pVertices[iIndices[2]].vNormal = pVertices[iIndices[2]].vNormal + vNormal;
+
+			pIndices[iNumIndices++] = iIndices[0];
+			pIndices[iNumIndices++] = iIndices[2];
+			pIndices[iNumIndices++] = iIndices[3];
+
+			vSourDir = _vector(pVertices[iIndices[2]].vPosition - pVertices[iIndices[0]].vPosition);
+
+			vDestDir = _vector(pVertices[iIndices[3]].vPosition - pVertices[iIndices[2]].vPosition);
+
+			vNormal = XMVector3Normalize(XMVector3Cross(vSourDir, vDestDir));
+
+			pVertices[iIndices[0]].vNormal = pVertices[iIndices[0]].vNormal + vNormal;
+			pVertices[iIndices[2]].vNormal = pVertices[iIndices[2]].vNormal + vNormal;
+			pVertices[iIndices[3]].vNormal = pVertices[iIndices[3]].vNormal + vNormal;
+		}
+	}
+
+	
+	
+#pragma endregion
+
+#pragma region Setting
+	ZeroMemory(&m_tBufferDesc, sizeof m_tBufferDesc);
+	m_tBufferDesc.ByteWidth = m_iStride * m_iNumVertices;
+	m_tBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	m_tBufferDesc.CPUAccessFlags = 0;
+	m_tBufferDesc.MiscFlags = 0;
+	m_tBufferDesc.StructureByteStride = m_iStride;
 
 	ZeroMemory(&m_tInitialData, sizeof m_tInitialData);
 	m_tInitialData.pSysMem = pVertices;
@@ -73,30 +134,13 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pVertices);
-
-#pragma endregion
-
-#pragma region INDEX_BUFFER
-
 	ZeroMemory(&m_tBufferDesc, sizeof m_tBufferDesc);
 	m_tBufferDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
-	m_tBufferDesc.Usage = D3D11_USAGE_DEFAULT; 
+	m_tBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	m_tBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	m_tBufferDesc.CPUAccessFlags = 0;
 	m_tBufferDesc.MiscFlags = 0;
 	m_tBufferDesc.StructureByteStride = 0;
-
-	_ushort* pIndices = new _ushort[m_iNumIndices];
-	ZeroMemory(pIndices, sizeof(_ushort) * m_iNumIndices);
-
-	pIndices[0] = 0;
-	pIndices[1] = 1;
-	pIndices[2] = 2;
-
-	pIndices[3] = 0;
-	pIndices[4] = 2;
-	pIndices[5] = 3;
 
 	ZeroMemory(&m_tInitialData, sizeof m_tInitialData);
 	m_tInitialData.pSysMem = pIndices;
@@ -104,6 +148,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 	if (FAILED(__super::Create_Buffer(&m_pIB)))
 		return E_FAIL;
 
+	Safe_Delete_Array(pVertices);
 	Safe_Delete_Array(pIndices);
 #pragma endregion
 

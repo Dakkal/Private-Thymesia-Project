@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 #include "BackGround.h"
+#include "Terrain.h"
+#include "GameCamera.h"
 
 _uint APIENTRY ThreadEntry(void* pArg)
 {
@@ -133,6 +135,9 @@ HRESULT CLoader::Loading_Texture()
 			return E_FAIL;
 		break;
 	case Client::LEVEL_GAMEPLAY:
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
+			return E_FAIL;
 		break;
 	default:
 		break;
@@ -151,6 +156,9 @@ HRESULT CLoader::Loading_Mesh()
 	case Client::LEVEL_LOGO:
 		break;
 	case Client::LEVEL_GAMEPLAY:
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
+			CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
+			return E_FAIL;
 		break;
 	default:
 		break;
@@ -169,6 +177,9 @@ HRESULT CLoader::Loading_Sahder()
 	case Client::LEVEL_LOGO:
 		break;
 	case Client::LEVEL_GAMEPLAY:
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxPosNorTex"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosNorTex.hlsl"), VTXPOSNORTEX::tElements, VTXPOSNORTEX::iNumElements))))
+			return E_FAIL;
 		break;
 	default:
 		break;
@@ -190,6 +201,12 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 		break;
 	case Client::LEVEL_GAMEPLAY:
+		/* For.Terrain*/
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), CTerrain::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Camera*/
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CGameCamera::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 		break;
 	default:
 		break;

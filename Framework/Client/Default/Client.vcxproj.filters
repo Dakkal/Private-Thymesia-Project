@@ -40,6 +40,12 @@
     <Filter Include="97.Shader">
       <UniqueIdentifier>{2f165e26-97ef-40e4-8943-5b7ef2c6ae65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Terrain">
+      <UniqueIdentifier>{ce1e08a8-7496-4238-8cdc-d373c28cc08d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Camera">
+      <UniqueIdentifier>{917820ce-772b-4de1-8b05-52cbb61fa8d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -89,6 +95,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
       <Filter>999. Imgui\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Terrain.cpp">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameCamera.cpp">
+      <Filter>02.GameObject\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +167,12 @@
     <ClInclude Include="..\Public\Imgui_Manager.h">
       <Filter>999. Imgui\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameCamera.h">
+      <Filter>02.GameObject\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -171,6 +189,9 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
+      <Filter>97.Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosNorTex.hlsl">
       <Filter>97.Shader</Filter>
     </FxCompile>
   </ItemGroup>

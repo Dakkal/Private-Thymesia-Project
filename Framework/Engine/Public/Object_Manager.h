@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Base.h"
+#include "Camera.h"
 
 BEGIN(Engine)
 
@@ -19,6 +20,8 @@ public:
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);
+
+	CGameObject* Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag);
 
 private:
 	map<const wstring, class CGameObject*>	m_mapPrototypes;

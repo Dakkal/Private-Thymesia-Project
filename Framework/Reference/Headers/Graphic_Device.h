@@ -17,7 +17,7 @@ public:
 		_uint iWinCX, _uint iWinCY, _Inout_ ID3D11Device** ppDeviceOut,
 		_Inout_ ID3D11DeviceContext** ppDeviceContextOut);
 
-	HRESULT Clear_BackBuffer_View(_float4 vClearColor);
+	HRESULT Clear_BackBuffer_View(_vector vClearColor);
 	HRESULT Clear_DepthStencil_View();
 	HRESULT Present();
 

@@ -15,9 +15,9 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagAxis
 	{
-		static	_fvector	X ;
-		static	_fvector	Y ;
-		static	_fvector	Z ;
+		static	_vector	X ;
+		static	_vector	Y ;
+		static	_vector	Z ;
 
 	}AXIS;
 

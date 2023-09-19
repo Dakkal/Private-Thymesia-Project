@@ -77,7 +77,7 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	return S_OK;
 }
 
-HRESULT CShader::Bind_Matrix(const char* pConstantName, const _float4x4* pMatrix) const
+HRESULT CShader::Bind_Matrix(const char* pConstantName, const _matrix* pMatrix) const
 {
 	ID3DX11EffectVariable*	pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
@@ -91,7 +91,7 @@ HRESULT CShader::Bind_Matrix(const char* pConstantName, const _float4x4* pMatrix
 	return pMatrixVariable->SetMatrix((const _float*)pMatrix);
 }
 
-HRESULT CShader::Bind_Matrices(const char* pConstantName, const _float4x4** ppMatrices, _uint iNumMatrices) const
+HRESULT CShader::Bind_Matrices(const char* pConstantName, const _matrix** ppMatrices, _uint iNumMatrices) const
 {
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)

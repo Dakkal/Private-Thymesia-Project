@@ -24,6 +24,8 @@ protected:
 protected:
     map<const wstring, class CComponent*>   m_Components;
 
+
+
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeRag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
     class CComponent* Find_Component(const wstring & strComponentTag);

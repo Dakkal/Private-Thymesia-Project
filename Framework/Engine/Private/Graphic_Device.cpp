@@ -56,7 +56,7 @@ HRESULT CGraphic_Device::Ready_Graphic_Device(HWND hWnd, GRAPHIC_DESC::WINMODE e
 	return S_OK;
 }
 
-HRESULT CGraphic_Device::Clear_BackBuffer_View(_float4 vClearColor)
+HRESULT CGraphic_Device::Clear_BackBuffer_View(_vector vClearColor)
 {
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;

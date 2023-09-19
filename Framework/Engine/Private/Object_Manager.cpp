@@ -89,6 +89,14 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 
 }
 
+CGameObject* CObject_Manager::Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	auto iter = Find_Layer(iLevelIndex, strLayerTag);
+
+	if (nullptr != iter)
+		return iter->Get_FirstObject();
+}
+
 CGameObject* CObject_Manager::Find_Prototype(const wstring& strPrototypeTag)
 {
 	auto iter = m_mapPrototypes.find(strPrototypeTag);

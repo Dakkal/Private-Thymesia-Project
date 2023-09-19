@@ -32,10 +32,10 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(GraphicDesc, &m_pDevice, &m_pContext, LEVEL_END)))
 		return E_FAIL;
 
-#ifdef _DEBUG
+#ifndef NDEBUG
 	if (FAILED(m_pImgui_Manager->Ready_Manager(m_pDevice, m_pContext)))
 		return E_FAIL;
-#endif // _DEBUG
+#endif // NDEBUG
 
 	
 	if (FAILED(Ready_Prototype_Components()))
@@ -58,15 +58,13 @@ void CMainApp::Tick(_float fTimeDelta)
 
 HRESULT CMainApp::Render()
 {
-	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
+	m_pGameInstance->Clear_BackBuffer_View(_vector(0.f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 	
 	m_pRenderer->Draw_RenderObject();
 
-#ifdef _DEBUG
+#ifndef NDEBUG
 	m_pImgui_Manager->Render();
-
-
 
 #endif // _DEBUG
 

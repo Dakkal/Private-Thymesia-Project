@@ -27,7 +27,7 @@ public: /* For.Timer_Manager */
 	HRESULT	Add_Timer(const wstring & strTimerTag);
 
 public: /* For.Graphic_Device */
-	HRESULT Clear_BackBuffer_View(_float4 vClearColor);
+	HRESULT Clear_BackBuffer_View(_vector vClearColor);
 	HRESULT Clear_DepthStencil_View();
 	HRESULT Present();
 
@@ -37,6 +37,7 @@ public: /* For.Level_Manager */
 public: /* For.Object_Manager */
 	HRESULT Add_Prototype(const wstring & strPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
+	CGameObject* Find_GameObject(_uint iLevelIndex, const wstring & strLayerTag);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, class CComponent* pPrototype);
