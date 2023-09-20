@@ -29,7 +29,7 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iWinSizeX = g_iWinSizeX;
 	GraphicDesc.iWinSizeY = g_iWinSizeY;
 
-	if (FAILED(m_pGameInstance->Initialize_Engine(GraphicDesc, &m_pDevice, &m_pContext, LEVEL_END)))
+	if (FAILED(m_pGameInstance->Initialize_Engine(GraphicDesc, g_hInstance , &m_pDevice, &m_pContext, LEVEL_END)))
 		return E_FAIL;
 
 #ifndef NDEBUG
@@ -58,7 +58,7 @@ void CMainApp::Tick(_float fTimeDelta)
 
 HRESULT CMainApp::Render()
 {
-	m_pGameInstance->Clear_BackBuffer_View(_vector(0.f, 0.f, 1.f, 1.f));
+	m_pGameInstance->Clear_BackBuffer_View(_vector(0.5f, 0.5f, 0.5f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 	
 	m_pRenderer->Draw_RenderObject();

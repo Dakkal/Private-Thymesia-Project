@@ -174,6 +174,9 @@
     <ClInclude Include="..\Public\PipeLine.h">
       <Filter>01.Utility\05.PipeLine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Input_Device.h">
+      <Filter>00.System\01.Device\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -244,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PipeLine.cpp">
       <Filter>01.Utility\05.PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Input_Device.cpp">
+      <Filter>00.System\01.Device\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

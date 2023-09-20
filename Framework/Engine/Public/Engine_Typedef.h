@@ -25,8 +25,9 @@ namespace Engine
 
 	typedef		SimpleMath::Matrix			_matrix;
 	typedef		SimpleMath::Vector4			_vector;
-	typedef		SimpleMath::Vector2			_float2;
 	typedef		SimpleMath::Vector3			_float3;
+	typedef		SimpleMath::Vector2			_float2;
+
 }
 
 #endif // Engine_Typedef_h__

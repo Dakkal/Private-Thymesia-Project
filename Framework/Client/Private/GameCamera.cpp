@@ -33,57 +33,51 @@ HRESULT CGameCamera::Initialize(void* pArg)
 
 void CGameCamera::Tick(_float fTimeDelta)
 {
+    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance)
+
+    _long MouseMove = 0;
+
     /* Move */
-    if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+    if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
     {
         m_pTransform->Go_Left(fTimeDelta);
     }
-    if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+    if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
     {
         m_pTransform->Go_Right(fTimeDelta);
     }
-    if (GetAsyncKeyState(VK_UP) & 0x8000)
+    if (MouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::MOUSEMOVE_STATE::WHEEL))
     {
-        m_pTransform->Go_Up(fTimeDelta);
+        m_pTransform->Go_Up(m_fMouseSensitive * MouseMove * fTimeDelta);
     }
-    if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-    {
-        m_pTransform->Go_Down(fTimeDelta);
-    }
-    if (GetAsyncKeyState('W') & 0x8000)
+    if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
     {
         m_pTransform->Go_Forward(fTimeDelta);
     }
-    if (GetAsyncKeyState('S') & 0x8000)
+    if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
     {
         m_pTransform->Go_Backward(fTimeDelta);
     }
 
     /* Rotation */
-    if (GetAsyncKeyState('D') & 0x8000)
-    {
-        m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_UP), fTimeDelta);
-    }
-    if (GetAsyncKeyState('A') & 0x8000)
-    {
-        m_pTransform->Turn_Invert(m_pTransform->Get_State(CTransform::STATE_UP), fTimeDelta);
-    }
-    if (GetAsyncKeyState('E') & 0x8000)
+    if (pGameInstance->Get_DIKeyState(DIK_Q) & 0x80)
     {
         m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_LOOK), fTimeDelta);
     }
-    if (GetAsyncKeyState('Q') & 0x8000)
+    if (pGameInstance->Get_DIKeyState(DIK_E) & 0x80)
     {
         m_pTransform->Turn_Invert(m_pTransform->Get_State(CTransform::STATE_LOOK), fTimeDelta);
     }
-    if (GetAsyncKeyState('X') & 0x8000)
+    if (MouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::MOUSEMOVE_STATE::X))
     {
-        m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta);
+        m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_UP), m_fMouseSensitive * MouseMove * fTimeDelta);
     }
-    if (GetAsyncKeyState('Z') & 0x8000)
+    if (MouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::MOUSEMOVE_STATE::Y))
     {
-        m_pTransform->Turn_Invert(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta);
+        m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), m_fMouseSensitive * MouseMove * fTimeDelta);
     }
+
+    RELEASE_INSTANCE(CGameInstance)
 
     __super::Tick(fTimeDelta);
 }
