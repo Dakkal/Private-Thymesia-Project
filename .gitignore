@@ -438,5 +438,3 @@ FodyWeavers.xsd
 
 # Resource Folder Ignore
 ./Resources/
-
-!Framework/Client/Bin/ShaderFiles/
