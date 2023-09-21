@@ -17,6 +17,9 @@ public:
     virtual void LateTick(_float fTimeDelta);
     virtual HRESULT Render();
 
+public:
+    _bool   Is_Remain() { return m_bRemain; }
+
 protected:
     ID3D11Device*           m_pDevice = { nullptr };
     ID3D11DeviceContext*    m_pContext = { nullptr };
@@ -24,7 +27,7 @@ protected:
 protected:
     map<const wstring, class CComponent*>   m_Components;
 
-
+    _bool   m_bRemain = { false };
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeRag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);

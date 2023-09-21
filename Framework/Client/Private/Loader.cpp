@@ -4,7 +4,7 @@
 #include "GameInstance.h"
 #include "BackGround.h"
 #include "Terrain.h"
-#include "GameCamera.h"
+#include "ToolCamera.h"
 
 _uint APIENTRY ThreadEntry(void* pArg)
 {
@@ -56,6 +56,9 @@ _int CLoader::Loading()
 		break;
 	case Client::LEVEL_GAMEPLAY:
 		hr = Loading_For_Level_GamePlay();
+		break;
+	case Client::LEVEL_EDIT:
+		hr = Loading_For_Level_Edit();
 		break;
 	default:
 		break;
@@ -122,6 +125,31 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 	return S_OK;
 }
 
+HRESULT CLoader::Loading_For_Level_Edit()
+{
+	/* For.Texture */
+	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+	Loading_Texture();
+
+	/* For.Mesh */
+	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+	Loading_Mesh();
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+	Loading_Sahder();
+
+	/* For.Object */
+	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
+	Loading_Object();
+
+
+	m_strLoading = TEXT("로딩 끝.");
+	m_isFinished = true;
+
+	return S_OK;
+}
+
 HRESULT CLoader::Loading_Texture()
 {
 	if (m_eNextLevel >= LEVEL_END)
@@ -138,6 +166,8 @@ HRESULT CLoader::Loading_Texture()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
 			return E_FAIL;
+		break;
+	case Client::LEVEL_EDIT:
 		break;
 	default:
 		break;
@@ -160,6 +190,8 @@ HRESULT CLoader::Loading_Mesh()
 			CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
 			return E_FAIL;
 		break;
+	case Client::LEVEL_EDIT:
+		break;
 	default:
 		break;
 	}
@@ -180,6 +212,8 @@ HRESULT CLoader::Loading_Sahder()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxPosNorTex"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosNorTex.hlsl"), VTXPOSNORTEX::tElements, VTXPOSNORTEX::iNumElements))))
 			return E_FAIL;
+		break;
+	case Client::LEVEL_EDIT:
 		break;
 	default:
 		break;
@@ -205,13 +239,17 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), CTerrain::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		/* For.Camera*/
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CGameCamera::Create(m_pDevice, m_pContext))))
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CToolCamera::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_EDIT:
+		/* For.Camera*/
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ToolCamera"), CToolCamera::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		break;
 	default:
 		break;
 	}
-
 	
 
 	return S_OK;

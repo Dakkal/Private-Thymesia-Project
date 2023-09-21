@@ -2,7 +2,7 @@
 #include "..\Public\Level_GamePlay.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
-#include "GameCamera.h"
+#include "ToolCamera.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -48,20 +48,20 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CGameCamera::CAMERA_GAME_DESC			CameraGameDesc;
-	ZeroMemory(&CameraGameDesc, sizeof CameraGameDesc);
+	CToolCamera::CAMERA_TOOL_DESC			CameraToolDesc;
+	ZeroMemory(&CameraToolDesc, sizeof CameraToolDesc);
 
-	CameraGameDesc.fMouseSensitive = 0.3f;
-	CameraGameDesc.vEye = _vector(0.f, 0.f, -1.f, 1.f);
-	CameraGameDesc.vAt = _vector(0.f, 0.f, 0.f, 1.f);
-	CameraGameDesc.fFovy = XMConvertToRadians(90.0f);
-	CameraGameDesc.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
-	CameraGameDesc.fNear = 0.2f;
-	CameraGameDesc.fFar = 1000.f;
-	CameraGameDesc.fSpeedPerSec = 80.f;
-	CameraGameDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
+	CameraToolDesc.fMouseSensitive = 0.3f;
+	CameraToolDesc.vEye = _vector(0.f, 0.f, -1.f, 1.f);
+	CameraToolDesc.vAt = _vector(0.f, 0.f, 0.f, 1.f);
+	CameraToolDesc.fFovy = XMConvertToRadians(90.0f);
+	CameraToolDesc.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
+	CameraToolDesc.fNear = 0.2f;
+	CameraToolDesc.fFar = 1000.f;
+	CameraToolDesc.fSpeedPerSec = 80.f;
+	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera"), &CameraGameDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance)

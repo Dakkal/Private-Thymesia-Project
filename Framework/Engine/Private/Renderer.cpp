@@ -40,6 +40,8 @@ HRESULT CRenderer::Draw_RenderObject()
 		return E_FAIL;
 	if (FAILED(Render_UI()))
 		return E_FAIL;
+	if (FAILED(Render_Tool()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -110,6 +112,20 @@ HRESULT CRenderer::Render_UI()
 		Safe_Release(pGameObject);
 	}
 	m_listRenderObject[(_uint)RENDERGROUP::RG_UI].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Tool()
+{
+	for (auto& pGameObject : m_listRenderObject[(_uint)RENDERGROUP::RG_TOOL])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+	m_listRenderObject[(_uint)RENDERGROUP::RG_TOOL].clear();
 
 	return S_OK;
 }

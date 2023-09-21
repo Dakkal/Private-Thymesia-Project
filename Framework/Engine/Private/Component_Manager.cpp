@@ -43,6 +43,15 @@ CComponent* CComponent_Manager::Clone_Component(_uint iLevelIndex, const wstring
 	return pComponent;
 }
 
+void CComponent_Manager::Clear(_uint iLevelIndex)
+{
+	for (auto& Pair : m_pPrototypes[iLevelIndex])
+	{
+		Safe_Release(Pair.second);
+	}
+	m_pPrototypes[iLevelIndex].clear();
+}
+
 CComponent* CComponent_Manager::Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag)
 {
 	if (iLevelIndex >= m_iLevelIndex)

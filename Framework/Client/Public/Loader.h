@@ -38,7 +38,8 @@ private:
 private:
 	HRESULT Loading_For_Level_Logo();
 	HRESULT Loading_For_Level_GamePlay();
-	
+	HRESULT Loading_For_Level_Edit();
+
 	/* For.Loading */
 	HRESULT Loading_Texture();
 	HRESULT Loading_Mesh();

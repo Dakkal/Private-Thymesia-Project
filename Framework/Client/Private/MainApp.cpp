@@ -8,11 +8,8 @@
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
-	, m_pImgui_Manager(CImgui_Manager::GetInstance())
 {
-	Safe_AddRef(m_pImgui_Manager);
 	Safe_AddRef(m_pGameInstance);
-
 }
 
 HRESULT CMainApp::Initialize()
@@ -31,11 +28,6 @@ HRESULT CMainApp::Initialize()
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(GraphicDesc, g_hInstance , &m_pDevice, &m_pContext, LEVEL_END)))
 		return E_FAIL;
-
-#ifndef NDEBUG
-	if (FAILED(m_pImgui_Manager->Ready_Manager(m_pDevice, m_pContext)))
-		return E_FAIL;
-#endif // NDEBUG
 
 	
 	if (FAILED(Ready_Prototype_Components()))
@@ -63,10 +55,15 @@ HRESULT CMainApp::Render()
 	
 	m_pRenderer->Draw_RenderObject();
 
-#ifndef NDEBUG
-	m_pImgui_Manager->Render();
+	if (LEVEL_EDIT == m_pGameInstance->Get_CurLevel())
+	{
+		CImgui_Manager* pGuiManager = GET_INSTANCE(CImgui_Manager);
 
-#endif // _DEBUG
+		pGuiManager->Render();
+
+		RELEASE_INSTANCE(CImgui_Manager);
+	}
+	
 
 	m_pGameInstance->Present();
 
@@ -131,10 +128,5 @@ void CMainApp::Free()
 	Safe_Release(m_pContext);
 
 	Safe_Release(m_pGameInstance);
-
-	Safe_Release(m_pImgui_Manager);
-	CImgui_Manager::GetInstance()->DestroyInstance();
-
-
 	CGameInstance::Release_Engine();
 }

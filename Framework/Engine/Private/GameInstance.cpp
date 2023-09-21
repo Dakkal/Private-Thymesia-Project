@@ -69,7 +69,7 @@ void CGameInstance::Tick(_float fTimeDelta)
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	m_pObject_Manager->Clear(iLevelIndex);
-	//m_pComponent_Manager->Clear(iLevelIndex);
+	m_pComponent_Manager->Clear(iLevelIndex);
 }
 
 _float CGameInstance::Compute_TimeDelta(const wstring& strTimerTag)
@@ -142,6 +142,14 @@ HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 		return E_FAIL;
 
 	return m_pLevel_Manager->Open_Level(iLevelIndex, pNewLevel);
+}
+
+_uint CGameInstance::Get_CurLevel()
+{
+	if (nullptr == m_pLevel_Manager)
+		return E_FAIL;
+
+	return m_pLevel_Manager->Get_CurLevel();
 }
 
 HRESULT CGameInstance::Add_Prototype(const wstring& strPrototypeTag, CGameObject* pPrototype)
@@ -227,7 +235,42 @@ HRESULT CGameInstance::SetChannelVolume(CHANNELID eCh, _float fVolume)
 
 HRESULT CGameInstance::Bind_TransformToShader(CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORM_STATE eState)
 {
+	if (nullptr == m_pPipeLine)
+		return E_FAIL;
+
 	return m_pPipeLine->Bind_TransformToShader(pShader, pConstantName, eState);
+}
+
+HRESULT CGameInstance::Bind_CamPosToShader(CShader* pShader, const char* pConstantName)
+{
+	if (nullptr == m_pPipeLine)
+		return E_FAIL;
+
+	return m_pPipeLine->Bind_CamPosToShader(pShader, pConstantName);
+}
+
+_matrix CGameInstance::Get_Transform_Matrix(CPipeLine::TRANSFORM_STATE eState) const
+{
+	if (nullptr == m_pPipeLine)
+		return XMMatrixIdentity();
+
+	return m_pPipeLine->Get_Transform_Matrix(eState);
+}
+
+_matrix CGameInstance::Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORM_STATE eState) const
+{
+	if (nullptr == m_pPipeLine)
+		return XMMatrixIdentity();
+
+	return m_pPipeLine->Get_Transform_Matrix_Inverse(eState);
+}
+
+_vector CGameInstance::Get_CamPosition_Vector() const
+{
+	if (nullptr == m_pPipeLine)
+		return _vector();
+
+	return m_pPipeLine->Get_CamPosition_Vector();
 }
 
 void CGameInstance::Release_Engine()

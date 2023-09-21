@@ -22,6 +22,19 @@ HRESULT CBackGround::Initialize(void* pArg)
     if (FAILED(Ready_Component(pArg)))
         return E_FAIL;
 
+    m_fSizeX = g_iWinSizeX;
+    m_fSizeY = g_iWinSizeY;
+    m_fX = g_iWinSizeX * 0.5f;
+    m_fY = g_iWinSizeY * 0.5f;
+
+    m_pTransformCom->Set_Scale(_vector(m_fSizeX, m_fSizeY, 1.f, 0.f));
+    m_pTransformCom->Set_State(CTransform::STATE_POS,
+        _vector(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+    m_ViewMatrix = XMMatrixIdentity();
+    m_ProjMatrix = XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
+
+
     return S_OK;
 }
 
@@ -92,14 +105,12 @@ HRESULT CBackGround::Ready_Component(void* pArg)
 
 HRESULT CBackGround::Bind_ShaderResources()
 {
-    _matrix matView;
-    _matrix matProj;
 
     if (FAILED(m_pTransformCom->Bind_ShaderResources(m_pShaderCom, "g_WorldMatrix")))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &matView)))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &matProj)))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
         return E_FAIL;
 
 

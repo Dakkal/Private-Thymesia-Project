@@ -40,6 +40,7 @@ public: /* For.Input_Device */
 
 public: /* For.Level_Manager */
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
+	_uint	Get_CurLevel();
 
 public: /* For.Object_Manager */
 	HRESULT Add_Prototype(const wstring & strPrototypeTag, class CGameObject* pPrototype);
@@ -59,6 +60,10 @@ public: /* For.Sound_Manager */
 
 public: /* For.PipeLine */
 	HRESULT Bind_TransformToShader(class CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORM_STATE eState);
+	HRESULT Bind_CamPosToShader(class CShader* pShader, const char* pConstantName);
+	_matrix Get_Transform_Matrix(CPipeLine::TRANSFORM_STATE eState) const;
+	_matrix Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORM_STATE eState) const;
+	_vector Get_CamPosition_Vector() const;
 
 private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };

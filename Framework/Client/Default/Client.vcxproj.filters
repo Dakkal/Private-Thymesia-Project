@@ -46,6 +46,12 @@
     <Filter Include="02.GameObject\Camera">
       <UniqueIdentifier>{917820ce-772b-4de1-8b05-52cbb61fa8d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="999. Imgui\gui">
+      <UniqueIdentifier>{573c3773-f4f8-412b-bf2c-ff9ce8110f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\09.Edit">
+      <UniqueIdentifier>{fdb0e1ca-4dec-4b43-9312-6b27eae561c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -72,35 +78,38 @@
     <ClCompile Include="..\Private\BackGround.cpp">
       <Filter>02.GameObject\BackGround</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Imgui\imgui.cpp">
-      <Filter>999. Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Imgui\imgui_demo.cpp">
-      <Filter>999. Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Imgui\imgui_draw.cpp">
-      <Filter>999. Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Imgui\imgui_impl_dx11.cpp">
-      <Filter>999. Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Imgui\imgui_impl_win32.cpp">
-      <Filter>999. Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Imgui\imgui_tables.cpp">
-      <Filter>999. Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Imgui\imgui_widgets.cpp">
-      <Filter>999. Imgui</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
       <Filter>999. Imgui\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02.GameObject\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\GameCamera.cpp">
+    <ClCompile Include="..\Private\ToolCamera.cpp">
       <Filter>02.GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imgui.cpp">
+      <Filter>999. Imgui\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imgui_demo.cpp">
+      <Filter>999. Imgui\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imgui_draw.cpp">
+      <Filter>999. Imgui\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imgui_impl_dx11.cpp">
+      <Filter>999. Imgui\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imgui_impl_win32.cpp">
+      <Filter>999. Imgui\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imgui_tables.cpp">
+      <Filter>999. Imgui\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imgui_widgets.cpp">
+      <Filter>999. Imgui\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Edit.cpp">
+      <Filter>01.Levels\09.Edit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,38 +149,41 @@
     <ClInclude Include="..\Public\BackGround.h">
       <Filter>02.GameObject\BackGround</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Imgui\imconfig.h">
-      <Filter>999. Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Imgui\imgui.h">
-      <Filter>999. Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Imgui\imgui_impl_dx11.h">
-      <Filter>999. Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Imgui\imgui_impl_win32.h">
-      <Filter>999. Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Imgui\imgui_internal.h">
-      <Filter>999. Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Imgui\imstb_rectpack.h">
-      <Filter>999. Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Imgui\imstb_textedit.h">
-      <Filter>999. Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Imgui\imstb_truetype.h">
-      <Filter>999. Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Imgui_Manager.h">
       <Filter>999. Imgui\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObject\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\GameCamera.h">
+    <ClInclude Include="..\Public\ToolCamera.h">
       <Filter>02.GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imconfig.h">
+      <Filter>999. Imgui\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imgui.h">
+      <Filter>999. Imgui\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imgui_impl_dx11.h">
+      <Filter>999. Imgui\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imgui_impl_win32.h">
+      <Filter>999. Imgui\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imgui_internal.h">
+      <Filter>999. Imgui\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imstb_rectpack.h">
+      <Filter>999. Imgui\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imstb_textedit.h">
+      <Filter>999. Imgui\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imstb_truetype.h">
+      <Filter>999. Imgui\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Edit.h">
+      <Filter>01.Levels\09.Edit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

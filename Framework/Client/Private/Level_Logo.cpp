@@ -40,8 +40,14 @@ HRESULT CLevel_Logo::LateTick(_float fTimeDelta)
 	{
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+#ifndef NDEBUG
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))
 			return E_FAIL;
+#else
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))
+			return E_FAIL;
+#endif // !NDEBUG
+
 
 		RELEASE_INSTANCE(CGameInstance);
 	}

@@ -1,5 +1,6 @@
 #include "..\Public\Camera.h"
 #include "PipeLine.h"
+#include "GameInstance.h"
 
 CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)

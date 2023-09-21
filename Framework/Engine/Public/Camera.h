@@ -30,8 +30,8 @@ protected:
 	_float			m_fFovy, m_fAspect, m_fNear, m_fFar;
 
 protected:
-	class CTransform* m_pTransform = { nullptr };
-	class CPipeLine* m_pPipeLine = { nullptr };
+	class CTransform*	m_pTransform = { nullptr };
+	class CPipeLine*	m_pPipeLine = { nullptr };
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
