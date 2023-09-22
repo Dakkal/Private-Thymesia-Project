@@ -19,6 +19,8 @@ public:
 
 public:
     _bool   Is_Remain() { return m_bRemain; }
+    wstring Get_Name() { return m_strObjectName; }
+    _uint   Get_CloneIndex() { return m_iIndex; }
 
 protected:
     ID3D11Device*           m_pDevice = { nullptr };
@@ -27,7 +29,15 @@ protected:
 protected:
     map<const wstring, class CComponent*>   m_Components;
 
+
+    _bool   m_bDead = { false };
     _bool   m_bRemain = { false };
+
+
+    wstring m_strObjectName = { TEXT("") };
+    _uint   m_iIndex = { 0 };
+
+    _uint   m_iCloneIndex = { 0 };
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeRag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
@@ -35,7 +45,7 @@ protected:
 
 
 public:
-    virtual CGameObject* Clone(void* pArg) = 0;
+    virtual CGameObject* Clone(void* pArg);
     virtual void Free() override;
 
 };

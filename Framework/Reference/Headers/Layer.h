@@ -16,7 +16,8 @@ public:
 	void LateTick(_float fTimeDelta);
 
 public:
-	CGameObject* Get_FirstObject();
+	CGameObject* Find_GameObject(const wstring& ObjName, _uint iCloneIndex);
+	HRESULT		 Delete_GameObject(const wstring& ObjName, _uint iCloneIndex);
 
 private:
 	list<class CGameObject*>		m_listGameObject;

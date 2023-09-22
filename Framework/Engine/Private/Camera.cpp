@@ -23,6 +23,8 @@ HRESULT CCamera::Initialize_Prototype()
 
 HRESULT CCamera::Initialize(void* pArg)
 {
+	__super::Initialize(pArg);
+
 	CAMERA_DESC* pCameraDesc = (CAMERA_DESC*)pArg;
 
 	m_vEye = pCameraDesc->vEye;
@@ -56,6 +58,15 @@ void CCamera::Tick(_float fTimeDelta)
 
 void CCamera::LateTick(_float fTimeDelta)
 {
+
+	__super::LateTick(fTimeDelta);
+}
+
+CGameObject* CCamera::Clone(void* pArg)
+{
+	__super::Clone(pArg);
+
+	return nullptr;
 }
 
 void CCamera::Free()

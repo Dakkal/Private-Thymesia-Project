@@ -16,9 +16,12 @@ CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_eTopology(rhs.m_eTopology)
 	, m_iNumVBs(rhs.m_iNumVBs)
+	, m_tRasterDesc(rhs.m_tRasterDesc)
+	, m_pRasterizer(rhs.m_pRasterizer)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
+	Safe_AddRef(m_pRasterizer);
 }
 
 HRESULT CVIBuffer::Initialize_Prototype()
@@ -49,6 +52,9 @@ HRESULT CVIBuffer::Render()
 
 	m_pContext->IASetPrimitiveTopology(m_eTopology);
 
+	if(nullptr != m_pRasterizer)
+		m_pContext->RSSetState(m_pRasterizer);
+
 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
 
 
@@ -67,6 +73,7 @@ void CVIBuffer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pRasterizer);
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
 }

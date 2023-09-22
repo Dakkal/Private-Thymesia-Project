@@ -138,6 +138,10 @@ HRESULT CShader::Bind_Textures(const char* pConstantName, ID3D11ShaderResourceVi
 		return E_FAIL;
 
 	return pSRVariable->SetResourceArray(ppSRVs, 0, iNumTextures);
+
+
+	
+
 }
 
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)

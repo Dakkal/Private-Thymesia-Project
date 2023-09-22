@@ -43,9 +43,10 @@ public: /* For.Level_Manager */
 	_uint	Get_CurLevel();
 
 public: /* For.Object_Manager */
-	HRESULT Add_Prototype(const wstring & strPrototypeTag, class CGameObject* pPrototype);
-	HRESULT Add_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
-	CGameObject* Find_GameObject(_uint iLevelIndex, const wstring & strLayerTag);
+	HRESULT			Add_Prototype(const wstring & strPrototypeTag, class CGameObject* pPrototype);
+	HRESULT			Add_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
+	CGameObject*	Find_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & ObjName, _uint iCloneIndex);
+	HRESULT			Delete_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & ObjName, _uint iCloneIndex);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, class CComponent* pPrototype);

@@ -29,6 +29,10 @@ protected:
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
 	_uint						m_iNumVBs = { 0 };
 
+	ID3D11RasterizerState*		m_pRasterizer = { nullptr };
+	D3D11_RASTERIZER_DESC		m_tRasterDesc;
+
+
 protected:
 	HRESULT Create_Buffer(_Inout_ ID3D11Buffer * *ppOut);
 

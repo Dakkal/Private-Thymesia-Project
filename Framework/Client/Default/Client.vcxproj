@@ -48,6 +48,7 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp" />
+    <ClCompile Include="..\Private\Edit_Terrain.cpp" />
     <ClCompile Include="..\Private\ToolCamera.cpp" />
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
@@ -82,6 +83,7 @@
     <ClInclude Include="..\..\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\Edit_Terrain.h" />
     <ClInclude Include="..\Public\ToolCamera.h" />
     <ClInclude Include="..\Public\Imgui_Manager.h" />
     <ClInclude Include="..\Public\Level_Edit.h" />

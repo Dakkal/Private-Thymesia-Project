@@ -10,7 +10,6 @@ public:
 	{
 		_ulong			iNumVerticesX;
 		_ulong			iNumVerticesZ;
-		_bool			bIsHeightMap;
 
 	}TERRAIN_DESC;
 
@@ -26,10 +25,9 @@ public:
 private:
 	_ulong			m_iNumVerticesX = { 0 };
 	_ulong			m_iNumVerticesZ = { 0 };
-	_bool			m_bIsHeightMap = { true };
 
 public:
-	static CVIBuffer_Terrain* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strHeightMapFilePath = nullptr);
+	static CVIBuffer_Terrain* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strHeightMapFilePath = TEXT(""));
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };

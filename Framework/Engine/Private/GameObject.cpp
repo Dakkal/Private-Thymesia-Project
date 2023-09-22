@@ -13,6 +13,8 @@ CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CGameObject::CGameObject(const CGameObject& rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pContext(rhs.m_pContext)
+	, m_iCloneIndex(rhs.m_iCloneIndex)
+	, m_strObjectName(rhs.m_strObjectName)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
@@ -25,6 +27,8 @@ HRESULT CGameObject::Initialize_Prototype()
 
 HRESULT CGameObject::Initialize(void* pArg)
 {
+	m_iIndex = m_iCloneIndex;
+
 	return S_OK;
 }
 
@@ -72,6 +76,13 @@ CComponent* CGameObject::Find_Component(const wstring& strComponentTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+CGameObject* CGameObject::Clone(void* pArg)
+{
+	m_iCloneIndex++;
+
+	return nullptr;
 }
 
 void CGameObject::Free()

@@ -21,7 +21,8 @@ public:
 	void LateTick(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);
 
-	CGameObject* Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag);
+	CGameObject* Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iCloneIndex);
+	HRESULT		 Delete_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iCloneIndex);
 
 private:
 	map<const wstring, class CGameObject*>	m_mapPrototypes;

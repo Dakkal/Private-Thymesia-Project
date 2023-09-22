@@ -34,7 +34,7 @@ protected:
 	class CPipeLine*	m_pPipeLine = { nullptr };
 
 public:
-	virtual CGameObject* Clone(void* pArg) = 0;
+	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
 };
 

@@ -40,12 +40,33 @@ void CLayer::LateTick(_float fTimeDelta)
 
 }
 
-CGameObject* CLayer::Get_FirstObject()
+CGameObject* CLayer::Find_GameObject(const wstring& ObjName, _uint iCloneIndex)
 {
-	if (nullptr == m_listGameObject.front())
-		return nullptr;
-	else
-		return m_listGameObject.front();
+	for (auto& pGameObject : m_listGameObject)
+	{
+		if (nullptr != pGameObject)
+		{
+			if (ObjName == pGameObject->Get_Name() &&
+				iCloneIndex == pGameObject->Get_CloneIndex())
+				return pGameObject;
+		}
+		else
+			return nullptr;
+	}
+}
+
+HRESULT CLayer::Delete_GameObject(const wstring& ObjName, _uint iCloneIndex)
+{
+	for (auto iter = m_listGameObject.begin(); iter != m_listGameObject.end(); ++iter)
+	{
+		if (ObjName == (*iter)->Get_Name() &&
+			iCloneIndex == (*iter)->Get_CloneIndex())
+		{
+			Safe_Release(*iter);
+			m_listGameObject.erase(iter);
+			return S_OK;
+		}
+	}
 }
 
 CLayer* CLayer::Create()

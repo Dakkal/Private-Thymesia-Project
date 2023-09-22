@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "BackGround.h"
 #include "Terrain.h"
+#include "Edit_Terrain.h"
 #include "ToolCamera.h"
 
 _uint APIENTRY ThreadEntry(void* pArg)
@@ -191,6 +192,9 @@ HRESULT CLoader::Loading_Mesh()
 			return E_FAIL;
 		break;
 	case Client::LEVEL_EDIT:
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
+			CVIBuffer_Terrain::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 		break;
 	default:
 		break;
@@ -243,6 +247,9 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 		break;
 	case Client::LEVEL_EDIT:
+		/* For.Terrain*/
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Edit_Terrain"), CEdit_Terrain::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
 		/* For.Camera*/
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ToolCamera"), CToolCamera::Create(m_pDevice, m_pContext))))
 			return E_FAIL;

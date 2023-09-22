@@ -14,11 +14,15 @@ CBackGround::CBackGround(const CGameObject& rhs)
 
 HRESULT CBackGround::Initialize_Prototype()
 {
+    m_strObjectName = TEXT("Object_BackGround");
+
     return S_OK;
 }
 
 HRESULT CBackGround::Initialize(void* pArg)
 {
+    __super::Initialize(pArg);
+
     if (FAILED(Ready_Component(pArg)))
         return E_FAIL;
 
@@ -57,7 +61,6 @@ void CBackGround::LateTick(_float fTimeDelta)
 
 HRESULT CBackGround::Render()
 {
-
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 
@@ -139,6 +142,8 @@ CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 CGameObject* CBackGround::Clone(void* pArg)
 {
+    __super::Clone(pArg);
+
     CBackGround* pInstance = new CBackGround(*this);
 
     if (FAILED(pInstance->Initialize(pArg)))

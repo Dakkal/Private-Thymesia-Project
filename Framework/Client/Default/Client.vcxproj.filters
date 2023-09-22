@@ -52,6 +52,9 @@
     <Filter Include="01.Levels\09.Edit">
       <UniqueIdentifier>{fdb0e1ca-4dec-4b43-9312-6b27eae561c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Terrain\Level1">
+      <UniqueIdentifier>{0296b653-9d0c-4c68-bc7c-7b61ff677c1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Edit.cpp">
       <Filter>01.Levels\09.Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edit_Terrain.cpp">
+      <Filter>02.GameObject\Terrain\Level1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_Edit.h">
       <Filter>01.Levels\09.Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edit_Terrain.h">
+      <Filter>02.GameObject\Terrain\Level1</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -16,12 +16,14 @@ CToolCamera::CToolCamera(const CToolCamera& rhs)
 
 HRESULT CToolCamera::Initialize_Prototype()
 {
- 
+    m_strObjectName = TEXT("Object_ToolCamera");
 	return S_OK;
 }
 
 HRESULT CToolCamera::Initialize(void* pArg)
 {
+    __super::Initialize(pArg);
+
     CAMERA_TOOL_DESC* pCamera_Tool_Desc = (CAMERA_TOOL_DESC*)pArg;
 
     m_fMouseSensitive = pCamera_Tool_Desc->fMouseSensitive;

@@ -44,167 +44,21 @@ HRESULT CImgui_Manager::Tick(_float fTimeDelta)
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    _bool bIsOpen = false;
-
     ImGui::Begin("Tool Box");
 
-    ImGui::BeginMainMenuBar();
-    if (ImGui::BeginMenu("File"))
-    {
-        // "File" 메뉴에 하위 메뉴 아이템 추가
-        if (ImGui::MenuItem("Open", "Ctrl+O"))
-        {
-            // "Open" 메뉴 아이템이 클릭될 때 수행할 작업
-        }
-
-        if (ImGui::MenuItem("Save", "Ctrl+S"))
-        {
-            // "Save" 메뉴 아이템이 클릭될 때 수행할 작업
-        }
-
-        ImGui::EndMenu(); // "File" 메뉴 종료
-    }
-
-    if (ImGui::BeginMenu("Edit"))
-    {
-        // "Edit" 메뉴에 하위 메뉴 아이템 추가
-        // 추가 작업 수행
-
-        ImGui::EndMenu(); // "Edit" 메뉴 종료
-    }
-    ImGui::EndMainMenuBar();
-
-
-    if (ImGui::CollapsingHeader("Level"))
-    {
-
-#pragma region LEVEL1
-        ImGui::BeginTabBar("");
-        if (ImGui::BeginTabItem("Level 1"))
-        {
-            // 레벨 1 탭 내용을 이곳에 추가
-            ImGui::Indent(10);
-            if (ImGui::CollapsingHeader("Terrain"))
-            {
-                // 레벨 1 터레인 설정
-                int value = 0;
-                ImGui::SeparatorText("Vertical");
-                ImGui::SetNextItemWidth(50);
-                ImGui::InputInt("##Vertical Input", &value, 0, 1000);
-                ImGui::SameLine();
-                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderInt("##Vertical Slider", &value, 0, 1000);
-
-                int Hvalue = 0;
-                ImGui::SeparatorText("Horizon");
-                ImGui::SetNextItemWidth(50);
-                ImGui::InputInt("##Horizon Input", &Hvalue, 0, 1000);
-                ImGui::SameLine();
-                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderInt("##Horizon Slider", &Hvalue, 0, 1000);
-
-                ImGui::Spacing();
-
-                if (ImGui::Button("Create Terrain"))
-                {
-
-                }
-            }
-
-            ImGui::Spacing();
-
-            if (ImGui::CollapsingHeader("Object"))
-            {
-                // 레벨 1 오브젝트 설정
-                ImGui::BeginTabBar("ObjectTabs");
-
-                if (ImGui::BeginTabItem("Monster"))
-                {
-                    // 레벨 1 몬스터 설정
-                    ImGui::EndTabItem();
-                }
-
-                if (ImGui::BeginTabItem("Prop"))
-                {
-                    // 레벨 1 프롭 설정
-                    ImGui::EndTabItem();
-                }
-
-                ImGui::EndTabBar();
-            }
-
-            ImGui::EndTabItem();
-        }
-#pragma endregion
-
-#pragma region LEVEL2
-        if (ImGui::BeginTabItem("Level 2"))
-        {
-            // 레벨 2 탭 내용을 이곳에 추가
-            ImGui::Indent(10);
-            if (ImGui::CollapsingHeader("Terrain"))
-            {
-                // 레벨 2 터레인 설정
-                int value = 0;
-                ImGui::SeparatorText("Vertical");
-                ImGui::SetNextItemWidth(50);
-                ImGui::InputInt("##Vertical Input", &value, 0, 1000);
-                ImGui::SameLine();
-                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderInt("##Vertical Slider", &value, 0, 1000);
-
-                int Hvalue = 0;
-                ImGui::SeparatorText("Horizon");
-                ImGui::SetNextItemWidth(50);
-                ImGui::InputInt("##Horizon Input", &Hvalue, 0, 1000);
-                ImGui::SameLine();
-                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderInt("##Horizon Slider", &Hvalue, 0, 1000);
-
-                ImGui::Spacing();
-
-                if (ImGui::Button("Create Terrain"))
-                {
-
-                }
-            }
-
-            ImGui::Spacing();
-
-            if (ImGui::CollapsingHeader("Object"))
-            {
-                // 레벨 2 오브젝트 설정
-                ImGui::BeginTabBar("ObjectTabs");
-
-                if (ImGui::BeginTabItem("Monster"))
-                {
-                    // 레벨 2 몬스터 설정
-                    ImGui::EndTabItem();
-                }
-
-                if (ImGui::BeginTabItem("Prop"))
-                {
-                    // 레벨 2 프롭 설정
-                    ImGui::EndTabItem();
-                }
-
-                ImGui::EndTabBar();
-            }
-
-            ImGui::EndTabItem();
-        }
-#pragma endregion
-
-
-
-        // 다른 레벨 탭들 추가 가능
-
-        ImGui::EndTabBar();
-    }
+    Menu();
+    ToolBox();
 
     ImGui::End();
 
-    
+    // 마우스 좌표 출력
+    ImGui::Begin("Mouse Pos");
+
+    ImVec2 mousePos = ImGui::GetMousePos();
+
+    ImGui::Text("Mouse X : %.f, Mouse Y : %.f", mousePos.x, mousePos.y);
+
+    ImGui::End();
 
 	return S_OK;
 }
@@ -224,6 +78,184 @@ HRESULT CImgui_Manager::Render()
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     }
 	return S_OK;
+}
+
+void CImgui_Manager::Menu()
+{
+    /* 메뉴바 */
+    ImGui::BeginMainMenuBar();
+    if (ImGui::BeginMenu("Save"))
+    {
+        // "Save" 메뉴에 하위 메뉴 아이템 추가
+        if (ImGui::MenuItem("Level 1"))
+        {
+            // "Level1" 메뉴 아이템이 클릭될 때 수행할 작업
+
+            m_iCurLevel = 0;
+        }
+
+        if (ImGui::MenuItem("Level 2"))
+        {
+            // "Level2" 메뉴 아이템이 클릭될 때 수행할 작업
+
+            m_iCurLevel = 1;
+        }
+        if (ImGui::MenuItem("Level 3"))
+        {
+            // "Level3" 메뉴 아이템이 클릭될 때 수행할 작업
+
+            m_iCurLevel = 2;
+        }
+
+        if (ImGui::MenuItem("Level 4"))
+        {
+            // "Level4" 메뉴 아이템이 클릭될 때 수행할 작업
+
+            m_iCurLevel = 3;
+        }
+
+
+        ImGui::EndMenu(); // "File" 메뉴 종료
+    }
+    if (ImGui::BeginMenu("Load"))
+    {
+        // "Load" 메뉴에 하위 메뉴 아이템 추가
+        if (ImGui::MenuItem("Level 1"))
+        {
+            // "Level1" 메뉴 아이템이 클릭될 때 수행할 작업
+
+            m_iCurLevel = 0;
+        }
+
+        if (ImGui::MenuItem("Level 2"))
+        {
+            // "Level2" 메뉴 아이템이 클릭될 때 수행할 작업
+
+            m_iCurLevel = 1;
+        }
+        if (ImGui::MenuItem("Level 3"))
+        {
+            // "Level3" 메뉴 아이템이 클릭될 때 수행할 작업
+
+            m_iCurLevel = 2;
+        }
+
+        if (ImGui::MenuItem("Level 4"))
+        {
+            // "Level4" 메뉴 아이템이 클릭될 때 수행할 작업
+
+            m_iCurLevel = 3;
+        }
+
+        ImGui::EndMenu(); // "File" 메뉴 종료
+    }
+    ImGui::EndMainMenuBar();
+}
+
+void CImgui_Manager::ToolBox()
+{
+    const char* Level[] = { "Level 1", "Level 2", "Level 3", "Level 4" }; // 콤보 박스의 옵션 목록
+    if (ImGui::Combo("Select Level", &m_iCurLevel, Level, IM_ARRAYSIZE(Level))) 
+    {
+        // 사용자가 항목을 선택하면 이 코드 블록이 실행됩니다.
+        // selectedItem에는 선택된 항목의 인덱스가 저장됩니다.
+    }
+
+    ImGui::BeginTabBar("Level");
+    if (ImGui::BeginTabItem((m_strCurLevel + to_string(m_iCurLevel + 1)).c_str()))
+    {
+        // 레벨 탭 내용을 이곳에 추가
+        if (ImGui::CollapsingHeader("Terrain"))
+        {
+            // 레벨 터레인 설정
+            ImGui::SeparatorText("Vertical");
+            ImGui::SetNextItemWidth(50);
+            ImGui::InputInt("##Vertical Input", &m_iNumVerticesX, 0, 1000);
+            ImGui::SameLine();
+            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+            ImGui::SliderInt("##Vertical Slider", &m_iNumVerticesX, 0, 1000);
+
+            ImGui::SeparatorText("Horizon");
+            ImGui::SetNextItemWidth(50);
+            ImGui::InputInt("##Horizon Input", &m_iNumVerticesZ, 0, 1000);
+            ImGui::SameLine();
+            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+            ImGui::SliderInt("##Horizon Slider", &m_iNumVerticesZ, 0, 1000);
+
+            ImGui::Spacing();
+
+            if (ImGui::Button("Create Terrain"))
+            {
+                if (false == m_bIsCreateTerrain)
+                {
+                    m_bIsCreateTerrain = true;
+
+                    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+                    CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
+                    ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
+
+                    TerrainDesc.iNumVerticesX = m_iNumVerticesX;
+                    TerrainDesc.iNumVerticesZ = m_iNumVerticesZ;
+
+                    if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
+                    {
+                        RELEASE_INSTANCE(CGameInstance);
+                        return;
+                    }
+                       
+
+                    RELEASE_INSTANCE(CGameInstance);
+
+                   
+                }
+               
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Delete Terrain"))
+            {
+                if (true == m_bIsCreateTerrain)
+                {
+                    m_bIsCreateTerrain = false;
+
+                    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+                    if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1)))
+                    {
+                        RELEASE_INSTANCE(CGameInstance);
+                        return;
+                    }
+                        
+                    RELEASE_INSTANCE(CGameInstance);
+                }
+            }
+        }
+
+        ImGui::Spacing();
+
+        if (ImGui::CollapsingHeader("Object"))
+        {
+            // 레벨 오브젝트 설정
+            ImGui::BeginTabBar("ObjectTabs");
+
+            if (ImGui::BeginTabItem("Monster"))
+            {
+                // 레벨 몬스터 설정
+                ImGui::EndTabItem();
+            }
+
+            if (ImGui::BeginTabItem("Prop"))
+            {
+                // 레벨 프롭 설정
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
+
+        ImGui::EndTabItem();
+    }
+    ImGui::EndTabBar();
 }
 
 void CImgui_Manager::ImGuiStyles()

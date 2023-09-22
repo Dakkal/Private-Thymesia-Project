@@ -14,6 +14,7 @@
 #include <Effect11\d3dx11effect.h>
 #include <DirectXTK\DDSTextureLoader.h>
 #include <DirectXTK\WICTextureLoader.h>
+#include <DirectXCollision.h>
 using namespace DirectX;
 
 /* fmod channel */
@@ -35,7 +36,7 @@ enum class CHANNELID {
 	CHANNEL_END
 };
 
-
+#include <string>
 #include <iostream>
 #include <vector> 
 #include <list> 

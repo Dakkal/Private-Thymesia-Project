@@ -89,12 +89,22 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 
 }
 
-CGameObject* CObject_Manager::Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag)
+CGameObject* CObject_Manager::Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iCloneIndex)
 {
 	auto iter = Find_Layer(iLevelIndex, strLayerTag);
 
 	if (nullptr != iter)
-		return iter->Get_FirstObject();
+		return iter->Find_GameObject(ObjName, iCloneIndex);
+}
+
+HRESULT CObject_Manager::Delete_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iCloneIndex)
+{
+	auto iter = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == iter)
+		return E_FAIL;
+
+
+	return iter->Delete_GameObject(ObjName, iCloneIndex);
 }
 
 CGameObject* CObject_Manager::Find_Prototype(const wstring& strPrototypeTag)
