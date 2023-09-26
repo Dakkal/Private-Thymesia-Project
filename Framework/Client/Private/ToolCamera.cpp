@@ -17,13 +17,12 @@ CToolCamera::CToolCamera(const CToolCamera& rhs)
 HRESULT CToolCamera::Initialize_Prototype()
 {
     m_strObjectName = TEXT("Object_ToolCamera");
+
 	return S_OK;
 }
 
 HRESULT CToolCamera::Initialize(void* pArg)
 {
-    __super::Initialize(pArg);
-
     CAMERA_TOOL_DESC* pCamera_Tool_Desc = (CAMERA_TOOL_DESC*)pArg;
 
     m_fMouseSensitive = pCamera_Tool_Desc->fMouseSensitive;
@@ -50,14 +49,17 @@ void CToolCamera::MouseMove(_float fTimeDelta)
 {
     CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-   /* CImgui_Manager* pImgui = GET_INSTANCE(CImgui_Manager);
-    if (true == pImgui->Is_MouseClickedGUI())
+    if (LEVELID::LEVEL_EDIT == pGameInstance->Get_CurLevel())
     {
-        RELEASE_INSTANCE(CGameInstance);
+        CImgui_Manager* pImgui = GET_INSTANCE(CImgui_Manager);
+        if (true == pImgui->Is_MouseClickedGUI())
+        {
+            RELEASE_INSTANCE(CGameInstance);
+            RELEASE_INSTANCE(CImgui_Manager);
+            return;
+        }
         RELEASE_INSTANCE(CImgui_Manager);
-        return;
     }
-    RELEASE_INSTANCE(CImgui_Manager);*/
 
     _long MouseMove = 0;
 

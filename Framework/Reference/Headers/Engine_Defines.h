@@ -14,6 +14,7 @@
 #include <Effect11\d3dx11effect.h>
 #include <DirectXTK\DDSTextureLoader.h>
 #include <DirectXTK\WICTextureLoader.h>
+#include <DirectXTK\ScreenGrab.h>
 #include <DirectXCollision.h>
 using namespace DirectX;
 

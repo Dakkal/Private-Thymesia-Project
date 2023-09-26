@@ -164,8 +164,19 @@ HRESULT CLoader::Loading_Texture()
 			return E_FAIL;
 		break;
 	case Client::LEVEL_GAMEPLAY:
+		/* For.Prototype_Component_Texture_Terrain*/
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Texture_Terrain_Mask */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain_Mask"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Mask.bmp"), 1))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Texture_Brush */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Brush"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Brush.png"), 1))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_EDIT:

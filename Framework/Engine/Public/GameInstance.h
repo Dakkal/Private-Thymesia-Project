@@ -6,6 +6,7 @@
 #include "Level_Manager.h"
 #include "Object_Manager.h"
 #include "Sound_Manager.h"
+#include "Light_Manager.h"
 #include "PipeLine.h"
 #include "Input_Device.h"
 
@@ -45,8 +46,8 @@ public: /* For.Level_Manager */
 public: /* For.Object_Manager */
 	HRESULT			Add_Prototype(const wstring & strPrototypeTag, class CGameObject* pPrototype);
 	HRESULT			Add_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
-	CGameObject*	Find_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & ObjName, _uint iCloneIndex);
-	HRESULT			Delete_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & ObjName, _uint iCloneIndex);
+	CGameObject*	Find_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & ObjName, _uint iCloneIndex = 1);
+	HRESULT			Delete_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & ObjName, _uint iCloneIndex = 1);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, class CComponent* pPrototype);
@@ -66,14 +67,19 @@ public: /* For.PipeLine */
 	_matrix Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORM_STATE eState) const;
 	_vector Get_CamPosition_Vector() const;
 
+public: /* For.Light_Manager */
+	const LIGHT_DESC* Get_LightDesc(_uint iLightIndex);
+	HRESULT Add_Light(const LIGHT_DESC & LightDesc);
+
 private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
-	class CInput_Device* m_pInput_Device = { nullptr };
+	class CInput_Device*		m_pInput_Device = { nullptr };
 	class CLevel_Manager*		m_pLevel_Manager = { nullptr };
 	class CObject_Manager*		m_pObject_Manager = { nullptr };
 	class CComponent_Manager*	m_pComponent_Manager = { nullptr };
 	class CSound_Manager*		m_pSound_Manager = { nullptr };
+	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CPipeLine*			m_pPipeLine = { nullptr };
 
 public:

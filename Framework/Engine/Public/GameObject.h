@@ -20,7 +20,11 @@ public:
 public:
     _bool   Is_Remain() { return m_bRemain; }
     wstring Get_Name() { return m_strObjectName; }
-    _uint   Get_CloneIndex() { return m_iIndex; }
+
+    _uint   Get_Index() { return m_iIndex; }
+    void    Set_Index(const _uint& iIndex) { m_iIndex = iIndex; }
+
+    void    Decrease_CloneIndex();
 
 protected:
     ID3D11Device*           m_pDevice = { nullptr };

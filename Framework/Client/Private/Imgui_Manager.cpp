@@ -90,28 +90,20 @@ void CImgui_Manager::Menu()
         if (ImGui::MenuItem("Level 1"))
         {
             // "Level1" 메뉴 아이템이 클릭될 때 수행할 작업
-
-            m_iCurLevel = 0;
         }
 
         if (ImGui::MenuItem("Level 2"))
         {
             // "Level2" 메뉴 아이템이 클릭될 때 수행할 작업
-
-            m_iCurLevel = 1;
         }
         if (ImGui::MenuItem("Level 3"))
         {
             // "Level3" 메뉴 아이템이 클릭될 때 수행할 작업
-
-            m_iCurLevel = 2;
         }
 
         if (ImGui::MenuItem("Level 4"))
         {
             // "Level4" 메뉴 아이템이 클릭될 때 수행할 작업
-
-            m_iCurLevel = 3;
         }
 
 
@@ -123,28 +115,20 @@ void CImgui_Manager::Menu()
         if (ImGui::MenuItem("Level 1"))
         {
             // "Level1" 메뉴 아이템이 클릭될 때 수행할 작업
-
-            m_iCurLevel = 0;
         }
 
         if (ImGui::MenuItem("Level 2"))
         {
             // "Level2" 메뉴 아이템이 클릭될 때 수행할 작업
-
-            m_iCurLevel = 1;
         }
         if (ImGui::MenuItem("Level 3"))
         {
             // "Level3" 메뉴 아이템이 클릭될 때 수행할 작업
-
-            m_iCurLevel = 2;
         }
 
         if (ImGui::MenuItem("Level 4"))
         {
             // "Level4" 메뉴 아이템이 클릭될 때 수행할 작업
-
-            m_iCurLevel = 3;
         }
 
         ImGui::EndMenu(); // "File" 메뉴 종료
@@ -155,10 +139,23 @@ void CImgui_Manager::Menu()
 void CImgui_Manager::ToolBox()
 {
     const char* Level[] = { "Level 1", "Level 2", "Level 3", "Level 4" }; // 콤보 박스의 옵션 목록
-    if (ImGui::Combo("Select Level", &m_iCurLevel, Level, IM_ARRAYSIZE(Level))) 
+    if (ImGui::Combo("Select Level", &m_SelectLevel, Level, IM_ARRAYSIZE(Level)))
     {
-        // 사용자가 항목을 선택하면 이 코드 블록이 실행됩니다.
-        // selectedItem에는 선택된 항목의 인덱스가 저장됩니다.
+        if (true == m_bIsCreateTerrain && m_iCurLevel != m_SelectLevel)
+        {
+            CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+            if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1)))
+            {
+                RELEASE_INSTANCE(CGameInstance);
+                return;
+            }
+
+            RELEASE_INSTANCE(CGameInstance);
+
+            m_bIsCreateTerrain = false;
+        }
+        m_iCurLevel = m_SelectLevel;
     }
 
     ImGui::BeginTabBar("Level");
@@ -170,17 +167,17 @@ void CImgui_Manager::ToolBox()
             // 레벨 터레인 설정
             ImGui::SeparatorText("Vertical");
             ImGui::SetNextItemWidth(50);
-            ImGui::InputInt("##Vertical Input", &m_iNumVerticesX, 0, 1000);
+            ImGui::InputInt("##Vertical Input", &m_iNumVerticesX[m_iCurLevel], 0, 500);
             ImGui::SameLine();
             ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-            ImGui::SliderInt("##Vertical Slider", &m_iNumVerticesX, 0, 1000);
+            ImGui::SliderInt("##Vertical Slider", &m_iNumVerticesX[m_iCurLevel], 0, 500);
 
             ImGui::SeparatorText("Horizon");
             ImGui::SetNextItemWidth(50);
-            ImGui::InputInt("##Horizon Input", &m_iNumVerticesZ, 0, 1000);
+            ImGui::InputInt("##Horizon Input", &m_iNumVerticesZ[m_iCurLevel], 0, 500);
             ImGui::SameLine();
             ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-            ImGui::SliderInt("##Horizon Slider", &m_iNumVerticesZ, 0, 1000);
+            ImGui::SliderInt("##Horizon Slider", &m_iNumVerticesZ[m_iCurLevel], 0, 500);
 
             ImGui::Spacing();
 
@@ -195,19 +192,15 @@ void CImgui_Manager::ToolBox()
                     CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
                     ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
 
-                    TerrainDesc.iNumVerticesX = m_iNumVerticesX;
-                    TerrainDesc.iNumVerticesZ = m_iNumVerticesZ;
+                    TerrainDesc.iNumVerticesX = m_iNumVerticesX[m_iCurLevel];
+                    TerrainDesc.iNumVerticesZ = m_iNumVerticesZ[m_iCurLevel];
 
                     if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
                     {
                         RELEASE_INSTANCE(CGameInstance);
                         return;
                     }
-                       
-
                     RELEASE_INSTANCE(CGameInstance);
-
-                   
                 }
                
             }
@@ -313,6 +306,26 @@ _bool CImgui_Manager::Is_MouseClickedGUI()
     }
 
     return false;
+}
+
+HRESULT CImgui_Manager::Save_MakeShift_Data(LEVEL eLevel)
+{
+    return S_OK;
+}
+
+HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
+{
+    return S_OK;
+}
+
+HRESULT CImgui_Manager::Save_Data(LEVEL eLevel)
+{
+    return S_OK;
+}
+
+HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
+{
+    return S_OK;
 }
 
 void CImgui_Manager::Free()

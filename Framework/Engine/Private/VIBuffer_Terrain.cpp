@@ -171,7 +171,6 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 
 		m_tRasterDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
 		m_tRasterDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
-
 		m_pDevice->CreateRasterizerState(&m_tRasterDesc, &m_pRasterizer);
 
 		m_iStride = sizeof(VTXPOSNORTEX); /* 정점하나의 크기 .*/

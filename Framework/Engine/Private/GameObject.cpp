@@ -80,9 +80,17 @@ CComponent* CGameObject::Find_Component(const wstring& strComponentTag)
 
 CGameObject* CGameObject::Clone(void* pArg)
 {
-	m_iCloneIndex++;
+ 	m_iCloneIndex++;
 
 	return nullptr;
+}
+
+void CGameObject::Decrease_CloneIndex()
+{
+	--m_iCloneIndex;
+
+	if (m_iCloneIndex <= 0)
+		m_iCloneIndex = 0;
 }
 
 void CGameObject::Free()

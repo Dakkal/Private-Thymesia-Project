@@ -11,6 +11,7 @@ CGameInstance::CGameInstance()
 	, m_pSound_Manager(CSound_Manager::GetInstance())
 	, m_pPipeLine(CPipeLine::GetInstance())
 	, m_pInput_Device(CInput_Device::GetInstance())
+	, m_pLight_Manager(CLight_Manager::GetInstance())
 {
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pTimer_Manager);
@@ -20,6 +21,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pSound_Manager);
 	Safe_AddRef(m_pInput_Device);
+	Safe_AddRef(m_pLight_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(const GRAPHIC_DESC& GraphicDesc, HINSTANCE hInstance, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _uint iLevelIndex)
@@ -281,6 +283,23 @@ _vector CGameInstance::Get_CamPosition_Vector() const
 	return m_pPipeLine->Get_CamPosition_Vector();
 }
 
+const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iLightIndex)
+{
+	if (nullptr == m_pLight_Manager)
+		return nullptr;
+
+	return m_pLight_Manager->Get_LightDesc(iLightIndex);
+}
+
+HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
+{
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+
+	return m_pLight_Manager->Add_Light(LightDesc);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -291,6 +310,7 @@ void CGameInstance::Release_Engine()
 	CSound_Manager::GetInstance()->DestroyInstance();
 	CPipeLine::GetInstance()->DestroyInstance();
 	CInput_Device::GetInstance()->DestroyInstance();
+	CLight_Manager::GetInstance()->DestroyInstance();
 	CGraphic_Device::GetInstance()->DestroyInstance();
 }
 
@@ -305,5 +325,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pInput_Device);
+	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pGraphic_Device);
 }

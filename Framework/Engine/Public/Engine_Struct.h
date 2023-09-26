@@ -42,6 +42,19 @@ namespace Engine
 
 	}VTXPOSNORTEX;
 
+	typedef struct tagLightDesc
+	{
+		enum class TYPE { DIRECTIONAL, POINT, _END };
+
+		TYPE		eLightType = { TYPE::_END };
+
+		_vector		vLightPos;
+		float		fLightRange;
+		_vector		vLightDir;
+
+		_vector		vDiffuse, vAmbient, vSpecular;
+	}LIGHT_DESC;
+
 }
 
 

@@ -47,7 +47,7 @@ CGameObject* CLayer::Find_GameObject(const wstring& ObjName, _uint iCloneIndex)
 		if (nullptr != pGameObject)
 		{
 			if (ObjName == pGameObject->Get_Name() &&
-				iCloneIndex == pGameObject->Get_CloneIndex())
+				iCloneIndex == pGameObject->Get_Index())
 				return pGameObject;
 		}
 		else
@@ -59,11 +59,24 @@ HRESULT CLayer::Delete_GameObject(const wstring& ObjName, _uint iCloneIndex)
 {
 	for (auto iter = m_listGameObject.begin(); iter != m_listGameObject.end(); ++iter)
 	{
+		int a = (*iter)->Get_Index();
+
 		if (ObjName == (*iter)->Get_Name() &&
-			iCloneIndex == (*iter)->Get_CloneIndex())
+			iCloneIndex == (*iter)->Get_Index())
 		{
 			Safe_Release(*iter);
 			m_listGameObject.erase(iter);
+			
+			_uint	iIndex = 1;
+			for (auto& pGameObject : m_listGameObject)
+			{
+				if (nullptr != pGameObject && ObjName == pGameObject->Get_Name())
+				{
+					pGameObject->Set_Index(iIndex);
+					++iIndex;
+				}
+			}
+
 			return S_OK;
 		}
 	}

@@ -40,6 +40,10 @@ HRESULT CMainApp::Initialize()
 	/* 1-4-1. 게임내에서 사용할 여러 자원(텍스쳐, 모델, 객체) 들을 준비한다.  */
 
 
+	/* 실프레임 워크에서는 지우자 */
+	if (FAILED(Create_FakeTexture()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -101,6 +105,69 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 
 	Safe_AddRef(m_pRenderer);
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Create_FakeTexture()
+{
+	ID3D11Texture2D* pTexture2D = { nullptr };
+
+	D3D11_TEXTURE2D_DESC	TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof TextureDesc);
+
+	TextureDesc.Width = 256;
+	TextureDesc.Height = 256;
+	TextureDesc.MipLevels = 1;
+	TextureDesc.ArraySize = 1;
+	TextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	TextureDesc.SampleDesc.Quality = 0;
+	TextureDesc.SampleDesc.Count = 1;
+
+	TextureDesc.Usage = D3D11_USAGE_DYNAMIC;
+	TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	TextureDesc.MiscFlags = 0;
+
+	_ulong* pPixel = new _ulong[TextureDesc.Width * TextureDesc.Height];
+
+	for (size_t i = 0; i < TextureDesc.Height; i++)
+	{
+		for (size_t j = 0; j < TextureDesc.Width; j++)
+		{
+			_uint		iIndex = i * 256 + j;
+
+
+			pPixel[iIndex] = D3DCOLOR_ARGB(255, 255, 255, 255);
+		}
+	}
+
+	D3D11_SUBRESOURCE_DATA		InitialData;
+	ZeroMemory(&InitialData, sizeof InitialData);
+	InitialData.pSysMem = pPixel;
+	InitialData.SysMemPitch = TextureDesc.Width * 4;
+
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, &InitialData, &pTexture2D)))
+		return E_FAIL;
+
+	SaveDDSTextureToFile(m_pContext, pTexture2D, TEXT("../Bin/Resources/Textures/Terrain/MyMask.dds"));
+
+	D3D11_MAPPED_SUBRESOURCE	MappedSubResource;
+	ZeroMemory(&MappedSubResource, sizeof MappedSubResource);
+
+	pPixel[0] = D3DCOLOR_ARGB(255, 0, 0, 255);
+
+	m_pContext->Map(pTexture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedSubResource);
+
+	memmove(MappedSubResource.pData, pPixel, sizeof(_ulong) * 256 * 256);
+
+	m_pContext->Unmap(pTexture2D, 0);
+
+	SaveDDSTextureToFile(m_pContext, pTexture2D, TEXT("../Bin/Resources/Textures/Terrain/MyMask.dds"));
+
+	Safe_Delete_Array(pPixel);
+	Safe_Release(pTexture2D);
 
 	return S_OK;
 }

@@ -89,22 +89,29 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 
 }
 
-CGameObject* CObject_Manager::Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iCloneIndex)
+CGameObject* CObject_Manager::Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iIndex)
 {
 	auto iter = Find_Layer(iLevelIndex, strLayerTag);
 
 	if (nullptr != iter)
-		return iter->Find_GameObject(ObjName, iCloneIndex);
+		return iter->Find_GameObject(ObjName, iIndex);
 }
 
-HRESULT CObject_Manager::Delete_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iCloneIndex)
+HRESULT CObject_Manager::Delete_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iIndex)
 {
 	auto iter = Find_Layer(iLevelIndex, strLayerTag);
 	if (nullptr == iter)
 		return E_FAIL;
 
-
-	return iter->Delete_GameObject(ObjName, iCloneIndex);
+	for (auto mapiter = m_mapPrototypes.begin(); mapiter != m_mapPrototypes.end(); mapiter++)
+	{
+		if (ObjName == mapiter->second->Get_Name())
+		{
+			mapiter->second->Decrease_CloneIndex();
+			continue;
+		}
+	}
+	return iter->Delete_GameObject(ObjName, iIndex);
 }
 
 CGameObject* CObject_Manager::Find_Prototype(const wstring& strPrototypeTag)

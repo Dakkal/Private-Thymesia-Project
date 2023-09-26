@@ -26,8 +26,6 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-	void	Set_Terrain(_uint iNumVerticesX, _uint iNumVerticesZ);
-
 private:
 	CRenderer*					m_pRendererCom = { nullptr };
 	CTransform*					m_pTransformCom = { nullptr };

@@ -33,6 +33,7 @@ private:
 	HRESULT Open_Level(LEVELID eLevelID);
 	HRESULT Ready_Prototype_Components();
 
+	HRESULT Create_FakeTexture();
 
 public:
 	static CMainApp* Create();

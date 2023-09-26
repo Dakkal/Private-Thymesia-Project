@@ -56,12 +56,6 @@ HRESULT CEdit_Terrain::Render()
 	return S_OK;
 }
 
-void CEdit_Terrain::Set_Terrain(_uint iNumVerticesX, _uint iNumVerticesZ)
-{
-	m_iNumVerticesX = iNumVerticesX;
-	m_iNumVerticesZ = iNumVerticesZ;
-}
-
 HRESULT CEdit_Terrain::Ready_Components()
 {
 	/* Com_Renderer */
