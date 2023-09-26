@@ -20,7 +20,9 @@ public:
 	virtual HRESULT Tick(_float fTimeDelta) override;
 	virtual HRESULT LateTick(_float fTimeDelta) override;
 
+	HRESULT Ready_Light();
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
+
 
 private:
 	class CImgui_Manager* m_pImgui_Manager = { nullptr };

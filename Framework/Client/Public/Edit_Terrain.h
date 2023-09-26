@@ -26,6 +26,8 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+	HRESULT	Set_WireFrameMode(_bool bWireFrame);
+
 private:
 	CRenderer*					m_pRendererCom = { nullptr };
 	CTransform*					m_pTransformCom = { nullptr };
@@ -35,6 +37,7 @@ private:
 private:
 	_uint						m_iNumVerticesX = { 0 };
 	_uint						m_iNumVerticesZ = { 0 };
+	_bool						m_bIsWireFrame = { true };
 
 private:
 	HRESULT	Ready_Components();

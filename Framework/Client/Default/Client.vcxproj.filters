@@ -55,6 +55,12 @@
     <Filter Include="02.GameObject\Terrain\Level1">
       <UniqueIdentifier>{0296b653-9d0c-4c68-bc7c-7b61ff677c1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Props">
+      <UniqueIdentifier>{5bbb44bc-fd26-40a6-84e9-0f3b1f392a71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Props\ChurchGrillesFloor">
+      <UniqueIdentifier>{ecbc253c-ea08-4874-99a2-11d4172e0106}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -116,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Edit_Terrain.cpp">
       <Filter>02.GameObject\Terrain\Level1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ChurchGrillesFloor.cpp">
+      <Filter>02.GameObject\Props\ChurchGrillesFloor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +203,9 @@
     <ClInclude Include="..\Public\Edit_Terrain.h">
       <Filter>02.GameObject\Terrain\Level1</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ChurchGrillesFloor.h">
+      <Filter>02.GameObject\Props\ChurchGrillesFloor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -213,6 +225,9 @@
       <Filter>97.Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosNorTex.hlsl">
+      <Filter>97.Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
       <Filter>97.Shader</Filter>
     </FxCompile>
   </ItemGroup>

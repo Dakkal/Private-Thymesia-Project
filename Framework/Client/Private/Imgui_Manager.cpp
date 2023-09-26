@@ -7,6 +7,7 @@
 
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
+#include "Edit_Terrain.h"
 
 IMPLEMENT_SINGLETON(CImgui_Manager)
 
@@ -32,6 +33,11 @@ HRESULT CImgui_Manager::Ready_Manager(ID3D11Device* pDevice, ID3D11DeviceContext
 
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
+
+    for (size_t i = 0; i < (_uint)LEVEL::_END; i++)
+    {
+        m_bIsWireFrame[i] = true;
+    }
 
 	return S_OK;
 }
@@ -141,7 +147,7 @@ void CImgui_Manager::ToolBox()
     const char* Level[] = { "Level 1", "Level 2", "Level 3", "Level 4" }; // 콤보 박스의 옵션 목록
     if (ImGui::Combo("Select Level", &m_SelectLevel, Level, IM_ARRAYSIZE(Level)))
     {
-        if (true == m_bIsCreateTerrain && m_iCurLevel != m_SelectLevel)
+        if (true == m_bIsCreateTerrain[m_iCurLevel] && m_iCurLevel != m_SelectLevel)
         {
             CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -153,7 +159,7 @@ void CImgui_Manager::ToolBox()
 
             RELEASE_INSTANCE(CGameInstance);
 
-            m_bIsCreateTerrain = false;
+            m_bIsCreateTerrain[m_iCurLevel] = false;
         }
         m_iCurLevel = m_SelectLevel;
     }
@@ -162,67 +168,7 @@ void CImgui_Manager::ToolBox()
     if (ImGui::BeginTabItem((m_strCurLevel + to_string(m_iCurLevel + 1)).c_str()))
     {
         // 레벨 탭 내용을 이곳에 추가
-        if (ImGui::CollapsingHeader("Terrain"))
-        {
-            // 레벨 터레인 설정
-            ImGui::SeparatorText("Vertical");
-            ImGui::SetNextItemWidth(50);
-            ImGui::InputInt("##Vertical Input", &m_iNumVerticesX[m_iCurLevel], 0, 500);
-            ImGui::SameLine();
-            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-            ImGui::SliderInt("##Vertical Slider", &m_iNumVerticesX[m_iCurLevel], 0, 500);
-
-            ImGui::SeparatorText("Horizon");
-            ImGui::SetNextItemWidth(50);
-            ImGui::InputInt("##Horizon Input", &m_iNumVerticesZ[m_iCurLevel], 0, 500);
-            ImGui::SameLine();
-            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-            ImGui::SliderInt("##Horizon Slider", &m_iNumVerticesZ[m_iCurLevel], 0, 500);
-
-            ImGui::Spacing();
-
-            if (ImGui::Button("Create Terrain"))
-            {
-                if (false == m_bIsCreateTerrain)
-                {
-                    m_bIsCreateTerrain = true;
-
-                    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-                    CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
-                    ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
-
-                    TerrainDesc.iNumVerticesX = m_iNumVerticesX[m_iCurLevel];
-                    TerrainDesc.iNumVerticesZ = m_iNumVerticesZ[m_iCurLevel];
-
-                    if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
-                    {
-                        RELEASE_INSTANCE(CGameInstance);
-                        return;
-                    }
-                    RELEASE_INSTANCE(CGameInstance);
-                }
-               
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("Delete Terrain"))
-            {
-                if (true == m_bIsCreateTerrain)
-                {
-                    m_bIsCreateTerrain = false;
-
-                    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-                    if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1)))
-                    {
-                        RELEASE_INSTANCE(CGameInstance);
-                        return;
-                    }
-                        
-                    RELEASE_INSTANCE(CGameInstance);
-                }
-            }
-        }
+        Setting_Terrain();
 
         ImGui::Spacing();
 
@@ -249,6 +195,112 @@ void CImgui_Manager::ToolBox()
         ImGui::EndTabItem();
     }
     ImGui::EndTabBar();
+}
+
+void CImgui_Manager::Setting_Terrain()
+{
+    if (ImGui::CollapsingHeader("Terrain"))
+    {
+        // 레벨 터레인 설정
+        ImGui::SeparatorText("Vertical");
+        ImGui::SetNextItemWidth(50);
+        ImGui::InputInt("##Vertical Input", &m_iNumVerticesX[m_iCurLevel], 0, 500);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+        ImGui::SliderInt("##Vertical Slider", &m_iNumVerticesX[m_iCurLevel], 0, 500);
+
+        ImGui::SeparatorText("Horizon");
+        ImGui::SetNextItemWidth(50);
+        ImGui::InputInt("##Horizon Input", &m_iNumVerticesZ[m_iCurLevel], 0, 500);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+        ImGui::SliderInt("##Horizon Slider", &m_iNumVerticesZ[m_iCurLevel], 0, 500);
+
+        ImGui::Spacing();
+
+        if (ImGui::Button("Create"))
+        {
+            if (false == m_bIsCreateTerrain[m_iCurLevel])
+            {
+                m_bIsCreateTerrain[m_iCurLevel] = true;
+
+                CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+                CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
+                ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
+
+                TerrainDesc.iNumVerticesX = m_iNumVerticesX[m_iCurLevel];
+                TerrainDesc.iNumVerticesZ = m_iNumVerticesZ[m_iCurLevel];
+                TerrainDesc.bIsWireFrame = m_bIsWireFrame[m_iCurLevel];
+
+                if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
+                {
+                    RELEASE_INSTANCE(CGameInstance);
+                    return;
+                }
+                RELEASE_INSTANCE(CGameInstance);
+            }
+
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Delete"))
+        {
+            if (true == m_bIsCreateTerrain[m_iCurLevel])
+            {
+                m_bIsCreateTerrain[m_iCurLevel] = false;
+
+                CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+                if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1)))
+                {
+                    RELEASE_INSTANCE(CGameInstance);
+                    return;
+                }
+
+                RELEASE_INSTANCE(CGameInstance);
+            }
+        }
+        ImGui::SameLine();
+        if (true == m_bIsWireFrame[m_iCurLevel])
+        {
+            m_bWireCheckBox = true;
+        }
+        else
+        {
+            m_bWireCheckBox = false;
+        }
+        ImGui::Checkbox("WireFrame", &m_bWireCheckBox);
+        if (true == m_bWireCheckBox)
+        {
+            m_bIsWireFrame[m_iCurLevel] = true;
+
+            if (true == m_bIsCreateTerrain[m_iCurLevel])
+            {
+                CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+                CEdit_Terrain* pInstance = static_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1));
+
+                pInstance->Set_WireFrameMode(m_bIsWireFrame[m_iCurLevel]);
+
+                RELEASE_INSTANCE(CGameInstance);
+            }
+        }
+        else if (false == m_bWireCheckBox)
+        {
+            m_bIsWireFrame[m_iCurLevel] = false;
+
+            if (true == m_bIsCreateTerrain[m_iCurLevel])
+            {
+                CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+                CEdit_Terrain* pInstance = static_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1));
+
+               pInstance->Set_WireFrameMode(m_bIsWireFrame[m_iCurLevel]);
+
+                RELEASE_INSTANCE(CGameInstance);
+            }
+        }
+    }
 }
 
 void CImgui_Manager::ImGuiStyles()

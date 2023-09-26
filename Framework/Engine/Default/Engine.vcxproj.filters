@@ -97,6 +97,12 @@
     <Filter Include="01.Utility\06.Lights\Manager">
       <UniqueIdentifier>{b9b32a41-0ddf-41fb-976b-ff24db7b85d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.Component\Model">
+      <UniqueIdentifier>{ca073ef7-5ac3-4926-857d-27d7312536dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Component\Model\Mesh">
+      <UniqueIdentifier>{8215fafd-3455-49dd-9ff6-e9f1b8209d22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -189,6 +195,12 @@
     <ClInclude Include="..\Public\Light_Manager.h">
       <Filter>01.Utility\06.Lights\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Model.h">
+      <Filter>01.Utility\04.Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mesh.h">
+      <Filter>01.Utility\04.Component\Model\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -268,6 +280,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Light_Manager.cpp">
       <Filter>01.Utility\06.Lights\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model.cpp">
+      <Filter>01.Utility\04.Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mesh.cpp">
+      <Filter>01.Utility\04.Component\Model\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

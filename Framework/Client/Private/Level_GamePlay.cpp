@@ -17,6 +17,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Props(TEXT("Layer_Props"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
@@ -61,13 +64,25 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring& strLayerTag)
 	CameraToolDesc.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
 	CameraToolDesc.fNear = 0.2f;
 	CameraToolDesc.fFar = 1000.f;
-	CameraToolDesc.fSpeedPerSec = 80.f;
+	CameraToolDesc.fSpeedPerSec = 50.f;
 	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance)
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Props(const wstring& strLayerTag)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ChurchGrillesFloor"))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -79,19 +94,19 @@ HRESULT CLevel_GamePlay::Ready_Light()
 	LIGHT_DESC			LightDesc;
 
 	/* 방향성 광원을 추가하낟. */
-	//ZeroMemory(&LightDesc, sizeof LightDesc);
-	//LightDesc.eLightType = LIGHT_DESC::LIGHT_DIRECTIONAL;
-	//LightDesc.vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+	ZeroMemory(&LightDesc, sizeof LightDesc);
+	LightDesc.eLightType = LIGHT_DESC::TYPE::DIRECTIONAL;
+	LightDesc.vLightDir = _vector(1.f, -1.f, 1.f, 0.f);
 
-	//LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	//LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDiffuse = _vector(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _vector(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _vector(1.f, 1.f, 1.f, 1.f);
 
-	//if (FAILED(pGameInstance->Add_Light(LightDesc)))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
 
 	/* 점 광원을 추가한다. */
-	ZeroMemory(&LightDesc, sizeof LightDesc);
+	/*ZeroMemory(&LightDesc, sizeof LightDesc);
 	LightDesc.eLightType = LIGHT_DESC::TYPE::POINT;
 	LightDesc.vLightPos = _vector(35.f, 3.f, 35.f, 1.f);
 	LightDesc.fLightRange = 20.f;
@@ -101,7 +116,7 @@ HRESULT CLevel_GamePlay::Ready_Light()
 	LightDesc.vSpecular = _vector(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	RELEASE_INSTANCE(CGameInstance);
 

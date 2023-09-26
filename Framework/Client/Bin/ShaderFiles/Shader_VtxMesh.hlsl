@@ -42,6 +42,7 @@ struct VS_IN
 	float3		vPosition : POSITION;
     float3		vNormal	  : NORMAL;
 	float2		vTexcoord : TEXCOORD0;
+    float3      vTangent : TANGENT;
 };
 
 
@@ -86,8 +87,8 @@ struct PS_OUT
 
 float4 Compute_TerrainPixelColor(PS_IN In)
 {
-    vector vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexcoord * 20.f);
-    vector vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexcoord * 20.f);
+    vector vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexcoord * 30.f);
+    vector vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexcoord * 30.f);
     vector vMaskColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
     vector vBrushColor = vector(0.f, 0.f, 0.f, 1.f);
 	
@@ -102,11 +103,11 @@ float4 Compute_TerrainPixelColor(PS_IN In)
         vBrushColor = g_BrushTexture.Sample(LinearSampler, vUV);
     }
 	
-    return vDestDiffuse * vMaskColor + vSourDiffuse + vSourDiffuse * (1.f - vMaskColor) + vBrushColor;
+    return vDestDiffuse * vMaskColor + vSourDiffuse * (1.f - vMaskColor) + vBrushColor;
 }
 
 
-PS_OUT	PS_MAIN_DIRECTIONAL(PS_IN In)
+PS_OUT	PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
@@ -118,7 +119,7 @@ PS_OUT	PS_MAIN_DIRECTIONAL(PS_IN In)
     vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
     vector vLook = In.vWorldPos - g_CamPosition;
 	
-    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 50.f);
+    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
 	
 
     Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade)
@@ -127,49 +128,15 @@ PS_OUT	PS_MAIN_DIRECTIONAL(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_MAIN_POINT(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-
-    vector vMtrlDiffuse = Compute_TerrainPixelColor(In);
-	
-    vector  vLightDir = In.vWorldPos - g_vLightPos;
-    float fDistance = length(vLightDir);
-    float fLightAtt = saturate((g_fLightRange - fDistance) / g_fLightRange);
-	
-    vector vShade = max(dot(normalize(vLightDir) * -1.f, normalize(In.vNormal)), 0.f)
-					+ g_vLightAmbient * g_vMtrlAmbient;
-
-    vector vReflect = reflect(normalize(vLightDir), normalize(In.vNormal));
-    vector vLook = In.vWorldPos - g_CamPosition;
-	
-    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 50.f);
-	
-
-    Out.vColor = ((g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade)
-				+ (g_vLightSpecular * g_vMtrlSpecular) * fSpecular) * fLightAtt;
-	
-    return Out;
-}
-
 technique11 DefaultTechnique
 {
-	pass Terrain_Directional
+	pass Mesh
 	{
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
-    }
-
-    pass Terrain_Point
-    {
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        HullShader = NULL;
-        DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_POINT();
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 }
 

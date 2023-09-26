@@ -37,8 +37,10 @@ private:
 	/* 여기에 사용할 함수 생성 */
 	void Menu();
 	void ToolBox();
+	void Setting_Terrain();
+
+
 	void ImGuiStyles();
-	
 
 
 private:
@@ -49,11 +51,14 @@ private:
 	/* 터레인용 변수 */
 	_int			m_iNumVerticesX[(_uint)LEVEL::_END] = { 0 };
 	_int			m_iNumVerticesZ[(_uint)LEVEL::_END] = { 0 };
-	_bool			m_bIsCreateTerrain = { false };
+	_bool			m_bIsWireFrame[(_uint)LEVEL::_END] = { true };
+	_bool			m_bIsCreateTerrain[(_uint)LEVEL::_END] = { false };
 
 	/* GUI용 변수 */
 	_bool			m_bFrameReady = { false };
+	_bool			m_bWireCheckBox = { true };
 
+	/* 레벨 설정 변수 */
 	string			m_strCurLevel = { "Level : " };
 	_int			m_iCurLevel = { 0 };
 	_int			m_SelectLevel = { 0 };

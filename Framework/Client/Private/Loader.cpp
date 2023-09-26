@@ -6,6 +6,7 @@
 #include "Terrain.h"
 #include "Edit_Terrain.h"
 #include "ToolCamera.h"
+#include "ChurchGrillesFloor.h"
 
 _uint APIENTRY ThreadEntry(void* pArg)
 {
@@ -198,8 +199,13 @@ HRESULT CLoader::Loading_Mesh()
 	case Client::LEVEL_LOGO:
 		break;
 	case Client::LEVEL_GAMEPLAY:
+		/* For.Proto_Terrain */
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
 			CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
+			return E_FAIL;
+		/* For.Proto_Model_ChurchGrillesFloor */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
+			CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Props/ChurchGrillesFloor/ChurchGrillesFloor.fbx"))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_EDIT:
@@ -224,11 +230,19 @@ HRESULT CLoader::Loading_Sahder()
 	case Client::LEVEL_LOGO:
 		break;
 	case Client::LEVEL_GAMEPLAY:
+		/* For.Proto_VtxPosNorTex */
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxPosNorTex"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosNorTex.hlsl"), VTXPOSNORTEX::tElements, VTXPOSNORTEX::iNumElements))))
 			return E_FAIL;
+		/* For.Proto_VtxMesh */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::tElements, VTXMESH::iNumElements))))
+			return E_FAIL;
 		break;
 	case Client::LEVEL_EDIT:
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxPosNorTex"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosNorTex.hlsl"), VTXPOSNORTEX::tElements, VTXPOSNORTEX::iNumElements))))
+			return E_FAIL;
 		break;
 	default:
 		break;
@@ -255,6 +269,10 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 		/* For.Camera*/
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CToolCamera::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Props_ChurchGrillesFloor */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchGrillesFloor"),
+			CChurchGrillesFloor::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_EDIT:

@@ -48,6 +48,7 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp" />
+    <ClCompile Include="..\Private\ChurchGrillesFloor.cpp" />
     <ClCompile Include="..\Private\Edit_Terrain.cpp" />
     <ClCompile Include="..\Private\ToolCamera.cpp" />
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
@@ -82,6 +83,7 @@
     <ClInclude Include="..\..\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\Public\BackGround.h" />
+    <ClInclude Include="..\Public\ChurchGrillesFloor.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Edit_Terrain.h" />
     <ClInclude Include="..\Public\ToolCamera.h" />
@@ -107,6 +109,7 @@
     <ResourceCompile Include="Client.rc" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl" />
   </ItemGroup>
@@ -224,7 +227,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/Librarys/Debug/;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;d3d11.lib;DirectXTKd.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;d3d11.lib;DirectXTKd.lib;Effects11d.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -251,7 +254,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/Librarys/Release/;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine_Release.lib;d3d11.lib;DirectXTK.lib;Effects11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine_Release.lib;d3d11.lib;DirectXTK.lib;Effects11.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>

@@ -27,6 +27,7 @@ HRESULT CEdit_Terrain::Initialize(void* pArg)
 
 	m_iNumVerticesX = TerrainDesc->iNumVerticesX;
 	m_iNumVerticesZ = TerrainDesc->iNumVerticesZ;
+	m_bIsWireFrame = TerrainDesc->bIsWireFrame;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -49,9 +50,15 @@ HRESULT CEdit_Terrain::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(1);
-
 	m_pVIBufferCom->Render();
+
+	return S_OK;
+}
+
+HRESULT CEdit_Terrain::Set_WireFrameMode(_bool bWireFrame)
+{
+	if (FAILED(m_pVIBufferCom->Set_RasterState(bWireFrame)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -64,7 +71,7 @@ HRESULT CEdit_Terrain::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosTex"),
+	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxPosNorTex"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
@@ -74,6 +81,7 @@ HRESULT CEdit_Terrain::Ready_Components()
 
 	TerrainDesc.iNumVerticesX = m_iNumVerticesX;
 	TerrainDesc.iNumVerticesZ = m_iNumVerticesZ;
+	TerrainDesc.bIsWireFrame = m_bIsWireFrame;
 
 	/* Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
@@ -102,8 +110,38 @@ HRESULT CEdit_Terrain::Bind_ShaderResources()
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 		return E_FAIL;
 
+	const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
+	if (nullptr == pLightDesc)
+		return E_FAIL;
+
+	_uint	iPassIndex = 0;
+
+	if (LIGHT_DESC::TYPE::DIRECTIONAL == pLightDesc->eLightType)
+	{
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vLightDir, sizeof(_vector))))
+			return E_FAIL;
+
+		iPassIndex = 0;
+	}
+	else
+	{
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightPos", &pLightDesc->vLightPos, sizeof(_vector))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightRange", &pLightDesc->fLightRange, sizeof(_float))))
+			return E_FAIL;
+		iPassIndex = 1;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_vector))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_vector))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_vector))))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	m_pShaderCom->Begin(iPassIndex);
 
 	return S_OK;
 }

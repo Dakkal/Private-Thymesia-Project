@@ -10,6 +10,7 @@ public:
 	{
 		_ulong			iNumVerticesX;
 		_ulong			iNumVerticesZ;
+		_bool			bIsWireFrame;
 
 	}TERRAIN_DESC;
 
@@ -22,9 +23,14 @@ public:
 	virtual HRESULT Initialize_Prototype(const wstring & strHeightMapFilePath);
 	virtual HRESULT Initialize(void* pArg) override;
 
+	const _float3* Get_Terrain_Pos() const { return m_pTerrainPos; }
+
 private:
 	_ulong			m_iNumVerticesX = { 0 };
 	_ulong			m_iNumVerticesZ = { 0 };
+	_bool			m_bIsWireFrame = { false };
+
+	_float3*		m_pTerrainPos = { nullptr };
 
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strHeightMapFilePath = TEXT(""));

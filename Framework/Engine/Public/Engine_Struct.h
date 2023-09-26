@@ -21,6 +21,19 @@ namespace Engine
 
 	}AXIS;
 
+	typedef struct tagLightDesc
+	{
+		enum class TYPE { DIRECTIONAL, POINT, _END };
+
+		TYPE		eLightType = { TYPE::_END };
+
+		_vector		vLightPos;
+		float		fLightRange;
+		_vector		vLightDir;
+
+		_vector		vDiffuse, vAmbient, vSpecular;
+	}LIGHT_DESC;
+
 	typedef struct ENGINE_DLL tagVertex_Pos_Tex
 	{
 		_float3		vPosition;
@@ -42,18 +55,17 @@ namespace Engine
 
 	}VTXPOSNORTEX;
 
-	typedef struct tagLightDesc
+	typedef struct ENGINE_DLL tagVertex_Mesh
 	{
-		enum class TYPE { DIRECTIONAL, POINT, _END };
+		_float3		vPosition;
+		_float3		vNormal;
+		_float2		vTexcoord;
+		_float3		vTangent;
 
-		TYPE		eLightType = { TYPE::_END };
+		static const _uint					  iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC tElements[iNumElements];
 
-		_vector		vLightPos;
-		float		fLightRange;
-		_vector		vLightDir;
-
-		_vector		vDiffuse, vAmbient, vSpecular;
-	}LIGHT_DESC;
+	}VTXMESH;
 
 }
 

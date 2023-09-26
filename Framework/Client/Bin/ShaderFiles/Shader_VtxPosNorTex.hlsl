@@ -9,7 +9,7 @@ vector			g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
 vector			g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector			g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
-vector			g_vMtrlAmbient = vector(0.3f, 0.3f, 0.3f, 1.f);
+vector			g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector			g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 vector			g_CamPosition;
@@ -34,6 +34,10 @@ sampler PointSampler = sampler_state {
 	Filter = MIN_MAG_MIP_POINT;
     AddressU = wrap;
     AddressV = wrap;
+};
+
+RasterizerState RasterState_WireFrame {
+    FillMode = WireFrame;
 };
 
 /* 버텍스 쉐이더 */
@@ -86,8 +90,8 @@ struct PS_OUT
 
 float4 Compute_TerrainPixelColor(PS_IN In)
 {
-    vector vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexcoord * 20.f);
-    vector vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexcoord * 20.f);
+    vector vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexcoord * 30.f);
+    vector vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexcoord * 30.f);
     vector vMaskColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
     vector vBrushColor = vector(0.f, 0.f, 0.f, 1.f);
 	
@@ -102,7 +106,7 @@ float4 Compute_TerrainPixelColor(PS_IN In)
         vBrushColor = g_BrushTexture.Sample(LinearSampler, vUV);
     }
 	
-    return vDestDiffuse * vMaskColor + vSourDiffuse + vSourDiffuse * (1.f - vMaskColor) + vBrushColor;
+    return vDestDiffuse * vMaskColor + vSourDiffuse * (1.f - vMaskColor) + vBrushColor;
 }
 
 

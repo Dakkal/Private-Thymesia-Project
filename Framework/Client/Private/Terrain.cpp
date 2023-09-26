@@ -44,6 +44,7 @@ HRESULT CTerrain::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
+	m_pVIBufferCom->Set_RasterState(false);
 	m_pVIBufferCom->Render();
 
 	return S_OK;

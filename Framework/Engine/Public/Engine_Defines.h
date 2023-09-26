@@ -18,10 +18,14 @@
 #include <DirectXCollision.h>
 using namespace DirectX;
 
+/* assimp */
+#include <assimp\scene.h>
+#include <assimp\Importer.hpp>
+#include <assimp\postprocess.h>
+
 /* fmod channel */
 #include "fmod.h"
 #include "fmod.hpp"
-
 #include <io.h>
 
 
@@ -37,7 +41,9 @@ enum class CHANNELID {
 	CHANNEL_END
 };
 
+#include <typeinfo>
 #include <string>
+#include <cmath>
 #include <iostream>
 #include <vector> 
 #include <list> 

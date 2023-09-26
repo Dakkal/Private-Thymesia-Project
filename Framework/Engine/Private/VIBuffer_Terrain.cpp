@@ -9,6 +9,7 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& rhs)
 	: CVIBuffer(rhs)
 	, m_iNumVerticesX(rhs.m_iNumVerticesX)
 	, m_iNumVerticesZ(rhs.m_iNumVerticesZ)
+	, m_bIsWireFrame(rhs.m_bIsWireFrame)
 {
 
 }
@@ -46,7 +47,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 
 #pragma region VERTEX_BUFFER
 
-
+	m_pTerrainPos = new _float3[m_iNumVertices];
 	VTXPOSNORTEX* pVertices = new VTXPOSNORTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXPOSNORTEX) * m_iNumVertices);
 
@@ -59,6 +60,8 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 			pVertices[iIndex].vPosition = _float3(j, (pPixel[iIndex] & 0x000000ff) / 10.f, i);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
+
+			m_pTerrainPos[iIndex] = pVertices[iIndex].vPosition;
 		}
 	}
 
@@ -166,12 +169,9 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 		TERRAIN_DESC* pTerrain_Desc = (TERRAIN_DESC*)pArg;
 		m_iNumVerticesX = pTerrain_Desc->iNumVerticesX;
 		m_iNumVerticesZ = pTerrain_Desc->iNumVerticesZ;
+		m_bIsWireFrame = pTerrain_Desc->bIsWireFrame;
 
-		ZeroMemory(&m_tRasterDesc, sizeof(D3D11_RASTERIZER_DESC));
-
-		m_tRasterDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
-		m_tRasterDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
-		m_pDevice->CreateRasterizerState(&m_tRasterDesc, &m_pRasterizer);
+		Set_RasterState(m_bIsWireFrame);
 
 		m_iStride = sizeof(VTXPOSNORTEX); /* 정점하나의 크기 .*/
 		m_iNumVertices = m_iNumVerticesX * m_iNumVerticesZ;
@@ -184,7 +184,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 
 #pragma region VERTEX_BUFFER
 
-
+		m_pTerrainPos = new _float3[m_iNumVertices];
 		VTXPOSNORTEX* pVertices = new VTXPOSNORTEX[m_iNumVertices];
 		ZeroMemory(pVertices, sizeof(VTXPOSNORTEX) * m_iNumVertices);
 
@@ -197,6 +197,8 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 				pVertices[iIndex].vPosition = _float3(j, 0.f, i);
 				pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 				pVertices[iIndex].vTexcoord = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
+
+				m_pTerrainPos[iIndex] = pVertices[iIndex].vPosition;
 			}
 		}
 
@@ -287,6 +289,8 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 		if (FAILED(__super::Create_Buffer(&m_pIB)))
 			return E_FAIL;
 
+	
+
 		Safe_Delete_Array(pVertices);
 		Safe_Delete_Array(pIndices);
 #pragma endregion
@@ -328,5 +332,10 @@ void CVIBuffer_Terrain::Free()
 {
 	__super::Free();
 
+	if (m_IsCloned == false) 
+	{
+		if(nullptr != m_pTerrainPos)
+			Safe_Delete_Array(m_pTerrainPos);
+	}
 
 }

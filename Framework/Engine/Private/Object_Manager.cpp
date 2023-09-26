@@ -108,7 +108,7 @@ HRESULT CObject_Manager::Delete_GameObject(_uint iLevelIndex, const wstring& str
 		if (ObjName == mapiter->second->Get_Name())
 		{
 			mapiter->second->Decrease_CloneIndex();
-			continue;
+			break;
 		}
 	}
 	return iter->Delete_GameObject(ObjName, iIndex);
