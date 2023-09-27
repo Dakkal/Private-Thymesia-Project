@@ -14,13 +14,9 @@ vector			g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 vector			g_CamPosition;
 
-Texture2D		g_DiffuseTexture[2];
-Texture2D		g_MaskTexture;
+Texture2D		g_DiffuseTexture;
+Texture2D		g_NormalTexture;
 
-Texture2D		g_BrushTexture;
-
-vector			g_vBrushPos = vector(35.f, 0.f, 35.f, 1.f);
-float			g_fBrushRange = 15.0f;
 
 
 /* »ùÇÃ·¯  */
@@ -85,33 +81,14 @@ struct PS_OUT
 	float4	vColor : SV_TARGET0;
 };
 
-float4 Compute_TerrainPixelColor(PS_IN In)
-{
-    vector vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexcoord * 30.f);
-    vector vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexcoord * 30.f);
-    vector vMaskColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
-    vector vBrushColor = vector(0.f, 0.f, 0.f, 1.f);
-	
-    if (g_vBrushPos.x - g_fBrushRange <= In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fBrushRange &&
-		g_vBrushPos.z - g_fBrushRange <= In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fBrushRange)
-    {
-        float2 vUV;
-		
-        vUV.x = (In.vWorldPos.x - (g_vBrushPos.x - g_fBrushRange)) / (2.f * g_fBrushRange);
-        vUV.y = ((g_vBrushPos.z + g_fBrushRange) - In.vWorldPos.z) / (2.f * g_fBrushRange);
-		
-        vBrushColor = g_BrushTexture.Sample(LinearSampler, vUV);
-    }
-	
-    return vDestDiffuse * vMaskColor + vSourDiffuse * (1.f - vMaskColor) + vBrushColor;
-}
-
-
 PS_OUT	PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-    vector vMtrlDiffuse = Compute_TerrainPixelColor(In);
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+	
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
 	
     vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f)
 					+ g_vLightAmbient * g_vMtrlAmbient;
@@ -119,7 +96,7 @@ PS_OUT	PS_MAIN(PS_IN In)
     vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
     vector vLook = In.vWorldPos - g_CamPosition;
 	
-    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 50.f);
 	
 
     Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade)

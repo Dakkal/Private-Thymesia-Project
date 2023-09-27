@@ -127,6 +127,8 @@ HRESULT CEdit_Terrain::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Bind_CamPosToShader(m_pShaderCom, "g_CamPosition")))
+		return E_FAIL;
 
 	const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
 	if (nullptr == pLightDesc)

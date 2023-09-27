@@ -14,14 +14,17 @@ _vector CCalculator::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, 
 	_float3		vMousePos(pt.x, pt.y, 0.f);
 	SimpleMath::Viewport viewport(rc);
 
-	_float3 WorldMousePos = viewport.Unproject(vMousePos, pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ), pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW), pTransform->Get_WorldMatrix());
+	_float3 WorldMousePos = viewport.Unproject(vMousePos, 
+        pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ),
+        pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW), 
+        pTransform->Get_WorldMatrix());
 
 	SimpleMath::Ray ray;
     ray.position = _float3(pGameInstance->Get_CamPosition_Vector());
 	ray.direction = WorldMousePos - ray.position;
 	ray.direction.Normalize();
 
-    ray.position = XMVector3TransformCoord(ray.position, pTransform->Get_WorldMatrix_Inverse());
+    ray.position = XMVector3TransformCoord(ray.position, pTransform->Get_WorldMatrix_Inverse()); // 요건 월드항등상태라 불필요한데 혹시 모르니 한거
     ray.direction = XMVector3TransformNormal(ray.direction, pTransform->Get_WorldMatrix_Inverse());
     ray.direction.Normalize();
 
@@ -43,9 +46,7 @@ _vector CCalculator::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, 
             dwVtxIdx[1] = dwIndex + tTerrainDesc.iNumVerticesX + 1;
             dwVtxIdx[2] = dwIndex + 1;
 
-  
-
-            if (ray.Intersects(pBufferPos[dwVtxIdx[1]], pBufferPos[dwVtxIdx[0]], pBufferPos[dwVtxIdx[2]], fDist))
+            if (true == ray.Intersects(pBufferPos[dwVtxIdx[1]], pBufferPos[dwVtxIdx[0]], pBufferPos[dwVtxIdx[2]], fDist))
             {
                 RELEASE_INSTANCE(CGameInstance);
 
@@ -57,7 +58,7 @@ _vector CCalculator::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, 
             dwVtxIdx[1] = dwIndex + 1;
             dwVtxIdx[2] = dwIndex;
 
-            if (ray.Intersects(pBufferPos[dwVtxIdx[1]], pBufferPos[dwVtxIdx[0]], pBufferPos[dwVtxIdx[2]], fDist))
+            if (true == ray.Intersects(pBufferPos[dwVtxIdx[1]], pBufferPos[dwVtxIdx[0]], pBufferPos[dwVtxIdx[2]], fDist))
             {
                 RELEASE_INSTANCE(CGameInstance);
 

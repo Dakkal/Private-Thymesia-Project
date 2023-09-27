@@ -45,8 +45,22 @@ HRESULT CChurchGrillesFloor::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Model_WireFrame(true);
-	m_pModelCom->Render();
+	_uint	iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Set_Model_WireFrame(i, false);
+
+
+		m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		//m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
+
+		m_pShaderCom->Begin(0);
+
+		m_pModelCom->Render(i);
+	}
+
+	
 
 	return S_OK;
 }
@@ -83,9 +97,11 @@ HRESULT CChurchGrillesFloor::Bind_ShaderResources()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance)
 
-		if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)))
-			return E_FAIL;
+	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)))
+		return E_FAIL;
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Bind_CamPosToShader(m_pShaderCom, "g_CamPosition")))
 		return E_FAIL;
 
 	const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
@@ -118,8 +134,6 @@ HRESULT CChurchGrillesFloor::Bind_ShaderResources()
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
-
-	m_pShaderCom->Begin(iPassIndex);
 
 	return S_OK;
 }

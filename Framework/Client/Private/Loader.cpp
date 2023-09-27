@@ -194,6 +194,8 @@ HRESULT CLoader::Loading_Mesh()
 	if (m_eNextLevel >= LEVEL_END)
 		return E_FAIL;
 
+	_matrix	ModelInitMatrix = XMMatrixIdentity();
+
 	switch (m_eNextLevel)
 	{
 	case Client::LEVEL_LOGO:
@@ -204,8 +206,10 @@ HRESULT CLoader::Loading_Mesh()
 			CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
 			return E_FAIL;
 		/* For.Proto_Model_ChurchGrillesFloor */
+		
+		ModelInitMatrix = XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
-			CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Props/ChurchGrillesFloor/ChurchGrillesFloor.fbx"))))
+			CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Props/ChurchGrillesFloor/ChurchGrillesFloor.fbx", ModelInitMatrix))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_EDIT:
@@ -240,8 +244,13 @@ HRESULT CLoader::Loading_Sahder()
 			return E_FAIL;
 		break;
 	case Client::LEVEL_EDIT:
+		/* For.Proto_VtxPosNorTex */
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxPosNorTex"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosNorTex.hlsl"), VTXPOSNORTEX::tElements, VTXPOSNORTEX::iNumElements))))
+			return E_FAIL;
+		/* For.Proto_VtxMesh */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::tElements, VTXMESH::iNumElements))))
 			return E_FAIL;
 		break;
 	default:
@@ -271,8 +280,7 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CToolCamera::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		/* For.Props_ChurchGrillesFloor */
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchGrillesFloor"),
-			CChurchGrillesFloor::Create(m_pDevice, m_pContext))))
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchGrillesFloor"),CChurchGrillesFloor::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_EDIT:

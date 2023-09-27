@@ -79,7 +79,7 @@ HRESULT CVIBuffer::Set_RasterState(_bool eWireFrame)
 	{
 		ZeroMemory(&m_tRasterDesc, sizeof(D3D11_RASTERIZER_DESC));
 		m_tRasterDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
-		m_tRasterDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
+		m_tRasterDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
 
 		if (FAILED(m_pDevice->CreateRasterizerState(&m_tRasterDesc, &m_pRasterState)))
 			return E_FAIL;

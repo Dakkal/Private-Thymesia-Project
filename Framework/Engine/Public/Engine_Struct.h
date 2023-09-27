@@ -32,7 +32,14 @@ namespace Engine
 		_vector		vLightDir;
 
 		_vector		vDiffuse, vAmbient, vSpecular;
+
 	}LIGHT_DESC;
+
+	typedef struct tagMeshMaterial
+	{
+		class CTexture*		pTextures[AI_TEXTURE_TYPE_MAX];
+
+	}MESH_MATERIAL;
 
 	typedef struct ENGINE_DLL tagVertex_Pos_Tex
 	{
