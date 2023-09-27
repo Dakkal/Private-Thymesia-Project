@@ -12,6 +12,7 @@ CGameInstance::CGameInstance()
 	, m_pPipeLine(CPipeLine::GetInstance())
 	, m_pInput_Device(CInput_Device::GetInstance())
 	, m_pLight_Manager(CLight_Manager::GetInstance())
+	, m_pCalculator(CCalculator::GetInstance())
 {
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pTimer_Manager);
@@ -22,6 +23,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pSound_Manager);
 	Safe_AddRef(m_pInput_Device);
 	Safe_AddRef(m_pLight_Manager);
+	Safe_AddRef(m_pCalculator);
 }
 
 HRESULT CGameInstance::Initialize_Engine(const GRAPHIC_DESC& GraphicDesc, HINSTANCE hInstance, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _uint iLevelIndex)
@@ -300,6 +302,14 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 	return m_pLight_Manager->Add_Light(LightDesc);
 }
 
+_vector CGameInstance::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, CVIBuffer_Terrain* pBuffer)
+{
+	if (nullptr == m_pCalculator)
+		return _vector();
+
+	return m_pCalculator->Picking_Terrain(rc, pt, pTransform, pBuffer);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -309,6 +319,7 @@ void CGameInstance::Release_Engine()
 	CTimer_Manager::GetInstance()->DestroyInstance();
 	CSound_Manager::GetInstance()->DestroyInstance();
 	CPipeLine::GetInstance()->DestroyInstance();
+	CCalculator::GetInstance()->DestroyInstance();
 	CInput_Device::GetInstance()->DestroyInstance();
 	CLight_Manager::GetInstance()->DestroyInstance();
 	CGraphic_Device::GetInstance()->DestroyInstance();
@@ -326,5 +337,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pLight_Manager);
+	Safe_Release(m_pCalculator);
 	Safe_Release(m_pGraphic_Device);
 }

@@ -63,6 +63,24 @@ HRESULT CEdit_Terrain::Set_WireFrameMode(_bool bWireFrame)
 	return S_OK;
 }
 
+_vector CEdit_Terrain::Picking_Terrain()
+{
+	RECT rc = { 0, 0, g_iWinSizeX, g_iWinSizeY };
+
+	POINT pt;
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	_vector vPick = pGameInstance->Picking_Terrain(rc, pt, m_pTransformCom, m_pVIBufferCom);
+	
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return vPick;
+}
+
 HRESULT CEdit_Terrain::Ready_Components()
 {
 	/* Com_Renderer */

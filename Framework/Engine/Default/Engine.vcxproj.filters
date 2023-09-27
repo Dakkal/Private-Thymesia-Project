@@ -103,6 +103,9 @@
     <Filter Include="01.Utility\04.Component\Model\Mesh">
       <UniqueIdentifier>{8215fafd-3455-49dd-9ff6-e9f1b8209d22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\08.Calculator">
+      <UniqueIdentifier>{48283e5e-5162-4688-9450-59718e1b0796}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -201,6 +204,9 @@
     <ClInclude Include="..\Public\Mesh.h">
       <Filter>01.Utility\04.Component\Model\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Calculator.h">
+      <Filter>01.Utility\08.Calculator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -286,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mesh.cpp">
       <Filter>01.Utility\04.Component\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Calculator.cpp">
+      <Filter>01.Utility\08.Calculator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -64,6 +64,23 @@ HRESULT CImgui_Manager::Tick(_float fTimeDelta)
 
     ImGui::Text("Mouse X : %.f, Mouse Y : %.f", mousePos.x, mousePos.y);
 
+    if (true == m_bIsCreateTerrain[m_iCurLevel])
+    {
+        CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+        CEdit_Terrain* pInstance = static_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1));
+
+        _vector vTerrainPos = pInstance->Picking_Terrain();
+
+        ImGui::Spacing();
+        ImGui::Text("Terrain X : %.f", vTerrainPos.x);
+        ImGui::Text("Terrain Y : %.f", vTerrainPos.y);
+        ImGui::Text("Terrain Z : %.f", vTerrainPos.z);
+
+        RELEASE_INSTANCE(CGameInstance);
+    }
+   
+
     ImGui::End();
 
 	return S_OK;
@@ -150,7 +167,6 @@ void CImgui_Manager::ToolBox()
         if (true == m_bIsCreateTerrain[m_iCurLevel] && m_iCurLevel != m_SelectLevel)
         {
             CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
             if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1)))
             {
                 RELEASE_INSTANCE(CGameInstance);

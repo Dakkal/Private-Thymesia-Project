@@ -23,12 +23,11 @@ public:
 	virtual HRESULT Initialize_Prototype(const wstring & strHeightMapFilePath);
 	virtual HRESULT Initialize(void* pArg) override;
 
-	const _float3* Get_Terrain_Pos() const { return m_pTerrainPos; }
+	TERRAIN_DESC	Get_TerrainDesc() const { return m_tTerrainDesc; }
+	_float3*		Get_Terrain_Pos() const { return m_pTerrainPos; }
 
 private:
-	_ulong			m_iNumVerticesX = { 0 };
-	_ulong			m_iNumVerticesZ = { 0 };
-	_bool			m_bIsWireFrame = { false };
+	TERRAIN_DESC	m_tTerrainDesc;
 
 	_float3*		m_pTerrainPos = { nullptr };
 

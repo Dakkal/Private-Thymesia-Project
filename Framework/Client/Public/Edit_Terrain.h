@@ -28,6 +28,8 @@ public:
 
 	HRESULT	Set_WireFrameMode(_bool bWireFrame);
 
+	_vector	Picking_Terrain();
+
 private:
 	CRenderer*					m_pRendererCom = { nullptr };
 	CTransform*					m_pTransformCom = { nullptr };

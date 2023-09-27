@@ -9,6 +9,7 @@
 #include <dinput.h>
 
 #include <DirectXMath.h>
+#include <DirectXCollision.h>
 #include <DirectXTK\SimpleMath.h>
 #include <d3dcompiler.h>
 #include <Effect11\d3dx11effect.h>

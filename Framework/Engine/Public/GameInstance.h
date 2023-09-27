@@ -9,6 +9,7 @@
 #include "Light_Manager.h"
 #include "PipeLine.h"
 #include "Input_Device.h"
+#include "Calculator.h"
 
 BEGIN(Engine)
 
@@ -71,6 +72,9 @@ public: /* For.Light_Manager */
 	const LIGHT_DESC* Get_LightDesc(_uint iLightIndex);
 	HRESULT Add_Light(const LIGHT_DESC & LightDesc);
 
+public: /* For.Calculaotr */
+	_vector	Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer_Terrain* pBuffer);
+
 private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -81,6 +85,7 @@ private:
 	class CSound_Manager*		m_pSound_Manager = { nullptr };
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CPipeLine*			m_pPipeLine = { nullptr };
+	class CCalculator*			m_pCalculator = { nullptr };
 
 public:
 	static void Release_Engine();
