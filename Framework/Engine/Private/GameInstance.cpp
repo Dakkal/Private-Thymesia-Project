@@ -164,6 +164,14 @@ HRESULT CGameInstance::Add_Prototype(const wstring& strPrototypeTag, CGameObject
 	return m_pObject_Manager->Add_Prototype(strPrototypeTag, pPrototype);
 }
 
+const map<const wstring, class CGameObject*>& CGameInstance::Get_Prototypes()
+{
+	if (nullptr == m_pObject_Manager)
+		return map<const wstring, class CGameObject*>{};
+
+	return m_pObject_Manager->Get_Prototypes();
+}
+
 HRESULT CGameInstance::Add_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg)
 {
 	if (nullptr == m_pObject_Manager)
@@ -178,6 +186,14 @@ CGameObject* CGameInstance::Find_GameObject(_uint iLevelIndex, const wstring& st
 		return nullptr;
 
 	return m_pObject_Manager->Find_GameObject(iLevelIndex, strLayerTag, ObjName, iCloneIndex);
+}
+
+CGameObject* CGameInstance::Last_GameObject(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Last_GameObject(iLevelIndex, strLayerTag);
 }
 
 HRESULT CGameInstance::Delete_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iCloneIndex)

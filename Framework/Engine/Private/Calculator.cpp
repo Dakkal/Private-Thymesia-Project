@@ -24,7 +24,7 @@ _vector CCalculator::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, 
 	ray.direction = WorldMousePos - ray.position;
 	ray.direction.Normalize();
 
-    ray.position = XMVector3TransformCoord(ray.position, pTransform->Get_WorldMatrix_Inverse()); // 요건 월드항등상태라 불필요한데 혹시 모르니 한거
+    ray.position = XMVector3TransformCoord(ray.position, pTransform->Get_WorldMatrix_Inverse()); 
     ray.direction = XMVector3TransformNormal(ray.direction, pTransform->Get_WorldMatrix_Inverse());
     ray.direction.Normalize();
 
@@ -70,7 +70,7 @@ _vector CCalculator::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, 
 
     RELEASE_INSTANCE(CGameInstance);
 
-    return _vector();
+    return _vector(-1.f, -1.f, -1.f, -1.f);
 }
 
 void CCalculator::Free()

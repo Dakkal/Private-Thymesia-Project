@@ -18,13 +18,20 @@ public:
     virtual HRESULT Render();
 
 public:
-    _bool   Is_Remain() { return m_bRemain; }
-    wstring Get_Name() { return m_strObjectName; }
+    _bool           Is_Remain() { return m_IsRemain; }
+    _bool           Is_Cloned() { return m_IsCloned; }
+    _bool           Is_Dead()   { return m_IsDead; }
 
-    _uint   Get_Index() { return m_iIndex; }
-    void    Set_Index(const _uint& iIndex) { m_iIndex = iIndex; }
+    wstring         Get_Name() { return m_strObjectName; }
+    OBJECT_TYPE     Get_ObjectType() { return m_eObjType; }
 
-    void    Decrease_CloneIndex();
+    _uint           Get_Index() { return m_iIndex; }
+    void            Set_Index(const _uint& iIndex) { m_iIndex = iIndex; }
+
+    void            Decrease_CloneIndex();
+
+public:
+    class  CComponent* Get_Component(const wstring& strComponentTag) { return Find_Component(strComponentTag); }
 
 protected:
     ID3D11Device*           m_pDevice = { nullptr };
@@ -33,15 +40,15 @@ protected:
 protected:
     map<const wstring, class CComponent*>   m_Components;
 
+    _bool	    m_IsCloned = { false };
+    _bool       m_IsRemain = { false };
+    _bool       m_IsDead = { false };
+   
+    OBJECT_TYPE m_eObjType = OBJECT_TYPE::_END;
+    wstring     m_strObjectName = { TEXT("") };
 
-    _bool   m_bDead = { false };
-    _bool   m_bRemain = { false };
-
-
-    wstring m_strObjectName = { TEXT("") };
-    _uint   m_iIndex = { 0 };
-
-    _uint   m_iCloneIndex = { 0 };
+    _uint       m_iIndex = { 0 };
+    _uint       m_iCloneIndex = { 0 };
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeRag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);

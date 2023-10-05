@@ -22,8 +22,10 @@ public:
 	void Clear(_uint iLevelIndex);
 
 	CGameObject* Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iIndex);
+	CGameObject* Last_GameObject(_uint iLevelIndex, const wstring& strLayerTag);
 	HRESULT		 Delete_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iIndex);	
 
+	const map<const wstring, class CGameObject*>&	Get_Prototypes() { return m_mapPrototypes; }
 private:
 	map<const wstring, class CGameObject*>	m_mapPrototypes;
 

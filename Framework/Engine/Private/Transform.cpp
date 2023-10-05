@@ -47,6 +47,11 @@ void CTransform::Set_Scale(const _vector& vScale)
 	Set_State(STATE_LOOK, vLook * vScale.z);
 }
 
+void CTransform::Set_WorldMatrix(_matrix matWorld)
+{
+	m_WorldMatrix = matWorld;
+}
+
 HRESULT CTransform::Initialize_Prototype()
 {
 	m_WorldMatrix = XMMatrixIdentity();
@@ -147,6 +152,25 @@ void CTransform::Fix_Rotation(_vector vAxis, _float fRadian)
 	_vector		vRight = _vector(1.f, 0.f, 0.f, 0.f) * vScaled.x;
 	_vector		vUp = _vector(0.f, 1.f, 0.f, 0.f) * vScaled.y;
 	_vector		vLook = _vector(0.f, 0.f, 1.f, 0.f) * vScaled.z;
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
+	_vector		vQuaternionData = XMQuaternionRotationMatrix(RotationMatrix);
+	_matrix		QuaternionMatrix = XMMatrixRotationQuaternion(vQuaternionData);
+
+	vRight = XMVector4Transform(vRight, QuaternionMatrix);
+	vUp = XMVector4Transform(vUp, QuaternionMatrix);
+	vLook = XMVector4Transform(vLook, QuaternionMatrix);
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
+void CTransform::Rotation(_vector vAxis, _float fRadian)
+{
+	_vector		vRight = Get_State(STATE_RIGHT);
+	_vector		vUp = Get_State(STATE_UP);
+	_vector		vLook = Get_State(STATE_LOOK);
 
 	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
 	_vector		vQuaternionData = XMQuaternionRotationMatrix(RotationMatrix);

@@ -15,6 +15,7 @@ CGameObject::CGameObject(const CGameObject& rhs)
 	, m_pContext(rhs.m_pContext)
 	, m_iCloneIndex(rhs.m_iCloneIndex)
 	, m_strObjectName(rhs.m_strObjectName)
+	, m_eObjType(rhs.m_eObjType)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
@@ -27,6 +28,7 @@ HRESULT CGameObject::Initialize_Prototype()
 
 HRESULT CGameObject::Initialize(void* pArg)
 {
+	m_IsCloned = true;
 	m_iIndex = m_iCloneIndex;
 
 	return S_OK;

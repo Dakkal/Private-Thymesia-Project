@@ -206,8 +206,7 @@ HRESULT CLoader::Loading_Mesh()
 			CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
 			return E_FAIL;
 		/* For.Proto_Model_ChurchGrillesFloor */
-		
-		ModelInitMatrix = XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
 			CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Props/ChurchGrillesFloor/ChurchGrillesFloor.fbx", ModelInitMatrix))))
 			return E_FAIL;
@@ -215,6 +214,10 @@ HRESULT CLoader::Loading_Mesh()
 	case Client::LEVEL_EDIT:
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
 			CVIBuffer_Terrain::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
+			CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Props/ChurchGrillesFloor/ChurchGrillesFloor.fbx", ModelInitMatrix))))
 			return E_FAIL;
 		break;
 	default:
@@ -289,6 +292,9 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 		/* For.Camera*/
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ToolCamera"), CToolCamera::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Props_ChurchGrillesFloor */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchGrillesFloor"), CChurchGrillesFloor::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		break;
 	default:

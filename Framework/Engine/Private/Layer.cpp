@@ -40,6 +40,11 @@ void CLayer::LateTick(_float fTimeDelta)
 
 }
 
+CGameObject* CLayer::Last_GameObject()
+{
+	return m_listGameObject.back();
+}
+
 CGameObject* CLayer::Find_GameObject(const wstring& ObjName, _uint iCloneIndex)
 {
 	for (auto& pGameObject : m_listGameObject)

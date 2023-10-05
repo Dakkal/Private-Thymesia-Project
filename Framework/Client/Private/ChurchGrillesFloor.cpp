@@ -14,7 +14,8 @@ CChurchGrillesFloor::CChurchGrillesFloor(const CGameObject& rhs)
 
 HRESULT CChurchGrillesFloor::Initialize_Prototype()
 {
-	m_strObjectName = TEXT("Object_Props_ChurchGrillesFloor");
+	m_eObjType = OBJECT_TYPE::PROP;
+	m_strObjectName = TEXT("ChurchGrillesFloor");
 
 	return S_OK;
 }
@@ -72,6 +73,22 @@ HRESULT CChurchGrillesFloor::Ready_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
+	/* Com_Transform */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
+		return E_FAIL;
+
+#ifndef NDEBUG
+	/* Com_Shader */
+	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
+		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
+
+	/* Com_Model */
+	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
+		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+		return E_FAIL;
+#else
 	/* Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
@@ -81,11 +98,8 @@ HRESULT CChurchGrillesFloor::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
-
-	/* Com_Transform */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
-		return E_FAIL;
+#endif // !NDEBUG
+	
 
 	return S_OK;
 }

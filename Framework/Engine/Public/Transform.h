@@ -29,6 +29,7 @@ public:
 
 	void		Set_State(STATE eState, _vector vState);
 	void		Set_Scale(const _vector& vScale);
+	void		Set_WorldMatrix(_matrix matWorld);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -46,6 +47,7 @@ public:
 	void Go_Right(_float fTimeDelta);
 
 	void Fix_Rotation(_vector vAxis, _float fRadian);
+	void Rotation(_vector vAxis, _float fRadian);
 	void Turn(_vector vAxis, _float fTimeDelta);
 	void Turn_Invert(_vector vAxis, _float fTimeDelta);
 	void LookAt(_vector vPoint);

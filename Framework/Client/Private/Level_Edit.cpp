@@ -12,13 +12,13 @@ CLevel_Edit::CLevel_Edit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Edit::Initialize()
 {
-	m_pImgui_Manager->Ready_Manager(m_pDevice, m_pContext);
-
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_ToolCamera"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
+
+	m_pImgui_Manager->Ready_Manager(m_pDevice, m_pContext);
 
 	return S_OK;
 }

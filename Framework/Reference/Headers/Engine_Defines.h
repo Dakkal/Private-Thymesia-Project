@@ -30,6 +30,10 @@ using namespace DirectX;
 #include <io.h>
 
 
+enum class OBJECT_TYPE {
+	TERRAIN, PLAYER, PROP, MONSTER, _END
+};
+
 enum class CHANNELID {
 	CHANNEL_BGM,
 	CHANNEL_0, CHANNEL_1, CHANNEL_2, CHANNEL_3, CHANNEL_4,

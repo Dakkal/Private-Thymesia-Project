@@ -61,6 +61,18 @@
     <Filter Include="02.GameObject\Props\ChurchGrillesFloor">
       <UniqueIdentifier>{ecbc253c-ea08-4874-99a2-11d4172e0106}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Terrain\Edit">
+      <UniqueIdentifier>{7ec138c4-6252-4923-a8a3-2206dc583bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Terrain\Level2">
+      <UniqueIdentifier>{95b49d30-75b4-49ff-9840-96bbe7b0fa27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Terrain\Level3">
+      <UniqueIdentifier>{ebe76984-e273-4544-aa87-ed58b3d0d864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Terrain\Level4">
+      <UniqueIdentifier>{a450a836-bb4c-422c-bd34-caa5e49cae7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -117,14 +129,17 @@
     <ClCompile Include="..\..\Imgui\imgui_widgets.cpp">
       <Filter>999. Imgui\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Level_Edit.cpp">
-      <Filter>01.Levels\09.Edit</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Edit_Terrain.cpp">
-      <Filter>02.GameObject\Terrain\Level1</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\ChurchGrillesFloor.cpp">
       <Filter>02.GameObject\Props\ChurchGrillesFloor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Imgui\imgui_spectrum.cpp">
+      <Filter>999. Imgui\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edit_Terrain.cpp">
+      <Filter>02.GameObject\Terrain\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Edit.cpp">
+      <Filter>01.Levels\09.Edit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,11 +215,14 @@
     <ClInclude Include="..\Public\Level_Edit.h">
       <Filter>01.Levels\09.Edit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Edit_Terrain.h">
-      <Filter>02.GameObject\Terrain\Level1</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ChurchGrillesFloor.h">
       <Filter>02.GameObject\Props\ChurchGrillesFloor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Imgui\imgui_spectrum.h">
+      <Filter>999. Imgui\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edit_Terrain.h">
+      <Filter>02.GameObject\Terrain\Edit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
