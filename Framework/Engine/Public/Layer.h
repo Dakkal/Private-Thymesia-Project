@@ -16,7 +16,7 @@ public:
 	void LateTick(_float fTimeDelta);
 
 public:
-	const list<class CGameObject*>&	Get_LayerList() { return m_listGameObject; }
+	const list<class CGameObject*>*	Get_LayerList() { return &m_listGameObject; }
 	CGameObject* Last_GameObject();
 	CGameObject* Find_GameObject(const wstring& ObjName, _uint iCloneIndex);
 	HRESULT		 Delete_GameObject(const wstring& ObjName, _uint iCloneIndex);

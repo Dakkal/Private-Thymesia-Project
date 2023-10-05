@@ -51,8 +51,8 @@ public: /* For.Object_Manager */
 	CGameObject*	Last_GameObject(_uint iLevelIndex, const wstring & strLayerTag);
 	HRESULT			Delete_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & ObjName, _uint iCloneIndex = 1);
 	HRESULT			Delete_Layer(_uint iLevelIndex, const wstring & strLayerTag);
-	const map<const wstring, class CGameObject*>&	Get_Prototypes();
-	const list<class CGameObject*>&					Get_LayerList(_uint iLevelIndex, const wstring & strLayerTag);
+	const map<const wstring, class CGameObject*>*	Get_Prototypes();
+	const list<class CGameObject*>*					Get_LayerList(_uint iLevelIndex, const wstring & strLayerTag);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, class CComponent* pPrototype);

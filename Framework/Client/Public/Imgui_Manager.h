@@ -15,6 +15,7 @@ class CImgui_Manager final : public CBase
 	DECLARE_SINGLETON(CImgui_Manager)
 
 public:
+	enum class DATA { SAVE, LOAD, _END };
 	enum class LEVEL {ONE, TWO, THREE, FOUR, _END};
 
 private:
@@ -34,7 +35,7 @@ private:
 	/* 세이브, 로드 함수 */
 	HRESULT	Save_MakeShift_Data(LEVEL eLevel);
 	HRESULT	Load_MakeShift_Data(LEVEL eLevel);
-	HRESULT DeleteMakeShift_Data();
+	void	DeleteMakeShift_Data();
 	HRESULT	Save_Data(LEVEL eLevel);
 	HRESULT	Load_Data(LEVEL eLevel);
 	
@@ -45,6 +46,8 @@ private:
 
 	HRESULT Setting_Terrain();
 	HRESULT Setting_Object();
+	HRESULT	Mouse_Pos();
+	HRESULT List_Object();
 
 
 	void ImGuiStyles();
@@ -55,6 +58,8 @@ private:
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 
 private:
+	_bool			m_bShowMessage[(_uint)DATA::_END] = { false };
+
 	/* 터레인용 변수 */
 	CGameObject*	m_pSelectTerrain = { nullptr };
 	_int			m_iNumVerticesX[(_uint)LEVEL::_END] = { 0 };
@@ -74,14 +79,18 @@ private:
 	_int			m_SelectLevel = { 0 };
 
 	/* 리스트 박스 변수 */
-	CGameObject*	m_pSelectObject = { nullptr };
-
 	wstring			m_strCurMonsterProtoObject[(_uint)LEVEL::_END] = { TEXT("") };
 	wstring			m_strCurPropProtoObject[(_uint)LEVEL::_END] = { TEXT("") };
 	vector<string>	m_vecMonsters;
 	vector<string>	m_vecProps;
 	_int			m_iSelectMonster[(_uint)LEVEL::_END] = { -1 };
 	_int			m_iSelectProp[(_uint)LEVEL::_END] = { -1 };
+
+	/* 오브젝트 리스트 변수 */
+	CGameObject* m_pSelectObject = { nullptr };
+
+	vector<string>	m_vecObjectList;
+	_int			m_iSelectObject[(_uint)LEVEL::_END] = { -1 };
 
 	/* 트랜스폼 설정 변수 */
 	_bool			m_IsMonTransformOpen[(_uint)LEVEL::_END] = { false };

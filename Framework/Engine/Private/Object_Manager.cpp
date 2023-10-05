@@ -131,11 +131,11 @@ HRESULT CObject_Manager::Delete_Layer(_uint iLevelIndex, const wstring& strLayer
 	return iter->Delete_Layer();
 }
 
-const list<class CGameObject*>& CObject_Manager::Get_LayerList(_uint iLevelIndex, const wstring& strLayerTag)
+const list<class CGameObject*>* CObject_Manager::Get_LayerList(_uint iLevelIndex, const wstring& strLayerTag)
 {
 	auto iter = Find_Layer(iLevelIndex, strLayerTag);
 	if (nullptr == iter)
-		return list<class CGameObject*>{};
+		return nullptr;
 
 	return iter->Get_LayerList();
 }

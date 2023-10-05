@@ -26,8 +26,8 @@ public:
 	HRESULT		 Delete_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iIndex);	
 	HRESULT		 Delete_Layer(_uint iLevelIndex, const wstring& strLayerTag);
 
-	const auto&		Get_Prototypes()	{ return m_mapPrototypes; }
-	const list<class CGameObject*>&		Get_LayerList(_uint iLevelIndex, const wstring& strLayerTag);
+	const auto*		Get_Prototypes()	{ return &m_mapPrototypes; }
+	const list<class CGameObject*>*		Get_LayerList(_uint iLevelIndex, const wstring& strLayerTag);
 
 private:
 	map<const wstring, class CGameObject*>	m_mapPrototypes;

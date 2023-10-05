@@ -164,18 +164,18 @@ HRESULT CGameInstance::Add_Prototype(const wstring& strPrototypeTag, CGameObject
 	return m_pObject_Manager->Add_Prototype(strPrototypeTag, pPrototype);
 }
 
-const map<const wstring, class CGameObject*>& CGameInstance::Get_Prototypes()
+const map<const wstring, class CGameObject*>* CGameInstance::Get_Prototypes()
 {
 	if (nullptr == m_pObject_Manager)
-		return map<const wstring, class CGameObject*>{};
+		return nullptr;
 
 	return m_pObject_Manager->Get_Prototypes();
 }
 
-const list<class CGameObject*>& CGameInstance::Get_LayerList(_uint iLevelIndex, const wstring& strLayerTag)
+const list<class CGameObject*>* CGameInstance::Get_LayerList(_uint iLevelIndex, const wstring& strLayerTag)
 {
 	if (nullptr == m_pObject_Manager)
-		return  list<class CGameObject*>{};
+		return  nullptr;
 
 	return m_pObject_Manager->Get_LayerList(iLevelIndex, strLayerTag);
 }
