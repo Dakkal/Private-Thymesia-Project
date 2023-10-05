@@ -46,10 +46,12 @@ enum class CHANNELID {
 	CHANNEL_END
 };
 
+#include <cstdio>
 #include <typeinfo>
 #include <string>
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <vector> 
 #include <list> 
 #include <map> 

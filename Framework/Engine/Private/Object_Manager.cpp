@@ -92,9 +92,10 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 CGameObject* CObject_Manager::Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iIndex)
 {
 	auto iter = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == iter)
+		return nullptr;
 
-	if (nullptr != iter)
-		return iter->Find_GameObject(ObjName, iIndex);
+	return iter->Find_GameObject(ObjName, iIndex);
 }
 
 CGameObject* CObject_Manager::Last_GameObject(_uint iLevelIndex, const wstring& strLayerTag)
@@ -113,15 +114,30 @@ HRESULT CObject_Manager::Delete_GameObject(_uint iLevelIndex, const wstring& str
 	if (nullptr == iter)
 		return E_FAIL;
 
-	for (auto mapiter = m_mapPrototypes.begin(); mapiter != m_mapPrototypes.end(); mapiter++)
-	{
-		if (ObjName == mapiter->second->Get_Name())
-		{
-			mapiter->second->Decrease_CloneIndex();
-			break;
-		}
-	}
 	return iter->Delete_GameObject(ObjName, iIndex);
+}
+
+HRESULT CObject_Manager::Delete_Layer(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	auto iter = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == iter)
+		return E_FAIL;
+
+	for (auto& mapiter : m_mapPrototypes)
+	{
+		mapiter.second->Reset_CloneIndex();
+	}
+
+	return iter->Delete_Layer();
+}
+
+const list<class CGameObject*>& CObject_Manager::Get_LayerList(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	auto iter = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == iter)
+		return list<class CGameObject*>{};
+
+	return iter->Get_LayerList();
 }
 
 CGameObject* CObject_Manager::Find_Prototype(const wstring& strPrototypeTag)

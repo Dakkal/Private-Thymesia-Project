@@ -14,7 +14,7 @@ CToolCamera::CToolCamera(const CToolCamera& rhs)
 }
 
 
-HRESULT CToolCamera::Initialize_Prototype()
+HRESULT CToolCamera::Initialize_Prototype(const wstring& strProtoTag)
 {
     m_strObjectName = TEXT("Object_ToolCamera");
 
@@ -110,11 +110,11 @@ void CToolCamera::MouseMove(_float fTimeDelta)
     RELEASE_INSTANCE(CGameInstance)
 }
 
-CToolCamera* CToolCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CToolCamera* CToolCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
 	CToolCamera* pInstance = new CToolCamera(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype()))
+	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
 		MSG_BOX("Failed to Created : CToolCamera");
 		Safe_Release(pInstance);

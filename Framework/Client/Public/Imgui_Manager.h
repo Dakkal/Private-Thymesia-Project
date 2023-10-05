@@ -34,6 +34,7 @@ private:
 	/* 세이브, 로드 함수 */
 	HRESULT	Save_MakeShift_Data(LEVEL eLevel);
 	HRESULT	Load_MakeShift_Data(LEVEL eLevel);
+	HRESULT DeleteMakeShift_Data();
 	HRESULT	Save_Data(LEVEL eLevel);
 	HRESULT	Load_Data(LEVEL eLevel);
 	
@@ -55,6 +56,7 @@ private:
 
 private:
 	/* 터레인용 변수 */
+	CGameObject*	m_pSelectTerrain = { nullptr };
 	_int			m_iNumVerticesX[(_uint)LEVEL::_END] = { 0 };
 	_int			m_iNumVerticesZ[(_uint)LEVEL::_END] = { 0 };
 	_bool			m_bIsWireFrame[(_uint)LEVEL::_END] = { true };

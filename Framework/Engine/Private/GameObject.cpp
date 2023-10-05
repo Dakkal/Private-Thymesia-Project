@@ -15,14 +15,17 @@ CGameObject::CGameObject(const CGameObject& rhs)
 	, m_pContext(rhs.m_pContext)
 	, m_iCloneIndex(rhs.m_iCloneIndex)
 	, m_strObjectName(rhs.m_strObjectName)
+	, m_strProtoTag(rhs.m_strProtoTag)
 	, m_eObjType(rhs.m_eObjType)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
 }
 
-HRESULT CGameObject::Initialize_Prototype()
+HRESULT CGameObject::Initialize_Prototype(const wstring& strProtoTag)
 {
+	m_strProtoTag = strProtoTag;
+
 	return S_OK;
 }
 
@@ -85,14 +88,6 @@ CGameObject* CGameObject::Clone(void* pArg)
  	m_iCloneIndex++;
 
 	return nullptr;
-}
-
-void CGameObject::Decrease_CloneIndex()
-{
-	--m_iCloneIndex;
-
-	if (m_iCloneIndex <= 0)
-		m_iCloneIndex = 0;
 }
 
 void CGameObject::Free()

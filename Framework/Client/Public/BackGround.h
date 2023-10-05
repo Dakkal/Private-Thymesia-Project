@@ -21,7 +21,7 @@ private:
 	virtual ~CBackGround() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag) override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void LateTick(_float fTimeDelta) override;
@@ -45,7 +45,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

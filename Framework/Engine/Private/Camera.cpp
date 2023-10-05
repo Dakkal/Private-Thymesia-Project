@@ -16,7 +16,7 @@ CCamera::CCamera(const CCamera& rhs)
 	Safe_AddRef(m_pPipeLine);
 }
 
-HRESULT CCamera::Initialize_Prototype()
+HRESULT CCamera::Initialize_Prototype(const wstring& strProtoTag)
 {
 	return S_OK;
 }

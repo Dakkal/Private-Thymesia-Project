@@ -12,7 +12,7 @@ CEdit_Terrain::CEdit_Terrain(const CGameObject& rhs)
 {
 }
 
-HRESULT CEdit_Terrain::Initialize_Prototype()
+HRESULT CEdit_Terrain::Initialize_Prototype(const wstring& strProtoTag)
 {
 	m_strObjectName = TEXT("Object_Edit_Terrain");
 
@@ -166,11 +166,11 @@ HRESULT CEdit_Terrain::Bind_ShaderResources()
 	return S_OK;
 }
 
-CEdit_Terrain* CEdit_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEdit_Terrain* CEdit_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
 	CEdit_Terrain* pInstance = new CEdit_Terrain(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype()))
+	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
 		MSG_BOX("Failed to Created : CEdit_Terrain");
 		Safe_Release(pInstance);

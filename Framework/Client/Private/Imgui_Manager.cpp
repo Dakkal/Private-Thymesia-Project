@@ -10,6 +10,7 @@
 #include "GameInstance.h"
 #include "Edit_Terrain.h"
 #include "Input_Device.h"
+#include "Layer.h"
 
 IMPLEMENT_SINGLETON(CImgui_Manager)
 
@@ -32,7 +33,7 @@ HRESULT CImgui_Manager::Ready_Manager(ID3D11Device* pDevice, ID3D11DeviceContext
 	ImGui::CreateContext();
 
     //ImGuiStyles();
-    //ImGui::Spectrum::StyleColorsSpectrum();
+    ImGui::Spectrum::StyleColorsSpectrum();
 
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
@@ -90,7 +91,7 @@ HRESULT CImgui_Manager::Tick(_float fTimeDelta)
     {
         CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-        CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1));
+        CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index()));
 
         _vector vTerrainPos = pInstance->Picking_Terrain();
 
@@ -180,15 +181,18 @@ HRESULT CImgui_Manager::Menu(_float fTimeDelta)
         if (ImGui::MenuItem("Level 2"))
         {
             // "Level2" 메뉴 아이템이 클릭될 때 수행할 작업
+            m_SelectLevel = 1;
         }
         if (ImGui::MenuItem("Level 3"))
         {
             // "Level3" 메뉴 아이템이 클릭될 때 수행할 작업
+            m_SelectLevel = 2;
         }
 
         if (ImGui::MenuItem("Level 4"))
         {
             // "Level4" 메뉴 아이템이 클릭될 때 수행할 작업
+            m_SelectLevel = 3;
         }
 
 
@@ -200,20 +204,24 @@ HRESULT CImgui_Manager::Menu(_float fTimeDelta)
         if (ImGui::MenuItem("Level 1"))
         {
             // "Level1" 메뉴 아이템이 클릭될 때 수행할 작업
+            m_SelectLevel = 0;
         }
 
         if (ImGui::MenuItem("Level 2"))
         {
             // "Level2" 메뉴 아이템이 클릭될 때 수행할 작업
+            m_SelectLevel = 1;
         }
         if (ImGui::MenuItem("Level 3"))
         {
             // "Level3" 메뉴 아이템이 클릭될 때 수행할 작업
+            m_SelectLevel = 2;
         }
 
         if (ImGui::MenuItem("Level 4"))
         {
             // "Level4" 메뉴 아이템이 클릭될 때 수행할 작업
+            m_SelectLevel = 3;
         }
 
         ImGui::EndMenu(); // "File" 메뉴 종료
@@ -230,18 +238,23 @@ HRESULT CImgui_Manager::ToolBox(_float fTimeDelta)
     {
         if (true == m_bIsCreateTerrain[m_iCurLevel] && m_iCurLevel != m_SelectLevel)
         {
+            Save_MakeShift_Data(LEVEL(m_iCurLevel));
+
             CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-            if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1)))
-            {
-                RELEASE_INSTANCE(CGameInstance);
-                return E_FAIL;
-            }
+
+            pGameInstance->Delete_Layer(LEVEL_EDIT, TEXT("Layer_Terrain"));
+            pGameInstance->Delete_Layer(LEVEL_EDIT, TEXT("Layer_Object"));
+
+            if (nullptr != m_pSelectObject)
+                m_pSelectObject = nullptr;
 
             RELEASE_INSTANCE(CGameInstance);
-
-            m_bIsCreateTerrain[m_iCurLevel] = false;
         }
         m_iCurLevel = m_SelectLevel;
+        if (true == m_bIsCreateTerrain[m_iCurLevel])
+        {
+            Load_MakeShift_Data(LEVEL(m_iCurLevel));
+        }
     }
 
     ImGui::BeginTabBar("Level");
@@ -302,6 +315,14 @@ HRESULT CImgui_Manager::Setting_Terrain()
                         RELEASE_INSTANCE(CGameInstance);
                         return E_FAIL;
                     }
+                    
+                    m_pSelectTerrain = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"));
+                    if (nullptr == m_pSelectTerrain)
+                    {
+                        RELEASE_INSTANCE(CGameInstance);
+                        return E_FAIL;
+                    }
+
                     RELEASE_INSTANCE(CGameInstance);
                 }
             }
@@ -315,7 +336,7 @@ HRESULT CImgui_Manager::Setting_Terrain()
 
                 CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1)))
+                if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index())))
                 {
                     RELEASE_INSTANCE(CGameInstance);
                     return E_FAIL;
@@ -342,7 +363,7 @@ HRESULT CImgui_Manager::Setting_Terrain()
             {
                 CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1));
+                CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index()));
 
                 pInstance->Set_WireFrameMode(m_bIsWireFrame[m_iCurLevel]);
 
@@ -357,7 +378,7 @@ HRESULT CImgui_Manager::Setting_Terrain()
             {
                 CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), 1));
+                CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index()));
 
                pInstance->Set_WireFrameMode(m_bIsWireFrame[m_iCurLevel]);
 
@@ -405,6 +426,11 @@ HRESULT CImgui_Manager::Setting_Object()
                 {
 
                 }
+                ImGui::SameLine();
+                if (ImGui::Button("Delete"))
+                {
+
+                }
             }
 
             if (ImGui::CollapsingHeader("Transformation"))
@@ -413,29 +439,29 @@ HRESULT CImgui_Manager::Setting_Object()
 
                 /* 스케일 */
                 ImGui::SeparatorText("Scale");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizX");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##MonScaleX Input", &m_vMonsterScale[m_iCurLevel].x, -50, 50, "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##MonScaleX Slider", &m_vMonsterScale[m_iCurLevel].x, -50, 50, "%.1f");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizY");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##MonScaleY Input", &m_vMonsterScale[m_iCurLevel].y, -50, 50, "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##MonScaleY Slider", &m_vMonsterScale[m_iCurLevel].y, -50, 50, "%.1f");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizZ");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##MonScaleZ Input", &m_vMonsterScale[m_iCurLevel].z, -50, 50, "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -443,11 +469,11 @@ HRESULT CImgui_Manager::Setting_Object()
 
                 /* 회전 */
                 ImGui::SeparatorText("Rotation");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("RotX");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 if (ImGui::InputFloat("##MonRotX Input", &m_vMonsterRot[m_iCurLevel].x, 0, 360, "%.1f"))
                 {
                     if (nullptr != m_pSelectObject)
@@ -466,11 +492,11 @@ HRESULT CImgui_Manager::Setting_Object()
                         pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_RIGHT), XMConvertToRadians(m_vPropRot[m_iCurLevel].x));
                     }
                 }
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("RotY");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 if (ImGui::InputFloat("##MonRotY Input", &m_vMonsterRot[m_iCurLevel].y, 0, 360, "%.1f"))
                 {
                     if (nullptr != m_pSelectObject)
@@ -489,11 +515,11 @@ HRESULT CImgui_Manager::Setting_Object()
                         pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_vPropRot[m_iCurLevel].y));
                     }
                 }
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("RotZ");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 if (ImGui::InputFloat("##MonRotZ Input", &m_vMonsterRot[m_iCurLevel].z, 0, 360, "%.1f"))
                 {
                     if (nullptr != m_pSelectObject)
@@ -512,33 +538,33 @@ HRESULT CImgui_Manager::Setting_Object()
                         pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_LOOK), XMConvertToRadians(m_vPropRot[m_iCurLevel].z));
                     }
                 }
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 /* 위치 */
                 ImGui::SeparatorText("Position");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosX");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##MonPosX Input", &m_vMonsterPos[m_iCurLevel].x, 0, m_iNumVerticesX[m_iCurLevel], "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##MonPosX Slider", &m_vMonsterPos[m_iCurLevel].x, 0, m_iNumVerticesX[m_iCurLevel], "%.1f");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosY");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##MonPosY Input", &m_vMonsterPos[m_iCurLevel].y, 0, 100, "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##MonPosY Slider", &m_vMonsterPos[m_iCurLevel].y, 0, 100, "%.1f");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosZ");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##MonPosZ Input", &m_vMonsterPos[m_iCurLevel].z, 0, m_iNumVerticesZ[m_iCurLevel], "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -594,11 +620,11 @@ HRESULT CImgui_Manager::Setting_Object()
                     {
                         CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                        if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Props"), m_strCurPropProtoObject[m_iCurLevel])))
+                        if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), m_strCurPropProtoObject[m_iCurLevel])))
                             return E_FAIL;
 
 
-                        m_pSelectObject = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Props"));
+                        m_pSelectObject = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Object"));
                         if (nullptr == m_pSelectObject)
                             return E_FAIL;
 
@@ -614,6 +640,24 @@ HRESULT CImgui_Manager::Setting_Object()
                         RELEASE_INSTANCE(CGameInstance);
                     }
                 }
+                ImGui::SameLine();
+                if (ImGui::Button("Delete"))
+                {
+                    if (nullptr != m_pSelectObject)
+                    {
+                        CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+                        _uint iIndex = m_pSelectObject->Get_Index();
+                        wstring strObjectName = m_pSelectObject->Get_Name();
+
+                        pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), strObjectName, iIndex);
+                        m_pSelectObject = nullptr;
+
+  
+                        RELEASE_INSTANCE(CGameInstance);
+                    }
+
+                }
             }
 
             if (ImGui::CollapsingHeader("Transformation"))
@@ -621,29 +665,29 @@ HRESULT CImgui_Manager::Setting_Object()
                 m_IsPropTransformOpen[m_iCurLevel] = true;
                 /* 스케일 */
                 ImGui::SeparatorText("Scale");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizX");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##PropScaleX Input", &m_vPropScale[m_iCurLevel].x, -50, 50, "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##PropScaleX Slider", &m_vPropScale[m_iCurLevel].x, -50, 50, "%.1f");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizY");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##PropScaleY Input", &m_vPropScale[m_iCurLevel].y, -50, 50, "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##PropScaleY Slider", &m_vPropScale[m_iCurLevel].y, -50, 50, "%.1f");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizZ");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##PropScaleZ Input", &m_vPropScale[m_iCurLevel].z, -50, 50, "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -651,11 +695,11 @@ HRESULT CImgui_Manager::Setting_Object()
 
                 /* 회전 */
                 ImGui::SeparatorText("Rotation");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("RotX");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 if (ImGui::InputFloat("##PropRotX Input", &m_vPropRot[m_iCurLevel].x, 0, 360, "%.1f"))
                 {
                     if (nullptr != m_pSelectObject)
@@ -674,11 +718,11 @@ HRESULT CImgui_Manager::Setting_Object()
                         pTransform->Rotation(pTransform->Get_State(CTransform::STATE_RIGHT), XMConvertToRadians(m_vPropRot[m_iCurLevel].x));
                     }
                 }
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("RotY");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 if (ImGui::InputFloat("##PropRotY Input", &m_vPropRot[m_iCurLevel].y, 0, 360, "%.1f"))
                 {
                     if (nullptr != m_pSelectObject)
@@ -697,11 +741,11 @@ HRESULT CImgui_Manager::Setting_Object()
                         pTransform->Rotation(pTransform->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_vPropRot[m_iCurLevel].y));
                     }
                 }
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("RotZ");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 if (ImGui::InputFloat("##PropRotZ Input", &m_vPropRot[m_iCurLevel].z, 0, 360, "%.1f"))
                 {
                     if (nullptr != m_pSelectObject)
@@ -720,35 +764,35 @@ HRESULT CImgui_Manager::Setting_Object()
                         pTransform->Rotation(pTransform->Get_State(CTransform::STATE_LOOK), XMConvertToRadians(m_vPropRot[m_iCurLevel].z));
                     }
                 }
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 /* 위치 */
                 ImGui::SeparatorText("Position");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosX");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##PropPosX Input", &m_vPropPos[m_iCurLevel].x
                     , m_matStore[m_iCurLevel]._41 - 50, m_matStore[m_iCurLevel]._41 + 50, "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##PropPosX Slider", &m_vPropPos[m_iCurLevel].x
                     , m_matStore[m_iCurLevel]._41 - 50, m_matStore[m_iCurLevel]._41 + 50, "%.1f");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosY");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##PropPosY Input", &m_vPropPos[m_iCurLevel].y, m_matStore[m_iCurLevel]._42 -10, m_matStore[m_iCurLevel]._42 + 10, "%.1f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##PropPosY Slider", &m_vPropPos[m_iCurLevel].y, m_matStore[m_iCurLevel]._42 -10, m_matStore[m_iCurLevel]._42 + 10, "%.1f");
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosZ");
                 ImGui::SameLine();
-                ImGui::SetNextItemWidth(50);
+                ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##PropPosZ Input", &m_vPropPos[m_iCurLevel].z
                     , m_matStore[m_iCurLevel]._43 - 50, m_matStore[m_iCurLevel]._43 + 50, "%.1f");
                 ImGui::SameLine();
@@ -920,16 +964,174 @@ _bool CImgui_Manager::Is_MouseClickedGUI()
 
 HRESULT CImgui_Manager::Save_MakeShift_Data(LEVEL eLevel)
 {
+    string strFileTerrain = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Terrain.dat";
+    string strFileObject = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Object.dat";
+
+    ofstream OutTerrain(strFileTerrain, ios::binary);
+    ofstream OutObject(strFileObject, ios::binary);
+
+    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+    auto& listObject = pGameInstance->Get_LayerList(LEVEL_EDIT, TEXT("Layer_Object"));
+
+    RELEASE_INSTANCE(CGameInstance);
+
+    if (OutTerrain.is_open())
+    {
+        OutTerrain << m_iNumVerticesX[m_iCurLevel] << endl;
+        OutTerrain << m_iNumVerticesZ[m_iCurLevel] << endl;
+        OutTerrain << m_bIsWireFrame[m_iCurLevel] << endl;
+    }
+
+    if (OutObject.is_open())
+    {
+        for (auto& iter : listObject)
+        {
+            _uint iType = _uint(iter->Get_ObjectType());
+
+            wstring wstrTag = iter->Get_ProtoTag();
+            string strTag;
+            strTag.assign(wstrTag.begin(), wstrTag.end());
+
+            XMFLOAT4X4 matObject = dynamic_cast<CTransform*>(iter->Get_Component(TEXT("Com_Transform")))->Get_WorldMatrix();
+            _float  elements[4][4];
+
+            OutObject << iType << endl;
+            for (size_t i = 0; i < 4; i++)
+            {
+                for (size_t j = 0; j < 4; j++)
+                {
+                    elements[i][j] = matObject.m[i][j];
+                    OutObject << elements[i][j] << endl;
+                }
+            }
+            OutObject << strTag.size();
+            OutObject.write(strTag.c_str(), strTag.size());
+        }
+    }
+
     return S_OK;
 }
 
 HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
 {
+    string strFileTerrain = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Terrain.dat";
+    string strFileObject = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Object.dat";
+
+    ifstream  InTerrain(strFileTerrain, ios::binary);
+    ifstream  InObject(strFileObject, ios::binary);
+
+    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+   
+#pragma region Terrain
+    if (InTerrain.is_open())
+    {
+        InTerrain >> m_iNumVerticesX[m_iCurLevel];
+        InTerrain >> m_iNumVerticesZ[m_iCurLevel];
+        InTerrain >> m_bIsWireFrame[m_iCurLevel];
+    }
+    CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
+    ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
+
+    TerrainDesc.iNumVerticesX = m_iNumVerticesX[m_iCurLevel];
+    TerrainDesc.iNumVerticesZ = m_iNumVerticesZ[m_iCurLevel];
+    TerrainDesc.bIsWireFrame = m_bIsWireFrame[m_iCurLevel];
+
+    if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
+    {
+        RELEASE_INSTANCE(CGameInstance);
+        return E_FAIL;
+    }
+    m_pSelectTerrain = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"));
+    if (nullptr == m_pSelectTerrain)
+    {
+        RELEASE_INSTANCE(CGameInstance);
+        return E_FAIL;
+    }
+#pragma endregion
+
+  
+#pragma region Object
+    if (InObject.is_open())
+    {
+        _uint iType;
+        OBJECT_TYPE eType;
+
+        _int iStrSize;
+        string strTag;
+        wstring wstrTag;
+
+        XMFLOAT4X4 matObject;
+        _float  elements[4][4];
+
+        while (true)
+        {
+            InObject >> iType;
+            for (size_t i = 0; i < 4; i++)
+            {
+                for (size_t j = 0; j < 4; j++)
+                {
+                    InObject >> elements[i][j];
+                }
+            }
+            InObject >> iStrSize;
+            char* filePath = new char[iStrSize + 1]; 
+            InObject.read(filePath, iStrSize);
+            filePath[iStrSize] = '\0'; 
+
+            
+
+            eType = OBJECT_TYPE(iType);
+            for (size_t i = 0; i < 4; i++)
+            {
+                for (size_t j = 0; j < 4; j++)
+                {
+                    matObject.m[i][j] = elements[i][j];
+                }
+            }
+            strTag = filePath;
+            wstrTag.assign(strTag.begin(), strTag.end());
+            Safe_Delete_Array(filePath);
+
+            if (!InObject)
+                break;
+
+            if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), wstrTag)))
+                return E_FAIL;
+
+            CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Object"));
+            if (nullptr == pObject)
+                return E_FAIL;
+
+            CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+            pTransform->Set_WorldMatrix(matObject);
+        }
+    }
+#pragma endregion
+    RELEASE_INSTANCE(CGameInstance);
+
+    return S_OK;
+}
+
+HRESULT CImgui_Manager::DeleteMakeShift_Data()
+{
+    for (size_t i = 0; i < _uint(LEVEL::_END); i++)
+    {
+        string strFileTerrain = "../Bin/Data/MakeShift/MakeShiftLv" + to_string(i + 1) + "Terrain.dat";
+        string strFileObject = "../Bin/Data/MakeShift/MakeShiftLv" + to_string(i + 1) + "Object.dat";
+
+        remove(strFileTerrain.c_str());
+        remove(strFileObject.c_str());
+    }
+
+
     return S_OK;
 }
 
 HRESULT CImgui_Manager::Save_Data(LEVEL eLevel)
 {
+    wstring strFileName = TEXT("Level ") + to_wstring((_uint)eLevel + 1);
+
     return S_OK;
 }
 
@@ -942,10 +1144,14 @@ void CImgui_Manager::Free()
 {
 	__super::Free();
 
+    DeleteMakeShift_Data();
+
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+
+    
 }

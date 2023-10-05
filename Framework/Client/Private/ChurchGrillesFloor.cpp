@@ -12,8 +12,10 @@ CChurchGrillesFloor::CChurchGrillesFloor(const CGameObject& rhs)
 {
 }
 
-HRESULT CChurchGrillesFloor::Initialize_Prototype()
+HRESULT CChurchGrillesFloor::Initialize_Prototype(const wstring& strProtoTag)
 {
+	__super::Initialize_Prototype(strProtoTag);
+
 	m_eObjType = OBJECT_TYPE::PROP;
 	m_strObjectName = TEXT("ChurchGrillesFloor");
 
@@ -152,11 +154,11 @@ HRESULT CChurchGrillesFloor::Bind_ShaderResources()
 	return S_OK;
 }
 
-CChurchGrillesFloor* CChurchGrillesFloor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CChurchGrillesFloor* CChurchGrillesFloor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
 	CChurchGrillesFloor* pInstance = new CChurchGrillesFloor(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype()))
+	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
 		MSG_BOX("Failed to Created : CChurchGrillesFloor");
 		Safe_Release(pInstance);

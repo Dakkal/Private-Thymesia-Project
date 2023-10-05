@@ -11,7 +11,7 @@ protected:
     virtual ~CGameObject() = default;
 
 public:
-    virtual HRESULT Initialize_Prototype();
+    virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
     virtual HRESULT Initialize(void* pArg);
     virtual void Tick(_float fTimeDelta);
     virtual void LateTick(_float fTimeDelta);
@@ -23,12 +23,13 @@ public:
     _bool           Is_Dead()   { return m_IsDead; }
 
     wstring         Get_Name() { return m_strObjectName; }
+    wstring         Get_ProtoTag() { return m_strProtoTag; }
     OBJECT_TYPE     Get_ObjectType() { return m_eObjType; }
 
     _uint           Get_Index() { return m_iIndex; }
     void            Set_Index(const _uint& iIndex) { m_iIndex = iIndex; }
 
-    void            Decrease_CloneIndex();
+    void            Reset_CloneIndex() { m_iCloneIndex = 0; }
 
 public:
     class  CComponent* Get_Component(const wstring& strComponentTag) { return Find_Component(strComponentTag); }
@@ -46,12 +47,14 @@ protected:
    
     OBJECT_TYPE m_eObjType = OBJECT_TYPE::_END;
     wstring     m_strObjectName = { TEXT("") };
+    wstring     m_strProtoTag = { TEXT("") };
+
 
     _uint       m_iIndex = { 0 };
     _uint       m_iCloneIndex = { 0 };
 
 protected:
-    HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeRag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
+    HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
     class CComponent* Find_Component(const wstring & strComponentTag);
 
 

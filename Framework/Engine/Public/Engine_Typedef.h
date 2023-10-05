@@ -28,6 +28,8 @@ namespace Engine
 	typedef		SimpleMath::Vector3			_float3;
 	typedef		SimpleMath::Vector2			_float2;
 
+
+
 }
 
 #endif // Engine_Typedef_h__

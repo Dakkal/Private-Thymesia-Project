@@ -20,7 +20,7 @@ protected:
 	virtual ~CChurchGrillesFloor() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype();
+	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
@@ -37,7 +37,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CChurchGrillesFloor* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
+	static CChurchGrillesFloor* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strProtoTag = TEXT(""));
 	virtual CGameObject* Clone(void* pArg) override; 
 	virtual void Free() override;
 };

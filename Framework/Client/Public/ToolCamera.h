@@ -17,7 +17,7 @@ private:
 	virtual	~CToolCamera() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype();
+	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
@@ -28,7 +28,7 @@ private:
 	_float			m_fMouseSensitive = { 0.0f };
 
 public:
-	static CToolCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CToolCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
 	virtual CToolCamera* Clone(void* pArg) override;
 	virtual void Free() override;
 };

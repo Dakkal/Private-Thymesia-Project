@@ -12,7 +12,7 @@ CBackGround::CBackGround(const CGameObject& rhs)
 {
 }
 
-HRESULT CBackGround::Initialize_Prototype()
+HRESULT CBackGround::Initialize_Prototype(const wstring& strProtoTag)
 {
     m_strObjectName = TEXT("Object_BackGround");
 
@@ -127,11 +127,11 @@ HRESULT CBackGround::Bind_ShaderResources()
     return S_OK;
 }
 
-CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
     CBackGround* pInstance = new CBackGround(pDevice, pContext);
 
-    if (FAILED(pInstance->Initialize_Prototype()))
+    if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
     {
         MSG_BOX("Failed to Created : CBackGround");
         Safe_Release(pInstance);
