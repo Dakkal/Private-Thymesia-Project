@@ -20,6 +20,12 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Props(TEXT("Layer_Props"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
@@ -64,7 +70,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring& strLayerTag)
 	CameraToolDesc.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
 	CameraToolDesc.fNear = 0.2f;
 	CameraToolDesc.fFar = 1000.f;
-	CameraToolDesc.fSpeedPerSec = 50.f;
+	CameraToolDesc.fSpeedPerSec = 10.f;
 	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
@@ -79,8 +85,32 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props(const wstring& strLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_ChurchGrillesFloor"))))
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring& strLayerTag)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"))))
 		return E_FAIL;
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring& strLayerTag)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	for (size_t i = 0; i < 20; i++)
+	{
+		if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"))))
+			return E_FAIL;
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
 

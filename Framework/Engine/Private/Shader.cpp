@@ -101,7 +101,7 @@ HRESULT CShader::Bind_Matrix(const char* pConstantName, const _matrix* pMatrix) 
 	return pMatrixVariable->SetMatrix((const _float*)pMatrix);
 }
 
-HRESULT CShader::Bind_Matrices(const char* pConstantName, const _matrix** ppMatrices, _uint iNumMatrices) const
+HRESULT CShader::Bind_Matrices(const char* pConstantName, const _matrix* pMatrices, _uint iNumMatrices) const
 {
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
@@ -111,7 +111,7 @@ HRESULT CShader::Bind_Matrices(const char* pConstantName, const _matrix** ppMatr
 	if (nullptr == pMatrixVariable)
 		return E_FAIL;
 
-	return pMatrixVariable->SetMatrixArray((const _float*)ppMatrices, 0, iNumMatrices);
+	return pMatrixVariable->SetMatrixArray((_float*)pMatrices, 0, iNumMatrices);
 }
 
 HRESULT CShader::Bind_Texture(const char* pConstantName, ID3D11ShaderResourceView* pSRV) const
@@ -138,10 +138,6 @@ HRESULT CShader::Bind_Textures(const char* pConstantName, ID3D11ShaderResourceVi
 		return E_FAIL;
 
 	return pSRVariable->SetResourceArray(ppSRVs, 0, iNumTextures);
-
-
-	
-
 }
 
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)

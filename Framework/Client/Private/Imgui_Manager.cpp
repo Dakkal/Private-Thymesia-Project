@@ -287,6 +287,11 @@ HRESULT CImgui_Manager::ToolBox(_float fTimeDelta)
             pGameInstance->Delete_Layer(LEVEL_EDIT, TEXT("Layer_Terrain"));
             pGameInstance->Delete_Layer(LEVEL_EDIT, TEXT("Layer_Object"));
 
+            if (!m_vecObjectList.empty())
+            {
+                m_vecObjectList.clear();
+            }
+
             if (nullptr != m_pSelectObject)
                 m_pSelectObject = nullptr;
 
@@ -295,6 +300,7 @@ HRESULT CImgui_Manager::ToolBox(_float fTimeDelta)
         m_iCurLevel = m_SelectLevel;
         if (true == m_bIsCreateTerrain[m_iCurLevel])
         {
+            
             Load_MakeShift_Data(LEVEL(m_iCurLevel));
         }
     }
@@ -1229,6 +1235,8 @@ HRESULT CImgui_Manager::Save_MakeShift_Data(LEVEL eLevel)
             _float  elements[4][4];
 
             OutObject << iType << endl;
+            OutObject << strTag.size() << endl;
+            OutObject << strTag.c_str() << endl;
             for (size_t i = 0; i < 4; i++)
             {
                 for (size_t j = 0; j < 4; j++)
@@ -1237,8 +1245,6 @@ HRESULT CImgui_Manager::Save_MakeShift_Data(LEVEL eLevel)
                     OutObject << elements[i][j] << endl;
                 }
             }
-            OutObject << strTag.size();
-            OutObject.write(strTag.c_str(), strTag.size());
         }
     }
 
@@ -1247,11 +1253,17 @@ HRESULT CImgui_Manager::Save_MakeShift_Data(LEVEL eLevel)
 
 HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
 {
+    if (!m_vecObjectList.empty())
+    {
+        m_vecObjectList.clear();
+    }
+
     string strFileTerrain = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Terrain.dat";
     string strFileObject = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Object.dat";
 
     ifstream  InTerrain(strFileTerrain, ios::binary);
     ifstream  InObject(strFileObject, ios::binary);
+
 
     CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
    
@@ -1289,16 +1301,21 @@ HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
         _uint iType;
         OBJECT_TYPE eType;
 
+        XMFLOAT4X4 matObject;
+        _float  elements[4][4];
+
         _int iStrSize;
         string strTag;
         wstring wstrTag;
 
-        XMFLOAT4X4 matObject;
-        _float  elements[4][4];
-
         while (true)
         {
             InObject >> iType;
+            InObject >> iStrSize;
+            ++iStrSize;
+            char* filePath = new char[iStrSize];
+            InObject >> filePath;
+            filePath[iStrSize] = '\0'; 
             for (size_t i = 0; i < 4; i++)
             {
                 for (size_t j = 0; j < 4; j++)
@@ -1306,14 +1323,11 @@ HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
                     InObject >> elements[i][j];
                 }
             }
-            InObject >> iStrSize;
-            char* filePath = new char[iStrSize + 1]; 
-            InObject.read(filePath, iStrSize);
-            filePath[iStrSize] = '\0'; 
-
-            
 
             eType = OBJECT_TYPE(iType);
+            strTag = filePath;
+            wstrTag.assign(strTag.begin(), strTag.end());
+            Safe_Delete_Array(filePath);
             for (size_t i = 0; i < 4; i++)
             {
                 for (size_t j = 0; j < 4; j++)
@@ -1321,9 +1335,6 @@ HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
                     matObject.m[i][j] = elements[i][j];
                 }
             }
-            strTag = filePath;
-            wstrTag.assign(strTag.begin(), strTag.end());
-            Safe_Delete_Array(filePath);
 
             if (!InObject)
                 break;
@@ -1436,6 +1447,11 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
     if (nullptr != m_pSelectObject)
         m_pSelectObject = nullptr;
 
+    if (!m_vecObjectList.empty())
+    {
+        m_vecObjectList.clear();
+    }
+
 #pragma region Terrain
     if (InTerrain.is_open())
     {
@@ -1497,8 +1513,6 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
             char* filePath = new char[iStrSize + 1];
             InObject.read(filePath, iStrSize);
             filePath[iStrSize] = '\0';
-
-
 
             eType = OBJECT_TYPE(iType);
             for (size_t i = 0; i < 4; i++)

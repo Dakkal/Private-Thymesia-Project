@@ -43,7 +43,7 @@ private:
 	/* For.Loading */
 	HRESULT Loading_Texture();
 	HRESULT Loading_Mesh();
-	HRESULT Loading_Sahder();
+	HRESULT Loading_Shader();
 	HRESULT Loading_Object();
 
 public:

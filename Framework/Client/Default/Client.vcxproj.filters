@@ -73,6 +73,12 @@
     <Filter Include="02.GameObject\Terrain\Level4">
       <UniqueIdentifier>{a450a836-bb4c-422c-bd34-caa5e49cae7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Player">
+      <UniqueIdentifier>{a57f584a-6f8b-47e4-b971-5a4126bcb11a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster">
+      <UniqueIdentifier>{808aa973-9d4e-42ea-b5a7-0a17ff2ce930}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -140,6 +146,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Edit.cpp">
       <Filter>01.Levels\09.Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02.GameObject\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +236,12 @@
     <ClInclude Include="..\Public\Edit_Terrain.h">
       <Filter>02.GameObject\Terrain\Edit</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObject\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -246,6 +264,9 @@
       <Filter>97.Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
+      <Filter>97.Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl">
       <Filter>97.Shader</Filter>
     </FxCompile>
   </ItemGroup>

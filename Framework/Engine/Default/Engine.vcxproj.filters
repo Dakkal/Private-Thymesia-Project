@@ -106,6 +106,15 @@
     <Filter Include="01.Utility\08.Calculator">
       <UniqueIdentifier>{48283e5e-5162-4688-9450-59718e1b0796}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.Component\Model\Animation">
+      <UniqueIdentifier>{2f8a7045-b096-43b5-bb79-6b6b18481d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Component\Model\Bone">
+      <UniqueIdentifier>{2cfc5f95-56df-4af1-9836-ce61151e8761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Component\Model\Animation\Channel">
+      <UniqueIdentifier>{665d120a-01b8-4587-ad5c-78fd79eaf882}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -207,6 +216,15 @@
     <ClInclude Include="..\Public\Calculator.h">
       <Filter>01.Utility\08.Calculator</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bone.h">
+      <Filter>01.Utility\04.Component\Model\Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>01.Utility\04.Component\Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Channel.h">
+      <Filter>01.Utility\04.Component\Model\Animation\Channel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -295,6 +313,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Calculator.cpp">
       <Filter>01.Utility\08.Calculator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bone.cpp">
+      <Filter>01.Utility\04.Component\Model\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation.cpp">
+      <Filter>01.Utility\04.Component\Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Channel.cpp">
+      <Filter>01.Utility\04.Component\Model\Animation\Channel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
