@@ -77,8 +77,8 @@ public: /* For.Light_Manager */
 	HRESULT Add_Light(const LIGHT_DESC & LightDesc);
 
 public: /* For.Calculaotr */
-	_vector	Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer_Terrain* pBuffer);
-
+	_vector		Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
+	_vector		Picking_Object(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
 private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };

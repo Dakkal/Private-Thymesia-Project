@@ -47,7 +47,9 @@ private:
 	HRESULT Setting_Terrain();
 	HRESULT Setting_Object();
 	HRESULT	Mouse_Pos();
+
 	HRESULT List_Object();
+	void	ChangeListToSelectObj();
 
 
 	void ImGuiStyles();
@@ -68,6 +70,9 @@ private:
 	_bool			m_bIsCreateTerrain[(_uint)LEVEL::_END] = { false };
 
 	_vector			m_vTerrainPos[(_uint)LEVEL::_END];
+	_vector			m_vObjectPos[(_uint)LEVEL::_END];
+	_bool			m_bisTerrainPick = { true };
+	_bool			m_bisObjectPick = { false };
 
 	/* GUI¿ë º¯¼ö */
 	_bool			m_bFrameReady = { false };

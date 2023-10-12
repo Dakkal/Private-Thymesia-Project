@@ -102,7 +102,7 @@ HRESULT CTerrain::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 		return E_FAIL;
-	if (FAILED(pGameInstance->Bind_CamPosToShader(m_pShaderCom, "g_CamPosition")))
+	if (FAILED(pGameInstance->Bind_CamPosToShader(m_pShaderCom, "g_vCamPosition")))
 		return E_FAIL;
 
 	const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);

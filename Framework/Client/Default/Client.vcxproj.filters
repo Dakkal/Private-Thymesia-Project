@@ -52,9 +52,6 @@
     <Filter Include="01.Levels\09.Edit">
       <UniqueIdentifier>{fdb0e1ca-4dec-4b43-9312-6b27eae561c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Terrain\Level1">
-      <UniqueIdentifier>{0296b653-9d0c-4c68-bc7c-7b61ff677c1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Props">
       <UniqueIdentifier>{5bbb44bc-fd26-40a6-84e9-0f3b1f392a71}</UniqueIdentifier>
     </Filter>
@@ -64,20 +61,23 @@
     <Filter Include="02.GameObject\Terrain\Edit">
       <UniqueIdentifier>{7ec138c4-6252-4923-a8a3-2206dc583bce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Terrain\Level2">
-      <UniqueIdentifier>{95b49d30-75b4-49ff-9840-96bbe7b0fa27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Terrain\Level3">
-      <UniqueIdentifier>{ebe76984-e273-4544-aa87-ed58b3d0d864}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Terrain\Level4">
-      <UniqueIdentifier>{a450a836-bb4c-422c-bd34-caa5e49cae7d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Player">
       <UniqueIdentifier>{a57f584a-6f8b-47e4-b971-5a4126bcb11a}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\Monster">
       <UniqueIdentifier>{808aa973-9d4e-42ea-b5a7-0a17ff2ce930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\Level_1">
+      <UniqueIdentifier>{18fc7a18-52a4-493b-8cf1-d5bc700eeedf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\Level_2">
+      <UniqueIdentifier>{dce08dd1-5b1f-4797-a2b9-a9452f674271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\Level_3">
+      <UniqueIdentifier>{fd8187fe-2235-458f-a3db-43edfc580b29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.GamePlay\Level_4">
+      <UniqueIdentifier>{83f8375a-80f6-4d07-9b7c-0c1d751e4bd2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObject\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_1.cpp">
+      <Filter>01.Levels\01.GamePlay\Level_1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObject\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_1.h">
+      <Filter>01.Levels\01.GamePlay\Level_1</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

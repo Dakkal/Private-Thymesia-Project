@@ -15,6 +15,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Render();
 
+	_float3* Get_Buffer_Pos() { return m_pBufferPos; }
+	vector<_ulong> Get_Indicies() { return m_Indicies; }
+
 public:
 	HRESULT			Set_RasterState(_bool eWireFrame = false);
 
@@ -34,6 +37,9 @@ protected:
 
 	ID3D11RasterizerState*		m_pRasterState = { nullptr };
 	D3D11_RASTERIZER_DESC		m_tRasterDesc;
+
+	_float3* m_pBufferPos = { nullptr };
+	vector<_ulong> m_Indicies;
 
 protected:
 	HRESULT Create_Buffer(_Inout_ ID3D11Buffer * *ppOut);

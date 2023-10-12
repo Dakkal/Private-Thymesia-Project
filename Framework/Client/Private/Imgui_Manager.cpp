@@ -11,6 +11,8 @@
 #include "Edit_Terrain.h"
 #include "Input_Device.h"
 #include "Layer.h"
+#include "VIBuffer.h"
+#include "Mesh.h"
 
 IMPLEMENT_SINGLETON(CImgui_Manager)
 
@@ -664,7 +666,7 @@ HRESULT CImgui_Manager::Setting_Object()
                 /* 適経持失 */
                 if (ImGui::Button("Clone"))
                 {
-                    if (-1 != m_vTerrainPos[m_iCurLevel].x)
+                    if (-1 != m_vTerrainPos[m_iCurLevel].x && TEXT("") != m_strCurPropProtoObject[m_iCurLevel])
                     {
                         CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -965,7 +967,7 @@ HRESULT CImgui_Manager::Mouse_Pos()
     ImGui::Text("Mouse X : %.f", mousePos.x);
     ImGui::Text("Mouse Y : %.f", mousePos.y);
 
-    if (true == m_bIsCreateTerrain[m_iCurLevel])
+    if (true == m_bisTerrainPick && true == m_bIsCreateTerrain[m_iCurLevel])
     {
         CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -1003,7 +1005,7 @@ HRESULT CImgui_Manager::List_Object()
 {
     ImGui::Begin("Object List");
    
-    if (ImGui::BeginListBox("##List", ImVec2(ImGui::GetContentRegionAvail().x, 300)))
+    if (ImGui::BeginListBox("##List", ImVec2(ImGui::GetContentRegionAvail().x, 200)))
     {
         for (int i = 0; i < m_vecObjectList.size(); i++)
         {
@@ -1062,43 +1064,6 @@ HRESULT CImgui_Manager::List_Object()
                 RELEASE_INSTANCE(CGameInstance);
             }
         }
-        else if (nullptr == m_pSelectObject && 0 < m_vecObjectList.size())
-        {
-            string inputStr = m_vecObjectList[0];
-            string alpha;
-            string digits;
-
-            for (char c : inputStr) {
-                if (std::isalpha(c)) {
-                    alpha += c;
-                }
-                else if (std::isdigit(c)) {
-                    digits += c;
-                }
-            }
-
-            wstring walpha;
-            walpha.assign(alpha.begin(), alpha.end());
-
-            CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-            m_pSelectObject = pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), walpha, stoi(digits));
-            if (nullptr == m_pSelectObject)
-            {
-                RELEASE_INSTANCE(CGameInstance);
-                ImGui::End();
-                return E_FAIL;
-            }
-
-            CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
-
-            m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
-            m_vPropScale[m_iCurLevel] = pTransform->Get_Scale();
-            m_vPropRot[m_iCurLevel] = XMVectorZero();
-            m_vPropPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
-
-            RELEASE_INSTANCE(CGameInstance);
-        }
         ImGui::EndListBox();
     }
 
@@ -1119,8 +1084,7 @@ HRESULT CImgui_Manager::List_Object()
                 {
                     m_vecObjectList.erase(iter);
                     break;
-                }
-                    
+                }     
             }
 
             if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), m_pSelectObject->Get_Name(), m_pSelectObject->Get_Index())))
@@ -1135,12 +1099,129 @@ HRESULT CImgui_Manager::List_Object()
             RELEASE_INSTANCE(CGameInstance);
         }
     }
+    ImGui::SameLine();
+    if (ImGui::Button("Pick Object ON"))
+    {
+        if (false == m_bisObjectPick)
+        {
+            m_bisObjectPick = true;
+            m_bisTerrainPick = false;
+        }
+        else
+        {
+            m_bisObjectPick = false;
+            m_bisTerrainPick = true;
+        }
+    }
+
+    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+    if (true == m_bisObjectPick && false == Is_MouseClickedGUI() && pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON))
+    {
+        RECT rc = { 0, 0, g_iWinSizeX, g_iWinSizeY };
+
+        POINT pt;
+        GetCursorPos(&pt);
+        ScreenToClient(g_hWnd, &pt);
+
+        const list<CGameObject*>* pList = pGameInstance->Get_LayerList(LEVEL_EDIT, TEXT("Layer_Object"));
+
+        _bool IsFirstCheck = true;
+        _vector vClosePick;
+
+        if (nullptr != pList)
+        {
+            for (auto& pObject : *pList)
+            {
+                CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+                CModel* pModel = dynamic_cast<CModel*>(pObject->Get_Component(TEXT("Com_Model")));
+
+                vector<CMesh*> Meshes = pModel->Get_Meshes();
+                
+
+                for (auto& pMesh : Meshes)
+                {
+                    _vector vPick = pGameInstance->Picking_Object(rc, pt, pTransform, dynamic_cast<CVIBuffer*>(pMesh));
+
+                    if (-1 != vPick.w)
+                    {
+                        if (false == IsFirstCheck)
+                        {
+                            _vector vPickLenght = pGameInstance->Get_CamPosition_Vector() - vPick;
+                            _vector vClosePickLenght = pGameInstance->Get_CamPosition_Vector() - vClosePick;
+                          
+                            if (vPickLenght.Length() < vClosePickLenght.Length())
+                            {
+                                vClosePick = vPick;
+                                m_vObjectPos[m_iCurLevel] = vClosePick;
+
+                                m_pSelectObject = pObject;
+                                ChangeListToSelectObj();
+                            }
+                        }
+                        else
+                        {
+                            vClosePick = vPick;
+                            m_vObjectPos[m_iCurLevel] = vClosePick;
+
+                            m_pSelectObject = pObject;
+                            ChangeListToSelectObj();
+
+                            IsFirstCheck = false;
+                        }
+                        
+                    }
+                }
+            }
+        }
+
+        if (0 == vClosePick.w)
+        {
+            m_vObjectPos[m_iCurLevel] = XMVectorZero();
+        }
+    }
+
+    ImGui::Spacing();
+    ImGui::Text("MeshPos X : %.f", m_vObjectPos[m_iCurLevel].x);
+    ImGui::Text("MeshPos Y : %.f", m_vObjectPos[m_iCurLevel].y);
+    ImGui::Text("MeshPos Z : %.f", m_vObjectPos[m_iCurLevel].z);
+
+    RELEASE_INSTANCE(CGameInstance);
     
 
    
     ImGui::End();
 
     return S_OK;;
+}
+
+void CImgui_Manager::ChangeListToSelectObj()
+{
+    if (nullptr != m_pSelectObject && 0 < m_vecObjectList.size())
+    {
+        wstring strObjectName = m_pSelectObject->Get_Name();
+        string strSelectNameIndex;
+        strSelectNameIndex.assign(strObjectName.begin(), strObjectName.end());
+        strSelectNameIndex += to_string(m_pSelectObject->Get_Index());
+
+        _uint iIndex = 0;
+        for (auto& list : m_vecObjectList)
+        {
+            if (list == strSelectNameIndex)
+                break;
+
+            ++iIndex;
+        }
+        m_iSelectObject[m_iCurLevel] = iIndex;
+
+        CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
+
+        m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
+        m_vPropScale[m_iCurLevel] = pTransform->Get_Scale();
+        m_vPropRot[m_iCurLevel] = XMVectorZero();
+        m_vPropPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+;
+    }
 }
 
 void CImgui_Manager::ImGuiStyles()

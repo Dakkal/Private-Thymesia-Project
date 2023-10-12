@@ -92,12 +92,12 @@ HRESULT CChurchGrillesFloor::Ready_Components()
 		return E_FAIL;
 #else
 	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
+	if (FAILED(__super::Add_Component(LEVEL_1, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
+	if (FAILED(__super::Add_Component(LEVEL_1, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 #endif // !NDEBUG

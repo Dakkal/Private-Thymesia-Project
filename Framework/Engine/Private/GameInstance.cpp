@@ -334,12 +334,20 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 	return m_pLight_Manager->Add_Light(LightDesc);
 }
 
-_vector CGameInstance::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, CVIBuffer_Terrain* pBuffer)
+_vector CGameInstance::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, CVIBuffer* pBuffer)
 {
 	if (nullptr == m_pCalculator)
 		return _vector();
 
 	return m_pCalculator->Picking_Terrain(rc, pt, pTransform, pBuffer);
+}
+
+_vector CGameInstance::Picking_Object(RECT rc, POINT pt, CTransform* pTransform, CVIBuffer* pBuffer)
+{
+	if (nullptr == m_pCalculator)
+		return _vector();
+
+	return m_pCalculator->Picking_Object(rc, pt, pTransform, pBuffer);
 }
 
 void CGameInstance::Release_Engine()

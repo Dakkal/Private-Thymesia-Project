@@ -61,6 +61,9 @@ _int CLoader::Loading()
 	case Client::LEVEL_GAMEPLAY:
 		hr = Loading_For_Level_GamePlay();
 		break;
+	case Client::LEVEL_1:
+		hr = Loading_For_Level_1();
+		break;
 	case Client::LEVEL_EDIT:
 		hr = Loading_For_Level_Edit();
 		break;
@@ -105,6 +108,106 @@ HRESULT CLoader::Loading_For_Level_Logo()
 }
 
 HRESULT CLoader::Loading_For_Level_GamePlay()
+{
+	/* For.Texture */
+	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+	Loading_Texture();
+
+	/* For.Mesh */
+	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+	Loading_Mesh();
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+	Loading_Shader();
+
+	/* For.Object */
+	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
+	Loading_Object();
+
+
+	m_strLoading = TEXT("로딩 끝.");
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Level_1()
+{
+	/* For.Texture */
+	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+	Loading_Texture();
+
+	/* For.Mesh */
+	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+	Loading_Mesh();
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+	Loading_Shader();
+
+	/* For.Object */
+	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
+	Loading_Object();
+
+
+	m_strLoading = TEXT("로딩 끝.");
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Level_2()
+{
+	/* For.Texture */
+	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+	Loading_Texture();
+
+	/* For.Mesh */
+	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+	Loading_Mesh();
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+	Loading_Shader();
+
+	/* For.Object */
+	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
+	Loading_Object();
+
+
+	m_strLoading = TEXT("로딩 끝.");
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Level_3()
+{
+	/* For.Texture */
+	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+	Loading_Texture();
+
+	/* For.Mesh */
+	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+	Loading_Mesh();
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+	Loading_Shader();
+
+	/* For.Object */
+	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
+	Loading_Object();
+
+
+	m_strLoading = TEXT("로딩 끝.");
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Level_4()
 {
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
@@ -182,6 +285,14 @@ HRESULT CLoader::Loading_Texture()
 			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Brush.png"), 1))))
 			return E_FAIL;
 		break;
+	case Client::LEVEL_1:
+		break;
+	case Client::LEVEL_2:
+		break;
+	case Client::LEVEL_3:
+		break;
+	case Client::LEVEL_4:
+		break;
 	case Client::LEVEL_EDIT:
 		break;
 	default:
@@ -212,8 +323,22 @@ HRESULT CLoader::Loading_Mesh()
 			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Fiona/Fiona.fbx", ModelInitMatrix))))
 			return E_FAIL;
 		break;
+	case Client::LEVEL_1:
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_1, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
+			CVIBuffer_Terrain::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_1, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
+			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Props/ChurchGrillesFloor/ChurchGrillesFloor.fbx", ModelInitMatrix))))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_2:
+		break;
+	case Client::LEVEL_3:
+		break;
+	case Client::LEVEL_4:
+		break;
 	case Client::LEVEL_EDIT:
-		
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
 			CVIBuffer_Terrain::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
@@ -248,6 +373,22 @@ HRESULT CLoader::Loading_Shader()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::tElements, VTXANIMMESH::iNumElements))))
 			return E_FAIL;
+		break;
+	case Client::LEVEL_1:
+		/* For.Proto_VtxPosNorTex */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_1, TEXT("Prototype_Component_Shader_VtxPosNorTex"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosNorTex.hlsl"), VTXPOSNORTEX::tElements, VTXPOSNORTEX::iNumElements))))
+			return E_FAIL;
+		/* For.Proto_VtxMesh */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_1, TEXT("Prototype_Component_Shader_VtxMesh"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::tElements, VTXMESH::iNumElements))))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_2:
+		break;
+	case Client::LEVEL_3:
+		break;
+	case Client::LEVEL_4:
 		break;
 	case Client::LEVEL_EDIT:
 		/* For.Proto_VtxPosNorTex */
@@ -291,6 +432,23 @@ HRESULT CLoader::Loading_Object()
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster"), CMonster::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+		break;
+	case Client::LEVEL_1:
+		/* For.Terrain*/
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Edit_Terrain"), CEdit_Terrain::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Camera*/
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CToolCamera::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		/* For.Props_ChurchGrillesFloor */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchGrillesFloor"), CChurchGrillesFloor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchGrillesFloor")))))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_2:
+		break;
+	case Client::LEVEL_3:
+		break;
+	case Client::LEVEL_4:
 		break;
 	case Client::LEVEL_EDIT:
 		/* For.Terrain*/

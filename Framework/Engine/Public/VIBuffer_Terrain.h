@@ -24,12 +24,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 	TERRAIN_DESC	Get_TerrainDesc() const { return m_tTerrainDesc; }
-	_float3*		Get_Terrain_Pos() const { return m_pTerrainPos; }
 
 private:
 	TERRAIN_DESC	m_tTerrainDesc;
-
-	_float3*		m_pTerrainPos = { nullptr };
 
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strHeightMapFilePath = TEXT(""));

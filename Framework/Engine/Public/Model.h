@@ -27,8 +27,9 @@ public:
 	HRESULT Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame);
 
 public:
-	_uint	Get_NumMeshes() const { return m_iNumMeshes; }
-	_int	Get_BoneIndex(const char* pBoneName) const;
+	_uint					Get_NumMeshes() const { return m_iNumMeshes; }
+	_int					Get_BoneIndex(const char* pBoneName) const;
+	vector<class CMesh*>&	Get_Meshes() { return m_Meshes; }
 
 private:
 	Assimp::Importer		m_Importer;

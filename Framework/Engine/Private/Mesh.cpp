@@ -65,6 +65,10 @@ HRESULT CMesh::Initialize_Prototype(const CModel* pModel, CModel::TYPE eModelTyp
 		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[0];
 		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[1];
 		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[2];
+
+		m_Indicies.push_back(pAIMesh->mFaces[i].mIndices[0]);
+		m_Indicies.push_back(pAIMesh->mFaces[i].mIndices[1]);
+		m_Indicies.push_back(pAIMesh->mFaces[i].mIndices[2]);
 	}
 
 	ZeroMemory(&m_tInitialData, sizeof m_tInitialData);
@@ -101,6 +105,7 @@ HRESULT CMesh::Bind_BoneMatrices(CShader* pShader, const vector<class CBone*>& B
 
 HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _matrix PivotMatrix)
 {
+	m_pBufferPos = new _float3[m_iNumVertices];
 	VTXMESH* pVertices = new VTXMESH[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXMESH) * m_iNumVertices);
 
@@ -113,6 +118,8 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _matrix Piv
 
 		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
 		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
+
+		m_pBufferPos[i] = pVertices[i].vPosition;
 	}
 
 	ZeroMemory(&m_tInitialData, sizeof m_tInitialData);

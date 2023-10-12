@@ -17,6 +17,7 @@
 #include <DirectXTK\WICTextureLoader.h>
 #include <DirectXTK\ScreenGrab.h>
 #include <DirectXCollision.h>
+#include <DirectXCollision.inl>
 using namespace DirectX;
 
 /* assimp */

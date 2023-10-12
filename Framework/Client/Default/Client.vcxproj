@@ -53,6 +53,7 @@
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\ChurchGrillesFloor.cpp" />
     <ClCompile Include="..\Private\Edit_Terrain.cpp" />
+    <ClCompile Include="..\Private\Level_1.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\ToolCamera.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="..\Public\ChurchGrillesFloor.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Edit_Terrain.h" />
+    <ClInclude Include="..\Public\Level_1.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\ToolCamera.h" />

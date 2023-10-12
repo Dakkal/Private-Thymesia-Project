@@ -12,7 +12,8 @@ private:
 	virtual ~CCalculator() = default;
 
 public:
-	_vector		Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform,class CVIBuffer_Terrain* pBuffer);
+	_vector		Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform,class CVIBuffer* pBuffer);
+	_vector		Picking_Object(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
 
 public:
 	virtual void Free() override;

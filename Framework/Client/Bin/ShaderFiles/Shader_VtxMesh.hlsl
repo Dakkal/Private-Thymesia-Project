@@ -12,7 +12,7 @@ vector			g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
 vector			g_vMtrlAmbient = vector(0.3f, 0.3f, 0.3f, 1.f);
 vector			g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
-vector			g_CamPosition;
+vector			g_vCamPosition;
 
 Texture2D		g_DiffuseTexture;
 Texture2D		g_NormalTexture;
@@ -94,7 +94,7 @@ PS_OUT	PS_MAIN(PS_IN In)
 					+ g_vLightAmbient * g_vMtrlAmbient;
 
     vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-    vector vLook = In.vWorldPos - g_CamPosition;
+    vector vLook = In.vWorldPos - g_vCamPosition;
 	
     float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 50.f);
 	
