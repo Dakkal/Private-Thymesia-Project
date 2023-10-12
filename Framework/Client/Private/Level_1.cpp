@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "ToolCamera.h"
+#include "FbxExporter.h"
 
 CLevel_1::CLevel_1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -11,6 +12,11 @@ CLevel_1::CLevel_1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_1::Initialize()
 {
+	//CFbxExporter FbxExport;
+	//FbxExport.Start_Static_Import(TEXT("../Bin/Resources/Models/Static/Props/ChurchGrillesFloor/ChurchGrillesFloor.dat"));
+
+	//SAVEMESH_STATIC modelmesh = FbxExport.Get_Static_Mesh();
+
     m_eLevel = LEVELID::LEVEL_1;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
