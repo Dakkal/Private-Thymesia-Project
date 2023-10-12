@@ -50,9 +50,13 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
     </ClCompile>
+    <ClCompile Include="..\Private\AsFileUtils.cpp">
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IncludeInUnityFile>
+    </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\ChurchGrillesFloor.cpp" />
     <ClCompile Include="..\Private\Edit_Terrain.cpp" />
+    <ClCompile Include="..\Private\FbxExporter.cpp" />
     <ClCompile Include="..\Private\Level_1.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
@@ -89,10 +93,14 @@
     <ClInclude Include="..\..\Imgui\imstb_rectpack.h" />
     <ClInclude Include="..\..\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Imgui\imstb_truetype.h" />
+    <ClInclude Include="..\Public\AsFileUtils.h" />
+    <ClInclude Include="..\Public\AsTypes.h" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\Public\ChurchGrillesFloor.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Edit_Terrain.h" />
+    <ClInclude Include="..\Public\FbxExporter.h" />
+    <ClInclude Include="..\Public\FbxStruct.h" />
     <ClInclude Include="..\Public\Level_1.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Player.h" />
@@ -233,6 +241,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -258,6 +267,8 @@
       <AdditionalIncludeDirectories>../../Reference/Headers/;../Public/;./;../../Imgui/;../../Fmod/inc/</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <Optimization>MaxSpeed</Optimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -39,133 +39,101 @@ HRESULT CLevel_1::LateTick(_float fTimeDelta)
 
 HRESULT CLevel_1::Load_Level(LEVELID eLevel)
 {
-    string strFileTerrain = "../Bin/Data/Level" + to_string((_uint)eLevel - 2) + "Terrain.dat";
-    string strFileObject = "../Bin/Data/Level" + to_string((_uint)eLevel + - 2) + "Object.dat";
-
-    ifstream  InTerrain(strFileTerrain, ios::binary);
-    ifstream  InObject(strFileObject, ios::binary);
-
     CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+    wstring strFileTerrain = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel - 2) + TEXT("Terrain.dat");
+    wstring strFileObject = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel - 2) + TEXT("Object.dat");
 
 #pragma region Terrain
 	CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
 	ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
 
-    if (InTerrain.is_open())
-    {
-        InTerrain >> TerrainDesc.iNumVerticesX;
-        InTerrain >> TerrainDesc.iNumVerticesZ;
-        InTerrain >> TerrainDesc.bIsWireFrame;
-    }
-    else
-    {
-        RELEASE_INSTANCE(CGameInstance);
-        return E_FAIL;
-    }
+    shared_ptr<CAsFileUtils> LoadTerrain = make_shared<CAsFileUtils>();
+    LoadTerrain->Open(strFileTerrain, FileMode::Read);
 
+    LoadTerrain->Read<_int>(TerrainDesc.iNumVerticesX);
+    LoadTerrain->Read<_int>(TerrainDesc.iNumVerticesZ);
+    LoadTerrain->Read<_bool>(TerrainDesc.bIsWireFrame);
 	TerrainDesc.bIsWireFrame = false;
 
     if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
     {
-		RELEASE_INSTANCE(CGameInstance);
-		return E_FAIL;
+        RELEASE_INSTANCE(CGameInstance);
+        return E_FAIL;
     }
 #pragma endregion
 
 
 #pragma region Object
-    if (InObject.is_open())
+    _uint iObjCnt;
+
+    _uint iType;
+    OBJECT_TYPE eType;
+
+    string strTag;
+    wstring wstrTag;
+
+    _matrix matObject;
+
+    shared_ptr<CAsFileUtils> LoadObject = make_shared<CAsFileUtils>();
+    LoadObject->Open(strFileObject, FileMode::Read);
+
+    LoadObject->Read<_uint>(iObjCnt);
+
+    for (size_t i = 0; i < iObjCnt; i++)
     {
-        _uint iType;
-        OBJECT_TYPE eType;
+        LoadObject->Read<_uint>(iType);
+        LoadObject->Read(strTag);
+        LoadObject->Read<_matrix>(matObject);
 
-        _int iStrSize;
-        string strTag;
-        wstring wstrTag;
+        eType = OBJECT_TYPE(iType);
+        wstrTag.assign(strTag.begin(), strTag.end());
 
-        XMFLOAT4X4 matObject;
-        _float  elements[4][4];
 
-        while (true)
-        {
-            InObject >> iType;
-            for (size_t i = 0; i < 4; i++)
-            {
-                for (size_t j = 0; j < 4; j++)
-                {
-                    InObject >> elements[i][j];
-                }
-            }
-            InObject >> iStrSize;
-            char* filePath = new char[iStrSize + 1];
-            InObject.read(filePath, iStrSize);
-            filePath[iStrSize] = '\0';
+		switch (eType)
+		{
+		case OBJECT_TYPE::PLAYER:
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Player"), wstrTag)))
+				return E_FAIL;
 
-            eType = OBJECT_TYPE(iType);
-            for (size_t i = 0; i < 4; i++)
-            {
-                for (size_t j = 0; j < 4; j++)
-                {
-                    matObject.m[i][j] = elements[i][j];
-                }
-            }
-            strTag = filePath;
-            wstrTag.assign(strTag.begin(), strTag.end());
-            Safe_Delete_Array(filePath);
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, TEXT("Layer_Player"));
+			if (nullptr == pObject)
+				return E_FAIL;
 
-            if (!InObject)
-                break;
+			CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+			pTransform->Set_WorldMatrix(matObject);
+		}
+			break;
+		case OBJECT_TYPE::PROP:
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Prop"), wstrTag)))
+				return E_FAIL;
 
-            switch (eType)
-            {
-            case OBJECT_TYPE::PLAYER:
-            {
-                if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Player"), wstrTag)))
-                    return E_FAIL;
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, TEXT("Layer_Prop"));
+			if (nullptr == pObject)
+				return E_FAIL;
 
-                CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, TEXT("Layer_Player"));
-                if (nullptr == pObject)
-                    return E_FAIL;
+			CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+			pTransform->Set_WorldMatrix(matObject);
+		}
+			break;
+		case OBJECT_TYPE::MONSTER:
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Monster"), wstrTag)))
+				return E_FAIL;
 
-                CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
-                pTransform->Set_WorldMatrix(matObject);
-            }
-                break;
-            case OBJECT_TYPE::PROP:
-            {
-                if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Prop"), wstrTag)))
-                    return E_FAIL;
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, TEXT("Layer_Monster"));
+			if (nullptr == pObject)
+				return E_FAIL;
 
-                CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, TEXT("Layer_Prop"));
-                if (nullptr == pObject)
-                    return E_FAIL;
-
-                CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
-                pTransform->Set_WorldMatrix(matObject);
-            }
-                break;
-            case OBJECT_TYPE::MONSTER:
-            {
-                if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Monster"), wstrTag)))
-                    return E_FAIL;
-
-                CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, TEXT("Layer_Monster"));
-                if (nullptr == pObject)
-                    return E_FAIL;
-
-                CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
-                pTransform->Set_WorldMatrix(matObject);
-            }
-                break;
-            default:
-                break;
-            }
-        }
-    }
-    else
-    {
-        RELEASE_INSTANCE(CGameInstance);
-        return E_FAIL;
+			CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+			pTransform->Set_WorldMatrix(matObject);
+		}
+			break;
+		default:
+			break;
+		}
     }
 #pragma endregion
     RELEASE_INSTANCE(CGameInstance);
@@ -190,7 +158,7 @@ HRESULT CLevel_1::Ready_Layer_Camera(const wstring& strLayerTag)
 	CameraToolDesc.fSpeedPerSec = 10.f;
 	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, strLayerTag, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance)

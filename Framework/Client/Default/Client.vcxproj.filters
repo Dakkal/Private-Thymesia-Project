@@ -79,6 +79,9 @@
     <Filter Include="01.Levels\01.GamePlay\Level_4">
       <UniqueIdentifier>{83f8375a-80f6-4d07-9b7c-0c1d751e4bd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="888. FbxExporter">
+      <UniqueIdentifier>{2c7cacd5-bbe9-4db2-92d5-2cf6dce7a0d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -155,6 +158,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_1.cpp">
       <Filter>01.Levels\01.GamePlay\Level_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AsFileUtils.cpp">
+      <Filter>999. Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FbxExporter.cpp">
+      <Filter>888. FbxExporter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +256,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_1.h">
       <Filter>01.Levels\01.GamePlay\Level_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AsFileUtils.h">
+      <Filter>999. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AsTypes.h">
+      <Filter>999. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FbxStruct.h">
+      <Filter>888. FbxExporter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FbxExporter.h">
+      <Filter>888. FbxExporter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

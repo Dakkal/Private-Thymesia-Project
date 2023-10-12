@@ -8,6 +8,8 @@
 
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
+#include "FbxExporter.h"
+
 #include "Edit_Terrain.h"
 #include "Input_Device.h"
 #include "Layer.h"
@@ -1283,51 +1285,44 @@ _bool CImgui_Manager::Is_MouseClickedGUI()
 
 HRESULT CImgui_Manager::Save_MakeShift_Data(LEVEL eLevel)
 {
-    string strFileTerrain = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Terrain.dat";
-    string strFileObject = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Object.dat";
-
-    ofstream OutTerrain(strFileTerrain, ios::binary);
-    ofstream OutObject(strFileObject, ios::binary);
-
     CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+    //Terrain
+    wstring strFileTerrain = TEXT("../Bin/Data/MakeShift/MakeShiftLv") + to_wstring((_uint)eLevel + 1) + TEXT("Terrain.dat");
+    wstring strFileObject = TEXT("../Bin/Data/MakeShift/MakeShiftLv") + to_wstring((_uint)eLevel + 1) + TEXT("Object.dat");
+
+    shared_ptr<CAsFileUtils> SaveTerrain = make_shared<CAsFileUtils>();
+    SaveTerrain->Open(strFileTerrain, FileMode::Write);
+
+    SaveTerrain->Write<_int>(m_iNumVerticesX[m_iCurLevel]);
+    SaveTerrain->Write<_int>(m_iNumVerticesZ[m_iCurLevel]);
+    SaveTerrain->Write<_bool>(m_bIsWireFrame[m_iCurLevel]);
+
+    // Object
+    shared_ptr<CAsFileUtils> SaveObject = make_shared<CAsFileUtils>();
+    SaveObject->Open(strFileObject, FileMode::Write);
 
     auto listObject = pGameInstance->Get_LayerList(LEVEL_EDIT, TEXT("Layer_Object"));
 
+    _uint iObjCnt = listObject->size();
+    SaveObject->Write<_uint>(iObjCnt);
+
+    for (auto& iter : *listObject)
+    {
+        _uint iType = _uint(iter->Get_ObjectType());
+
+        wstring wstrTag = iter->Get_ProtoTag();
+        string strTag;
+        strTag.assign(wstrTag.begin(), wstrTag.end());
+
+        _matrix matObject = dynamic_cast<CTransform*>(iter->Get_Component(TEXT("Com_Transform")))->Get_WorldMatrix();
+
+        SaveObject->Write<_uint>(iType);
+        SaveObject->Write<string>(strTag);
+        SaveObject->Write<_matrix>(matObject);
+    }
+
     RELEASE_INSTANCE(CGameInstance);
-
-    if (OutTerrain.is_open())
-    {
-        OutTerrain << m_iNumVerticesX[m_iCurLevel] << endl;
-        OutTerrain << m_iNumVerticesZ[m_iCurLevel] << endl;
-        OutTerrain << m_bIsWireFrame[m_iCurLevel] << endl;
-    }
-
-    if (OutObject.is_open())
-    {
-        for (auto& iter : *listObject)
-        {
-            _uint iType = _uint(iter->Get_ObjectType());
-
-            wstring wstrTag = iter->Get_ProtoTag();
-            string strTag;
-            strTag.assign(wstrTag.begin(), wstrTag.end());
-
-            XMFLOAT4X4 matObject = dynamic_cast<CTransform*>(iter->Get_Component(TEXT("Com_Transform")))->Get_WorldMatrix();
-            _float  elements[4][4];
-
-            OutObject << iType << endl;
-            OutObject << strTag.size() << endl;
-            OutObject << strTag.c_str() << endl;
-            for (size_t i = 0; i < 4; i++)
-            {
-                for (size_t j = 0; j < 4; j++)
-                {
-                    elements[i][j] = matObject.m[i][j];
-                    OutObject << elements[i][j] << endl;
-                }
-            }
-        }
-    }
 
     return S_OK;
 }
@@ -1339,22 +1334,19 @@ HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
         m_vecObjectList.clear();
     }
 
-    string strFileTerrain = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Terrain.dat";
-    string strFileObject = "../Bin/Data/MakeShift/MakeShiftLv" + to_string((_uint)eLevel + 1) + "Object.dat";
-
-    ifstream  InTerrain(strFileTerrain, ios::binary);
-    ifstream  InObject(strFileObject, ios::binary);
-
-
     CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+    wstring strFileTerrain = TEXT("../Bin/Data/MakeShift/MakeShiftLv") + to_wstring((_uint)eLevel + 1) + TEXT("Terrain.dat");
+    wstring strFileObject = TEXT("../Bin/Data/MakeShift/MakeShiftLv") + to_wstring((_uint)eLevel + 1) + TEXT("Object.dat");
    
 #pragma region Terrain
-    if (InTerrain.is_open())
-    {
-        InTerrain >> m_iNumVerticesX[m_iCurLevel];
-        InTerrain >> m_iNumVerticesZ[m_iCurLevel];
-        InTerrain >> m_bIsWireFrame[m_iCurLevel];
-    }
+    shared_ptr<CAsFileUtils> LoadTerrain = make_shared<CAsFileUtils>();
+    LoadTerrain->Open(strFileTerrain, FileMode::Read);
+
+    LoadTerrain->Read<_int>(m_iNumVerticesX[m_iCurLevel]);
+    LoadTerrain->Read<_int>(m_iNumVerticesZ[m_iCurLevel]);
+    LoadTerrain->Read<_bool>(m_bIsWireFrame[m_iCurLevel]);
+
     CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
     ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
 
@@ -1377,48 +1369,29 @@ HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
 
   
 #pragma region Object
-    if (InObject.is_open())
-    {
+        _uint iObjCnt;
+
         _uint iType;
         OBJECT_TYPE eType;
 
-        XMFLOAT4X4 matObject;
-        _float  elements[4][4];
-
-        _int iStrSize;
         string strTag;
         wstring wstrTag;
 
-        while (true)
+        _matrix matObject;
+
+        shared_ptr<CAsFileUtils> LoadObject = make_shared<CAsFileUtils>();
+        LoadObject->Open(strFileObject, FileMode::Read);
+
+        LoadObject->Read<_uint>(iObjCnt);
+
+        for (size_t i = 0; i < iObjCnt; i++)
         {
-            InObject >> iType;
-            InObject >> iStrSize;
-            ++iStrSize;
-            char* filePath = new char[iStrSize];
-            InObject >> filePath;
-            filePath[iStrSize] = '\0'; 
-            for (size_t i = 0; i < 4; i++)
-            {
-                for (size_t j = 0; j < 4; j++)
-                {
-                    InObject >> elements[i][j];
-                }
-            }
+            LoadObject->Read<_uint>(iType);
+            LoadObject->Read(strTag);
+            LoadObject->Read<_matrix>(matObject);
 
             eType = OBJECT_TYPE(iType);
-            strTag = filePath;
             wstrTag.assign(strTag.begin(), strTag.end());
-            Safe_Delete_Array(filePath);
-            for (size_t i = 0; i < 4; i++)
-            {
-                for (size_t j = 0; j < 4; j++)
-                {
-                    matObject.m[i][j] = elements[i][j];
-                }
-            }
-
-            if (!InObject)
-                break;
 
             if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), wstrTag)))
                 return E_FAIL;
@@ -1438,7 +1411,6 @@ HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
             m_vecObjectList.push_back(strSelectNameIndex);
             m_iSelectObject[m_iCurLevel] = m_vecObjectList.size() - 1;
         }
-    }
 #pragma endregion
     RELEASE_INSTANCE(CGameInstance);
 
@@ -1459,93 +1431,66 @@ void CImgui_Manager::DeleteMakeShift_Data()
 
 HRESULT CImgui_Manager::Save_Data(LEVEL eLevel)
 {
-    string strFileTerrain = "../Bin/Data/Level" + to_string((_uint)eLevel + 1) + "Terrain.dat";
-    string strFileObject = "../Bin/Data/Level" + to_string((_uint)eLevel + 1) + "Object.dat";
-
-    ofstream OutTerrain(strFileTerrain, ios::binary);
-    ofstream OutObject(strFileObject, ios::binary);
-
     CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+    wstring strFileTerrain = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel + 1) + TEXT("Terrain.dat");
+    wstring strFileObject = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel + 1) + TEXT("Object.dat");
+
+    shared_ptr<CAsFileUtils> SaveTerrain = make_shared<CAsFileUtils>();
+    SaveTerrain ->Open(strFileTerrain, FileMode::Write);
+
+    SaveTerrain->Write<_int>(m_iNumVerticesX[m_iCurLevel]);
+    SaveTerrain->Write<_int>(m_iNumVerticesZ[m_iCurLevel]);
+    SaveTerrain->Write<_bool>(m_bIsWireFrame[m_iCurLevel]);
+
+    shared_ptr<CAsFileUtils> SaveObject = make_shared<CAsFileUtils>();
+    SaveObject->Open(strFileObject, FileMode::Write);
 
     auto listObject = pGameInstance->Get_LayerList(LEVEL_EDIT, TEXT("Layer_Object"));
 
+    _uint iObjCnt = listObject->size();
+    SaveObject->Write<_uint>(iObjCnt);
+
+    for (auto& iter : *listObject)
+    {
+        _uint iType = _uint(iter->Get_ObjectType());
+
+        wstring wstrTag = iter->Get_ProtoTag();
+        string strTag;
+        strTag.assign(wstrTag.begin(), wstrTag.end());
+
+        _matrix matObject = dynamic_cast<CTransform*>(iter->Get_Component(TEXT("Com_Transform")))->Get_WorldMatrix();
+
+        SaveObject->Write<_uint>(iType);
+        SaveObject->Write<string>(strTag);
+        SaveObject->Write<_matrix>(matObject);
+    }
+
     RELEASE_INSTANCE(CGameInstance);
-
-    if (OutTerrain.is_open())
-    {
-        OutTerrain << m_iNumVerticesX[m_iCurLevel] << endl;
-        OutTerrain << m_iNumVerticesZ[m_iCurLevel] << endl;
-        OutTerrain << m_bIsWireFrame[m_iCurLevel] << endl;
-    }
-    else
-        return E_FAIL;
-
-    if (OutObject.is_open())
-    {
-        for (auto& iter : *listObject)
-        {
-            _uint iType = _uint(iter->Get_ObjectType());
-
-            wstring wstrTag = iter->Get_ProtoTag();
-            string strTag;
-            strTag.assign(wstrTag.begin(), wstrTag.end());
-
-            XMFLOAT4X4 matObject = dynamic_cast<CTransform*>(iter->Get_Component(TEXT("Com_Transform")))->Get_WorldMatrix();
-            _float  elements[4][4];
-
-            OutObject << iType << endl;
-            for (size_t i = 0; i < 4; i++)
-            {
-                for (size_t j = 0; j < 4; j++)
-                {
-                    elements[i][j] = matObject.m[i][j];
-                    OutObject << elements[i][j] << endl;
-                }
-            }
-            OutObject << strTag.size();
-            OutObject.write(strTag.c_str(), strTag.size());
-        }
-    }
-    else
-        return E_FAIL;
 
     return S_OK;
 }
 
 HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
 {
-    string strFileTerrain = "../Bin/Data/Level" + to_string((_uint)eLevel + 1) + "Terrain.dat";
-    string strFileObject = "../Bin/Data/Level" + to_string((_uint)eLevel + 1) + "Object.dat";
-
-    ifstream  InTerrain(strFileTerrain, ios::binary);
-    ifstream  InObject(strFileObject, ios::binary);
-
-    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-    pGameInstance->Delete_Layer(LEVEL_EDIT, TEXT("Layer_Terrain"));
-    pGameInstance->Delete_Layer(LEVEL_EDIT, TEXT("Layer_Object"));
-
-    if (nullptr != m_pSelectObject)
-        m_pSelectObject = nullptr;
-
     if (!m_vecObjectList.empty())
     {
         m_vecObjectList.clear();
     }
 
+    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+    wstring strFileTerrain = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel + 1) + TEXT("Terrain.dat");
+    wstring strFileObject = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel + 1) + TEXT("Object.dat");
+
 #pragma region Terrain
-    if (InTerrain.is_open())
-    {
-        InTerrain >> m_iNumVerticesX[m_iCurLevel];
-        InTerrain >> m_iNumVerticesZ[m_iCurLevel];
-        InTerrain >> m_bIsWireFrame[m_iCurLevel];
-    }
-    else
-    {
-        RELEASE_INSTANCE(CGameInstance);
-        return E_FAIL;
-    }
-        
+    shared_ptr<CAsFileUtils> LoadTerrain = make_shared<CAsFileUtils>();
+    LoadTerrain->Open(strFileTerrain, FileMode::Read);
+
+    LoadTerrain->Read<_int>(m_iNumVerticesX[m_iCurLevel]);
+    LoadTerrain->Read<_int>(m_iNumVerticesZ[m_iCurLevel]);
+    LoadTerrain->Read<_bool>(m_bIsWireFrame[m_iCurLevel]);
+
     CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
     ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
 
@@ -1555,7 +1500,8 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
 
     if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
     {
-       
+        RELEASE_INSTANCE(CGameInstance);
+        return E_FAIL;
     }
     m_pSelectTerrain = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"));
     if (nullptr == m_pSelectTerrain)
@@ -1563,76 +1509,51 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
         RELEASE_INSTANCE(CGameInstance);
         return E_FAIL;
     }
-    m_bIsCreateTerrain[m_iCurLevel] = true;
 #pragma endregion
 
 
 #pragma region Object
-    if (InObject.is_open())
+    _uint iObjCnt;
+
+    _uint iType;
+    OBJECT_TYPE eType;
+
+    string strTag;
+    wstring wstrTag;
+
+    _matrix matObject;
+
+    shared_ptr<CAsFileUtils> LoadObject = make_shared<CAsFileUtils>();
+    LoadObject->Open(strFileObject, FileMode::Read);
+
+    LoadObject->Read<_uint>(iObjCnt);
+
+    for (size_t i = 0; i < iObjCnt; i++)
     {
-        _uint iType;
-        OBJECT_TYPE eType;
+        LoadObject->Read<_uint>(iType);
+        LoadObject->Read(strTag);
+        LoadObject->Read<_matrix>(matObject);
 
-        _int iStrSize;
-        string strTag;
-        wstring wstrTag;
+        eType = OBJECT_TYPE(iType);
+        wstrTag.assign(strTag.begin(), strTag.end());
 
-        XMFLOAT4X4 matObject;
-        _float  elements[4][4];
+        if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), wstrTag)))
+            return E_FAIL;
 
-        while (true)
-        {
-            InObject >> iType;
-            for (size_t i = 0; i < 4; i++)
-            {
-                for (size_t j = 0; j < 4; j++)
-                {
-                    InObject >> elements[i][j];
-                }
-            }
-            InObject >> iStrSize;
-            char* filePath = new char[iStrSize + 1];
-            InObject.read(filePath, iStrSize);
-            filePath[iStrSize] = '\0';
+        CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Object"));
+        if (nullptr == pObject)
+            return E_FAIL;
 
-            eType = OBJECT_TYPE(iType);
-            for (size_t i = 0; i < 4; i++)
-            {
-                for (size_t j = 0; j < 4; j++)
-                {
-                    matObject.m[i][j] = elements[i][j];
-                }
-            }
-            strTag = filePath;
-            wstrTag.assign(strTag.begin(), strTag.end());
-            Safe_Delete_Array(filePath);
+        CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+        pTransform->Set_WorldMatrix(matObject);
 
-            if (!InObject)
-                break;
+        wstring strObjectName = pObject->Get_Name();
+        string strSelectNameIndex;
+        strSelectNameIndex.assign(strObjectName.begin(), strObjectName.end());
+        strSelectNameIndex += to_string(pObject->Get_Index());
 
-            if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), wstrTag)))
-                return E_FAIL;
-
-            CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Object"));
-            if (nullptr == pObject)
-                return E_FAIL;
-
-            CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
-            pTransform->Set_WorldMatrix(matObject);
-
-            wstring strObjectName = pObject->Get_Name();
-            string strSelectNameIndex;
-            strSelectNameIndex.assign(strObjectName.begin(), strObjectName.end());
-            strSelectNameIndex += to_string(pObject->Get_Index());
-
-            m_vecObjectList.push_back(strSelectNameIndex);
-            m_iSelectObject[m_iCurLevel] = m_vecObjectList.size() - 1;
-        }
-    }
-    else
-    {
-        RELEASE_INSTANCE(CGameInstance);
-        return E_FAIL;
+        m_vecObjectList.push_back(strSelectNameIndex);
+        m_iSelectObject[m_iCurLevel] = m_vecObjectList.size() - 1;
     }
 #pragma endregion
     RELEASE_INSTANCE(CGameInstance);

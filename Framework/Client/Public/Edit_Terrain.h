@@ -37,8 +37,8 @@ private:
 	CVIBuffer_Terrain*			m_pVIBufferCom = { nullptr };
 	
 private:
-	_uint						m_iNumVerticesX = { 0 };
-	_uint						m_iNumVerticesZ = { 0 };
+	_int						m_iNumVerticesX = { 0 };
+	_int						m_iNumVerticesZ = { 0 };
 	_bool						m_bIsWireFrame = { true };
 
 private:

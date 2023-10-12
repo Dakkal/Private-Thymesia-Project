@@ -88,6 +88,12 @@ HRESULT CEdit_Terrain::Ready_Components()
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
 		return E_FAIL;
 
+	/* Com_Transform */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom))))
+		return E_FAIL;
+
+#ifndef NDEBUG
 	/* Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxPosNorTex"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -105,13 +111,25 @@ HRESULT CEdit_Terrain::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &TerrainDesc)))
 		return E_FAIL;
-
-	/* Com_Texture*/
-
-	/* Com_Transform */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom))))
+#else
+	/* Com_Shader */
+	if (FAILED(__super::Add_Component(LEVEL_1, TEXT("Prototype_Component_Shader_VtxPosNorTex"),
+		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
+
+
+	CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
+	ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
+
+	TerrainDesc.iNumVerticesX = m_iNumVerticesX;
+	TerrainDesc.iNumVerticesZ = m_iNumVerticesZ;
+	TerrainDesc.bIsWireFrame = m_bIsWireFrame;
+
+	/* Com_VIBuffer */
+	if (FAILED(__super::Add_Component(LEVEL_1, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
+		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &TerrainDesc)))
+		return E_FAIL;
+#endif // !NDEBUG
 
 	return S_OK;
 }

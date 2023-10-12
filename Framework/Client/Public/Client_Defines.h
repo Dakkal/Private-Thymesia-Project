@@ -3,6 +3,8 @@
 #include <process.h>
 #include <thread>
 #include <mutex>
+#include <filesystem>
+#include "AsFileUtils.h"
 
 namespace Client
 {
