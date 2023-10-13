@@ -19,7 +19,7 @@ CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
 	, m_pRasterState(rhs.m_pRasterState)
 	, m_tRasterDesc(rhs.m_tRasterDesc)
 	, m_Indicies(rhs.m_Indicies)
-	, m_pBufferPos(rhs.m_pBufferPos)
+	, m_BufferPoses(rhs.m_BufferPoses)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
@@ -101,9 +101,6 @@ HRESULT CVIBuffer::Create_Buffer(_Inout_ ID3D11Buffer** ppOut)
 void CVIBuffer::Free()
 {
 	__super::Free();
-
-	if (nullptr != m_pBufferPos)
-		Safe_Delete_Array(m_pBufferPos);
 
 	Safe_Release(m_pRasterState);
 	Safe_Release(m_pVB);

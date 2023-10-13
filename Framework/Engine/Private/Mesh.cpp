@@ -105,7 +105,6 @@ HRESULT CMesh::Bind_BoneMatrices(CShader* pShader, const vector<class CBone*>& B
 
 HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _matrix PivotMatrix)
 {
-	m_pBufferPos = new _float3[m_iNumVertices];
 	VTXMESH* pVertices = new VTXMESH[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXMESH) * m_iNumVertices);
 
@@ -119,7 +118,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _matrix Piv
 		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
 		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
 
-		m_pBufferPos[i] = pVertices[i].vPosition;
+		m_BufferPoses.push_back(pVertices[i].vPosition);
 	}
 
 	ZeroMemory(&m_tInitialData, sizeof m_tInitialData);

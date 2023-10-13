@@ -121,6 +121,21 @@
     <Filter Include="01.Utility\98.FileUtil\FbxExporter">
       <UniqueIdentifier>{5c04eadb-fd79-49ef-b5cf-3ec56aafd0a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.Component\BinModel">
+      <UniqueIdentifier>{c0f78696-e5b4-4498-b42a-0e6a6219a07e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Component\BinModel\BinAnimation">
+      <UniqueIdentifier>{1b99ae9e-8086-4937-942f-425ce28f91c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Component\BinModel\BinBone">
+      <UniqueIdentifier>{d6789947-cf9e-4d46-9841-43387e60d15f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Component\BinModel\BinMesh">
+      <UniqueIdentifier>{9feb08db-12ec-436f-953a-6cfb4571c680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Component\BinModel\BinAnimation\BinChannel">
+      <UniqueIdentifier>{43b773a7-159c-4b64-8e2c-67e4bb5d1764}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -243,6 +258,21 @@
     <ClInclude Include="..\Public\AsTypes.h">
       <Filter>01.Utility\98.FileUtil</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BinModel.h">
+      <Filter>01.Utility\04.Component\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BinBone.h">
+      <Filter>01.Utility\04.Component\BinModel\BinBone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BinMesh.h">
+      <Filter>01.Utility\04.Component\BinModel\BinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BinAnimation.h">
+      <Filter>01.Utility\04.Component\BinModel\BinAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BinChannel.h">
+      <Filter>01.Utility\04.Component\BinModel\BinAnimation\BinChannel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -346,6 +376,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\AsFileUtils.cpp">
       <Filter>01.Utility\98.FileUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BinModel.cpp">
+      <Filter>01.Utility\04.Component\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BinBone.cpp">
+      <Filter>01.Utility\04.Component\BinModel\BinBone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BinMesh.cpp">
+      <Filter>01.Utility\04.Component\BinModel\BinMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BinAnimation.cpp">
+      <Filter>01.Utility\04.Component\BinModel\BinAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BinChannel.cpp">
+      <Filter>01.Utility\04.Component\BinModel\BinAnimation\BinChannel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

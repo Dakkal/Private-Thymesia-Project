@@ -61,6 +61,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	else
 		m_pModelCom->Set_Animation(true, iIndex);
 
+
 	m_pModelCom->Play_Animation(fTimeDelta);
 }
 

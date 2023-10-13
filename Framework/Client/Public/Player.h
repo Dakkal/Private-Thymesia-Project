@@ -30,7 +30,7 @@ private:
 	CRenderer* m_pRendererCom = { nullptr };
 	CTransform* m_pTransformCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
+	CBinModel* m_pModelCom = { nullptr };
 
 	_int	iIndex = 0;
 

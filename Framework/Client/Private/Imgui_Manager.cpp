@@ -14,7 +14,7 @@
 #include "Input_Device.h"
 #include "Layer.h"
 #include "VIBuffer.h"
-#include "Mesh.h"
+#include "BinMesh.h"
 
 IMPLEMENT_SINGLETON(CImgui_Manager)
 
@@ -1135,9 +1135,9 @@ HRESULT CImgui_Manager::List_Object()
             for (auto& pObject : *pList)
             {
                 CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
-                CModel* pModel = dynamic_cast<CModel*>(pObject->Get_Component(TEXT("Com_Model")));
+                CBinModel* pModel = dynamic_cast<CBinModel*>(pObject->Get_Component(TEXT("Com_Model")));
 
-                vector<CMesh*> Meshes = pModel->Get_Meshes();
+                vector<CBinMesh*> Meshes = pModel->Get_Meshes();
                 
 
                 for (auto& pMesh : Meshes)

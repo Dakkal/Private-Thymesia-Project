@@ -16,17 +16,11 @@ typedef struct tagSave_MeshInfo_Static
 	_uint	iMaterialIndex;
 	_uint	iNumVertices;
 	_uint	iNumFaces;
+
+	vector<_ulong> vecIdicies;
 	vector<SAVE_VTXMESH_STATIC> vecVtxMeshes;
 
 }SAVE_MESHINFO_STATIC;
-
-typedef struct tagSave_Mesh_Static
-{
-	_uint	iNumMeshes;
-	vector<SAVE_MESHINFO_STATIC> vecMeshInfo;
-
-}SAVE_MESH_STATIC;
-
 
 // 다이나믹 메쉬저장
 typedef struct  tagSave_Vertex_Mesh_Dynamic
@@ -49,25 +43,34 @@ typedef struct tagSave_MeshInfo_Dynamic
 	_uint	iNumFaces;
 	_uint	iNumBone;
 
+	vector<_ulong> vecIdicies;
 	vector<SAVE_VTXMESH_DYNAMIC> vecVtxMeshes;
 	vector<XMFLOAT4X4> vecOffsetMatrix;
 	vector<_int> BoneIndex;
 
 }SAVE_MESHINFO_DYNAMIC;
 
-typedef struct tagSave_Mesh_Dynamic
+// 메쉬
+typedef struct tagSave_Mesh
 {
 	_uint	iNumMeshes;
-	vector<SAVE_MESHINFO_DYNAMIC> vecMeshInfo;
+	vector<SAVE_MESHINFO_STATIC> vecMeshStaticInfo;
+	vector<SAVE_MESHINFO_DYNAMIC> vecMeshDynamicInfo;
 
-}SAVE_MESH_DYNAMIC;
+}SAVE_MESH;
 
 
 // 머테리얼
+typedef struct  tagSave_Material_Info
+{
+	vector<string> FilePaths;
+
+}SAVE_MATERIAL_INFO;
+
 typedef struct  tagSave_Material
 {
 	_uint	iNumMaterial;
-	vector<string> MaterialPaths;
+	vector<SAVE_MATERIAL_INFO> vecMaterialPaths;
 
 }SAVE_MATERIAL;
 

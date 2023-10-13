@@ -97,7 +97,7 @@ HRESULT CFbxExporter::Start_Static_Export(const wstring& FbxPath)
     if (FAILED(Export_Static_Mesh(pAIScene, Save.get())))
         return E_FAIL;
 
-    if (FAILED(Export_Material(pAIScene, Save.get())))
+    if (FAILED(Export_Material(pAIScene, fbxPath, Save.get())))
         return E_FAIL;
 
     return S_OK;
@@ -136,7 +136,7 @@ HRESULT CFbxExporter::Start_Dynamic_Export(const wstring& FbxPath)
     if (FAILED(Export_Dynamic_Mesh(pAIScene, Save.get())))
         return E_FAIL;
     
-    if (FAILED(Export_Material(pAIScene, Save.get())))
+    if (FAILED(Export_Material(pAIScene, fbxPath, Save.get())))
         return E_FAIL;
 
     if (FAILED(Export_Animation(pAIScene, Save.get())))
@@ -171,6 +171,13 @@ HRESULT CFbxExporter::Export_Static_Mesh(const aiScene* pAIScene, CAsFileUtils* 
             pFile->Write<XMFLOAT3>(VtxDesc.vNormal);
             pFile->Write<XMFLOAT2>(VtxDesc.vTexcoord);
             pFile->Write<XMFLOAT3>(VtxDesc.vTangent);
+        }
+
+        for (size_t k = 0; k < pMesh->mNumFaces; k++)
+        {
+            pFile->Write<_ulong>(pMesh->mFaces[k].mIndices[0]);
+            pFile->Write<_ulong>(pMesh->mFaces[k].mIndices[1]);
+            pFile->Write<_ulong>(pMesh->mFaces[k].mIndices[2]);
         }
     }
 
@@ -256,13 +263,21 @@ HRESULT CFbxExporter::Export_Dynamic_Mesh(const aiScene* pAIScene, CAsFileUtils*
             pFile->Write<XMFLOAT4>(pVertices[m].vBlendWeights);
         }
 
+
+        for (size_t o = 0; o < pMesh->mNumFaces; o++)
+        {
+            pFile->Write<_ulong>(pMesh->mFaces[o].mIndices[0]);
+            pFile->Write<_ulong>(pMesh->mFaces[o].mIndices[1]);
+            pFile->Write<_ulong>(pMesh->mFaces[o].mIndices[2]);
+        }
+
         Safe_Delete_Array(pVertices);
     }
 
     return S_OK;
 }
 
-HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, CAsFileUtils* pFile)
+HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, const string& strExportPath, CAsFileUtils* pFile)
 {
     pFile->Write<_uint>(pAIScene->mNumMaterials);
 
@@ -282,7 +297,22 @@ HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, CAsFileUtils* pFi
             else
             {
                 string      strTexturePath = strAITexturePath.data;
-                pFile->Write<string>(strTexturePath);
+              
+                char			szDrive[MAX_PATH] = "";
+                char			szDirectory[MAX_PATH] = "";
+                _splitpath_s(strExportPath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
+
+                char			szFileName[MAX_PATH] = "";
+                char			szExt[MAX_PATH] = "";
+                _splitpath_s(strTexturePath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
+
+                char			szFullPath[MAX_PATH] = "";
+                strcpy_s(szFullPath, szDrive);
+                strcat_s(szFullPath, szDirectory);
+                strcat_s(szFullPath, szFileName);
+                strcat_s(szFullPath, szExt);
+
+                pFile->Write<string>(szFullPath);
             }
         }
     }
@@ -310,11 +340,12 @@ HRESULT CFbxExporter::Export_BoneNode(const aiNode* pAINode, _int iParentBoneInd
     XMStoreFloat4x4(&TransformMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransformMatrix)));
     pFile->Write<XMFLOAT4X4>(TransformMatrix);
   
-    ++iParentBoneIndex;
+    vecCheck.push_back(0);
+    _int iParentIndex = vecCheck.size() - 1;
 
     for (size_t i = 0; i < pAINode->mNumChildren; i++)
     {
-        Export_BoneNode(pAINode->mChildren[i], iParentBoneIndex, pFile);
+        Export_BoneNode(pAINode->mChildren[i], iParentIndex, pFile);
     }
 
     return S_OK;
@@ -420,9 +451,9 @@ HRESULT CFbxExporter::Start_Dynamic_Import(const wstring& batPath)
 
 HRESULT CFbxExporter::Import_Static_Mesh(CAsFileUtils* pFile)
 {
-   pFile->Read<_uint>(ModelStaticMesh.iNumMeshes);
+   pFile->Read<_uint>(ModelMesh.iNumMeshes);
 
-   for (size_t i = 0; i < ModelStaticMesh.iNumMeshes; i++)
+   for (size_t i = 0; i < ModelMesh.iNumMeshes; i++)
    {
        SAVE_MESHINFO_STATIC MeshInfoDesc;
 
@@ -443,7 +474,19 @@ HRESULT CFbxExporter::Import_Static_Mesh(CAsFileUtils* pFile)
            MeshInfoDesc.vecVtxMeshes.push_back(VtxDesc);
        }
 
-       ModelStaticMesh.vecMeshInfo.push_back(MeshInfoDesc);
+       _ulong a, b, c;
+       for (size_t k = 0; k < MeshInfoDesc.iNumFaces; k++)
+       {
+           pFile->Read<_ulong>(a);
+           pFile->Read<_ulong>(b);
+           pFile->Read<_ulong>(c);
+
+           MeshInfoDesc.vecIdicies.push_back(a);
+           MeshInfoDesc.vecIdicies.push_back(b);
+           MeshInfoDesc.vecIdicies.push_back(c);
+       }
+
+       ModelMesh.vecMeshStaticInfo.push_back(MeshInfoDesc);
    }
 
    return S_OK;
@@ -451,10 +494,10 @@ HRESULT CFbxExporter::Import_Static_Mesh(CAsFileUtils* pFile)
 
 HRESULT CFbxExporter::Import_Dynamic_Mesh(CAsFileUtils* pFile)
 {
-    pFile->Read<_uint>(ModelDynamicMesh.iNumMeshes);
+    pFile->Read<_uint>(ModelMesh.iNumMeshes);
 
    
-    for (size_t i = 0; i < ModelDynamicMesh.iNumMeshes; i++)
+    for (size_t i = 0; i < ModelMesh.iNumMeshes; i++)
     {
         SAVE_MESHINFO_DYNAMIC meshinfo;
 
@@ -498,7 +541,19 @@ HRESULT CFbxExporter::Import_Dynamic_Mesh(CAsFileUtils* pFile)
             meshinfo.vecVtxMeshes.push_back(vtxinfo);
         }
 
-        ModelDynamicMesh.vecMeshInfo.push_back(meshinfo);
+        _ulong a, b, c;
+        for (size_t k = 0; k < meshinfo.iNumFaces; k++)
+        {
+            pFile->Read<_ulong>(a);
+            pFile->Read<_ulong>(b);
+            pFile->Read<_ulong>(c);
+
+            meshinfo.vecIdicies.push_back(a);
+            meshinfo.vecIdicies.push_back(b);
+            meshinfo.vecIdicies.push_back(c);
+        }
+
+        ModelMesh.vecMeshDynamicInfo.push_back(meshinfo);
     }
 
     return S_OK;
@@ -510,13 +565,17 @@ HRESULT CFbxExporter::Import_Material(CAsFileUtils* pFile)
 
     for (size_t i = 0; i < ModelMaterial.iNumMaterial; i++)
     {
+        SAVE_MATERIAL_INFO MaterilInfo;
+
         for (size_t j = 0; j < AI_TEXTURE_TYPE_MAX; j++)
         {
             string      strTexturePath;
             pFile->Read(strTexturePath);
 
-            ModelMaterial.MaterialPaths.push_back(strTexturePath);
+            MaterilInfo.FilePaths.push_back(strTexturePath);
         }
+
+        ModelMaterial.vecMaterialPaths.push_back(MaterilInfo);
     }
 
     return S_OK;

@@ -23,6 +23,11 @@
     <ClInclude Include="..\Public\AsFileUtils.h" />
     <ClInclude Include="..\Public\AsTypes.h" />
     <ClInclude Include="..\Public\Base.h" />
+    <ClInclude Include="..\Public\BinAnimation.h" />
+    <ClInclude Include="..\Public\BinBone.h" />
+    <ClInclude Include="..\Public\BinChannel.h" />
+    <ClInclude Include="..\Public\BinMesh.h" />
+    <ClInclude Include="..\Public\BinModel.h" />
     <ClInclude Include="..\Public\Bone.h" />
     <ClInclude Include="..\Public\Calculator.h" />
     <ClInclude Include="..\Public\Camera.h" />
@@ -64,6 +69,11 @@
     <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\Private\AsFileUtils.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
+    <ClCompile Include="..\Private\BinAnimation.cpp" />
+    <ClCompile Include="..\Private\BinBone.cpp" />
+    <ClCompile Include="..\Private\BinChannel.cpp" />
+    <ClCompile Include="..\Private\BinMesh.cpp" />
+    <ClCompile Include="..\Private\BinModel.cpp" />
     <ClCompile Include="..\Private\Bone.cpp" />
     <ClCompile Include="..\Private\Calculator.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />

@@ -28,7 +28,7 @@ _vector CCalculator::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, 
     ray.direction = XMVector3TransformNormal(ray.direction, pTransform->Get_WorldMatrix_Inverse());
     ray.direction.Normalize();
 
-	SimpleMath::Vector3* pBufferPos = pBuffer->Get_Buffer_Pos();
+	vector<_float3> pBufferPos = pBuffer->Get_Buffer_Pos();
 	CVIBuffer_Terrain::TERRAIN_DESC tTerrainDesc = dynamic_cast<CVIBuffer_Terrain*>(pBuffer)->Get_TerrainDesc();
 
     _ulong		dwVtxIdx[3]{};
@@ -106,7 +106,7 @@ _vector CCalculator::Picking_Object(RECT rc, POINT pt, CTransform* pTransform, C
     ray.direction = XMVector3TransformNormal(ray.direction, pTransform->Get_WorldMatrix_Inverse());
     ray.direction.Normalize();
 
-    SimpleMath::Vector3* pBufferPos = pBuffer->Get_Buffer_Pos();
+    vector<_float3> pBufferPos = pBuffer->Get_Buffer_Pos();
     vector<_ulong>Indicies = pBuffer->Get_Indicies();
 
     _ulong	dwVtxIdx[3]{};

@@ -9,6 +9,7 @@
 #include "ChurchGrillesFloor.h"
 #include "Player.h"
 #include "Monster.h"
+#include "BinModel.h"
 
 _uint APIENTRY ThreadEntry(void* pArg)
 {
@@ -320,7 +321,7 @@ HRESULT CLoader::Loading_Mesh()
 			return E_FAIL;
 		ModelInitMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
-			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Dynamic/Fiona/Fiona.fbx", ModelInitMatrix))))
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Fiona/Fiona.dat"), ModelInitMatrix))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_1:
@@ -329,7 +330,7 @@ HRESULT CLoader::Loading_Mesh()
 			return E_FAIL;
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_1, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
-			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Static/Props/ChurchGrillesFloor/ChurchGrillesFloor.fbx", ModelInitMatrix))))
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchGrillesFloor/ChurchGrillesFloor.dat"), ModelInitMatrix))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_2:
@@ -344,7 +345,7 @@ HRESULT CLoader::Loading_Mesh()
 			return E_FAIL;
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
-			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Static/Props/ChurchGrillesFloor/ChurchGrillesFloor.fbx", ModelInitMatrix))))
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchGrillesFloor/ChurchGrillesFloor.dat"), ModelInitMatrix))))
 			return E_FAIL;
 		break;
 	default:

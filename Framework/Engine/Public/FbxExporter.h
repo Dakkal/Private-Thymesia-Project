@@ -10,8 +10,7 @@ public:
 	~CFbxExporter();
 
 public:
-	SAVE_MESH_STATIC	Get_Static_Mesh() { return ModelStaticMesh; };
-	SAVE_MESH_DYNAMIC	Get_Dynamic_Mesh() { return ModelDynamicMesh; };
+	SAVE_MESH			Get_Mesh() { return ModelMesh; };
 	SAVE_MATERIAL		Get_Material() { return ModelMaterial; };
 	SAVE_BONE			Get_Bone() { return ModelBone; }
 	SAVE_ANIM			Get_Anim() { return ModelAnim; }
@@ -29,7 +28,7 @@ private:
 
 	HRESULT Export_Static_Mesh(const aiScene* pAIScene, CAsFileUtils* pFile);
 	HRESULT Export_Dynamic_Mesh(const aiScene* pAIScene, CAsFileUtils* pFile);
-	HRESULT Export_Material(const aiScene* pAIScene, CAsFileUtils* pFile);
+	HRESULT Export_Material(const aiScene* pAIScene, const string& strExportPath, CAsFileUtils* pFile);
 	HRESULT Export_Bone(const aiScene* pAIScene, CAsFileUtils* pFile);
 	HRESULT Export_BoneNode(const aiNode* pAINode, _int iParentBoneIndex, CAsFileUtils* pFile);
 	HRESULT Export_Animation(const aiScene* pAIScene, CAsFileUtils* pFile);
@@ -51,9 +50,10 @@ private:
 	_int	  iNodeStop = { 0 };
 	_int	  iImportNodeStop = { 0 };
 
+	vector<_int> vecCheck;
+
 private:
-	SAVE_MESH_STATIC	ModelStaticMesh;
-	SAVE_MESH_DYNAMIC	ModelDynamicMesh;
+	SAVE_MESH			ModelMesh;
 	SAVE_MATERIAL		ModelMaterial;
 	SAVE_BONE			ModelBone;
 	SAVE_ANIM			ModelAnim;

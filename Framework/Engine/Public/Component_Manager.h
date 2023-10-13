@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "Transform.h"
 #include "Model.h"
+#include "BinModel.h"
 
 BEGIN(Engine)
 

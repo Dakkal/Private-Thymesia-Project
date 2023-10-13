@@ -44,8 +44,6 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 	m_iNumVBs = 1;
 
 #pragma region VERTEX_BUFFER
-
-	m_pBufferPos = new _float3[m_iNumVertices];
 	VTXPOSNORTEX* pVertices = new VTXPOSNORTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXPOSNORTEX) * m_iNumVertices);
 
@@ -59,7 +57,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const wstring& strHeightMapFileP
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexcoord = _float2(j / (m_tTerrainDesc.iNumVerticesX - 1.f), i / (m_tTerrainDesc.iNumVerticesZ - 1.f));
 
-			m_pBufferPos[iIndex] = pVertices[iIndex].vPosition;
+			m_BufferPoses.push_back(pVertices[iIndex].vPosition);
 		}
 	}
 
@@ -181,8 +179,6 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 		m_iNumVBs = 1;
 
 #pragma region VERTEX_BUFFER
-
-		m_pBufferPos = new _float3[m_iNumVertices];
 		VTXPOSNORTEX* pVertices = new VTXPOSNORTEX[m_iNumVertices];
 		ZeroMemory(pVertices, sizeof(VTXPOSNORTEX) * m_iNumVertices);
 
@@ -196,7 +192,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 				pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 				pVertices[iIndex].vTexcoord = _float2(j / (m_tTerrainDesc.iNumVerticesX - 1.f), i / (m_tTerrainDesc.iNumVerticesZ - 1.f));
 
-				m_pBufferPos[iIndex] = pVertices[iIndex].vPosition;
+				m_BufferPoses.push_back(pVertices[iIndex].vPosition);
 			}
 		}
 
