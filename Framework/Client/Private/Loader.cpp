@@ -320,7 +320,7 @@ HRESULT CLoader::Loading_Mesh()
 			return E_FAIL;
 		ModelInitMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
-			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Fiona/Fiona.fbx", ModelInitMatrix))))
+			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Dynamic/Fiona/Fiona.fbx", ModelInitMatrix))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_1:

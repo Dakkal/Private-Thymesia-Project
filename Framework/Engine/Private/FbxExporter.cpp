@@ -19,12 +19,16 @@ HRESULT CFbxExporter::Initialize_Static_Export(const wstring& FbxImportFolderPat
 
     visitedDirectories.insert(FbxImportFolderPath);
 
-    for (const auto& entry : fs::directory_iterator(FbxImportFolderPath)) {
-        if (fs::is_directory(entry)) {
+    for (const auto& entry : fs::directory_iterator(FbxImportFolderPath)) 
+    {
+        if (fs::is_directory(entry)) 
+        {
             Initialize_Static_Export(entry.path());
         }
-        else if (fs::is_regular_file(entry)) {
-            if (fileExtension == entry.path().extension()) {
+        else if (fs::is_regular_file(entry)) 
+        {
+            if (fileExtension == entry.path().extension()) 
+            {
                 if (FAILED(Start_Static_Export(entry.path())))
                     return E_FAIL;
             }
@@ -41,11 +45,14 @@ HRESULT CFbxExporter::Initialize_Dynamic_Export(const wstring& FbxImportFolderPa
 
     visitedDirectories.insert(FbxImportFolderPath);
 
-    for (const auto& entry : fs::directory_iterator(FbxImportFolderPath)) {
-        if (fs::is_directory(entry)) {
+    for (const auto& entry : fs::directory_iterator(FbxImportFolderPath)) 
+    {
+        if (fs::is_directory(entry)) 
+        {
             Initialize_Dynamic_Export(entry.path());
         }
-        else if (fs::is_regular_file(entry)) {
+        else if (fs::is_regular_file(entry)) 
+        {
 
             if (fileExtension == entry.path().extension())
             {
@@ -80,9 +87,10 @@ HRESULT CFbxExporter::Start_Static_Export(const wstring& FbxPath)
     shared_ptr<CAsFileUtils> Save = make_shared<CAsFileUtils>();
     Save->Open(szWOpenName, FileMode::Write);
 
-    Assimp::Importer Import;
 
     _uint iFlag = aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
+
+    Assimp::Importer Import;
 
     const aiScene* pAIScene = Import.ReadFile(fbxPath.c_str(), iFlag);
 
@@ -117,16 +125,21 @@ HRESULT CFbxExporter::Start_Dynamic_Export(const wstring& FbxPath)
     shared_ptr<CAsFileUtils> Save = make_shared<CAsFileUtils>();
     Save->Open(szWOpenName, FileMode::Write);
 
-    Assimp::Importer Import;
-
     _uint iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
+    Assimp::Importer Import;
     const aiScene* pAIScene = Import.ReadFile(fbxPath.c_str(), iFlag);
+
+    if (FAILED(Export_Bone(pAIScene, Save.get())))
+        return E_FAIL;
 
     if (FAILED(Export_Dynamic_Mesh(pAIScene, Save.get())))
         return E_FAIL;
     
     if (FAILED(Export_Material(pAIScene, Save.get())))
+        return E_FAIL;
+
+    if (FAILED(Export_Animation(pAIScene, Save.get())))
         return E_FAIL;
 
     return S_OK;
@@ -170,7 +183,7 @@ HRESULT CFbxExporter::Export_Dynamic_Mesh(const aiScene* pAIScene, CAsFileUtils*
 
     for (size_t i = 0; i < pAIScene->mNumMeshes; i++)
     {
-        aiMesh* pMesh = pAIScene->mMeshes[i];
+        const aiMesh* pMesh = pAIScene->mMeshes[i];
 
         pFile->Write<string>(pMesh->mName.data);
         pFile->Write<_uint>(pMesh->mMaterialIndex);
@@ -190,12 +203,13 @@ HRESULT CFbxExporter::Export_Dynamic_Mesh(const aiScene* pAIScene, CAsFileUtils*
         pFile->Write<_uint>(pMesh->mNumBones);
         for (size_t k = 0; k < pMesh->mNumBones; k++)
         {
-            aiBone* pBone = pMesh->mBones[k];
+            const aiBone* pBone = pMesh->mBones[k];
 
             XMFLOAT4X4 vOffsetMatrix;
             memcpy(&vOffsetMatrix, &pBone->mOffsetMatrix, sizeof(XMFLOAT4X4));
             XMStoreFloat4x4(&vOffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&vOffsetMatrix)));
             pFile->Write<XMFLOAT4X4>(vOffsetMatrix);
+            pFile->Write<string>(pBone->mName.data);
 
             for (size_t l = 0; l < pBone->mNumWeights; ++l)
             {
@@ -223,6 +237,13 @@ HRESULT CFbxExporter::Export_Dynamic_Mesh(const aiScene* pAIScene, CAsFileUtils*
                     pVertices[pBone->mWeights[l].mVertexId].vBlendWeights.w = pBone->mWeights[l].mWeight;
                 }
             }
+        }
+        if (0 == pMesh->mNumBones)
+        {
+            _matrix matIdentity;
+            XMFLOAT4X4 savemat = matIdentity;
+            pFile->Write<XMFLOAT4X4>(savemat);
+            pFile->Write<string>(pMesh->mName.data);
         }
 
         for (size_t m = 0; m < pMesh->mNumVertices; m++)
@@ -271,11 +292,95 @@ HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, CAsFileUtils* pFi
 
 HRESULT CFbxExporter::Export_Bone(const aiScene* pAIScene, CAsFileUtils* pFile)
 {
+    Export_BoneNode(pAIScene->mRootNode, -1, pFile);
+
+    iNodeStop = -99;
+    pFile->Write<_int>(iNodeStop);
+
+    return S_OK;
+}
+
+HRESULT CFbxExporter::Export_BoneNode(const aiNode* pAINode, _int iParentBoneIndex, CAsFileUtils* pFile)
+{
+    pFile->Write<_int>(iNodeStop);
+    pFile->Write<_int>(iParentBoneIndex);
+    pFile->Write<string>(pAINode->mName.data);
+    XMFLOAT4X4 TransformMatrix;
+    memcpy(&TransformMatrix, &pAINode->mTransformation, sizeof(XMFLOAT4X4));
+    XMStoreFloat4x4(&TransformMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransformMatrix)));
+    pFile->Write<XMFLOAT4X4>(TransformMatrix);
+  
+    ++iParentBoneIndex;
+
+    for (size_t i = 0; i < pAINode->mNumChildren; i++)
+    {
+        Export_BoneNode(pAINode->mChildren[i], iParentBoneIndex, pFile);
+    }
+
     return S_OK;
 }
 
 HRESULT CFbxExporter::Export_Animation(const aiScene* pAIScene, CAsFileUtils* pFile)
 {
+    pFile->Write<_uint>(pAIScene->mNumAnimations);
+
+    for (size_t i = 0; i < pAIScene->mNumAnimations; i++)
+    {
+        aiAnimation* pAnim = pAIScene->mAnimations[i];
+
+        pFile->Write<string>(pAnim->mName.data);
+        pFile->Write<_float>(pAnim->mDuration);
+        pFile->Write<_float>(pAnim->mTicksPerSecond);
+        pFile->Write<_uint>(pAnim->mNumChannels);
+
+        for (size_t j = 0; j < pAIScene->mAnimations[i]->mNumChannels; j++)
+        {
+            aiNodeAnim* pChannel = pAnim->mChannels[j];
+
+            pFile->Write<string>(pChannel->mNodeName.data);
+
+            _uint iNumKeyFrames = max(pChannel->mNumScalingKeys, pChannel->mNumRotationKeys);
+            iNumKeyFrames = max(iNumKeyFrames, pChannel->mNumPositionKeys);
+
+            pFile->Write<_uint>(iNumKeyFrames);
+
+            _float  fTime;
+            XMFLOAT3 vScale;
+            XMFLOAT4 vRotation;
+            XMFLOAT4 vTranslation;
+
+            for (size_t k = 0; k < iNumKeyFrames; k++)
+            {
+                if (pChannel->mNumScalingKeys > k)
+                {
+                    memcpy(&vScale, &pChannel->mScalingKeys[k].mValue, sizeof(XMFLOAT3));
+                    fTime = pChannel->mScalingKeys[k].mTime;
+                }
+
+                if (pChannel->mNumRotationKeys > k)
+                {
+                    vRotation.x = pChannel->mRotationKeys[k].mValue.x;
+                    vRotation.y = pChannel->mRotationKeys[k].mValue.y;
+                    vRotation.z = pChannel->mRotationKeys[k].mValue.z;
+                    vRotation.w = pChannel->mRotationKeys[k].mValue.w;
+                    fTime = pChannel->mRotationKeys[k].mTime;
+                }
+
+                if (pChannel->mNumPositionKeys > k)
+                {
+                    memcpy(&vTranslation, &pChannel->mPositionKeys[k].mValue, sizeof(XMFLOAT4));
+                    vTranslation.w = 1.f;
+                    fTime = pChannel->mPositionKeys[k].mTime;
+                }
+
+                pFile->Write<_float>(fTime);
+                pFile->Write<XMFLOAT3>(vScale);
+                pFile->Write<XMFLOAT4>(vRotation);
+                pFile->Write<XMFLOAT4>(vTranslation);
+            }
+        }
+    }
+
     return S_OK;
 }
 
@@ -295,6 +400,21 @@ HRESULT CFbxExporter::Start_Static_Import(const wstring& batPath)
 
 HRESULT CFbxExporter::Start_Dynamic_Import(const wstring& batPath)
 {
+    shared_ptr<CAsFileUtils> Load = make_shared<CAsFileUtils>();
+    Load->Open(batPath, FileMode::Read);
+
+    if (FAILED(Import_Bone(Load.get())))
+        return E_FAIL;
+
+    if (FAILED(Import_Dynamic_Mesh(Load.get())))
+        return E_FAIL;
+
+    if (FAILED(Import_Material(Load.get())))
+        return E_FAIL;
+
+    if (FAILED(Import_Animation(Load.get())))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -329,6 +449,61 @@ HRESULT CFbxExporter::Import_Static_Mesh(CAsFileUtils* pFile)
    return S_OK;
 }
 
+HRESULT CFbxExporter::Import_Dynamic_Mesh(CAsFileUtils* pFile)
+{
+    pFile->Read<_uint>(ModelDynamicMesh.iNumMeshes);
+
+   
+    for (size_t i = 0; i < ModelDynamicMesh.iNumMeshes; i++)
+    {
+        SAVE_MESHINFO_DYNAMIC meshinfo;
+
+        pFile->Read(meshinfo.strName);
+        pFile->Read<_uint>(meshinfo.iMaterialIndex);
+        pFile->Read<_uint>(meshinfo.iNumFaces);
+        pFile->Read<_uint>(meshinfo.iNumVertices);
+
+        pFile->Read<_uint>(meshinfo.iNumBone);
+        for (size_t k = 0; k < meshinfo.iNumBone; k++)
+        {
+            XMFLOAT4X4 vOffsetMatrix;
+            pFile->Read<XMFLOAT4X4>(vOffsetMatrix);
+            meshinfo.vecOffsetMatrix.push_back(vOffsetMatrix);
+            string strName;
+            pFile->Read(strName);
+            meshinfo.BoneIndex.push_back(Get_BoneIndex(strName));
+        }
+        if (0 == meshinfo.iNumBone)
+        {
+            meshinfo.iNumBone = 1;
+
+            XMFLOAT4X4 vOffsetMatrix;
+            pFile->Read<XMFLOAT4X4>(vOffsetMatrix);
+            meshinfo.vecOffsetMatrix.push_back(vOffsetMatrix);
+            string strName;
+            pFile->Read(strName);
+            meshinfo.BoneIndex.push_back(Get_BoneIndex(strName));
+        }
+
+        for (size_t j = 0; j < meshinfo.iNumVertices; j++)
+        {
+            SAVE_VTXMESH_DYNAMIC vtxinfo;
+            pFile->Read<XMFLOAT3>(vtxinfo.vPosition);
+            pFile->Read<XMFLOAT3>(vtxinfo.vNormal);
+            pFile->Read<XMFLOAT2>(vtxinfo.vTexcoord);
+            pFile->Read<XMFLOAT3>(vtxinfo.vTangent);
+            pFile->Read<XMUINT4>(vtxinfo.vBlendIndices);
+            pFile->Read<XMFLOAT4>(vtxinfo.vBlendWeights);
+
+            meshinfo.vecVtxMeshes.push_back(vtxinfo);
+        }
+
+        ModelDynamicMesh.vecMeshInfo.push_back(meshinfo);
+    }
+
+    return S_OK;
+}
+
 HRESULT CFbxExporter::Import_Material(CAsFileUtils* pFile)
 {
     pFile->Read<_uint>(ModelMaterial.iNumMaterial);
@@ -349,11 +524,84 @@ HRESULT CFbxExporter::Import_Material(CAsFileUtils* pFile)
 
 HRESULT CFbxExporter::Import_Bone(CAsFileUtils* pFile)
 {
+    while (true)
+    {
+        pFile->Read<_int>(iImportNodeStop);
+        if (-99 == iImportNodeStop)
+             return S_OK;
+
+        SAVE_BONE_INFO BoneInfo;
+
+        pFile->Read<_int>(BoneInfo.iParentBoneIndex);
+        pFile->Read(BoneInfo.strBoneName);
+        pFile->Read<XMFLOAT4X4>(BoneInfo.TransformMatrix);
+
+        ModelBone.Bones.push_back(BoneInfo);   
+    }
+   
     return S_OK;
 }
 
+
 HRESULT CFbxExporter::Import_Animation(CAsFileUtils* pFile)
 {
+    pFile->Read<_uint>(ModelAnim.iNumAnim);
+
+   
+    for (size_t i = 0; i < ModelAnim.iNumAnim; i++)
+    {
+        SAVE_ANIM_INFO animdesc;
+
+        pFile->Read(animdesc.strAnimName);
+        pFile->Read<_float>(animdesc.fDuration);
+        pFile->Read<_float>(animdesc.fTickPerSecond);
+        pFile->Read<_uint>(animdesc.iNumChannel);
+
+        for (size_t j = 0; j < animdesc.iNumChannel; j++)
+        {
+            SAVE_CHANNEL channeldesc;
+            pFile->Read(channeldesc.strChannelName);
+            channeldesc.iBoneIndex = Get_BoneIndex(channeldesc.strChannelName);
+            pFile->Read<_uint>(channeldesc.iNumKeyFrame);
+
+            for (size_t k = 0; k < channeldesc.iNumKeyFrame; k++)
+            {
+                SAVE_KEYFRAME keyframedesc;
+
+                pFile->Read<_float>(keyframedesc.fTime);
+                pFile->Read<XMFLOAT3>(keyframedesc.vScale);
+                pFile->Read<XMFLOAT4>(keyframedesc.vRotation);
+                pFile->Read<XMFLOAT4>(keyframedesc.vTranslation);
+
+                channeldesc.vecKeyFrames.push_back(keyframedesc);
+            }
+
+            animdesc.vecChannels.push_back(channeldesc);
+        }
+
+        ModelAnim.vecAnim.push_back(animdesc);
+    }
+
     return S_OK;
+}
+
+_int CFbxExporter::Get_BoneIndex(const string& pBoneName) const
+{
+    _uint	iBoneIndex = 0;
+
+    auto	iter = find_if(ModelBone.Bones.begin(), ModelBone.Bones.end(), [&](SAVE_BONE_INFO pBoneInfo){
+            
+        if (pBoneInfo.strBoneName == pBoneName)
+                return true;
+
+            ++iBoneIndex;
+
+            return false;
+     });
+
+    if (iter == ModelBone.Bones.end())
+        return -1;
+
+    return iBoneIndex;
 }
 

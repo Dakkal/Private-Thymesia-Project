@@ -14,6 +14,12 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	vector<class CBone*>&		Get_Model_Bone() { return m_Bones; }
+	vector<class CMesh*>&		Get_Model_Mesh() { return m_Meshes; }
+	vector<MESH_MATERIAL>&		Get_Model_Material() { return m_Materials; }
+	vector<class CAnimation*>&	Get_Model_Animation() { return m_Animations; }
+
+public:
 	virtual HRESULT Initialize_Prototype(TYPE eModelType, const char* pModelFilePath, _matrix PivotMatrix);
 	virtual HRESULT Initialize(void* pArg) override;
 

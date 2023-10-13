@@ -7,7 +7,7 @@ enum FileMode : uint8
 	Read,
 };
 
-class CAsFileUtils
+class ENGINE_DLL CAsFileUtils
 {
 public:
 	CAsFileUtils();
@@ -19,7 +19,12 @@ public:
 	void Write(const T& data)
 	{
 		DWORD numOfBytes = 0;
+		
+#ifndef NDEBUG
 		assert(::WriteFile(_handle, &data, sizeof(T), (LPDWORD)&numOfBytes, nullptr));
+#else
+		::WriteFile(_handle, &data, sizeof(T), (LPDWORD)&numOfBytes, nullptr);
+#endif // !NDEBUG
 	}
 
 	template<>

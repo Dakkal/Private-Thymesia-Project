@@ -61,16 +61,6 @@ HRESULT CImgui_Manager::Ready_Manager(ID3D11Device* pDevice, ID3D11DeviceContext
         }
     }
 
- 
-    CFbxExporter FbxExport;
-    FbxExport.Initialize_Static_Export(TEXT("../Bin/Resources/Models/Static/"));
-
-  /*  CFbxExporter FbxExport;
-    FbxExport.Start_Static_Import(TEXT("../Bin/Resources/Models/Static/Props/ChurchGrillesFloor/ChurchGrillesFloor.dat"));
-
-    SAVE_MESH_STATIC modelmesh = FbxExport.Get_Static_Mesh();
-    SAVE_MATERIAL modelmaterial = FbxExport.Get_Material();*/
-
     RELEASE_INSTANCE(CGameInstance);
 
 

@@ -5,6 +5,7 @@
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "FbxExporter.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -43,6 +44,17 @@ HRESULT CMainApp::Initialize()
 	/* 실프레임 워크에서는 지우자 */
 	if (FAILED(Create_FakeTexture()))
 		return E_FAIL;
+
+	//CFbxExporter FbxExport;
+	//FbxExport.Initialize_Static_Export(TEXT("../Bin/Resources/Models/Static/"));
+	//FbxExport.Initialize_Dynamic_Export(TEXT("../Bin/Resources/Models/Dynamic/"));
+
+	CFbxExporter FbxExport;
+	FbxExport.Start_Dynamic_Import(TEXT("../Bin/Resources/Models/Dynamic/Fiona/Fiona.dat"));
+
+	SAVE_BONE modelbone = FbxExport.Get_Bone();
+	SAVE_MESH_STATIC modelmesh = FbxExport.Get_Static_Mesh();
+	SAVE_MATERIAL modelmaterial = FbxExport.Get_Material();
 
 	return S_OK;
 }
