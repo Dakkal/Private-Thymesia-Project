@@ -92,7 +92,7 @@ void CToolCamera::MouseMove(_float fTimeDelta)
     }
     if (pGameInstance->Get_DIKeyState(DIK_E) & 0x80)
     {
-        m_pTransform->Turn_Invert(m_pTransform->Get_State(CTransform::STATE_LOOK), fTimeDelta);
+        m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_LOOK), -fTimeDelta);
     }
     if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::RBUTTON))
     {

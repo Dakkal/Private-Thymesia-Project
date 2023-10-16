@@ -22,7 +22,7 @@ private:
 public:
 	HRESULT Reserve_Manager(_uint iLevelIndex);
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypTag, class CComponent* pPrototype);
-	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg);
+	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, class CGameObject* pOwner, void* pArg);
 	void Clear(_uint iLevelIndex);
 
 private:

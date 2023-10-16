@@ -10,7 +10,7 @@ public:
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CRenderer(const CRenderer& rhs) = delete;
+	CRenderer(class CGameObject* pOwner, const CRenderer& rhs) = delete;
 	virtual ~CRenderer() = default;
 
 public:
@@ -35,7 +35,7 @@ private:
 
 public:
 	static CRenderer* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(class CGameObject* pOwner, void* pArg) override;
 	virtual void Free() override;
 
 };

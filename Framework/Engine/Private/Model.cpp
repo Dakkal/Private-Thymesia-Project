@@ -9,8 +9,8 @@ CModel::CModel(ID3D11Device* pDeivce, ID3D11DeviceContext* pContext)
 {
 }
 
-CModel::CModel(const CModel& rhs)
-	: CComponent(rhs)
+CModel::CModel(CGameObject* pOwner, const CModel& rhs)
+	: CComponent(pOwner, rhs)
 	, m_iNumMeshes(rhs.m_iNumMeshes)
 	, m_Meshes(rhs.m_Meshes)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
@@ -270,9 +270,9 @@ CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYP
 	return pInstance;
 }
 
-CComponent* CModel::Clone(void* pArg)
+CComponent* CModel::Clone(CGameObject* pOwner, void* pArg)
 {
-	CModel* pInstance = new CModel(*this);
+	CModel* pInstance = new CModel(pOwner, *this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

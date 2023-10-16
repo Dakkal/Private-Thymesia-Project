@@ -8,7 +8,7 @@ class CBinMesh final : public CVIBuffer
 {
 private:
 	CBinMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBinMesh(const CBinMesh& rhs);
+	CBinMesh(class CGameObject* pOwner, const CBinMesh& rhs);
 	virtual ~CBinMesh() = default;
 
 public:
@@ -34,7 +34,7 @@ private:
 public:
 	static CBinMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CBinModel::TYPE eModelType, const SAVE_MESHINFO_STATIC tStaicMesh, _matrix PivotMatrix);
 	static CBinMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CBinModel::TYPE eModelType, const SAVE_MESHINFO_DYNAMIC tDynamicMesh, _matrix PivotMatrix);
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(class CGameObject* pOwner, void* pArg) override;
 	virtual void Free() override;
 };
 

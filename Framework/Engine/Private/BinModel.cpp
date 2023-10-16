@@ -9,8 +9,8 @@ CBinModel::CBinModel(ID3D11Device* pDeivce, ID3D11DeviceContext* pContext)
 {
 }
 
-CBinModel::CBinModel(const CBinModel& rhs)
-	:CComponent(rhs)
+CBinModel::CBinModel(CGameObject* pOwner, const CBinModel& rhs)
+	:CComponent(pOwner, rhs)
 	, m_iNumMeshes(rhs.m_iNumMeshes)
 	, m_Meshes(rhs.m_Meshes)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
@@ -136,6 +136,7 @@ HRESULT CBinModel::Render(_uint iMeshIndex)
 	if(true == m_bIsRender)
 		m_Meshes[iMeshIndex]->Render();
 
+	m_bIsRender = true;
 	return S_OK;
 }
 
@@ -164,6 +165,19 @@ _int CBinModel::Get_BoneIndex(const string& strBoneName) const
 		return -1;
 
 	return iBoneIndex;
+}
+
+CBinBone* CBinModel::Get_BonePtr(const string& pBoneName) const
+{
+	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBinBone* pBone)
+		{
+			if (pBone->Get_BoneName() == pBoneName)
+				return true;
+
+			return false;
+		});
+
+	return *iter;
 }
 
 HRESULT CBinModel::Ready_Meshes(const SAVE_MESH tMehsDesc)
@@ -265,9 +279,9 @@ CBinModel* CBinModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	return pInstance;
 }
 
-CComponent* CBinModel::Clone(void* pArg)
+CComponent* CBinModel::Clone(CGameObject* pOwner, void* pArg)
 {
-	CBinModel* pInstance = new CBinModel(*this);
+	CBinModel* pInstance = new CBinModel(pOwner, *this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

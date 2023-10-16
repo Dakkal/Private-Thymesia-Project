@@ -5,8 +5,8 @@ CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 }
 
-CShader::CShader(const CShader& rhs)
-	: CComponent(rhs)
+CShader::CShader(CGameObject* pOwner, const CShader& rhs)
+	: CComponent(pOwner, rhs)
 	, m_pEffect(rhs.m_pEffect)
 	, m_vecInputLayouts(rhs.m_vecInputLayouts)
 {
@@ -153,9 +153,9 @@ CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, c
 	return pInstance;
 }
 
-CComponent* CShader::Clone(void* pArg)
+CComponent* CShader::Clone(CGameObject* pOwner, void* pArg)
 {
-	CShader* pInstance = new CShader(*this);
+	CShader* pInstance = new CShader(pOwner, *this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

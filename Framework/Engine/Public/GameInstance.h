@@ -49,6 +49,7 @@ public: /* For.Object_Manager */
 	HRESULT			Add_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & strPrototypeTag, void* pArg = nullptr);
 	CGameObject*	Find_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & ObjName, _uint iCloneIndex = 1);
 	CGameObject*	Last_GameObject(_uint iLevelIndex, const wstring & strLayerTag);
+	CGameObject*	Clone_GameObject(const wstring & strPrototypeTag, void* pArg = nullptr);
 	HRESULT			Delete_GameObject(_uint iLevelIndex, const wstring & strLayerTag, const wstring & ObjName, _uint iCloneIndex = 1);
 	HRESULT			Delete_Layer(_uint iLevelIndex, const wstring & strLayerTag);
 	const map<const wstring, class CGameObject*>*	Get_Prototypes();
@@ -56,7 +57,7 @@ public: /* For.Object_Manager */
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, class CComponent* pPrototype);
-	class CComponent* Clone_Component(_uint iLevelIndex, const wstring & strPrototypeTag, void* pArg = nullptr);
+	class CComponent* Clone_Component(_uint iLevelIndex, const wstring & strPrototypeTag, class CGameObject * pOwner, void* pArg = nullptr);
 
 public: /* For.Sound_Manager */
 	HRESULT PlaySoundFile(const wstring & strSoundKey, CHANNELID eCh, _float fVolume);

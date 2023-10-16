@@ -17,6 +17,7 @@ public:
 	HRESULT Reserve_Manager(_uint iLevelIndex);
 	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg);
+	class CGameObject* Clone_GameObject(const wstring& strPrototypeTag, void* pArg);
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);

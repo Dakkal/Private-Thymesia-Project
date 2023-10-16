@@ -1,12 +1,12 @@
 #include "..\Public\VIBuffer.h"
 
-CVIBuffer::CVIBuffer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CGameObject* pOwner)
-	: CComponent(pDevice, pContext, pOwner)
+CVIBuffer::CVIBuffer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CComponent(pDevice, pContext)
 {
 }
 
-CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
-	: CComponent(rhs)
+CVIBuffer::CVIBuffer(CGameObject* pOwner, const CVIBuffer& rhs)
+	: CComponent(pOwner, rhs)
 	, m_pVB(rhs.m_pVB)
 	, m_pIB(rhs.m_pIB)
 	, m_iStride(rhs.m_iStride)

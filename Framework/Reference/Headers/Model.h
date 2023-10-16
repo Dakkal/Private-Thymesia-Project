@@ -10,7 +10,7 @@ public:
 
 private:
 	CModel(ID3D11Device* pDeivce, ID3D11DeviceContext* pContext);
-	CModel(const CModel& rhs);
+	CModel(class CGameObject* pOwner, const CModel& rhs);
 	virtual ~CModel() = default;
 
 public:
@@ -68,7 +68,7 @@ private:
 
 public:
 	static	CModel* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eModelType, const char* pModelFilePath, _matrix PivotMatrix = XMMatrixIdentity());
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(class CGameObject* pOwner, void* pArg) override;
 	virtual void Free() override;
 };
 

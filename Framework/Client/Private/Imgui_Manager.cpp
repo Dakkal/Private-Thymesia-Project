@@ -102,14 +102,14 @@ HRESULT CImgui_Manager::LateTick(_float fTimeDelta)
         case OBJECT_TYPE::MONSTER:
             if (m_IsMonTransformOpen[m_iCurLevel])
             {
-                pTransform->Set_Scale(m_vMonsterScale[m_iCurLevel]);
+                pTransform->Set_Scale(_float3(m_vMonsterScale[m_iCurLevel]));
                 pTransform->Set_State(CTransform::STATE_POS, m_vMonsterPos[m_iCurLevel]);
             }
             break;
         case OBJECT_TYPE::PROP:
             if (m_IsPropTransformOpen[m_iCurLevel])
             {
-                pTransform->Set_Scale(m_vPropScale[m_iCurLevel]);
+                pTransform->Set_Scale(_float3(m_vPropScale[m_iCurLevel]));
                 pTransform->Set_State(CTransform::STATE_POS, m_vPropPos[m_iCurLevel]);
             }
             break;
@@ -869,7 +869,7 @@ HRESULT CImgui_Manager::Setting_Object()
                         memmove(&vUp, &m_matStore[m_iCurLevel].m[1], sizeof(_vector));
                         memmove(&vLook, &m_matStore[m_iCurLevel].m[2], sizeof(_vector));
 
-                        pTransform->Set_Scale(_vector(vRight.Length(), vUp.Length(), vLook.Length(), 0));
+                        pTransform->Set_Scale(_float3(vRight.Length(), vUp.Length(), vLook.Length()));
                         m_vPropScale[m_iCurLevel] = _vector(vRight.Length(), vUp.Length(), vLook.Length(), 0);
                     }
                 }

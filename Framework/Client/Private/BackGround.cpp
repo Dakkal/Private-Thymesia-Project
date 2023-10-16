@@ -31,7 +31,7 @@ HRESULT CBackGround::Initialize(void* pArg)
     m_fX = g_iWinSizeX * 0.5f;
     m_fY = g_iWinSizeY * 0.5f;
 
-    m_pTransformCom->Set_Scale(_vector(m_fSizeX, m_fSizeY, 1.f, 0.f));
+    m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
     m_pTransformCom->Set_State(CTransform::STATE_POS,
         _vector(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
 

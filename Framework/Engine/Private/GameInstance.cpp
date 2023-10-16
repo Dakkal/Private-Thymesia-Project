@@ -204,6 +204,14 @@ CGameObject* CGameInstance::Last_GameObject(_uint iLevelIndex, const wstring& st
 	return m_pObject_Manager->Last_GameObject(iLevelIndex, strLayerTag);
 }
 
+CGameObject* CGameInstance::Clone_GameObject(const wstring& strPrototypeTag, void* pArg)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Clone_GameObject(strPrototypeTag, pArg);
+}
+
 HRESULT CGameInstance::Delete_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& ObjName, _uint iCloneIndex)
 {
 	if (nullptr == m_pObject_Manager)
@@ -228,13 +236,13 @@ HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring& strProtot
 	return m_pComponent_Manager->Add_Prototype(iLevelIndex, strPrototypeTag, pPrototype);
 }
 
-CComponent* CGameInstance::Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg)
+CComponent* CGameInstance::Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, CGameObject* pOwner, void* pArg)
 {
 	if (nullptr == m_pComponent_Manager)
 		return nullptr;
 
 
-	return m_pComponent_Manager->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
+	return m_pComponent_Manager->Clone_Component(iLevelIndex, strPrototypeTag, pOwner, pArg);
 }
 
 HRESULT CGameInstance::PlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, _float fVolume)

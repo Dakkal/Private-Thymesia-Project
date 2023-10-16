@@ -3,12 +3,12 @@
 #include "BinBone.h"
 
 CBinMesh::CBinMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CVIBuffer(pDevice, pContext, pOwner)
+	: CVIBuffer(pDevice, pContext)
 {
 }
 
-CBinMesh::CBinMesh(const CBinMesh& rhs)
-	: CVIBuffer(rhs)
+CBinMesh::CBinMesh(CGameObject* pOwner, const CBinMesh& rhs)
+	: CVIBuffer(pOwner, rhs)
 {
 }
 
@@ -224,9 +224,9 @@ CBinMesh* CBinMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 	return pInstance;
 }
 
-CComponent* CBinMesh::Clone(void* pArg)
+CComponent* CBinMesh::Clone(CGameObject* pOwner, void* pArg)
 {
-	CBinMesh* pInstance = new CBinMesh(*this);
+	CBinMesh* pInstance = new CBinMesh(pOwner, *this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

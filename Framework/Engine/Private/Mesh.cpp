@@ -7,8 +7,8 @@ CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 }
 
-CMesh::CMesh(const CMesh& rhs)
-	: CVIBuffer(rhs)
+CMesh::CMesh(CGameObject* pOwner, const CMesh& rhs)
+	: CVIBuffer(pOwner, rhs)
 {
 }
 
@@ -230,9 +230,9 @@ CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const
 	return pInstance;
 }
 
-CComponent* CMesh::Clone(void* pArg)
+CComponent* CMesh::Clone(CGameObject* pOwner, void* pArg)
 {
-	CMesh* pInstance = new CMesh(*this);
+	CMesh* pInstance = new CMesh(pOwner, *this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

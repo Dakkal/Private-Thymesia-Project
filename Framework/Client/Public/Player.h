@@ -3,9 +3,6 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
-class CModel;
-class CShader;
-class CRenderer;
 class CTransform;
 END
 
@@ -13,6 +10,9 @@ BEGIN(Client)
 
 class CPlayer final : public CGameObject
 {
+public:
+	enum class PARTS { BODY, WEAPON, _END };
+
 protected:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CGameObject& rhs); 
@@ -26,17 +26,17 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+private:
+	vector<class CGameObject*>		m_PlayerParts;
+
 private: 
-	CRenderer* m_pRendererCom = { nullptr };
 	CTransform* m_pTransformCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CBinModel* m_pModelCom = { nullptr };
 
 	_int	iIndex = 0;
 
 private:
 	HRESULT Ready_Components();
-	HRESULT Bind_ShaderResources();
+	HRESULT Ready_PlayerParts();
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));

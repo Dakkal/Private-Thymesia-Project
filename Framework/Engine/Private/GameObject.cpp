@@ -58,7 +58,7 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring& strPrototyp
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CComponent* pComponent = pGameInstance->Clone_Component(iLevelIndex, strPrototypeRag, pArg);
+	CComponent* pComponent = pGameInstance->Clone_Component(iLevelIndex, strPrototypeRag, this, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
 
@@ -68,7 +68,6 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring& strPrototyp
 	Safe_AddRef(pComponent);
 
 	Safe_Release(pGameInstance);
-
 
 	return S_OK;
 }

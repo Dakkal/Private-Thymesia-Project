@@ -2,6 +2,8 @@
 #include "..\Public\Player.h"
 
 #include "GameInstance.h"
+#include "Body_Player.h"
+#include "Weapon_Player_Saber.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -32,7 +34,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(true, 3);
+	if (FAILED(Ready_PlayerParts()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -41,79 +44,58 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	if (GetKeyState(VK_LEFT) & 0x8000)
 	{
-		m_pTransformCom->Turn(_vector(0.f, 1.f, 0.f, 0.f), fTimeDelta * -1.f);
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * -1.f);
 	}
 
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
-		m_pTransformCom->Turn(_vector(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 	}
 
 	if (GetKeyState(VK_DOWN) & 0x8000)
 	{
-
+		//m_pTransformCom->Go_Backward(fTimeDelta);
+		dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, --iIndex);
 	}
 
 	if (GetKeyState(VK_UP) & 0x8000)
 	{
-		m_pModelCom->Set_Animation(true, ++iIndex);
+		//m_pTransformCom->Go_Forward(fTimeDelta);
+
+		dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, ++iIndex);
 	}
 	else
-		m_pModelCom->Set_Animation(true, iIndex);
+		
 
-
-	m_pModelCom->Play_Animation(fTimeDelta);
+	for (auto& pPart : m_PlayerParts)
+	{
+		if (nullptr != pPart)
+			pPart->Tick(fTimeDelta);
+	}
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
-
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_BLEND, this);
+	for (auto& pPart : m_PlayerParts)
+	{
+		if (nullptr != pPart)
+			pPart->LateTick(fTimeDelta);
+	}
 }
 
 HRESULT CPlayer::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (size_t i = 0; i < iNumMeshes; i++)
+	/*for (auto& pPart : m_PlayerParts)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
-			return E_FAIL;
-
-
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->Render(i)))
-			return E_FAIL;
-	}
+		if (nullptr != pPart)
+			pPart->Render();
+	}*/
 
 	return S_OK;
 }
 
 HRESULT CPlayer::Ready_Components()
 {
-	/* Com_Renderer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
-		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
-	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
-		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
-		return E_FAIL;
-
-	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
-		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-		return E_FAIL;
-
 	/* Com_Transform */
 	CTransform::TRANSFORM_DESC		TransformDesc;
 	TransformDesc.fSpeedPerSec = 10.f;
@@ -126,48 +108,41 @@ HRESULT CPlayer::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CPlayer::Bind_ShaderResources()
+HRESULT CPlayer::Ready_PlayerParts()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResources(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance)
+	CGameObject* pPlayerParts = nullptr;
 
-	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Bind_CamPosToShader(m_pShaderCom, "g_vCamPosition")))
-		return E_FAIL;
+	/* For.Part_Body */
+	CPartObject::PART_DESC			PartDesc_Body;
+	PartDesc_Body.pParentTransform = m_pTransformCom;
 
-	const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
-	if (nullptr == pLightDesc)
+	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Body"), &PartDesc_Body);
+	if (nullptr == pPlayerParts)
 		return E_FAIL;
+	m_PlayerParts.push_back(pPlayerParts);
 
-	_uint	iPassIndex = 0;
+	/* For.Part_Weapon */
+	CPartObject::PART_DESC			PartDesc_Weapon_Saber;
+	PartDesc_Weapon_Saber.pParentTransform = m_pTransformCom;
+	PartDesc_Weapon_Saber.pSocketBone = dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Get_SocketBonePtr("weapon_r");
+	PartDesc_Weapon_Saber.SocketPivot = dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Get_SocketPivotMatrix();
 
-	if (LIGHT_DESC::TYPE::DIRECTIONAL == pLightDesc->eLightType)
-	{
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vLightDir, sizeof(_vector))))
-			return E_FAIL;
-
-		iPassIndex = 0;
-	}
-	else
-	{
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightPos", &pLightDesc->vLightPos, sizeof(_vector))))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightRange", &pLightDesc->fLightRange, sizeof(_float))))
-			return E_FAIL;
-		iPassIndex = 1;
-	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_vector))))
+	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Weapon_Saber"), &PartDesc_Weapon_Saber);
+	if (nullptr == pPlayerParts)
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_vector))))
+	m_PlayerParts.push_back(pPlayerParts);
+
+	CPartObject::PART_DESC			PartDesc_Weapon_Dagger;
+	PartDesc_Weapon_Dagger.pParentTransform = m_pTransformCom;
+	PartDesc_Weapon_Dagger.pSocketBone = dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Get_SocketBonePtr("weapon_l");
+	PartDesc_Weapon_Dagger.SocketPivot = dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Get_SocketPivotMatrix();
+
+	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Weapon_Dagger"), &PartDesc_Weapon_Dagger);
+	if (nullptr == pPlayerParts)
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_vector))))
-		return E_FAIL;
+	m_PlayerParts.push_back(pPlayerParts);
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -204,8 +179,9 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+	for (auto& pPart : m_PlayerParts)
+		Safe_Release(pPart);
+	m_PlayerParts.clear();
+
 	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pRendererCom);
 }
