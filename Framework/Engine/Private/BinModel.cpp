@@ -128,7 +128,13 @@ HRESULT CBinModel::Bind_MaterialTexture(CShader* pShader, const char* pConstantN
 
 HRESULT CBinModel::Render(_uint iMeshIndex)
 {
-	m_Meshes[iMeshIndex]->Render();
+	string Name = m_Meshes[iMeshIndex]->Get_MeshName();
+	string SpareName = Name.substr(0, 2);
+	if (SpareName == "MI")
+		m_bIsRender = false;
+
+	if(true == m_bIsRender)
+		m_Meshes[iMeshIndex]->Render();
 
 	return S_OK;
 }

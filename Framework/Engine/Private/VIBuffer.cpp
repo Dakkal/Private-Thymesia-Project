@@ -1,7 +1,7 @@
 #include "..\Public\VIBuffer.h"
 
-CVIBuffer::CVIBuffer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CComponent(pDevice, pContext)
+CVIBuffer::CVIBuffer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CGameObject* pOwner)
+	: CComponent(pDevice, pContext, pOwner)
 {
 }
 

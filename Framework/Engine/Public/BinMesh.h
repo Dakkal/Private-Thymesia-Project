@@ -21,7 +21,7 @@ public:
 
 public:
 	_uint	Get_MaterialIndex() const { return m_iMaterialIndex; }
-
+	string  Get_MeshName() const { return m_strName; }
 private:
 
 private:

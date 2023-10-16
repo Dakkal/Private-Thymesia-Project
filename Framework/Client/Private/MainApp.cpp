@@ -49,10 +49,6 @@ HRESULT CMainApp::Initialize()
 	FbxExport.Initialize_Static_Export(TEXT("../Bin/Resources/Models/Static/"));
 	FbxExport.Initialize_Dynamic_Export(TEXT("../Bin/Resources/Models/Dynamic/"));*/
 
- 	/*CFbxExporter FbxExport;
-	FbxExport.Start_Dynamic_Import(TEXT("../Bin/Resources/Models/Dynamic/Fiona/Fiona.dat"));*/
-
-
 	return S_OK;
 }
 

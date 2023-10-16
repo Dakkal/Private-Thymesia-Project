@@ -35,6 +35,9 @@ public:
 	vector<class CBinMesh*>&	Get_Meshes() { return m_Meshes; }
 
 private:
+	_bool							m_bIsRender = { true };
+
+private:
 	TYPE							m_eModelType = { TYPE_END };
 	
 private:

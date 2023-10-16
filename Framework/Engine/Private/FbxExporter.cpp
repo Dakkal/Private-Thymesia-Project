@@ -153,7 +153,7 @@ HRESULT CFbxExporter::Export_Static_Mesh(const aiScene* pAIScene, CAsFileUtils* 
     {
         aiMesh* pMesh = pAIScene->mMeshes[i];
 
-        pFile->Write<string>(pMesh->mName.data);
+        pFile->Write<string>(pAIScene->mMaterials[pMesh->mMaterialIndex]->GetName().data);
         pFile->Write<_uint>(pMesh->mMaterialIndex);
         pFile->Write<_uint>(pMesh->mNumFaces);
         pFile->Write<_uint>(pMesh->mNumVertices);
@@ -192,7 +192,7 @@ HRESULT CFbxExporter::Export_Dynamic_Mesh(const aiScene* pAIScene, CAsFileUtils*
     {
         const aiMesh* pMesh = pAIScene->mMeshes[i];
 
-        pFile->Write<string>(pMesh->mName.data);
+        pFile->Write<string>(pAIScene->mMaterials[pMesh->mMaterialIndex]->GetName().data);
         pFile->Write<_uint>(pMesh->mMaterialIndex);
         pFile->Write<_uint>(pMesh->mNumFaces);
         pFile->Write<_uint>(pMesh->mNumVertices);
@@ -250,7 +250,7 @@ HRESULT CFbxExporter::Export_Dynamic_Mesh(const aiScene* pAIScene, CAsFileUtils*
             _matrix matIdentity;
             XMFLOAT4X4 savemat = matIdentity;
             pFile->Write<XMFLOAT4X4>(savemat);
-            pFile->Write<string>(pMesh->mName.data);
+            pFile->Write<string>(pAIScene->mMaterials[pMesh->mMaterialIndex]->GetName().data);
         }
 
         for (size_t m = 0; m < pMesh->mNumVertices; m++)
@@ -306,6 +306,12 @@ HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, const string& str
                 char			szExt[MAX_PATH] = "";
                 _splitpath_s(strTexturePath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
 
+                string Extdds = ".dds";
+                if (szExt != Extdds)
+                {
+                    strcpy_s(szExt, Extdds.c_str());
+                }
+
                 char			szFullPath[MAX_PATH] = "";
                 strcpy_s(szFullPath, szDrive);
                 strcat_s(szFullPath, szDirectory);
@@ -322,11 +328,15 @@ HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, const string& str
 
 HRESULT CFbxExporter::Export_Bone(const aiScene* pAIScene, CAsFileUtils* pFile)
 {
+    if (-99 == iNodeStop)
+        iNodeStop = 0;
+
     Export_BoneNode(pAIScene->mRootNode, -1, pFile);
 
     iNodeStop = -99;
     pFile->Write<_int>(iNodeStop);
 
+    vecCheck.clear();
     return S_OK;
 }
 
@@ -597,8 +607,6 @@ HRESULT CFbxExporter::Import_Bone(CAsFileUtils* pFile)
 
         ModelBone.Bones.push_back(BoneInfo);   
     }
-   
-    return S_OK;
 }
 
 

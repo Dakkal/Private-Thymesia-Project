@@ -15,7 +15,7 @@ public:
 	}TERRAIN_DESC;
 
 private:
-	CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
+	CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, class CGameObject* pOwner);
 	CVIBuffer_Terrain(const CVIBuffer_Terrain& rhs);
 	virtual ~CVIBuffer_Terrain() = default;
 
@@ -29,7 +29,7 @@ private:
 	TERRAIN_DESC	m_tTerrainDesc;
 
 public:
-	static CVIBuffer_Terrain* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strHeightMapFilePath = TEXT(""));
+	static CVIBuffer_Terrain* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, class CGameObject* pOwner, const wstring & strHeightMapFilePath = TEXT(""));
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };
