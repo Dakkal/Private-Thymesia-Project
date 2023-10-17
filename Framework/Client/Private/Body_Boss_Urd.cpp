@@ -1,32 +1,32 @@
 #include "pch.h"
-#include "..\Public\Weapon_Player_Dagger.h"
+#include "..\Public\Body_Boss_Urd.h"
 
 #include "GameInstance.h"
-#include "BinBone.h"
+#include "BinMesh.h"
 
-CWeapon_Player_Dagger::CWeapon_Player_Dagger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBody_Boss_Urd::CBody_Boss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
 {
 
 }
 
-CWeapon_Player_Dagger::CWeapon_Player_Dagger(const CWeapon_Player_Dagger& rhs)
+CBody_Boss_Urd::CBody_Boss_Urd(const CBody_Boss_Urd& rhs)
 	: CPartObject(rhs)
 {
 
 }
 
-HRESULT CWeapon_Player_Dagger::Initialize_Prototype(const wstring& strProtoTag)
+HRESULT CBody_Boss_Urd::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::PLAYER;
-	m_strObjectName = TEXT("Player_Weapon_Dagger");
+	m_eObjType = OBJECT_TYPE::BOSS;
+	m_strObjectName = TEXT("Boss_Urd_Body");
 
 	return S_OK;
 }
 
-HRESULT CWeapon_Player_Dagger::Initialize(void* pArg)
+HRESULT CBody_Boss_Urd::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -34,31 +34,33 @@ HRESULT CWeapon_Player_Dagger::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	/* 부모 소켓행렬을 기준으로 자식의 상태를 제어한다.  */
-	m_pTransformCom->Fix_Rotation(_vector(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(180.0f));
-	m_pTransformCom->Set_State(CTransform::STATE_POS, XMVectorSet(-0.02f, 0.f, 0.f, 1.f));
+	m_pModelCom->Set_Animation(true, rand() % 15);
 
 	return S_OK;
 }
 
-void CWeapon_Player_Dagger::Tick(_float fTimeDelta)
+void CBody_Boss_Urd::Tick(_float fTimeDelta)
 {
-	XMMATRIX	WorldMatrix = m_pSocketBone->Get_CombinedTransform() * m_SocketPivotMatrix;
+	m_pModelCom->Play_Animation(fTimeDelta);
 
-	WorldMatrix.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
-	WorldMatrix.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
-	WorldMatrix.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
-
-	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix() * WorldMatrix);
+	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix());
 }
 
-void CWeapon_Player_Dagger::LateTick(_float fTimeDelta)
+void CBody_Boss_Urd::LateTick(_float fTimeDelta)
 {
+	for (auto& pMesh : m_pModelCom->Get_Meshes())
+	{
+		string Name = pMesh->Get_MeshName();
+
+		if (Name == "Player_Corvus.Raven")
+			pMesh->Set_RenderState(false);
+	}
+
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_BLEND, this);
 }
 
-HRESULT CWeapon_Player_Dagger::Render()
+HRESULT CBody_Boss_Urd::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -67,8 +69,12 @@ HRESULT CWeapon_Player_Dagger::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
+			return E_FAIL;
+
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
+
 
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
@@ -80,32 +86,34 @@ HRESULT CWeapon_Player_Dagger::Render()
 	return S_OK;
 }
 
-HRESULT CWeapon_Player_Dagger::Ready_Components()
+HRESULT CBody_Boss_Urd::Ready_Components()
 {
-	/* Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player_Weapon_Dagger"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Boss_Urd_Body"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* Com_Transform */
+	CTransform::TRANSFORM_DESC		TransformDesc;
+	TransformDesc = m_pParentTransform->Get_TransformDesc();
+
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
+		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CWeapon_Player_Dagger::Bind_ShaderResources()
+HRESULT CBody_Boss_Urd::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
@@ -154,33 +162,33 @@ HRESULT CWeapon_Player_Dagger::Bind_ShaderResources()
 	return S_OK;
 }
 
-CWeapon_Player_Dagger* CWeapon_Player_Dagger::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
+CBody_Boss_Urd* CBody_Boss_Urd::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
-	CWeapon_Player_Dagger* pInstance = new CWeapon_Player_Dagger(pDevice, pContext);
+	CBody_Boss_Urd* pInstance = new CBody_Boss_Urd(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
-		MSG_BOX("Failed to Created : CWeapon_Player_Dagger");
+		MSG_BOX("Failed to Created : CBody_Boss_Urd");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CWeapon_Player_Dagger::Clone(void* pArg)
+CGameObject* CBody_Boss_Urd::Clone(void* pArg)
 {
-	CWeapon_Player_Dagger* pInstance = new CWeapon_Player_Dagger(*this);
+	CBody_Boss_Urd* pInstance = new CBody_Boss_Urd(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CWeapon_Player_Dagger");
+		MSG_BOX("Failed to Cloned : CBody_Boss_Urd");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CWeapon_Player_Dagger::Free()
+void CBody_Boss_Urd::Free()
 {
 	__super::Free();
 

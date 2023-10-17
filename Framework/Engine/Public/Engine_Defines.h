@@ -32,7 +32,7 @@ using namespace DirectX;
 
 
 enum class OBJECT_TYPE {
-	TERRAIN, PLAYER, PROP, MONSTER, _END
+	TERRAIN, PLAYER, PROP, MONSTER, BOSS, _END
 };
 
 enum class CHANNELID {

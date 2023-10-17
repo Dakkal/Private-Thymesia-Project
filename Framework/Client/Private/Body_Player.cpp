@@ -2,6 +2,7 @@
 #include "..\Public\Body_Player.h"
 
 #include "GameInstance.h"
+#include "BinMesh.h"
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -47,6 +48,14 @@ void CBody_Player::Tick(_float fTimeDelta)
 
 void CBody_Player::LateTick(_float fTimeDelta)
 {
+	for (auto& pMesh : m_pModelCom->Get_Meshes())
+	{
+		string Name = pMesh->Get_MeshName();
+
+		if (Name == "Player_Corvus.Raven")
+			pMesh->Set_RenderState(false);
+	}
+
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_BLEND, this);
 }

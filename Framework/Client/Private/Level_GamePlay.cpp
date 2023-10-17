@@ -23,8 +23,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Boss(TEXT("Layer_Boss"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
@@ -102,19 +102,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Boss(const wstring& strLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	for (size_t i = 0; i < 20; i++)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Monster"))))
+		if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Boss_Urd"))))
 			return E_FAIL;
 	}
 
 	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Light()

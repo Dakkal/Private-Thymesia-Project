@@ -17,6 +17,9 @@ public:
 	void		Reset();
 
 public:
+	const vector<class CBinChannel*>& Get_Channels() const { return m_Channels; }
+	const vector<_uint>& Get_CurKeyFrames() const { return m_iCurKeyFrames; }
+
 	void Set_Loop(_bool isLoop) { m_isLoop = isLoop; }
 
 private:
@@ -29,7 +32,7 @@ private:
 
 	string						m_strName = "";
 	_uint						m_iNumChannels = { 0 };
-	vector<class CBinChannel*>		m_Channels;
+	vector<class CBinChannel*>	m_Channels;
 	vector<_uint>				m_iCurKeyFrames;
 
 public:

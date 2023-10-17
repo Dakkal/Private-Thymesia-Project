@@ -10,6 +10,7 @@ CFbxExporter::CFbxExporter()
 
 CFbxExporter::~CFbxExporter()
 {
+    visitedDirectories.clear();
 }
 
 HRESULT CFbxExporter::Initialize_Static_Export(const wstring& FbxImportFolderPath)
@@ -192,7 +193,7 @@ HRESULT CFbxExporter::Export_Dynamic_Mesh(const aiScene* pAIScene, CAsFileUtils*
     {
         const aiMesh* pMesh = pAIScene->mMeshes[i];
 
-        pFile->Write<string>(pAIScene->mMaterials[pMesh->mMaterialIndex]->GetName().data);
+        pFile->Write<string>(pMesh->mName.data);
         pFile->Write<_uint>(pMesh->mMaterialIndex);
         pFile->Write<_uint>(pMesh->mNumFaces);
         pFile->Write<_uint>(pMesh->mNumVertices);
@@ -306,12 +307,6 @@ HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, const string& str
                 char			szExt[MAX_PATH] = "";
                 _splitpath_s(strTexturePath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
 
-                string Extdds = ".dds";
-                if (szExt != Extdds)
-                {
-                    strcpy_s(szExt, Extdds.c_str());
-                }
-
                 char			szFullPath[MAX_PATH] = "";
                 strcpy_s(szFullPath, szDrive);
                 strcat_s(szFullPath, szDirectory);
@@ -335,8 +330,8 @@ HRESULT CFbxExporter::Export_Bone(const aiScene* pAIScene, CAsFileUtils* pFile)
 
     iNodeStop = -99;
     pFile->Write<_int>(iNodeStop);
-
     vecCheck.clear();
+
     return S_OK;
 }
 

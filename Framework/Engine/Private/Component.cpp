@@ -15,8 +15,6 @@ CComponent::CComponent(CGameObject* pOwner, const CComponent& rhs)
 	, m_IsCloned(true)
 	, m_pOwner(pOwner)
 {
-	//Safe_AddRef(m_pOwner);
-
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
 }
@@ -34,9 +32,6 @@ HRESULT CComponent::Initialize(void* pArg)
 void CComponent::Free()
 {
 	__super::Free();
-
-	/*if(m_IsCloned)
-		Safe_Release(m_pOwner);*/
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);

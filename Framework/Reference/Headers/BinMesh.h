@@ -22,7 +22,9 @@ public:
 public:
 	_uint	Get_MaterialIndex() const { return m_iMaterialIndex; }
 	string  Get_MeshName() const { return m_strName; }
-private:
+	_bool	Get_RenderState() const { return m_bIsRender; }
+public:
+	void	Set_RenderState(_bool IsRender) { m_bIsRender = IsRender; }
 
 private:
 	string				m_strName = "";
@@ -30,6 +32,8 @@ private:
 	_uint				m_iNumBones = { 0 };
 	vector<_int>		m_Bones;
 	vector<XMFLOAT4X4>	m_OffsetMatrices;
+
+	_bool				m_bIsRender = { true };
 
 public:
 	static CBinMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CBinModel::TYPE eModelType, const SAVE_MESHINFO_STATIC tStaicMesh, _matrix PivotMatrix);

@@ -88,6 +88,18 @@
     <Filter Include="02.GameObject\Object\Player\Weapon_Player">
       <UniqueIdentifier>{2b5430ab-562c-44f6-9dba-f5a5b5e25d0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Boss">
+      <UniqueIdentifier>{84aa8443-e56e-4668-836c-019926f3a692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Boss\Boss_Urd">
+      <UniqueIdentifier>{8fa1fceb-e017-44df-b052-3970ae2f0578}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Boss\Boss_Urd\Body_Boss_Urd">
+      <UniqueIdentifier>{271dd645-de0b-4007-8299-d354e4d37591}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Boss\Boss_Urd\Weapon_Boss_Urd">
+      <UniqueIdentifier>{e6670a69-81fc-4a01-8901-e539d9793c34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -159,9 +171,6 @@
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObject\Object\Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Monster.cpp">
-      <Filter>02.GameObject\Object\Monster</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_1.cpp">
       <Filter>01.Levels\01.GamePlay\Level_1</Filter>
     </ClCompile>
@@ -176,6 +185,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Weapon_Player_Dagger.cpp">
       <Filter>02.GameObject\Object\Player\Weapon_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Boss_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Boss_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Body_Boss_Urd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Boss_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Weapon_Boss_Urd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -263,9 +281,6 @@
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObject\Object\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Monster.h">
-      <Filter>02.GameObject\Object\Monster</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_1.h">
       <Filter>01.Levels\01.GamePlay\Level_1</Filter>
     </ClInclude>
@@ -280,6 +295,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player_Dagger.h">
       <Filter>02.GameObject\Object\Player\Weapon_Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Boss_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Boss_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Body_Boss_Urd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Boss_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Weapon_Boss_Urd</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -82,18 +82,28 @@ HRESULT CBinModel::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex)
+HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex)
 {
 	if (iAnimationIndex >= m_iNumAnims ||
 		iAnimationIndex == m_iCurAnimIndex)
 		return S_OK;
 
-	m_Animations[m_iCurAnimIndex]->Reset();
+	if(-1 != m_iCurAnimIndex)
+		m_Animations[m_iCurAnimIndex]->Reset();
 
-	m_iCurAnimIndex = iAnimationIndex;
+	m_bIsAnimChange = true;
+
+	m_iNextAnimIndex = iAnimationIndex;
+
+	m_iCurAnimIndex = m_iNextAnimIndex;
 
 	m_Animations[m_iCurAnimIndex]->Set_Loop(isLoop);
 
+	return S_OK;
+}
+
+HRESULT CBinModel::Change_Animation()
+{
 	return S_OK;
 }
 
@@ -128,15 +138,9 @@ HRESULT CBinModel::Bind_MaterialTexture(CShader* pShader, const char* pConstantN
 
 HRESULT CBinModel::Render(_uint iMeshIndex)
 {
-	string Name = m_Meshes[iMeshIndex]->Get_MeshName();
-	string SpareName = Name.substr(0, 2);
-	if (SpareName == "MI")
-		m_bIsRender = false;
-
-	if(true == m_bIsRender)
+	if(true == m_Meshes[iMeshIndex]->Get_RenderState())
 		m_Meshes[iMeshIndex]->Render();
 
-	m_bIsRender = true;
 	return S_OK;
 }
 

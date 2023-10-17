@@ -1,57 +1,65 @@
 #include "pch.h"
-#include "..\Public\Monster.h"
+#include "..\Public\Weapon_Boss_Urd.h"
 
 #include "GameInstance.h"
+#include "BinBone.h"
 
-CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+CWeapon_Boss_Urd::CWeapon_Boss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CPartObject(pDevice, pContext)
 {
 
 }
 
-CMonster::CMonster(const CGameObject& rhs)
-	: CGameObject(rhs)
+CWeapon_Boss_Urd::CWeapon_Boss_Urd(const CWeapon_Boss_Urd& rhs)
+	: CPartObject(rhs)
 {
 
 }
 
-HRESULT CMonster::Initialize_Prototype(const wstring& strProtoTag)
+HRESULT CWeapon_Boss_Urd::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::MONSTER;
-	m_strObjectName = TEXT("Monster");
+	m_eObjType = OBJECT_TYPE::BOSS;
+	m_strObjectName = TEXT("Boss_Urd_Weapon");
 
 	return S_OK;
 }
 
-HRESULT CMonster::Initialize(void* pArg)
+HRESULT CWeapon_Boss_Urd::Initialize(void* pArg)
 {
-	__super::Initialize(pArg);
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(true, rand() % 15);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POS, _vector(rand() % 20, 0.f, rand() % 20, 1.f));
+	/* 부모 소켓행렬을 기준으로 자식의 상태를 제어한다.  */
+	//m_pTransformCom->Set_Scale(_float3(0.1f, 0.1f, 0.1f));
+	m_pTransformCom->Fix_Rotation(_vector(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
+	//m_pTransformCom->Set_State(CTransform::STATE_POS, XMVectorSet(-0.05f, 0.f, 0.f, 1.f));
 
 	return S_OK;
 }
 
-void CMonster::Tick(_float fTimeDelta)
+void CWeapon_Boss_Urd::Tick(_float fTimeDelta)
 {
+	XMMATRIX	WorldMatrix = m_pSocketBone->Get_CombinedTransform() * m_SocketPivotMatrix;
 
-	m_pModelCom->Play_Animation(fTimeDelta);
+	WorldMatrix.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
+	WorldMatrix.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
+	WorldMatrix.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
+
+	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix() * WorldMatrix);
 }
 
-void CMonster::LateTick(_float fTimeDelta)
+void CWeapon_Boss_Urd::LateTick(_float fTimeDelta)
 {
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_BLEND, this);
 }
 
-HRESULT CMonster::Render()
+HRESULT CWeapon_Boss_Urd::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -60,12 +68,8 @@ HRESULT CMonster::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
-			return E_FAIL;
-
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
-
 
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
@@ -77,7 +81,7 @@ HRESULT CMonster::Render()
 	return S_OK;
 }
 
-HRESULT CMonster::Ready_Components()
+HRESULT CWeapon_Boss_Urd::Ready_Components()
 {
 	/* Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -85,12 +89,12 @@ HRESULT CMonster::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Boss_Urd_Weapon"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
@@ -102,15 +106,16 @@ HRESULT CMonster::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CMonster::Bind_ShaderResources()
+HRESULT CWeapon_Boss_Urd::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResources(m_pShaderCom, "g_WorldMatrix")))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
 
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance)
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
 
-		if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)))
-			return E_FAIL;
+	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)))
+		return E_FAIL;
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Bind_CamPosToShader(m_pShaderCom, "g_vCamPosition")))
@@ -120,13 +125,12 @@ HRESULT CMonster::Bind_ShaderResources()
 	if (nullptr == pLightDesc)
 		return E_FAIL;
 
-	_uint	iPassIndex = 0;
+	_uint		iPassIndex = 0;
 
 	if (LIGHT_DESC::TYPE::DIRECTIONAL == pLightDesc->eLightType)
 	{
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vLightDir, sizeof(_vector))))
 			return E_FAIL;
-
 		iPassIndex = 0;
 	}
 	else
@@ -138,6 +142,7 @@ HRESULT CMonster::Bind_ShaderResources()
 		iPassIndex = 1;
 	}
 
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_vector))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_vector))))
@@ -145,38 +150,38 @@ HRESULT CMonster::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_vector))))
 		return E_FAIL;
 
-	RELEASE_INSTANCE(CGameInstance);
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
 
-CMonster* CMonster::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
+CWeapon_Boss_Urd* CWeapon_Boss_Urd::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
-	CMonster* pInstance = new CMonster(pDevice, pContext);
+	CWeapon_Boss_Urd* pInstance = new CWeapon_Boss_Urd(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
-		MSG_BOX("Failed to Created : CMonster");
+		MSG_BOX("Failed to Created : CWeapon_Boss_Urd");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMonster::Clone(void* pArg)
+CGameObject* CWeapon_Boss_Urd::Clone(void* pArg)
 {
-	CMonster* pInstance = new CMonster(*this);
+	CWeapon_Boss_Urd* pInstance = new CWeapon_Boss_Urd(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMonster");
+		MSG_BOX("Failed to Cloned : CWeapon_Boss_Urd");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMonster::Free()
+void CWeapon_Boss_Urd::Free()
 {
 	__super::Free();
 

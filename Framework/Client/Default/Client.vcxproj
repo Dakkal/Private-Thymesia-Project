@@ -51,11 +51,12 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp" />
+    <ClCompile Include="..\Private\Body_Boss_Urd.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
+    <ClCompile Include="..\Private\Boss_Urd.cpp" />
     <ClCompile Include="..\Private\ChurchGrillesFloor.cpp" />
     <ClCompile Include="..\Private\Edit_Terrain.cpp" />
     <ClCompile Include="..\Private\Level_1.cpp" />
-    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\PartObject.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\ToolCamera.cpp" />
@@ -72,6 +73,7 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\Weapon_Boss_Urd.cpp" />
     <ClCompile Include="..\Private\Weapon_Player_Dagger.cpp" />
     <ClCompile Include="..\Private\Weapon_Player_Saber.cpp" />
     <ClCompile Include="Client.cpp">
@@ -94,12 +96,13 @@
     <ClInclude Include="..\..\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\Public\BackGround.h" />
+    <ClInclude Include="..\Public\Body_Boss_Urd.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
+    <ClInclude Include="..\Public\Boss_Urd.h" />
     <ClInclude Include="..\Public\ChurchGrillesFloor.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Edit_Terrain.h" />
     <ClInclude Include="..\Public\Level_1.h" />
-    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\PartObject.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\ToolCamera.h" />
@@ -111,6 +114,7 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\Weapon_Boss_Urd.h" />
     <ClInclude Include="..\Public\Weapon_Player_Dagger.h" />
     <ClInclude Include="..\Public\Weapon_Player_Saber.h" />
     <ClInclude Include="Client.h" />

@@ -21,7 +21,7 @@ private:
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Props(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Player(const wstring& strLayerTag);
-	HRESULT Ready_Layer_Monster(const wstring& strLayerTag);
+	HRESULT Ready_Layer_Boss(const wstring& strLayerTag);
 	HRESULT Ready_Light();
 
 public:

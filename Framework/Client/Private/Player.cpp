@@ -2,8 +2,7 @@
 #include "..\Public\Player.h"
 
 #include "GameInstance.h"
-#include "Body_Player.h"
-#include "Weapon_Player_Saber.h"
+#include "PartObject.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -42,30 +41,37 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	if (GetKeyState(VK_LEFT) & 0x8000)
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	
+	if (pGameInstance->Get_DIKeyState(DIK_LEFT) & 0x80)
 	{
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * -1.f);
 	}
 
-	if (GetKeyState(VK_RIGHT) & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_RIGHT) & 0x80)
 	{
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 	}
 
-	if (GetKeyState(VK_DOWN) & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_DOWN) & 0x80)
 	{
 		//m_pTransformCom->Go_Backward(fTimeDelta);
-		dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, --iIndex);
+		--iIndex;
+		if (0 > iIndex)
+			iIndex = 0;
 	}
 
-	if (GetKeyState(VK_UP) & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_UP) & 0x80)
 	{
 		//m_pTransformCom->Go_Forward(fTimeDelta);
-
-		dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, ++iIndex);
+		++iIndex;
+		if (iIndex > dynamic_cast<CBinModel*>(m_PlayerParts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim())
+			iIndex = dynamic_cast<CBinModel*>(m_PlayerParts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim();
 	}
-	else
-		
+	
+	dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, iIndex);
+
+	RELEASE_INSTANCE(CGameInstance)
 
 	for (auto& pPart : m_PlayerParts)
 	{
@@ -85,12 +91,6 @@ void CPlayer::LateTick(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
-	/*for (auto& pPart : m_PlayerParts)
-	{
-		if (nullptr != pPart)
-			pPart->Render();
-	}*/
-
 	return S_OK;
 }
 

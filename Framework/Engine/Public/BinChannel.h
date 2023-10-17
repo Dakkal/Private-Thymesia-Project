@@ -14,6 +14,10 @@ public:
 	HRESULT	Initialize(const class CBinModel* pModel, const SAVE_CHANNEL tChannel);
 	void	Update_TransformationMatrix(_uint* pCurKeyFrame, vector<class CBinBone*>& Bones, _float fTrackPosition);
 
+public:
+	const vector<KEYFRAME>& Get_KeyFrames() const { return m_KeyFrames; }
+	const _uint& Get_Channel_BoneIndex() const { return m_iBoneIndex; }
+
 private:
 	string	m_strName = "";
 	_uint	m_iNumKeyFrames = { 0 };

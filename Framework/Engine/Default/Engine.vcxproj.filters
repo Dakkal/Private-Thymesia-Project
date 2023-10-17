@@ -136,6 +136,12 @@
     <Filter Include="01.Utility\04.Component\BinModel\BinAnimation\BinChannel">
       <UniqueIdentifier>{43b773a7-159c-4b64-8e2c-67e4bb5d1764}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.Component\Navigation">
+      <UniqueIdentifier>{b80aa6fb-1496-481c-a212-9c93ad12460d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Component\Navigation\Cell">
+      <UniqueIdentifier>{7c9a4a9e-24ad-4e9d-9660-1a0272ee5473}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -273,6 +279,12 @@
     <ClInclude Include="..\Public\BinChannel.h">
       <Filter>01.Utility\04.Component\BinModel\BinAnimation\BinChannel</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Navigation.h">
+      <Filter>01.Utility\04.Component\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cell.h">
+      <Filter>01.Utility\04.Component\Navigation\Cell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -391,6 +403,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\BinChannel.cpp">
       <Filter>01.Utility\04.Component\BinModel\BinAnimation\BinChannel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Navigation.cpp">
+      <Filter>01.Utility\04.Component\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cell.cpp">
+      <Filter>01.Utility\04.Component\Navigation\Cell</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

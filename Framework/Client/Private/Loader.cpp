@@ -7,11 +7,16 @@
 #include "Edit_Terrain.h"
 #include "ToolCamera.h"
 #include "ChurchGrillesFloor.h"
+
 #include "Player.h"
 #include "Body_Player.h"
 #include "Weapon_Player_Saber.h"
 #include "Weapon_Player_Dagger.h"
-#include "Monster.h"
+
+#include "Boss_Urd.h"
+#include "Body_Boss_Urd.h"
+#include "Weapon_Boss_Urd.h"
+
 #include "BinModel.h"
 
 
@@ -338,6 +343,17 @@ HRESULT CLoader::Loading_Mesh()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player_Weapon_Dagger"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Player/Weapon/Weapon_Dagger/Weapon_Player_Dagger.dat"), ModelInitMatrix))))
 			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Boss_Urd_Body"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Boss/Body/Boss_Urd.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Boss_Urd_Weapon"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Boss/Weapon/Boss_Weapon.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
 		break;
 	case Client::LEVEL_1:
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_1, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
@@ -460,10 +476,18 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Dagger"), CWeapon_Player_Dagger::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Dagger")))))
 			return E_FAIL;
 
-		
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd"), CBoss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_Body"), CBody_Boss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_Body")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_Weapon"), CWeapon_Boss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_Weapon")))))
+			return E_FAIL;
 
 		/*if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster"), CMonster::Create(m_pDevice, m_pContext))))
 			return E_FAIL;*/
+
 		break;
 	case Client::LEVEL_1:
 		/* For.Terrain*/

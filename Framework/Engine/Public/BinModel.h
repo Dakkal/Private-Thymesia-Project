@@ -21,7 +21,8 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	HRESULT Set_Animation(_bool isLoop, _uint iAnimationIndex);
+	HRESULT Set_Animation(_bool isLoop, _int iAnimationIndex);
+	HRESULT Change_Animation();
 	HRESULT	Play_Animation(_float fTimeDelta);
 
 	HRESULT Bind_BoneMatrices(class CShader* pShader, _uint iMeshIndex, const char* pConstantName);
@@ -30,36 +31,41 @@ public:
 	HRESULT Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame);
 
 public:
-	_uint						Get_NumMeshes() const { return m_iNumMeshes; }
-	_int						Get_BoneIndex(const string& strBoneName) const;
-	vector<class CBinMesh*>&	Get_Meshes() { return m_Meshes; }
+	const vector<class CBinMesh*>&			Get_Meshes()	 { return m_Meshes; }
+	const vector<MESH_MATERIAL>&			Get_Materials()  { return m_Materials; }
+	const vector<class CBinBone*>&			Get_Bones()		 { return m_Bones; }
+	const vector<class CBinAnimation*>&		Get_Animations() { return m_Animations; }
+
+
+	_uint									Get_NumMeshes() const { return m_iNumMeshes; }
+	_int									Get_BoneIndex(const string& strBoneName) const;
 	
-	class CBinBone* Get_BonePtr(const string& pBoneName) const;
-	_matrix Get_PivotMatrix() const { return m_PivotMatrix; }
+	class CBinBone*							Get_BonePtr(const string& pBoneName) const;
+	_matrix									Get_PivotMatrix() const { return m_PivotMatrix; }
+	_int									Get_NumAnim() const { return m_iNumAnims; }
 
 private:
-	_bool							m_bIsRender = { true };
-
-private:
-	TYPE							m_eModelType = { TYPE_END };
+	TYPE									m_eModelType = { TYPE_END };
 	
 private:
-	_uint							m_iNumMeshes = { 0 };
-	vector<class CBinMesh*>			m_Meshes;
+	_uint									m_iNumMeshes = { 0 };
+	vector<class CBinMesh*>					m_Meshes;
 
 private:
-	_uint							m_iNumMaterials = { 0 };
-	vector<MESH_MATERIAL>			m_Materials;
+	_uint									m_iNumMaterials = { 0 };
+	vector<MESH_MATERIAL>					m_Materials;
 
-	_matrix							m_PivotMatrix;
-
-private:
-	vector<class CBinBone*>			m_Bones;
+	_matrix									m_PivotMatrix;
 
 private:
-	_uint							m_iCurAnimIndex = { 0 };
-	_uint							m_iNumAnims = { 0 };
-	vector<class CBinAnimation*>	m_Animations;
+	vector<class CBinBone*>					m_Bones;
+
+private:
+	_bool									m_bIsAnimChange = { false };
+	_int									m_iCurAnimIndex = { -1 };
+	_int									m_iNextAnimIndex = { -1 };
+	_uint									m_iNumAnims = { 0 };
+	vector<class CBinAnimation*>			m_Animations;
 
 private:
 	HRESULT Ready_Meshes(const SAVE_MESH tMehsDesc);

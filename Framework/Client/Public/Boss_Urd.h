@@ -3,21 +3,21 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
-class CModel;
-class CShader;
-class CRenderer;
 class CTransform;
 END
 
 BEGIN(Client)
 
-class CMonster final : public CGameObject
+class CBoss_Urd final : public CGameObject
 {
-protected:
-	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMonster(const CGameObject& rhs);
+public:
+	enum class PARTS { BODY, WEAPON, _END };
 
-	virtual ~CMonster() = default;
+protected:
+	CBoss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CBoss_Urd(const CGameObject& rhs);
+
+	virtual ~CBoss_Urd() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
@@ -27,19 +27,19 @@ public:
 	virtual HRESULT Render();
 
 private:
-	CRenderer* m_pRendererCom = { nullptr };
+	vector<class CGameObject*>		m_Parts;
+
+private:
 	CTransform* m_pTransformCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
 
 	_int	iIndex = 0;
 
 private:
 	HRESULT Ready_Components();
-	HRESULT Bind_ShaderResources();
+	HRESULT Ready_PlayerParts();
 
 public:
-	static CMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
+	static CBoss_Urd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

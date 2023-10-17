@@ -43,6 +43,7 @@ void CBinChannel::Update_TransformationMatrix(_uint* pCurKeyFrame, vector<class 
 	if (fTrackPosition >= LastKeyFrame.fTime)
 	{
 		*pCurKeyFrame = m_KeyFrames.size() - 1;
+		_float fTime = LastKeyFrame.fTime;
 		vScale = LastKeyFrame.vScale;
 		vRotation = LastKeyFrame.vRotation;
 		vTranslation = LastKeyFrame.vTranslation;

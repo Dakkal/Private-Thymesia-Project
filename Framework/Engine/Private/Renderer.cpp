@@ -145,9 +145,6 @@ CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 CComponent* CRenderer::Clone(CGameObject* pOwner, void* pArg)
 {
-	/*m_pOwner = pOwner;
-	Safe_AddRef(m_pOwner);*/
-
 	AddRef();
 
 	return this;
