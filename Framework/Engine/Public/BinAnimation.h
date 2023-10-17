@@ -17,9 +17,11 @@ public:
 	void		Reset();
 
 public:
-	const vector<class CBinChannel*>& Get_Channels() const { return m_Channels; }
-	const vector<_uint>& Get_CurKeyFrames() const { return m_iCurKeyFrames; }
+	const vector<class CBinChannel*>&	Get_Channels() const { return m_Channels; }
+	const vector<_uint>&				Get_CurKeyFrames() const { return m_iCurKeyFrames; }
+	const _bool&						IsFinished() const { return m_isFinished; }
 
+public:
 	void Set_Loop(_bool isLoop) { m_isLoop = isLoop; }
 
 private:

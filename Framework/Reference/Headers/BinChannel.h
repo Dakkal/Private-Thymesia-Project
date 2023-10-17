@@ -17,6 +17,7 @@ public:
 public:
 	const vector<KEYFRAME>& Get_KeyFrames() const { return m_KeyFrames; }
 	const _uint& Get_Channel_BoneIndex() const { return m_iBoneIndex; }
+	KEYFRAME Get_CurKeyFrame() { return m_CurKeyFrame; }
 
 private:
 	string	m_strName = "";
@@ -24,6 +25,8 @@ private:
 	_uint	m_iBoneIndex = { 0 };
 
 	vector<KEYFRAME>	m_KeyFrames;
+
+	KEYFRAME			m_CurKeyFrame;
 
 public:
 	static	CBinChannel* Create(const class CBinModel* pModel, const SAVE_CHANNEL tChannel);

@@ -34,41 +34,39 @@ void CBinChannel::Update_TransformationMatrix(_uint* pCurKeyFrame, vector<class 
 	if (0.f == fTrackPosition)
 		*pCurKeyFrame = 0;
 
-	_float3		vScale;
-	_vector		vRotation;
-	_vector		vTranslation;
-
 	KEYFRAME	LastKeyFrame = m_KeyFrames.back();
 
 	if (fTrackPosition >= LastKeyFrame.fTime)
 	{
 		*pCurKeyFrame = m_KeyFrames.size() - 1;
-		_float fTime = LastKeyFrame.fTime;
-		vScale = LastKeyFrame.vScale;
-		vRotation = LastKeyFrame.vRotation;
-		vTranslation = LastKeyFrame.vTranslation;
+		m_CurKeyFrame.fTime = fTrackPosition;
+		m_CurKeyFrame.vScale = LastKeyFrame.vScale;
+		m_CurKeyFrame.vRotation = LastKeyFrame.vRotation;
+		m_CurKeyFrame.vTranslation = LastKeyFrame.vTranslation;
 	}
 	else
 	{
 		while (fTrackPosition >= m_KeyFrames[*pCurKeyFrame + 1].fTime)
 			++* pCurKeyFrame;
 
+		m_CurKeyFrame.fTime = fTrackPosition;
+
 		_float	fRatio = (fTrackPosition - m_KeyFrames[*pCurKeyFrame].fTime) / (m_KeyFrames[*pCurKeyFrame + 1].fTime - m_KeyFrames[*pCurKeyFrame].fTime);
 
 		_vector vSourScale = _vector(m_KeyFrames[*pCurKeyFrame].vScale);
 		_vector vDestScale = _vector(m_KeyFrames[*pCurKeyFrame + 1].vScale);
-		vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
+		m_CurKeyFrame.vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
 
 		_vector vSourRotation = _vector(m_KeyFrames[*pCurKeyFrame].vRotation);
 		_vector vDestRotation = _vector(m_KeyFrames[*pCurKeyFrame + 1].vRotation);
-		vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
+		m_CurKeyFrame.vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
 
 		_vector vSourTranslation = m_KeyFrames[*pCurKeyFrame].vTranslation;
 		_vector vDestTranslation = m_KeyFrames[*pCurKeyFrame + 1].vTranslation;
-		vTranslation = XMVectorLerp(vSourTranslation, vDestTranslation, fRatio);
+		m_CurKeyFrame.vTranslation = XMVectorLerp(vSourTranslation, vDestTranslation, fRatio);
 	}
 
-	_matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, _vector(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+	_matrix TransformationMatrix = XMMatrixAffineTransformation(m_CurKeyFrame.vScale, _vector(0.f, 0.f, 0.f, 1.f), m_CurKeyFrame.vRotation, m_CurKeyFrame.vTranslation);
 
 	Bones[m_iBoneIndex]->Set_Transform(TransformationMatrix);
 }

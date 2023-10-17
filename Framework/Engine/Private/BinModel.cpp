@@ -2,6 +2,7 @@
 #include "BinAnimation.h"
 #include "BinBone.h"
 #include "BinMesh.h"
+#include "BinChannel.h"
 #include "Texture.h"
 
 CBinModel::CBinModel(ID3D11Device* pDeivce, ID3D11DeviceContext* pContext)
@@ -82,39 +83,109 @@ HRESULT CBinModel::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex)
+{
+	if (iAnimationIndex >= m_iNumAnims ||
+		iAnimationIndex == m_iCurAnimIndex)
+		return S_OK;
+
+	m_iCurAnimIndex = iAnimationIndex;
+
+	m_Animations[m_iCurAnimIndex]->Reset();
+	m_Animations[m_iCurAnimIndex]->Set_Loop(isLoop);
+
+	return S_OK;
+
+}
+
 HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex)
 {
 	if (iAnimationIndex >= m_iNumAnims ||
 		iAnimationIndex == m_iCurAnimIndex)
 		return S_OK;
 
-	if(-1 != m_iCurAnimIndex)
-		m_Animations[m_iCurAnimIndex]->Reset();
-
 	m_bIsAnimChange = true;
 
 	m_iNextAnimIndex = iAnimationIndex;
+	m_bIsNextAnimLoop = isLoop;
+	m_fChangeTrackPosition = 0.f;
 
-	m_iCurAnimIndex = m_iNextAnimIndex;
-
-	m_Animations[m_iCurAnimIndex]->Set_Loop(isLoop);
+	CurChannels = m_Animations[m_iCurAnimIndex]->Get_Channels();
+	NextChannels = m_Animations[m_iNextAnimIndex]->Get_Channels();
 
 	return S_OK;
 }
 
-HRESULT CBinModel::Change_Animation()
+HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 {
+	m_fChangeTrackPosition += fTimeDelta;
+
+	_vector	vScale;
+	_vector vRotation;
+	_vector vTranslation;
+
+	for (auto& pCurChannel : CurChannels)
+	{
+		for (auto& pNextChannel : NextChannels)
+		{
+			if (pCurChannel->Get_Channel_BoneIndex() == pNextChannel->Get_Channel_BoneIndex())
+			{
+				KEYFRAME CurKeyframe = pCurChannel->Get_CurKeyFrame();
+				KEYFRAME NextKeyframe = pNextChannel->Get_KeyFrames().front();
+
+				while (m_fChangeTrackPosition >= fDuration)
+				{
+					m_bIsAnimChange = false;
+					m_iCurAnimIndex = m_iNextAnimIndex;
+					m_Animations[m_iCurAnimIndex]->Reset();
+					m_Animations[m_iCurAnimIndex]->Set_Loop(m_bIsNextAnimLoop);
+
+					return S_OK;
+				}
+
+				_float	fRatio = (m_fChangeTrackPosition - 0.f) / fDuration;
+
+				_vector vSourScale = _vector(CurKeyframe.vScale);
+				_vector vDestScale = _vector(NextKeyframe.vScale);
+				vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
+
+				_vector vSourRotation = CurKeyframe.vRotation;
+				_vector vDestRotation = NextKeyframe.vRotation;
+				vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
+
+				_vector vSourTranslation = CurKeyframe.vTranslation;
+				_vector vDestTranslation = NextKeyframe.vTranslation;
+				vTranslation = XMVectorLerp(vSourTranslation, vDestTranslation, fRatio);
+
+				_matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, _vector(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+
+				m_Bones[pCurChannel->Get_Channel_BoneIndex()]->Set_Transform(TransformationMatrix);
+			}
+		}
+	}
+
+
+
+
 	return S_OK;
 }
 
 HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 {
-	m_Animations[m_iCurAnimIndex]->Update_TransformationMatrix(m_Bones, fTimeDelta);
+	if (true == m_bIsAnimChange)
+	{
+		Change_Animation(0.2, fTimeDelta);
+	}
+	if (false == m_bIsAnimChange)
+	{
+		m_Animations[m_iCurAnimIndex]->Update_TransformationMatrix(m_Bones, fTimeDelta);
+	}
 
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Update_CombinedTransformationMatrix(m_Bones);
 	}
+	
 
 	return S_OK;
 }

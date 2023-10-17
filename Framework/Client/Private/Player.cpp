@@ -59,6 +59,8 @@ void CPlayer::Tick(_float fTimeDelta)
 		--iIndex;
 		if (0 > iIndex)
 			iIndex = 0;
+
+		dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, iIndex);
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_UP) & 0x80)
@@ -67,9 +69,11 @@ void CPlayer::Tick(_float fTimeDelta)
 		++iIndex;
 		if (iIndex > dynamic_cast<CBinModel*>(m_PlayerParts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim())
 			iIndex = dynamic_cast<CBinModel*>(m_PlayerParts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim();
+
+		dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, iIndex);
 	}
 	
-	dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, iIndex);
+	
 
 	RELEASE_INSTANCE(CGameInstance)
 

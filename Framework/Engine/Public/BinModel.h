@@ -21,8 +21,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
+	HRESULT First_Set_Animation(_bool isLoop, _int iAnimationIndex);
 	HRESULT Set_Animation(_bool isLoop, _int iAnimationIndex);
-	HRESULT Change_Animation();
+	HRESULT Change_Animation(_float fDuration, _float fTimeDelta);
 	HRESULT	Play_Animation(_float fTimeDelta);
 
 	HRESULT Bind_BoneMatrices(class CShader* pShader, _uint iMeshIndex, const char* pConstantName);
@@ -31,11 +32,11 @@ public:
 	HRESULT Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame);
 
 public:
-	const vector<class CBinMesh*>&			Get_Meshes()	 { return m_Meshes; }
-	const vector<MESH_MATERIAL>&			Get_Materials()  { return m_Materials; }
-	const vector<class CBinBone*>&			Get_Bones()		 { return m_Bones; }
-	const vector<class CBinAnimation*>&		Get_Animations() { return m_Animations; }
-
+	const vector<class CBinMesh*>&			Get_Meshes()		{ return m_Meshes; }
+	const vector<MESH_MATERIAL>&			Get_Materials()		{ return m_Materials; }
+	const vector<class CBinBone*>&			Get_Bones()			{ return m_Bones; }
+	const vector<class CBinAnimation*>&		Get_Animations()	{ return m_Animations; }
+	const class CBinAnimation*				Get_CurAnimation()	{ return m_Animations[m_iCurAnimIndex]; }
 
 	_uint									Get_NumMeshes() const { return m_iNumMeshes; }
 	_int									Get_BoneIndex(const string& strBoneName) const;
@@ -61,6 +62,10 @@ private:
 	vector<class CBinBone*>					m_Bones;
 
 private:
+	vector<CBinChannel*>					CurChannels;
+	vector<CBinChannel*>					NextChannels;
+	_float									m_fChangeTrackPosition = { 0.f };
+	_bool									m_bIsNextAnimLoop = { false };
 	_bool									m_bIsAnimChange = { false };
 	_int									m_iCurAnimIndex = { -1 };
 	_int									m_iNextAnimIndex = { -1 };

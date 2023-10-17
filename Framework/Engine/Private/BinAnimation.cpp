@@ -53,7 +53,9 @@ void CBinAnimation::Update_TransformationMatrix(vector<class CBinBone*>& Bones, 
 	if (m_fTrackPosition >= m_fDuration)
 	{
 		if (true == m_isLoop)
+		{
 			m_fTrackPosition = 0.f;
+		}
 		else
 			m_isFinished = true;
 	}
