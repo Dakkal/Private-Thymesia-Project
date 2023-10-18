@@ -100,6 +100,9 @@
     <Filter Include="02.GameObject\Object\Boss\Boss_Urd\Weapon_Boss_Urd">
       <UniqueIdentifier>{e6670a69-81fc-4a01-8901-e539d9793c34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Props\Church">
+      <UniqueIdentifier>{09edb94f-992b-41ea-a07f-205a86a2792f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -194,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Weapon_Boss_Urd.cpp">
       <Filter>02.GameObject\Object\Boss\Boss_Urd\Weapon_Boss_Urd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Church.cpp">
+      <Filter>02.GameObject\Object\Props\Church</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +310,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Weapon_Boss_Urd.h">
       <Filter>02.GameObject\Object\Boss\Boss_Urd\Weapon_Boss_Urd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Church.h">
+      <Filter>02.GameObject\Object\Props\Church</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

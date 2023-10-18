@@ -12,12 +12,12 @@ END
 
 BEGIN(Client)
 
-class CChurchGrillesFloor final : public CGameObject
+class CChurch final : public CGameObject
 {
 protected:
-	CChurchGrillesFloor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CChurchGrillesFloor(const CGameObject& rhs);
-	virtual ~CChurchGrillesFloor() = default;
+	CChurch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CChurch(const CGameObject& rhs);
+	virtual ~CChurch() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
@@ -26,7 +26,7 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-private: 
+private:
 	CRenderer* m_pRendererCom = { nullptr };
 	CTransform* m_pTransformCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
@@ -37,8 +37,8 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CChurchGrillesFloor* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strProtoTag = TEXT(""));
-	virtual CGameObject* Clone(void* pArg) override; 
+	static CChurch* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
 

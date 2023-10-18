@@ -11,8 +11,8 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_GamePlay::Initialize()
 {
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -23,8 +23,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Boss(TEXT("Layer_Boss"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Boss(TEXT("Layer_Boss"))))
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
@@ -84,6 +84,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring& strLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_Props(const wstring& strLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Church"))))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 

@@ -54,6 +54,7 @@
     <ClCompile Include="..\Private\Body_Boss_Urd.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Boss_Urd.cpp" />
+    <ClCompile Include="..\Private\Church.cpp" />
     <ClCompile Include="..\Private\ChurchGrillesFloor.cpp" />
     <ClCompile Include="..\Private\Edit_Terrain.cpp" />
     <ClCompile Include="..\Private\Level_1.cpp" />
@@ -99,6 +100,7 @@
     <ClInclude Include="..\Public\Body_Boss_Urd.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Boss_Urd.h" />
+    <ClInclude Include="..\Public\Church.h" />
     <ClInclude Include="..\Public\ChurchGrillesFloor.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Edit_Terrain.h" />
