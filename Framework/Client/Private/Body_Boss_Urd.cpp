@@ -34,7 +34,7 @@ HRESULT CBody_Boss_Urd::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(true, rand() % 15);
+	m_pModelCom->First_Set_Animation(true, rand() % 15);
 
 	return S_OK;
 }
@@ -48,15 +48,6 @@ void CBody_Boss_Urd::Tick(_float fTimeDelta)
 
 void CBody_Boss_Urd::LateTick(_float fTimeDelta)
 {
-	for (auto& pMesh : m_pModelCom->Get_Meshes())
-	{
-		string Name = pMesh->Get_MeshName();
-
-		if (Name == "Player_Corvus.Raven")
-			pMesh->Set_RenderState(false);
-	}
-
-
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_BLEND, this);
 }
 
@@ -75,9 +66,17 @@ HRESULT CBody_Boss_Urd::Render()
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
-
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
+		if (m_pModelCom->Get_Meshes()[i]->Get_MeshName() == "Boss_Urd.Alpha")
+		{
+			if (FAILED(m_pShaderCom->Begin(0)))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(1)))
+				return E_FAIL;
+		}
+	
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;

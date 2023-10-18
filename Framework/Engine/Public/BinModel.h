@@ -62,8 +62,8 @@ private:
 	vector<class CBinBone*>					m_Bones;
 
 private:
-	vector<CBinChannel*>					CurChannels;
-	vector<CBinChannel*>					NextChannels;
+	vector<class CBinChannel*>				CurChannels;
+	vector<class CBinChannel*>				NextChannels;
 	_float									m_fChangeTrackPosition = { 0.f };
 	_bool									m_bIsNextAnimLoop = { false };
 	_bool									m_bIsAnimChange = { false };

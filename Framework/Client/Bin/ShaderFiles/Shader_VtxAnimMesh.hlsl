@@ -96,7 +96,7 @@ struct PS_OUT
 	float4	vColor : SV_TARGET0;
 };
 
-PS_OUT	PS_MAIN(PS_IN In)
+PS_OUT	PS_MAIN_ALPHA(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -120,15 +120,44 @@ PS_OUT	PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_NONALPHA(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
+		g_vLightAmbient * g_vMtrlAmbient;
+
+    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+    vector vLook = In.vWorldPos - g_vCamPosition;
+
+    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+
+    Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
+		(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
+
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
-    pass Mesh
+    pass Mesh_Alpha
     {
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_ALPHA();
+    }
+
+    pass Mesh_NonAlpha
+    {
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_NONALPHA();
     }
 }
 
