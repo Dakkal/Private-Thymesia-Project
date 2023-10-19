@@ -4,6 +4,8 @@
 #include "BinMesh.h"
 #include "BinChannel.h"
 #include "Texture.h"
+#include "GameObject.h"
+#include "Transform.h"
 
 CBinModel::CBinModel(ID3D11Device* pDeivce, ID3D11DeviceContext* pContext)
 	: CComponent(pDeivce, pContext)
@@ -139,7 +141,6 @@ HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 					m_iCurAnimIndex = m_iNextAnimIndex;
 					m_Animations[m_iCurAnimIndex]->Reset();
 					m_Animations[m_iCurAnimIndex]->Set_Loop(m_bIsNextAnimLoop);
-
 					return S_OK;
 				}
 
@@ -180,12 +181,22 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 	{
 		m_Animations[m_iCurAnimIndex]->Update_TransformationMatrix(m_Bones, fTimeDelta);
 	}
-
+	
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Update_CombinedTransformationMatrix(m_Bones);
 	}
 	
+	auto rootBone = Get_BonePtr("root");
+
+	if (true == m_Animations[m_iCurAnimIndex]->IsFinished())
+	{
+		m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
+		m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
+	}
+
+	m_PrevRootPos = m_CurRootPos;
+	m_CurRootPos = rootBone->Get_RootPos(m_PivotMatrix);
 
 	return S_OK;
 }
@@ -242,22 +253,21 @@ _int CBinModel::Get_BoneIndex(const string& strBoneName) const
 	return iBoneIndex;
 }
 
-_vector CBinModel::Get_AnimTargetPoint()
+void CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDelta)
 {
-	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBinBone* pBone)
-		{
-			if (pBone->Get_BoneName() == "AnimTargetPoint")
-				return true;
+	if (true == m_bIsAnimChange)
+		return;
 
-			return false;
-		});
+	_vector vPos = pTransform->Get_State(CTransform::STATE_POS);
+	_vector vDir = m_PrevRootPos - m_CurRootPos;
+	_vector vWorldDir = XMVector3TransformNormal(vDir, pTransform->Get_WorldMatrix());
+	vWorldDir.y *= -1;
+	vWorldDir.Normalize();
 
-	_vector vBonesPos;
-	if (iter != m_Bones.end())
-		vBonesPos = (*iter)->Get_BonePos();
-	
+	_float fDist = vDir.Length();
 
-	return vBonesPos;
+	vPos += vWorldDir * fDist * fTimeDelta;
+	pTransform->Set_State(CTransform::STATE_POS, vPos);
 }
 
 CBinBone* CBinModel::Get_BonePtr(const string& pBoneName) const

@@ -45,8 +45,13 @@ HRESULT CBinAnimation::Initialize(const CBinModel* pModel, const SAVE_ANIM_INFO 
 
 void CBinAnimation::Update_TransformationMatrix(vector<class CBinBone*>& Bones, _float fTimeDelta)
 {
-	if (true == m_isFinished)
+	if (true == m_isStop)
 		return;
+	else
+	{
+		if (true == m_isFinished)
+			m_isFinished = false;
+	}
 
 	m_fTrackPosition += m_fTickPerSecond * fTimeDelta;
 
@@ -55,9 +60,14 @@ void CBinAnimation::Update_TransformationMatrix(vector<class CBinBone*>& Bones, 
 		if (true == m_isLoop)
 		{
 			m_fTrackPosition = 0.f;
+			m_isFinished = true;
 		}
 		else
+		{
+			m_isStop = true;
 			m_isFinished = true;
+		}
+			
 	}
 
 	_uint	iNumChannel = 0;
@@ -73,6 +83,7 @@ void CBinAnimation::Reset()
 	m_fTrackPosition = 0.f;
 	m_isFinished = false;
 	m_isLoop = false;
+	m_isStop = false;
 
 	for (auto& iCurKeyFrame : m_iCurKeyFrames)
 	{

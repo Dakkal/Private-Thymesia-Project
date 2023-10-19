@@ -32,7 +32,7 @@ private:
 private: 
 	CTransform* m_pTransformCom = { nullptr };
 
-	_int	iIndex = 0;
+	_int	iIndex = 105;
 
 private:
 	HRESULT Ready_Components();

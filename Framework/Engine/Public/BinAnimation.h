@@ -20,6 +20,7 @@ public:
 	const vector<class CBinChannel*>&	Get_Channels() const { return m_Channels; }
 	const vector<_uint>&				Get_CurKeyFrames() const { return m_iCurKeyFrames; }
 	const _bool&						IsFinished() const { return m_isFinished; }
+	const _bool&						IsLoop() const { return m_isLoop; }
 
 public:
 	void Set_Loop(_bool isLoop) { m_isLoop = isLoop; }
@@ -30,6 +31,7 @@ private:
 	_float						m_fTrackPosition = { 0.f };
 
 	_bool						m_isFinished = { false };
+	_bool						m_isStop = { false };
 	_bool						m_isLoop = { false };
 
 	string						m_strName = "";

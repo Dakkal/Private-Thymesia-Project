@@ -43,6 +43,8 @@ void CBody_Player::Tick(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta);
 
+	m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta);
+
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix());
 }
 

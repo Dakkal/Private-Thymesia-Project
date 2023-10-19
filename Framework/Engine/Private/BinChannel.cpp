@@ -68,11 +68,6 @@ void CBinChannel::Update_TransformationMatrix(_uint* pCurKeyFrame, vector<class 
 
 	_matrix TransformationMatrix = XMMatrixAffineTransformation(m_CurKeyFrame.vScale, _vector(0.f, 0.f, 0.f, 1.f), m_CurKeyFrame.vRotation, m_CurKeyFrame.vTranslation);
 
-	if ("AnimTargetPoint" == Bones[m_iBoneIndex]->Get_BoneName())
-	{
-		_int a = 10;
-	}
-
 	Bones[m_iBoneIndex]->Set_Transform(TransformationMatrix);
 }
 

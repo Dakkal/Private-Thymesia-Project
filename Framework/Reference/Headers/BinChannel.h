@@ -15,9 +15,9 @@ public:
 	void	Update_TransformationMatrix(_uint* pCurKeyFrame, vector<class CBinBone*>& Bones, _float fTrackPosition);
 
 public:
-	const vector<KEYFRAME>& Get_KeyFrames() const { return m_KeyFrames; }
-	const _uint& Get_Channel_BoneIndex() const { return m_iBoneIndex; }
-	KEYFRAME Get_CurKeyFrame() { return m_CurKeyFrame; }
+	const vector<KEYFRAME>&		Get_KeyFrames() const { return m_KeyFrames; }
+	const _uint&				Get_Channel_BoneIndex() const { return m_iBoneIndex; }
+	KEYFRAME					Get_CurKeyFrame() { return m_CurKeyFrame; }
 
 private:
 	string	m_strName = "";

@@ -1,4 +1,5 @@
 #include "../Public/BinBone.h"
+#include "BinMesh.h"
 
 CBinBone::CBinBone()
 {
@@ -27,26 +28,21 @@ HRESULT CBinBone::Update_CombinedTransformationMatrix(const vector<class CBinBon
 	if (-1 == m_iParentBoneIndex)
 		m_ComBinedTransformationMatrix = m_TransformationMatrix;
 	else
+	{
 		m_ComBinedTransformationMatrix = m_TransformationMatrix * Bones[m_iParentBoneIndex]->m_ComBinedTransformationMatrix;
 
+		if ("root" == m_strName)
+		{
+			m_RootCombinedMatrix = m_ComBinedTransformationMatrix;
+			memcpy(&m_RootPos, &m_RootCombinedMatrix.m[3], sizeof(_vector));
+
+			_vector Zero = _vector(0.f, 0.f, 0.f, 1.f);
+
+			memcpy(&m_ComBinedTransformationMatrix.m[3], &Zero, sizeof(_vector));
+		}
+	}
+		
 	return S_OK;
-}
-
-_matrix CBinBone::Get_RemovePos_CombinedTransform()
-{
-	_matrix RemovePosMatrix = m_ComBinedTransformationMatrix;
-	_vector Zero = _vector(0.f, 0.f, 0.f, 1.f);
-
-	memcpy(&RemovePosMatrix.m[3], &Zero, sizeof(_vector));
-
-	return RemovePosMatrix;
-}
-
-_vector CBinBone::Get_BonePos()
-{
-	memcpy(&m_BonePos, &m_TransformationMatrix.m[3], sizeof(_vector));
-
-	return m_BonePos;
 }
 
 CBinBone* CBinBone::Create(const SAVE_BONE_INFO tBoneInfo)

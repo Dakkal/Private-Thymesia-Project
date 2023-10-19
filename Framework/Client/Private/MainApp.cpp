@@ -45,9 +45,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Create_FakeTexture()))
 		return E_FAIL;
 
-	//CFbxExporter FbxExport;
-	//FbxExport.Initialize_Static_Export(TEXT("../Bin/Resources/Models/Static/"));
-	//FbxExport.Initialize_Dynamic_Export(TEXT("../Bin/Resources/Models/Dynamic/"));
+	/*CFbxExporter FbxExport;
+	FbxExport.Initialize_Static_Export(TEXT("../Bin/Resources/Models/Static/"));
+	FbxExport.Initialize_Dynamic_Export(TEXT("../Bin/Resources/Models/Dynamic/"));*/
 
 	return S_OK;
 }

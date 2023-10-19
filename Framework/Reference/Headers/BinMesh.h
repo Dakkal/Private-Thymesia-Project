@@ -23,6 +23,7 @@ public:
 	_uint	Get_MaterialIndex() const { return m_iMaterialIndex; }
 	string  Get_MeshName() const { return m_strName; }
 	_bool	Get_RenderState() const { return m_bIsRender; }
+	XMFLOAT4X4 Get_OffsetMatrix(const _int& BoneIndex) const { return m_OffsetMatrices[BoneIndex]; }
 public:
 	void	Set_RenderState(_bool IsRender) { m_bIsRender = IsRender; }
 

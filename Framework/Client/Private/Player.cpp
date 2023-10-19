@@ -74,13 +74,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	}
 	
 	RELEASE_INSTANCE(CGameInstance);
-
-	_vector OriginPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
-	_vector TargetPos = dynamic_cast<CBinModel*>(m_PlayerParts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_AnimTargetPoint();
-	_vector NewPos = OriginPos + TargetPos;
-	NewPos.w = 1;
-	m_pTransformCom->Set_State(CTransform::STATE_POS, NewPos);
-
+	
 	for (auto& pPart : m_PlayerParts)
 	{
 		if (nullptr != pPart)

@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "FbxExporter.h"
+#include "BinAnimation.h"
 
 BEGIN(Engine)
 
@@ -37,10 +38,11 @@ public:
 	const vector<class CBinBone*>&			Get_Bones()			{ return m_Bones; }
 	const vector<class CBinAnimation*>&		Get_Animations()	{ return m_Animations; }
 	const class CBinAnimation*				Get_CurAnimation()	{ return m_Animations[m_iCurAnimIndex]; }
+	const _bool&							Is_CurAnimFinished(){ return m_Animations[m_iCurAnimIndex]->IsFinished(); }
 
 	_uint									Get_NumMeshes() const { return m_iNumMeshes; }
 	_int									Get_BoneIndex(const string& strBoneName) const;
-	_vector									Get_AnimTargetPoint();
+	void									Set_OwnerPosToRootPos(class CTransform* pTransform, _float fTimeDelta);
 	
 	class CBinBone*							Get_BonePtr(const string& pBoneName) const;
 	_matrix									Get_PivotMatrix() const { return m_PivotMatrix; }
@@ -61,6 +63,9 @@ private:
 
 private:
 	vector<class CBinBone*>					m_Bones;
+
+	_vector									m_PrevRootPos = {0.f, 0.f, 0.f, 1.f};
+	_vector									m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
 
 private:
 	vector<class CBinChannel*>				CurChannels;
