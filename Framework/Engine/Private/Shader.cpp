@@ -5,8 +5,8 @@ CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 }
 
-CShader::CShader(const CShader& rhs)
-	: CComponent(rhs)
+CShader::CShader(CGameObject* pOwner, const CShader& rhs)
+	: CComponent(pOwner, rhs)
 	, m_pEffect(rhs.m_pEffect)
 	, m_vecInputLayouts(rhs.m_vecInputLayouts)
 {
@@ -77,6 +77,16 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	return S_OK;
 }
 
+HRESULT CShader::Bind_RawValue(const char* pConstantName, const void* pData, _uint iSize) const
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+
+	return pVariable->SetRawValue(pData, 0, iSize);
+}
+
 HRESULT CShader::Bind_Matrix(const char* pConstantName, const _matrix* pMatrix) const
 {
 	ID3DX11EffectVariable*	pVariable = m_pEffect->GetVariableByName(pConstantName);
@@ -91,7 +101,7 @@ HRESULT CShader::Bind_Matrix(const char* pConstantName, const _matrix* pMatrix) 
 	return pMatrixVariable->SetMatrix((const _float*)pMatrix);
 }
 
-HRESULT CShader::Bind_Matrices(const char* pConstantName, const _matrix** ppMatrices, _uint iNumMatrices) const
+HRESULT CShader::Bind_Matrices(const char* pConstantName, const _matrix* pMatrices, _uint iNumMatrices) const
 {
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
@@ -101,7 +111,7 @@ HRESULT CShader::Bind_Matrices(const char* pConstantName, const _matrix** ppMatr
 	if (nullptr == pMatrixVariable)
 		return E_FAIL;
 
-	return pMatrixVariable->SetMatrixArray((const _float*)ppMatrices, 0, iNumMatrices);
+	return pMatrixVariable->SetMatrixArray((_float*)pMatrices, 0, iNumMatrices);
 }
 
 HRESULT CShader::Bind_Texture(const char* pConstantName, ID3D11ShaderResourceView* pSRV) const
@@ -143,9 +153,9 @@ CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, c
 	return pInstance;
 }
 
-CComponent* CShader::Clone(void* pArg)
+CComponent* CShader::Clone(CGameObject* pOwner, void* pArg)
 {
-	CShader* pInstance = new CShader(*this);
+	CShader* pInstance = new CShader(pOwner, *this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

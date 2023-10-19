@@ -9,10 +9,11 @@ CComponent::CComponent(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	Safe_AddRef(m_pContext);
 }
 
-CComponent::CComponent(const CComponent& rhs)
+CComponent::CComponent(CGameObject* pOwner, const CComponent& rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pContext(rhs.m_pContext)
 	, m_IsCloned(true)
+	, m_pOwner(pOwner)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);

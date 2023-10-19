@@ -39,6 +39,9 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
     </ClCompile>
+    <ClCompile Include="..\..\Imgui\imgui_spectrum.cpp">
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
+    </ClCompile>
     <ClCompile Include="..\..\Imgui\imgui_tables.cpp">
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
@@ -48,11 +51,21 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp" />
-    <ClCompile Include="..\Private\GameCamera.cpp" />
+    <ClCompile Include="..\Private\Body_Boss_Urd.cpp" />
+    <ClCompile Include="..\Private\Body_Player.cpp" />
+    <ClCompile Include="..\Private\Boss_Urd.cpp" />
+    <ClCompile Include="..\Private\Church.cpp" />
+    <ClCompile Include="..\Private\ChurchGrillesFloor.cpp" />
+    <ClCompile Include="..\Private\Edit_Terrain.cpp" />
+    <ClCompile Include="..\Private\Level_1.cpp" />
+    <ClCompile Include="..\Private\PartObject.cpp" />
+    <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\ToolCamera.cpp" />
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
     </ClCompile>
+    <ClCompile Include="..\Private\Level_Edit.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
@@ -61,6 +74,9 @@
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\Weapon_Boss_Urd.cpp" />
+    <ClCompile Include="..\Private\Weapon_Player_Dagger.cpp" />
+    <ClCompile Include="..\Private\Weapon_Player_Saber.cpp" />
     <ClCompile Include="Client.cpp">
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
@@ -76,19 +92,33 @@
     <ClInclude Include="..\..\Imgui\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\Imgui\imgui_impl_win32.h" />
     <ClInclude Include="..\..\Imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\Imgui\imgui_spectrum.h" />
     <ClInclude Include="..\..\Imgui\imstb_rectpack.h" />
     <ClInclude Include="..\..\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\Public\BackGround.h" />
+    <ClInclude Include="..\Public\Body_Boss_Urd.h" />
+    <ClInclude Include="..\Public\Body_Player.h" />
+    <ClInclude Include="..\Public\Boss_Urd.h" />
+    <ClInclude Include="..\Public\Church.h" />
+    <ClInclude Include="..\Public\ChurchGrillesFloor.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
-    <ClInclude Include="..\Public\GameCamera.h" />
+    <ClInclude Include="..\Public\Edit_Terrain.h" />
+    <ClInclude Include="..\Public\Level_1.h" />
+    <ClInclude Include="..\Public\PartObject.h" />
+    <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\ToolCamera.h" />
     <ClInclude Include="..\Public\Imgui_Manager.h" />
+    <ClInclude Include="..\Public\Level_Edit.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\Weapon_Boss_Urd.h" />
+    <ClInclude Include="..\Public\Weapon_Player_Dagger.h" />
+    <ClInclude Include="..\Public\Weapon_Player_Saber.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -103,6 +133,8 @@
     <ResourceCompile Include="Client.rc" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl" />
   </ItemGroup>
@@ -215,12 +247,13 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/Librarys/Debug/;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;d3d11.lib;DirectXTKd.lib;Effects11d.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -240,6 +273,8 @@
       <AdditionalIncludeDirectories>../../Reference/Headers/;../Public/;./;../../Imgui/;../../Fmod/inc/</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <Optimization>MaxSpeed</Optimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -247,7 +282,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/Librarys/Release/;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine_Release.lib;d3d11.lib;DirectXTK.lib;Effects11.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>

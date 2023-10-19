@@ -13,19 +13,32 @@ CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CGameObject::CGameObject(const CGameObject& rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pContext(rhs.m_pContext)
+	, m_iCloneIndex(rhs.m_iCloneIndex)
+	, m_strObjectName(rhs.m_strObjectName)
+	, m_strProtoTag(rhs.m_strProtoTag)
+	, m_eObjType(rhs.m_eObjType)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
 }
 
-HRESULT CGameObject::Initialize_Prototype()
+HRESULT CGameObject::Initialize_Prototype(const wstring& strProtoTag)
 {
+	m_strProtoTag = strProtoTag;
+
 	return S_OK;
 }
 
 HRESULT CGameObject::Initialize(void* pArg)
 {
+	m_IsCloned = true;
+	m_iIndex = m_iCloneIndex;
+
 	return S_OK;
+}
+
+void CGameObject::PriorityTick(_float fTimeDelta)
+{
 }
 
 void CGameObject::Tick(_float fTimeDelta)
@@ -49,7 +62,7 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring& strPrototyp
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CComponent* pComponent = pGameInstance->Clone_Component(iLevelIndex, strPrototypeRag, pArg);
+	CComponent* pComponent = pGameInstance->Clone_Component(iLevelIndex, strPrototypeRag, this, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
 
@@ -59,7 +72,6 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring& strPrototyp
 	Safe_AddRef(pComponent);
 
 	Safe_Release(pGameInstance);
-
 
 	return S_OK;
 }
@@ -72,6 +84,13 @@ CComponent* CGameObject::Find_Component(const wstring& strComponentTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+CGameObject* CGameObject::Clone(void* pArg)
+{
+ 	m_iCloneIndex++;
+
+	return nullptr;
 }
 
 void CGameObject::Free()

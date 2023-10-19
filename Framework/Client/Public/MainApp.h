@@ -10,8 +10,6 @@ END
 
 BEGIN(Client)
 
-class CImgui_Manager;
-
 class CMainApp final : public CBase
 {
 private:
@@ -25,7 +23,6 @@ public:
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
-	CImgui_Manager*			m_pImgui_Manager = { nullptr };
 
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
@@ -36,6 +33,7 @@ private:
 	HRESULT Open_Level(LEVELID eLevelID);
 	HRESULT Ready_Prototype_Components();
 
+	HRESULT Create_FakeTexture();
 
 public:
 	static CMainApp* Create();

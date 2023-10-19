@@ -1,5 +1,6 @@
 #include "..\Public\Camera.h"
 #include "PipeLine.h"
+#include "GameInstance.h"
 
 CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -15,13 +16,15 @@ CCamera::CCamera(const CCamera& rhs)
 	Safe_AddRef(m_pPipeLine);
 }
 
-HRESULT CCamera::Initialize_Prototype()
+HRESULT CCamera::Initialize_Prototype(const wstring& strProtoTag)
 {
 	return S_OK;
 }
 
 HRESULT CCamera::Initialize(void* pArg)
 {
+	__super::Initialize(pArg);
+
 	CAMERA_DESC* pCameraDesc = (CAMERA_DESC*)pArg;
 
 	m_vEye = pCameraDesc->vEye;
@@ -55,6 +58,15 @@ void CCamera::Tick(_float fTimeDelta)
 
 void CCamera::LateTick(_float fTimeDelta)
 {
+
+	__super::LateTick(fTimeDelta);
+}
+
+CGameObject* CCamera::Clone(void* pArg)
+{
+	__super::Clone(pArg);
+
+	return nullptr;
 }
 
 void CCamera::Free()

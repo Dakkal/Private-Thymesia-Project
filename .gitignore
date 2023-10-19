@@ -436,5 +436,6 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,c++
 
-# Resource Folder Ignore
-.Resources/
+# Project Folder Ignore
+./Resources/
+./Reference/

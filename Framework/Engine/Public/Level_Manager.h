@@ -18,6 +18,8 @@ public:
 public:
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
 
+	_uint	Get_CurLevel() { return m_iCurLevelIndex; }
+
 private:
 	class CLevel* m_pCurLevel = { nullptr };
 	_uint		  m_iCurLevelIndex = { 0 };

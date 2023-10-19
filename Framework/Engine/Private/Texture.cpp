@@ -6,8 +6,8 @@ CTexture::CTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 }
 
-CTexture::CTexture(const CTexture& rhs)
-	: CComponent(rhs)
+CTexture::CTexture(CGameObject* pOwner, const CTexture& rhs)
+	: CComponent(pOwner, rhs)
 	, m_iNumTextures(rhs.m_iNumTextures)
 	, m_vecSRVs(rhs.m_vecSRVs)
 {
@@ -81,9 +81,9 @@ CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 	return pInstance;
 }
 
-CComponent* CTexture::Clone(void* pArg)
+CComponent* CTexture::Clone(CGameObject* pOwner, void* pArg)
 {
-	CTexture* pInstance = new CTexture(*this);
+	CTexture* pInstance = new CTexture(pOwner, *this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

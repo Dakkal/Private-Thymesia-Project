@@ -7,7 +7,7 @@ class ENGINE_DLL CTexture  final : public CComponent
 {
 private:
 	CTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CTexture(const CTexture& rhs);
+	CTexture(class CGameObject* pOwner, const CTexture& rhs);
 	virtual ~CTexture() = default;
 
 public:
@@ -26,7 +26,7 @@ private:
 public:
 	static CTexture* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext,
 		const wstring & strTextureFilePath, _uint iNumTextures = 1);
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(class CGameObject* pOwner, void* pArg) override;
 	virtual void Free() override;
 };
 

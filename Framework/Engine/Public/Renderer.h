@@ -6,11 +6,11 @@ BEGIN(Engine)
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum class RENDERGROUP { RG_PRIORITY, RG_NONLIGHT, RG_NONBLEND, RG_BLEND, RG_UI, RG_END };
+	enum class RENDERGROUP { RG_PRIORITY, RG_NONLIGHT, RG_NONBLEND, RG_BLEND, RG_UI, RG_TOOL, RG_END };
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CRenderer(const CRenderer& rhs) = delete;
+	CRenderer(class CGameObject* pOwner, const CRenderer& rhs) = delete;
 	virtual ~CRenderer() = default;
 
 public:
@@ -30,11 +30,12 @@ private:
 	HRESULT	Render_NonBlend();
 	HRESULT	Render_Blend();
 	HRESULT	Render_UI();
+	HRESULT	Render_Tool();
 
 
 public:
 	static CRenderer* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(class CGameObject* pOwner, void* pArg) override;
 	virtual void Free() override;
 
 };

@@ -20,6 +20,15 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 	return S_OK;
 }
 
+void CLayer::PriorityTick(_float fTimeDelta)
+{
+	for (auto& pGameObject : m_listGameObject)
+	{
+		if (nullptr != pGameObject)
+			pGameObject->PriorityTick(fTimeDelta);
+	}
+}
+
 void CLayer::Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_listGameObject)
@@ -40,12 +49,51 @@ void CLayer::LateTick(_float fTimeDelta)
 
 }
 
-CGameObject* CLayer::Get_FirstObject()
+CGameObject* CLayer::Last_GameObject()
 {
-	if (nullptr == m_listGameObject.front())
-		return nullptr;
-	else
-		return m_listGameObject.front();
+	return m_listGameObject.back();
+}
+
+CGameObject* CLayer::Find_GameObject(const wstring& ObjName, _uint iCloneIndex)
+{
+	for (auto& pGameObject : m_listGameObject)
+	{
+		if (nullptr != pGameObject)
+		{
+			if (ObjName == pGameObject->Get_Name() &&
+				iCloneIndex == pGameObject->Get_Index())
+				return pGameObject;
+		}
+		else
+			return nullptr;
+	}
+}
+
+HRESULT CLayer::Delete_GameObject(const wstring& ObjName, _uint iCloneIndex)
+{
+	for (auto iter = m_listGameObject.begin(); iter != m_listGameObject.end(); ++iter)
+	{
+
+		if (ObjName == (*iter)->Get_Name() &&
+			iCloneIndex == (*iter)->Get_Index())
+		{
+			Safe_Release(*iter);
+			m_listGameObject.erase(iter);
+			
+			return S_OK;
+		}
+	}
+}
+
+HRESULT CLayer::Delete_Layer()
+{
+	for (auto& pGameObject : m_listGameObject)
+	{
+		Safe_Release(pGameObject);
+	}
+	m_listGameObject.clear();
+
+	return S_OK;
 }
 
 CLayer* CLayer::Create()

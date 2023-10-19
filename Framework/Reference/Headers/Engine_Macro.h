@@ -1,6 +1,21 @@
 #ifndef Engine_Macro_h__
 #define Engine_Macro_h__
 
+#define D3DCOLOR_ARGB(a,b,g,r) \
+    ((D3DCOLOR)((((a)&0xff)<<24)|(((r)&0xff)<<16)|(((g)&0xff)<<8)|((b)&0xff)))
+
+#define GET_INSTANCE(CLASSNAME)	[](){											\
+	CLASSNAME*	pInstance = CLASSNAME::GetInstance();							\
+	pInstance->AddRef();														\
+	return pInstance;															\
+	}();
+
+#define RELEASE_INSTANCE(CLASSNAME)	[](){										\
+	CLASSNAME*	pInstance = CLASSNAME::GetInstance();							\
+	pInstance->Release();														\
+	}();
+
+
 #ifndef			MSG_BOX
 #define			MSG_BOX(_message)			MessageBox(nullptr, TEXT(_message), L"System Message", MB_OK)
 #endif
@@ -75,5 +90,6 @@
 			}													\
 			return dwRefCnt;									\
 		}
+
 
 #endif // Engine_Macro_h__

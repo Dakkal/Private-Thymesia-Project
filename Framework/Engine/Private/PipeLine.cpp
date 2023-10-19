@@ -9,7 +9,7 @@ CPipeLine::CPipeLine()
 
 void CPipeLine::Set_Transform(TRANSFORM_STATE eState, _matrix TransformMatrix)
 {
-	if (eState >= D3DTS_END)
+	if (eState >= D3DTS_END || eState < D3DTS_VIEW)
 		return;
 
 	m_TransformMatrices[eState] = TransformMatrix;
@@ -17,7 +17,7 @@ void CPipeLine::Set_Transform(TRANSFORM_STATE eState, _matrix TransformMatrix)
 
 _matrix CPipeLine::Get_Transform_Matrix(TRANSFORM_STATE eState) const
 {
-	if (eState >= D3DTS_END)
+	if (eState >= D3DTS_END || eState < D3DTS_VIEW)
 		return XMMatrixIdentity();
 
 	return m_TransformMatrices[eState];
@@ -25,13 +25,13 @@ _matrix CPipeLine::Get_Transform_Matrix(TRANSFORM_STATE eState) const
 
 _matrix CPipeLine::Get_Transform_Matrix_Inverse(TRANSFORM_STATE eState) const
 {
-	if (eState >= D3DTS_END)
+	if (eState >= D3DTS_END || eState < D3DTS_VIEW)
 		return XMMatrixIdentity();
 
 	return m_TransformMatrices_Inverse[eState];
 }
 
-_vector CPipeLine::Get_CamPosition_Vector(TRANSFORM_STATE eState) const
+_vector CPipeLine::Get_CamPosition_Vector() const
 {
 	return m_vCamPosition;
 }
@@ -39,6 +39,11 @@ _vector CPipeLine::Get_CamPosition_Vector(TRANSFORM_STATE eState) const
 HRESULT CPipeLine::Bind_TransformToShader(CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORM_STATE eState)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_TransformMatrices[eState]);
+}
+
+HRESULT CPipeLine::Bind_CamPosToShader(CShader* pShader, const char* pConstantName)
+{
+	return pShader->Bind_RawValue(pConstantName, &m_vCamPosition, sizeof(_vector));
 }
 
 HRESULT CPipeLine::Initialize()

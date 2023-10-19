@@ -12,11 +12,16 @@ private:
 public:
 	HRESULT Initialize();
 	HRESULT Add_GameObject(class CGameObject* pGameObject);
+	void PriorityTick(_float fTimeDelta);
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
 
 public:
-	CGameObject* Get_FirstObject();
+	const list<class CGameObject*>*	Get_LayerList() { return &m_listGameObject; }
+	CGameObject* Last_GameObject();
+	CGameObject* Find_GameObject(const wstring& ObjName, _uint iCloneIndex);
+	HRESULT		 Delete_GameObject(const wstring& ObjName, _uint iCloneIndex);
+	HRESULT		 Delete_Layer();
 
 private:
 	list<class CGameObject*>		m_listGameObject;

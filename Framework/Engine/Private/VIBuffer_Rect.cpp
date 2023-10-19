@@ -5,8 +5,8 @@ CVIBuffer_Rect::CVIBuffer_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 {
 }
 
-CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect& rhs)
-	:CVIBuffer(rhs)
+CVIBuffer_Rect::CVIBuffer_Rect(CGameObject* pOwner, const CVIBuffer_Rect& rhs)
+	:CVIBuffer(pOwner, rhs)
 {
 }
 
@@ -111,9 +111,9 @@ CVIBuffer_Rect* CVIBuffer_Rect::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 	return pInstance;
 }
 
-CComponent* CVIBuffer_Rect::Clone(void* pArg)
+CComponent* CVIBuffer_Rect::Clone(CGameObject* pOwner, void* pArg)
 {
-	CVIBuffer_Rect* pInstance = new CVIBuffer_Rect(*this);
+	CVIBuffer_Rect* pInstance = new CVIBuffer_Rect(pOwner, *this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

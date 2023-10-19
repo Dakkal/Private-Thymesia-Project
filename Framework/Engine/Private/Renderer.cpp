@@ -40,6 +40,8 @@ HRESULT CRenderer::Draw_RenderObject()
 		return E_FAIL;
 	if (FAILED(Render_UI()))
 		return E_FAIL;
+	if (FAILED(Render_Tool()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -114,6 +116,20 @@ HRESULT CRenderer::Render_UI()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Tool()
+{
+	for (auto& pGameObject : m_listRenderObject[(_uint)RENDERGROUP::RG_TOOL])
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+	m_listRenderObject[(_uint)RENDERGROUP::RG_TOOL].clear();
+
+	return S_OK;
+}
+
 CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CRenderer* pInstance = new CRenderer(pDevice, pContext);
@@ -127,7 +143,7 @@ CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	return pInstance;
 }
 
-CComponent* CRenderer::Clone(void* pArg)
+CComponent* CRenderer::Clone(CGameObject* pOwner, void* pArg)
 {
 	AddRef();
 

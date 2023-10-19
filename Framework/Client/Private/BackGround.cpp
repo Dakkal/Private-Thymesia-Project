@@ -7,20 +7,37 @@ CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 }
 
-CBackGround::CBackGround(const CGameObject& rhs)
+CBackGround::CBackGround(const CBackGround& rhs)
     : CGameObject(rhs)
 {
 }
 
-HRESULT CBackGround::Initialize_Prototype()
+HRESULT CBackGround::Initialize_Prototype(const wstring& strProtoTag)
 {
+    m_strObjectName = TEXT("Object_BackGround");
+
     return S_OK;
 }
 
 HRESULT CBackGround::Initialize(void* pArg)
 {
+    __super::Initialize(pArg);
+
     if (FAILED(Ready_Component(pArg)))
         return E_FAIL;
+
+    m_fSizeX = g_iWinSizeX;
+    m_fSizeY = g_iWinSizeY;
+    m_fX = g_iWinSizeX * 0.5f;
+    m_fY = g_iWinSizeY * 0.5f;
+
+    m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
+    m_pTransformCom->Set_State(CTransform::STATE_POS,
+        _vector(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+    m_ViewMatrix = XMMatrixIdentity();
+    m_ProjMatrix = XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
+
 
     return S_OK;
 }
@@ -44,7 +61,6 @@ void CBackGround::LateTick(_float fTimeDelta)
 
 HRESULT CBackGround::Render()
 {
-
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 
@@ -92,14 +108,12 @@ HRESULT CBackGround::Ready_Component(void* pArg)
 
 HRESULT CBackGround::Bind_ShaderResources()
 {
-    _matrix matView;
-    _matrix matProj;
 
     if (FAILED(m_pTransformCom->Bind_ShaderResources(m_pShaderCom, "g_WorldMatrix")))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &matView)))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &matProj)))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
         return E_FAIL;
 
 
@@ -113,11 +127,11 @@ HRESULT CBackGround::Bind_ShaderResources()
     return S_OK;
 }
 
-CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
     CBackGround* pInstance = new CBackGround(pDevice, pContext);
 
-    if (FAILED(pInstance->Initialize_Prototype()))
+    if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
     {
         MSG_BOX("Failed to Created : CBackGround");
         Safe_Release(pInstance);
@@ -128,6 +142,8 @@ CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 CGameObject* CBackGround::Clone(void* pArg)
 {
+    __super::Clone(pArg);
+
     CBackGround* pInstance = new CBackGround(*this);
 
     if (FAILED(pInstance->Initialize(pArg)))
