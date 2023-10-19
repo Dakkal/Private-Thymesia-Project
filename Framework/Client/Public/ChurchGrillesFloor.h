@@ -16,7 +16,7 @@ class CChurchGrillesFloor final : public CGameObject
 {
 protected:
 	CChurchGrillesFloor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CChurchGrillesFloor(const CGameObject& rhs);
+	CChurchGrillesFloor(const CChurchGrillesFloor& rhs);
 	virtual ~CChurchGrillesFloor() = default;
 
 public:

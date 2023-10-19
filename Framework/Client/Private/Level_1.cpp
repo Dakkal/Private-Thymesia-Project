@@ -51,22 +51,22 @@ HRESULT CLevel_1::Load_Level(LEVELID eLevel)
     wstring strFileObject = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel - 2) + TEXT("Object.dat");
 
 #pragma region Terrain
-	CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
-	ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
+	//CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
+	//ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
 
-    shared_ptr<CAsFileUtils> LoadTerrain = make_shared<CAsFileUtils>();
-    LoadTerrain->Open(strFileTerrain, FileMode::Read);
+ //   shared_ptr<CAsFileUtils> LoadTerrain = make_shared<CAsFileUtils>();
+ //   LoadTerrain->Open(strFileTerrain, FileMode::Read);
 
-    LoadTerrain->Read<_int>(TerrainDesc.iNumVerticesX);
-    LoadTerrain->Read<_int>(TerrainDesc.iNumVerticesZ);
-    LoadTerrain->Read<_bool>(TerrainDesc.bIsWireFrame);
-	TerrainDesc.bIsWireFrame = false;
+ //   LoadTerrain->Read<_int>(TerrainDesc.iNumVerticesX);
+ //   LoadTerrain->Read<_int>(TerrainDesc.iNumVerticesZ);
+ //   LoadTerrain->Read<_bool>(TerrainDesc.bIsWireFrame);
+	//TerrainDesc.bIsWireFrame = false;
 
-    if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
-    {
-        RELEASE_INSTANCE(CGameInstance);
-        return E_FAIL;
-    }
+ //   if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
+ //   {
+ //       RELEASE_INSTANCE(CGameInstance);
+ //       return E_FAIL;
+ //   }
 #pragma endregion
 
 
@@ -111,7 +111,7 @@ HRESULT CLevel_1::Load_Level(LEVELID eLevel)
 			pTransform->Set_WorldMatrix(matObject);
 		}
 			break;
-		case OBJECT_TYPE::PROP:
+		case OBJECT_TYPE::PORP:
 		{
 			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Prop"), wstrTag)))
 				return E_FAIL;

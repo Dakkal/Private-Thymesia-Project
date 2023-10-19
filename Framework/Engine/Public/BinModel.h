@@ -40,6 +40,7 @@ public:
 
 	_uint									Get_NumMeshes() const { return m_iNumMeshes; }
 	_int									Get_BoneIndex(const string& strBoneName) const;
+	_vector									Get_AnimTargetPoint();
 	
 	class CBinBone*							Get_BonePtr(const string& pBoneName) const;
 	_matrix									Get_PivotMatrix() const { return m_PivotMatrix; }

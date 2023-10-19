@@ -16,7 +16,7 @@ class CEdit_Terrain final : public CGameObject
 {
 protected:
 	CEdit_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CEdit_Terrain(const CGameObject& rhs);
+	CEdit_Terrain(const CEdit_Terrain& rhs);
 	virtual	~CEdit_Terrain() = default;
 
 public:

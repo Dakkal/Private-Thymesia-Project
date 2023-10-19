@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "..\Public\Church.h"
 #include "GameInstance.h"
+#include "Navigation.h"
 
 CChurch::CChurch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
 }
 
-CChurch::CChurch(const CGameObject& rhs)
+CChurch::CChurch(const CChurch& rhs)
 	: CGameObject(rhs)
 {
 }
@@ -16,7 +17,7 @@ HRESULT CChurch::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::PROP;
+	m_eObjType = OBJECT_TYPE::PORP;
 	m_strObjectName = TEXT("Church");
 
 	return S_OK;
@@ -29,9 +30,14 @@ HRESULT CChurch::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POS, _vector(0.f, 0.f, 80.f, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POS, _vector(0.f, 0.f, 50.f, 1.f));
 
 	return S_OK;
+}
+
+void CChurch::PriorityTick(_float fTimeDelta)
+{
+	m_pNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CChurch::Tick(_float fTimeDelta)
@@ -64,7 +70,9 @@ HRESULT CChurch::Render()
 		m_pModelCom->Render(i);
 	}
 
-
+#ifndef NDEBUG
+	m_pNavigationCom->Render();
+#endif
 
 	return S_OK;
 }
@@ -91,6 +99,11 @@ HRESULT CChurch::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Church"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
+
+	/* Com_Navigation */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), (CComponent**)&m_pNavigationCom)))
+		return E_FAIL;
 #else
 	/* Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
@@ -100,6 +113,11 @@ HRESULT CChurch::Ready_Components()
 	/* Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Church"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+		return E_FAIL;
+
+	/* Com_Navigation */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), (CComponent**)&m_pNavigationCom)))
 		return E_FAIL;
 #endif // !NDEBUG
 
@@ -186,6 +204,11 @@ CGameObject* CChurch::Clone(void* pArg)
 void CChurch::Free()
 {
 	__super::Free();
+
+#ifndef NDEBUG
+	Safe_Release(m_pNavigationCom);
+#endif // !NDEBUG
+
 
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);

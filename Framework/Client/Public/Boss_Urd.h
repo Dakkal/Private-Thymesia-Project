@@ -15,7 +15,7 @@ public:
 
 protected:
 	CBoss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBoss_Urd(const CGameObject& rhs);
+	CBoss_Urd(const CBoss_Urd& rhs);
 
 	virtual ~CBoss_Urd() = default;
 

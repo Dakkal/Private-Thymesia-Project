@@ -20,12 +20,16 @@ public:
 
 	string			Get_BoneName() const { return m_strName; }
 	_matrix			Get_CombinedTransform() const { return m_ComBinedTransformationMatrix; }
+	_matrix			Get_RemovePos_CombinedTransform();
+	_vector			Get_BonePos();
 
 private:
 	string		m_strName;
 	_matrix		m_TransformationMatrix;
 	_matrix		m_ComBinedTransformationMatrix;
 	_int		m_iParentBoneIndex = -1;
+
+	_vector		m_BonePos;
 
 public:
 	static CBinBone* Create(const SAVE_BONE_INFO tBoneInfo);

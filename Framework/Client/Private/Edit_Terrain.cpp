@@ -7,7 +7,7 @@ CEdit_Terrain::CEdit_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 {
 }
 
-CEdit_Terrain::CEdit_Terrain(const CGameObject& rhs)
+CEdit_Terrain::CEdit_Terrain(const CEdit_Terrain& rhs)
 	: CGameObject(rhs)
 {
 }

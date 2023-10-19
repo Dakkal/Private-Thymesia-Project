@@ -61,6 +61,8 @@ void CGameInstance::Tick(_float fTimeDelta)
 {
 	m_pInput_Device->Tick();
 
+	m_pObject_Manager->PriorityTick(fTimeDelta);
+
 	m_pObject_Manager->Tick(fTimeDelta);
 	m_pLevel_Manager->Tick(fTimeDelta);
 

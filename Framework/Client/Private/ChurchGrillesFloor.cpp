@@ -7,7 +7,7 @@ CChurchGrillesFloor::CChurchGrillesFloor(ID3D11Device* pDevice, ID3D11DeviceCont
 {
 }
 
-CChurchGrillesFloor::CChurchGrillesFloor(const CGameObject& rhs)
+CChurchGrillesFloor::CChurchGrillesFloor(const CChurchGrillesFloor& rhs)
 	: CGameObject(rhs)
 {
 }
@@ -16,7 +16,7 @@ HRESULT CChurchGrillesFloor::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::PROP;
+	m_eObjType = OBJECT_TYPE::PORP;
 	m_strObjectName = TEXT("ChurchGrillesFloor");
 
 	return S_OK;

@@ -3,6 +3,7 @@
 xcopy		/y		.\Engine\Public\*.*						.\Reference\Headers\		
 xcopy		/y		.\Engine\Bin\*.lib						.\Reference\Librarys\Debug\		
 xcopy		/y		.\Engine\Bin\*.dll						.\Client\Bin\
+xcopy		/y		.\Engine\Bin\ShaderFiles\*.hlsl			.\Client\Bin\ShaderFiles\
 
 xcopy		/y		.\Engine\BinR\*.lib						.\Reference\Librarys\Release\		
 xcopy		/y		.\Engine\BinR\*.dll						.\Client\BinR\

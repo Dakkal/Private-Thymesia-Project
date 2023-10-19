@@ -10,7 +10,7 @@ CBoss_Urd::CBoss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 }
 
-CBoss_Urd::CBoss_Urd(const CGameObject& rhs)
+CBoss_Urd::CBoss_Urd(const CBoss_Urd& rhs)
 	: CGameObject(rhs)
 {
 

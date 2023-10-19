@@ -7,7 +7,7 @@ CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 }
 
-CTerrain::CTerrain(const CGameObject& rhs)
+CTerrain::CTerrain(const CTerrain& rhs)
 	: CGameObject(rhs)
 {
 }

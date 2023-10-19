@@ -69,6 +69,17 @@ CGameObject* CObject_Manager::Clone_GameObject(const wstring& strPrototypeTag, v
 	return pGameObject;
 }
 
+void CObject_Manager::PriorityTick(_float fTimeDelta)
+{
+	for (size_t i = 0; i < m_iLevelIndex; i++)
+	{
+		for (auto& Pair : m_pLayers[i])
+		{
+			Pair.second->PriorityTick(fTimeDelta);
+		}
+	}
+}
+
 void CObject_Manager::Tick(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iLevelIndex; i++)

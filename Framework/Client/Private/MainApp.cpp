@@ -45,9 +45,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Create_FakeTexture()))
 		return E_FAIL;
 
-	/*CFbxExporter FbxExport;
-	FbxExport.Initialize_Static_Export(TEXT("../Bin/Resources/Models/Static/"));
-	FbxExport.Initialize_Dynamic_Export(TEXT("../Bin/Resources/Models/Dynamic/"));*/
+	//CFbxExporter FbxExport;
+	//FbxExport.Initialize_Static_Export(TEXT("../Bin/Resources/Models/Static/"));
+	//FbxExport.Initialize_Dynamic_Export(TEXT("../Bin/Resources/Models/Dynamic/"));
 
 	return S_OK;
 }
@@ -174,41 +174,35 @@ HRESULT CMainApp::Create_FakeTexture()
 	Safe_Delete_Array(pPixel);
 	Safe_Release(pTexture2D);
 
-	//
+	// 가라 네비
+	CAsFileUtils Out;
+	Out.Open(TEXT("../Bin/Data/Navigation.dat"), FileMode::Write);
 
-	_ulong			dwByte = 0;
-	HANDLE			hFile = CreateFile(TEXT("../Bin/Data/Navigation.dat"), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
+	_float3			vPoints;
+	vector<_float3> vecPoints;
 
-	_float3			vPoints[3];
+	vecPoints.push_back(_float3(0.f, 0.f, 10.f));
+	vecPoints.push_back(_float3(10.f, 0.f, 0.f));
+	vecPoints.push_back(_float3(0.f, 0.f, 0.f));
 
-	ZeroMemory(vPoints, sizeof(_float3));
-	vPoints[0] = _float3(0.f, 0.f, 10.f);
-	vPoints[1] = _float3(10.f, 0.f, 0.f);
-	vPoints[2] = _float3(0.f, 0.f, 0.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
+	vecPoints.push_back(_float3(0.f, 0.f, 10.f));
+	vecPoints.push_back(_float3(10.f, 0.f, 10.f));
+	vecPoints.push_back(_float3(10.f, 0.f, 0.f));
 
-	ZeroMemory(vPoints, sizeof(_float3));
-	vPoints[0] = _float3(0.f, 0.f, 10.f);
-	vPoints[1] = _float3(10.f, 0.f, 10.f);
-	vPoints[2] = _float3(10.f, 0.f, 0.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
+	vecPoints.push_back(_float3(0.f, 0.f, 20.f));
+	vecPoints.push_back(_float3(10.f, 0.f, 10.f));
+	vecPoints.push_back(_float3(0.f, 0.f, 10.f));
 
-	ZeroMemory(vPoints, sizeof(_float3));
-	vPoints[0] = _float3(0.f, 0.f, 20.f);
-	vPoints[1] = _float3(10.f, 0.f, 10.f);
-	vPoints[2] = _float3(0.f, 0.f, 10.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
+	vecPoints.push_back(_float3(10.f, 0.f, 10.f));
+	vecPoints.push_back(_float3(20.f, 0.f, 0.f));
+	vecPoints.push_back(_float3(10.f, 0.f, 0.f));
 
+	Out.Write<_uint>(vecPoints.size());
 
-	ZeroMemory(vPoints, sizeof(_float3));
-	vPoints[0] = _float3(10.f, 0.f, 10.f);
-	vPoints[1] = _float3(20.f, 0.f, 00.f);
-	vPoints[2] = _float3(10.f, 0.f, 0.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-	CloseHandle(hFile);
+	for (size_t i = 0; i < vecPoints.size(); i++)
+	{
+		Out.Write<_float3>(vecPoints[i]);
+	}
 
 	return S_OK;
 }

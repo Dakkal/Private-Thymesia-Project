@@ -8,6 +8,8 @@
 #include "Transform.h"
 #include "Model.h"
 #include "BinModel.h"
+#include "BinMesh.h"
+#include "Navigation.h"
 
 BEGIN(Engine)
 

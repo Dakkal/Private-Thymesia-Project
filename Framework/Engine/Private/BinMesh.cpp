@@ -189,10 +189,13 @@ HRESULT CBinMesh::Bind_BoneMatrices(CShader* pShader, const vector<class CBinBon
 	ZeroMemory(BoneMatrices, sizeof(_matrix) * 256);
 
 	_uint		iIndex = 0;
+	_bool		IsRoot = false;
 
 	for (auto iBoneIndex : m_Bones)
 	{
-		BoneMatrices[iIndex++] = (m_OffsetMatrices[iIndex] * Bones[iBoneIndex]->Get_CombinedTransform()) * PivotMatrix;
+		_matrix Combined_Bone = Bones[iBoneIndex]->Get_CombinedTransform();
+
+		BoneMatrices[iIndex++] = (m_OffsetMatrices[iIndex] * Combined_Bone) * PivotMatrix;
 	}
 
 	return pShader->Bind_Matrices(pConstantName, BoneMatrices, m_iNumBones);

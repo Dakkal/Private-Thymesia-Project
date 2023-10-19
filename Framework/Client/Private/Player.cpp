@@ -10,7 +10,7 @@ CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 }
 
-CPlayer::CPlayer(const CGameObject& rhs)
+CPlayer::CPlayer(const CPlayer& rhs)
 	: CGameObject(rhs)
 {
 
@@ -73,9 +73,13 @@ void CPlayer::Tick(_float fTimeDelta)
 		dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, iIndex);
 	}
 	
-	
+	RELEASE_INSTANCE(CGameInstance);
 
-	RELEASE_INSTANCE(CGameInstance)
+	_vector OriginPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
+	_vector TargetPos = dynamic_cast<CBinModel*>(m_PlayerParts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_AnimTargetPoint();
+	_vector NewPos = OriginPos + TargetPos;
+	NewPos.w = 1;
+	m_pTransformCom->Set_State(CTransform::STATE_POS, NewPos);
 
 	for (auto& pPart : m_PlayerParts)
 	{

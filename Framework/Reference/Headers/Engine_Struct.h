@@ -50,6 +50,17 @@ namespace Engine
 
 	}MESH_MATERIAL;
 
+	/* 버퍼 구조체 */
+
+	typedef struct ENGINE_DLL tagVertex_Pos
+	{
+		_float3		vPosition;
+
+		static const _uint					  iNumElements = 1;
+		static const D3D11_INPUT_ELEMENT_DESC tElements[iNumElements];
+
+	}VTXPOS;
+
 	typedef struct ENGINE_DLL tagVertex_Pos_Tex
 	{
 		_float3		vPosition;

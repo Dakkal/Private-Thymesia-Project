@@ -242,6 +242,24 @@ _int CBinModel::Get_BoneIndex(const string& strBoneName) const
 	return iBoneIndex;
 }
 
+_vector CBinModel::Get_AnimTargetPoint()
+{
+	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBinBone* pBone)
+		{
+			if (pBone->Get_BoneName() == "AnimTargetPoint")
+				return true;
+
+			return false;
+		});
+
+	_vector vBonesPos;
+	if (iter != m_Bones.end())
+		vBonesPos = (*iter)->Get_BonePos();
+	
+
+	return vBonesPos;
+}
+
 CBinBone* CBinModel::Get_BonePtr(const string& pBoneName) const
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBinBone* pBone)

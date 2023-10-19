@@ -54,7 +54,7 @@ HRESULT CImgui_Manager::Ready_Manager(ID3D11Device* pDevice, ID3D11DeviceContext
             strStoreName.assign(iter.first.begin(), iter.first.end());
             m_vecMonsters.push_back(strStoreName);
         }
-        if (OBJECT_TYPE::PROP == iter.second->Get_ObjectType())
+        if (OBJECT_TYPE::PORP == iter.second->Get_ObjectType())
         {
             strStoreName.assign(iter.first.begin(), iter.first.end());
             m_vecProps.push_back(strStoreName);
@@ -106,7 +106,7 @@ HRESULT CImgui_Manager::LateTick(_float fTimeDelta)
                 pTransform->Set_State(CTransform::STATE_POS, m_vMonsterPos[m_iCurLevel]);
             }
             break;
-        case OBJECT_TYPE::PROP:
+        case OBJECT_TYPE::PORP:
             if (m_IsPropTransformOpen[m_iCurLevel])
             {
                 pTransform->Set_Scale(_float3(m_vPropScale[m_iCurLevel]));
@@ -667,7 +667,7 @@ HRESULT CImgui_Manager::Setting_Object()
                 /* 適経持失 */
                 if (ImGui::Button("Clone"))
                 {
-                    if (-1 != m_vTerrainPos[m_iCurLevel].x && TEXT("") != m_strCurPropProtoObject[m_iCurLevel])
+                    if (TEXT("") != m_strCurPropProtoObject[m_iCurLevel])
                     {
                         CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -680,6 +680,8 @@ HRESULT CImgui_Manager::Setting_Object()
 
                         CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
 
+                        if (0 == m_vTerrainPos[m_iCurLevel].w)
+                            m_vTerrainPos[m_iCurLevel].w = 1;
                         pTransform->Set_State(CTransform::STATE_POS, m_vTerrainPos[m_iCurLevel]);
 
                         m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
@@ -977,9 +979,9 @@ HRESULT CImgui_Manager::Mouse_Pos()
         _vector vTerrainPos = pInstance->Picking_Terrain();
 
         ImGui::Spacing();
-        ImGui::Text("Terrain X : %.f", vTerrainPos.x);
-        ImGui::Text("Terrain Y : %.f", vTerrainPos.y);
-        ImGui::Text("Terrain Z : %.f", vTerrainPos.z);
+        ImGui::Text("Terrain X : %.2f", vTerrainPos.x);
+        ImGui::Text("Terrain Y : %.2f", vTerrainPos.y);
+        ImGui::Text("Terrain Z : %.2f", vTerrainPos.z);
         vTerrainPos.w = 1.f;
 
         if (false == Is_MouseClickedGUI() && pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON))
@@ -988,9 +990,9 @@ HRESULT CImgui_Manager::Mouse_Pos()
         }
 
         ImGui::Spacing();
-        ImGui::Text("SavePos X : %.f", m_vTerrainPos[m_iCurLevel].x);
-        ImGui::Text("SavePos Y : %.f", m_vTerrainPos[m_iCurLevel].y);
-        ImGui::Text("SavePos Z : %.f", m_vTerrainPos[m_iCurLevel].z);
+        ImGui::Text("SavePos X : %.2f", m_vTerrainPos[m_iCurLevel].x);
+        ImGui::Text("SavePos Y : %.2f", m_vTerrainPos[m_iCurLevel].y);
+        ImGui::Text("SavePos Z : %.2f", m_vTerrainPos[m_iCurLevel].z);
         vTerrainPos.w = 1.f;
 
         RELEASE_INSTANCE(CGameInstance);
@@ -1183,9 +1185,9 @@ HRESULT CImgui_Manager::List_Object()
     }
 
     ImGui::Spacing();
-    ImGui::Text("MeshPos X : %.f", m_vObjectPos[m_iCurLevel].x);
-    ImGui::Text("MeshPos Y : %.f", m_vObjectPos[m_iCurLevel].y);
-    ImGui::Text("MeshPos Z : %.f", m_vObjectPos[m_iCurLevel].z);
+    ImGui::Text("MeshPos X : %.2f", m_vObjectPos[m_iCurLevel].x);
+    ImGui::Text("MeshPos Y : %.2f", m_vObjectPos[m_iCurLevel].y);
+    ImGui::Text("MeshPos Z : %.2f", m_vObjectPos[m_iCurLevel].z);
 
     RELEASE_INSTANCE(CGameInstance);
     

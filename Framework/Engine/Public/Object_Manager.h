@@ -18,6 +18,7 @@ public:
 	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg);
 	class CGameObject* Clone_GameObject(const wstring& strPrototypeTag, void* pArg);
+	void PriorityTick(_float fTimeDelta);
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);

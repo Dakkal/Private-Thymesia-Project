@@ -76,12 +76,6 @@
     <Filter Include="02.GameObject\Object\Monster">
       <UniqueIdentifier>{808aa973-9d4e-42ea-b5a7-0a17ff2ce930}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Object\Props">
-      <UniqueIdentifier>{5bbb44bc-fd26-40a6-84e9-0f3b1f392a71}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Object\Props\ChurchGrillesFloor">
-      <UniqueIdentifier>{ecbc253c-ea08-4874-99a2-11d4172e0106}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Object\Player\Body_Player">
       <UniqueIdentifier>{57a98c84-04b1-4cce-a9fa-5b13005b1661}</UniqueIdentifier>
     </Filter>
@@ -100,7 +94,13 @@
     <Filter Include="02.GameObject\Object\Boss\Boss_Urd\Weapon_Boss_Urd">
       <UniqueIdentifier>{e6670a69-81fc-4a01-8901-e539d9793c34}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Object\Props\Church">
+    <Filter Include="02.GameObject\Object\Porps">
+      <UniqueIdentifier>{5bbb44bc-fd26-40a6-84e9-0f3b1f392a71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\ChurchGrillesFloor">
+      <UniqueIdentifier>{ecbc253c-ea08-4874-99a2-11d4172e0106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Church">
       <UniqueIdentifier>{09edb94f-992b-41ea-a07f-205a86a2792f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -160,7 +160,7 @@
       <Filter>999. Imgui\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ChurchGrillesFloor.cpp">
-      <Filter>02.GameObject\Object\Props\ChurchGrillesFloor</Filter>
+      <Filter>02.GameObject\Object\Porps\ChurchGrillesFloor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Imgui\imgui_spectrum.cpp">
       <Filter>999. Imgui\gui</Filter>
@@ -199,7 +199,7 @@
       <Filter>02.GameObject\Object\Boss\Boss_Urd\Weapon_Boss_Urd</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Church.cpp">
-      <Filter>02.GameObject\Object\Props\Church</Filter>
+      <Filter>02.GameObject\Object\Porps\Church</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,7 +276,7 @@
       <Filter>01.Levels\09.Edit</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ChurchGrillesFloor.h">
-      <Filter>02.GameObject\Object\Props\ChurchGrillesFloor</Filter>
+      <Filter>02.GameObject\Object\Porps\ChurchGrillesFloor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Imgui\imgui_spectrum.h">
       <Filter>999. Imgui\gui</Filter>
@@ -312,7 +312,7 @@
       <Filter>02.GameObject\Object\Boss\Boss_Urd\Weapon_Boss_Urd</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Church.h">
-      <Filter>02.GameObject\Object\Props\Church</Filter>
+      <Filter>02.GameObject\Object\Porps\Church</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

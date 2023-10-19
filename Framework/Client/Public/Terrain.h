@@ -20,7 +20,7 @@ public:
 
 protected:
 	CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CTerrain(const CGameObject& rhs);
+	CTerrain(const CTerrain& rhs);
 	virtual	~CTerrain() = default;
 
 public:

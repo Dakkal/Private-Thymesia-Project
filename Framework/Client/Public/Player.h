@@ -15,7 +15,7 @@ public:
 
 protected:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CPlayer(const CGameObject& rhs); 
+	CPlayer(const CPlayer& rhs);
 
 	virtual ~CPlayer() = default;
 

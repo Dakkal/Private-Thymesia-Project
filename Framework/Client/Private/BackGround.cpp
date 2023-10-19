@@ -7,7 +7,7 @@ CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 }
 
-CBackGround::CBackGround(const CGameObject& rhs)
+CBackGround::CBackGround(const CBackGround& rhs)
     : CGameObject(rhs)
 {
 }

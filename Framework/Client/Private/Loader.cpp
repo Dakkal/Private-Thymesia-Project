@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Loader.h"
 
+#include "Navigation.h"
 #include "GameInstance.h"
 #include "BackGround.h"
 #include "Terrain.h"
@@ -369,7 +370,7 @@ HRESULT CLoader::Loading_Mesh()
 
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_1, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
-			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchGrillesFloor/ChurchGrillesFloor.dat"), ModelInitMatrix))))
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchFloorGriles/ChurchFloorGriles.dat"), ModelInitMatrix))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_2:
@@ -382,9 +383,13 @@ HRESULT CLoader::Loading_Mesh()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
 			CVIBuffer_Terrain::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Church"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Church/Church.dat"), ModelInitMatrix))))
+			return E_FAIL;
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
-			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchGrillesFloor/ChurchGrillesFloor.dat"), ModelInitMatrix))))
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchFloorGriles/ChurchFloorGriles.dat"), ModelInitMatrix))))
 			return E_FAIL;
 		break;
 	default:
@@ -418,6 +423,11 @@ HRESULT CLoader::Loading_Shader()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::tElements, VTXMESH::iNumElements))))
 			return E_FAIL;
+
+		/* For.Prototype_Component_Navigation */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation.dat")))))
+			return E_FAIL;
 		break;
 	case Client::LEVEL_1:
 		/* For.Proto_VtxPosNorTex */
@@ -443,6 +453,16 @@ HRESULT CLoader::Loading_Shader()
 		/* For.Proto_VtxMesh */
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::tElements, VTXMESH::iNumElements))))
+			return E_FAIL;
+
+		/* For.Proto_VtxAnimMesh */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::tElements, VTXANIMMESH::iNumElements))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Navigation */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Navigation"),
+			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation.dat")))))
 			return E_FAIL;
 		break;
 	default:
@@ -504,8 +524,11 @@ HRESULT CLoader::Loading_Object()
 		/* For.Camera*/
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CToolCamera::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		/* For.Props_ChurchGrillesFloor */
+		/* For.Porps_ChurchGrillesFloor */
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchGrillesFloor"), CChurchGrillesFloor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchGrillesFloor")))))
+			return E_FAIL;
+		/* For.Porps_Church */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Church"), CChurch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Church")))))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_2:
@@ -523,6 +546,8 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 		/* For.Props_ChurchGrillesFloor */
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchGrillesFloor"), CChurchGrillesFloor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchGrillesFloor")))))
+			return E_FAIL;
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Church"), CChurch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Church")))))
 			return E_FAIL;
 		break;
 	default:

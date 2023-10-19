@@ -32,6 +32,23 @@ HRESULT CBinBone::Update_CombinedTransformationMatrix(const vector<class CBinBon
 	return S_OK;
 }
 
+_matrix CBinBone::Get_RemovePos_CombinedTransform()
+{
+	_matrix RemovePosMatrix = m_ComBinedTransformationMatrix;
+	_vector Zero = _vector(0.f, 0.f, 0.f, 1.f);
+
+	memcpy(&RemovePosMatrix.m[3], &Zero, sizeof(_vector));
+
+	return RemovePosMatrix;
+}
+
+_vector CBinBone::Get_BonePos()
+{
+	memcpy(&m_BonePos, &m_TransformationMatrix.m[3], sizeof(_vector));
+
+	return m_BonePos;
+}
+
 CBinBone* CBinBone::Create(const SAVE_BONE_INFO tBoneInfo)
 {
 	CBinBone* pInstance = new CBinBone;

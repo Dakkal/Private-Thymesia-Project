@@ -82,7 +82,7 @@ _vector CCalculator::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, 
 
     RELEASE_INSTANCE(CGameInstance);
 
-    return _vector(-1.f, -1.f, -1.f, -1.f);
+    return _vector(0.f, 0.f, 0.f, 1.f);
 }
 
 _vector CCalculator::Picking_Object(RECT rc, POINT pt, CTransform* pTransform, CVIBuffer* pBuffer)

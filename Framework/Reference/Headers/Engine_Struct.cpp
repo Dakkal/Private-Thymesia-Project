@@ -6,6 +6,9 @@ namespace Engine
 	_vector	AXIS::Y = { 0.f, 1.f, 0.f, 0.f };
 	_vector	AXIS::Z = { 0.f, 0.f, 1.f, 0.f };
 
+	const D3D11_INPUT_ELEMENT_DESC VTXPOS::tElements[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
 
 	const D3D11_INPUT_ELEMENT_DESC VTXPOSTEX::tElements[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },

@@ -20,6 +20,15 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 	return S_OK;
 }
 
+void CLayer::PriorityTick(_float fTimeDelta)
+{
+	for (auto& pGameObject : m_listGameObject)
+	{
+		if (nullptr != pGameObject)
+			pGameObject->PriorityTick(fTimeDelta);
+	}
+}
+
 void CLayer::Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_listGameObject)
