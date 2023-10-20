@@ -31,6 +31,7 @@ public:
 	HRESULT	Bind_MaterialTexture(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType eType);
 	HRESULT	Render(_uint iMeshIndex);
 	HRESULT Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame);
+	HRESULT	Set_OwnerPosToRootPos(class CTransform* pTransform, _float fTimeDelta);
 
 public:
 	const vector<class CBinMesh*>&			Get_Meshes()		{ return m_Meshes; }
@@ -38,11 +39,12 @@ public:
 	const vector<class CBinBone*>&			Get_Bones()			{ return m_Bones; }
 	const vector<class CBinAnimation*>&		Get_Animations()	{ return m_Animations; }
 	const class CBinAnimation*				Get_CurAnimation()	{ return m_Animations[m_iCurAnimIndex]; }
+	const _uint&							Get_CurAnimIndex()  { return m_iCurAnimIndex; }
 	const _bool&							Is_CurAnimFinished(){ return m_Animations[m_iCurAnimIndex]->IsFinished(); }
+	
 
 	_uint									Get_NumMeshes() const { return m_iNumMeshes; }
 	_int									Get_BoneIndex(const string& strBoneName) const;
-	void									Set_OwnerPosToRootPos(class CTransform* pTransform, _float fTimeDelta);
 	
 	class CBinBone*							Get_BonePtr(const string& pBoneName) const;
 	_matrix									Get_PivotMatrix() const { return m_PivotMatrix; }

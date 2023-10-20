@@ -22,7 +22,7 @@ public:
 	string			Get_BoneName() const { return m_strName; }
 	_matrix			Get_CombinedTransform() const { return m_ComBinedTransformationMatrix; }
 	_matrix			Get_RootCombinedTransform() const { return m_RootCombinedMatrix; }
-	_vector			Get_RootPos(const _matrix& PivotMatrix) { return m_RootPos; }
+	_vector			Get_RootPos() { return m_RootPos; }
 
 private:
 	string		m_strName;

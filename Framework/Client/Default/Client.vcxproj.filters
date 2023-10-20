@@ -103,6 +103,9 @@
     <Filter Include="02.GameObject\Object\Porps\Church">
       <UniqueIdentifier>{09edb94f-992b-41ea-a07f-205a86a2792f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Player\State">
+      <UniqueIdentifier>{7ae48c94-2722-46bc-83a5-4555c8215b9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -200,6 +203,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Church.cpp">
       <Filter>02.GameObject\Object\Porps\Church</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Walk.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -313,6 +322,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Church.h">
       <Filter>02.GameObject\Object\Porps\Church</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Walk.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

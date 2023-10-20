@@ -3,7 +3,7 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CStateMachine : public CComponent
+class ENGINE_DLL CStateMachine final : public CComponent
 {
 private:
 	CStateMachine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);;
@@ -11,29 +11,27 @@ private:
 	virtual ~CStateMachine() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype();
-	virtual HRESULT Initialize(void* pArg) override;
+	virtual HRESULT		Initialize_Prototype();
+	virtual HRESULT		Initialize(void* pArg) override;
 
 	// 현재상태의 업데이트의 반환 상태타입을 받아 비교하여 상태가 변했는지 판단함
-	void			Tick_StateMachine(const _float& fTimeDelta);
-	void			LateTick_StateMachine(const _float& fTimeDelta);
-	void			Render_StateMachine();
-
-
+	HRESULT				Tick(const _float& fTimeDelta);
+	HRESULT				LateTick(const _float& fTimeDelta);
 
 public:
 	// 상태를 설정 및 변경해주는 함수(애니메이터까지 같이 바꿔줌)
-	void			Set_State(STATE eState);
+	HRESULT				Set_State(STATE eState);
 	// 상태를 맵컨테이너에다가 추가해주는 함수
-	HRESULT			Add_State(STATE eState, class CState* pState);
+	HRESULT				Add_State(STATE eState, class CState* pState);
 
-	const STATE& Get_CurState() { return m_eCurState; }
+	const STATE&		Get_CurState()	{ return m_eCurState; }
+	const CBinModel*	Get_OwnerModel(){ return m_pOwnerModel; }
 
 protected:
 	map<STATE, CState*>		m_StateMap;
-	class CState*			m_pCurState;
-	STATE					m_eCurState;
-	class CBinModel*		m_pOwnerModel;
+	class CState*			m_pCurState = { nullptr };
+	class CBinModel*		m_pOwnerModel = { nullptr };
+	STATE					m_eCurState = { STATE::_END};
 
 public:
 	static CStateMachine* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

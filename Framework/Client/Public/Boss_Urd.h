@@ -11,7 +11,7 @@ BEGIN(Client)
 class CBoss_Urd final : public CGameObject
 {
 public:
-	enum class PARTS { BODY, WEAPON, _END };
+	enum class PARTS { BODY, WEAPON_R, WEAPON_L, _END };
 
 protected:
 	CBoss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -25,6 +25,9 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
+
+public:
+	const CGameObject* Get_Parts(CBoss_Urd::PARTS ePart) { return m_Parts[(_uint)ePart]; }
 
 private:
 	vector<class CGameObject*>		m_Parts;

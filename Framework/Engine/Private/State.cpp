@@ -1,16 +1,11 @@
 #include "State.h"
 
-//CState::CState(LPDIRECT3DDEVICE9 pGraphicDev)
-//	: m_pGraphicDev(pGraphicDev), m_pOwner(nullptr), m_eState(STATE_TYPE::TYPEEND), m_bEnter(false)
-//{
-//	m_pGraphicDev->AddRef();
-//}
-//
-//CState::~CState()
-//{
-//}
-//
-//void CState::Free()
-//{
-//	Safe_Release(m_pGraphicDev);
-//}
+CState::CState(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
+	: m_pDevice(pDevice), m_pContext(pContext), m_pStateOwner(pOwner), m_eState(eState)
+{
+}
+
+void CState::Free()
+{
+	__super::Free();
+}

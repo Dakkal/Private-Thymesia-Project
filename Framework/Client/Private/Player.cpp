@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "PartObject.h"
+#include "StateMachine.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -56,26 +57,28 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (pGameInstance->Get_DIKeyState(DIK_DOWN) & 0x80)
 	{
 		//m_pTransformCom->Go_Backward(fTimeDelta);
-		--iIndex;
-		if (0 > iIndex)
-			iIndex = 0;
+		_uint AnimIndex = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_AnimationIndex();
+		--AnimIndex;
+		if (0 > AnimIndex)
+			AnimIndex = 0;
 
-		dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, iIndex);
+		dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, AnimIndex);
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_UP) & 0x80)
 	{
 		//m_pTransformCom->Go_Forward(fTimeDelta);
-		++iIndex;
-		if (iIndex > dynamic_cast<CBinModel*>(m_PlayerParts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim())
-			iIndex = dynamic_cast<CBinModel*>(m_PlayerParts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim();
+		_uint AnimIndex = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_AnimationIndex();
+		++AnimIndex;
+		if (AnimIndex > dynamic_cast<CBinModel*>(m_Parts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim())
+			AnimIndex = dynamic_cast<CBinModel*>(m_Parts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim();
 
-		dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, iIndex);
+		dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, AnimIndex);
 	}
 	
 	RELEASE_INSTANCE(CGameInstance);
 	
-	for (auto& pPart : m_PlayerParts)
+	for (auto& pPart : m_Parts)
 	{
 		if (nullptr != pPart)
 			pPart->Tick(fTimeDelta);
@@ -84,7 +87,7 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
-	for (auto& pPart : m_PlayerParts)
+	for (auto& pPart : m_Parts)
 	{
 		if (nullptr != pPart)
 			pPart->LateTick(fTimeDelta);
@@ -107,6 +110,10 @@ HRESULT CPlayer::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
+		TEXT("Com_StateMachine"), (CComponent**)&m_pStateMachineCom)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -123,28 +130,31 @@ HRESULT CPlayer::Ready_PlayerParts()
 	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Body"), &PartDesc_Body);
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
-	m_PlayerParts.push_back(pPlayerParts);
+	dynamic_cast<CPartObject*>(pPlayerParts)->Set_Owner(this);
+	m_Parts.push_back(pPlayerParts);
 
 	/* For.Part_Weapon */
 	CPartObject::PART_DESC			PartDesc_Weapon_Saber;
 	PartDesc_Weapon_Saber.pParentTransform = m_pTransformCom;
-	PartDesc_Weapon_Saber.pSocketBone = dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Get_SocketBonePtr("weapon_r");
-	PartDesc_Weapon_Saber.SocketPivot = dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Get_SocketPivotMatrix();
+	PartDesc_Weapon_Saber.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_SocketBonePtr("weapon_r");
+	PartDesc_Weapon_Saber.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_SocketPivotMatrix();
 
 	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Weapon_Saber"), &PartDesc_Weapon_Saber);
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
-	m_PlayerParts.push_back(pPlayerParts);
+	dynamic_cast<CPartObject*>(pPlayerParts)->Set_Owner(this);
+	m_Parts.push_back(pPlayerParts);
 
 	CPartObject::PART_DESC			PartDesc_Weapon_Dagger;
 	PartDesc_Weapon_Dagger.pParentTransform = m_pTransformCom;
-	PartDesc_Weapon_Dagger.pSocketBone = dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Get_SocketBonePtr("weapon_l");
-	PartDesc_Weapon_Dagger.SocketPivot = dynamic_cast<CPartObject*>(m_PlayerParts[(_uint)PARTS::BODY])->Get_SocketPivotMatrix();
+	PartDesc_Weapon_Dagger.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_SocketBonePtr("weapon_l");
+	PartDesc_Weapon_Dagger.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_SocketPivotMatrix();
 
 	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Weapon_Dagger"), &PartDesc_Weapon_Dagger);
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
-	m_PlayerParts.push_back(pPlayerParts);
+	dynamic_cast<CPartObject*>(pPlayerParts)->Set_Owner(this);
+	m_Parts.push_back(pPlayerParts);
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -183,9 +193,10 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	for (auto& pPart : m_PlayerParts)
+	for (auto& pPart : m_Parts)
 		Safe_Release(pPart);
-	m_PlayerParts.clear();
+	m_Parts.clear();
 
 	Safe_Release(m_pTransformCom);
+	Safe_Release(m_pStateMachineCom);
 }

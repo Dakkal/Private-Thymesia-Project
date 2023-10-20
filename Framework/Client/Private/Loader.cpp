@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Loader.h"
 
-#include "Navigation.h"
 #include "GameInstance.h"
 #include "BackGround.h"
 #include "Terrain.h"
@@ -21,6 +20,9 @@
 #include "Weapon_Boss_Urd.h"
 
 #include "BinModel.h"
+
+#include "Navigation.h"
+#include "StateMachine.h"
 
 
 _uint APIENTRY ThreadEntry(void* pArg)
@@ -109,6 +111,10 @@ HRESULT CLoader::Loading_For_Level_Logo()
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 	Loading_Shader();
 
+	/* For.Etc_Component */
+	m_strLoading = TEXT("나머지 컴포넌트들을 로딩 중 입니다.");
+	Loading_EtcComponent();
+
 	/* For.Object */
 	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
 	Loading_Object();
@@ -133,6 +139,10 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 	Loading_Shader();
+
+	/* For.Etc_Component */
+	m_strLoading = TEXT("나머지 컴포넌트들을 로딩 중 입니다.");
+	Loading_EtcComponent();
 
 	/* For.Object */
 	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
@@ -159,6 +169,10 @@ HRESULT CLoader::Loading_For_Level_1()
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 	Loading_Shader();
 
+	/* For.Etc_Component */
+	m_strLoading = TEXT("나머지 컴포넌트들을 로딩 중 입니다.");
+	Loading_EtcComponent();
+
 	/* For.Object */
 	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
 	Loading_Object();
@@ -183,6 +197,10 @@ HRESULT CLoader::Loading_For_Level_2()
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 	Loading_Shader();
+
+	/* For.Etc_Component */
+	m_strLoading = TEXT("나머지 컴포넌트들을 로딩 중 입니다.");
+	Loading_EtcComponent();
 
 	/* For.Object */
 	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
@@ -209,6 +227,10 @@ HRESULT CLoader::Loading_For_Level_3()
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 	Loading_Shader();
 
+	/* For.Etc_Component */
+	m_strLoading = TEXT("나머지 컴포넌트들을 로딩 중 입니다.");
+	Loading_EtcComponent();
+
 	/* For.Object */
 	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
 	Loading_Object();
@@ -234,6 +256,10 @@ HRESULT CLoader::Loading_For_Level_4()
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 	Loading_Shader();
 
+	/* For.Etc_Component */
+	m_strLoading = TEXT("나머지 컴포넌트들을 로딩 중 입니다.");
+	Loading_EtcComponent();
+
 	/* For.Object */
 	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
 	Loading_Object();
@@ -258,6 +284,10 @@ HRESULT CLoader::Loading_For_Level_Edit()
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 	Loading_Shader();
+
+	/* For.Etc_Component */
+	m_strLoading = TEXT("나머지 컴포넌트들을 로딩 중 입니다.");
+	Loading_EtcComponent();
 
 	/* For.Object */
 	m_strLoading = TEXT("오브젝트를 생성 중 입니다.");
@@ -423,11 +453,6 @@ HRESULT CLoader::Loading_Shader()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::tElements, VTXMESH::iNumElements))))
 			return E_FAIL;
-
-		/* For.Prototype_Component_Navigation */
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
-			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation.dat")))))
-			return E_FAIL;
 		break;
 	case Client::LEVEL_1:
 		/* For.Proto_VtxPosNorTex */
@@ -459,10 +484,49 @@ HRESULT CLoader::Loading_Shader()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::tElements, VTXANIMMESH::iNumElements))))
 			return E_FAIL;
+		break;
+	default:
+		break;
+	}
 
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_EtcComponent()
+{
+	if (m_eNextLevel >= LEVEL_END)
+		return E_FAIL;
+
+	switch (m_eNextLevel)
+	{
+	case Client::LEVEL_LOGO:
+		break;
+	case Client::LEVEL_GAMEPLAY:
+		/* For.Prototype_Component_Navigation */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation.dat")))))
+			return E_FAIL;
+		/* For.Prototype_Component_StateMachine*/
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
+			CStateMachine::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_1:
+		break;
+	case Client::LEVEL_2:
+		break;
+	case Client::LEVEL_3:
+		break;
+	case Client::LEVEL_4:
+		break;
+	case Client::LEVEL_EDIT:
 		/* For.Prototype_Component_Navigation */
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Navigation"),
 			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation.dat")))))
+			return E_FAIL;
+		/* For.Prototype_Component_StateMachine*/
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
+			CStateMachine::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		break;
 	default:

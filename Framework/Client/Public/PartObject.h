@@ -35,6 +35,7 @@ public:
 	_matrix Get_SocketPivotMatrix();
 
 public:
+	const _uint& Get_AnimationIndex();
 	void Set_AnimationIndex(_bool isLoop, _uint iAnimIndex);
 
 public:
@@ -43,6 +44,8 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
+
+	void Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
 
 protected:
 	CGameObject*	m_pOwner = { nullptr };

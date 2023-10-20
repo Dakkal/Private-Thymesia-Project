@@ -1,6 +1,7 @@
 #include "StateMachine.h"
 #include "State.h"
 #include "BinModel.h"
+#include "GameObject.h"
 
 CStateMachine::CStateMachine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -19,53 +20,58 @@ HRESULT CStateMachine::Initialize_Prototype()
 
 HRESULT CStateMachine::Initialize(void* pArg)
 {
+	m_pOwnerModel = dynamic_cast<CBinModel*>(m_pOwner->Get_Component(TEXT("Com_Model")));
+
 	return S_OK;
 }
 
-void CStateMachine::Tick_StateMachine(const _float& fTimeDelta)
+HRESULT CStateMachine::Tick(const _float& fTimeDelta)
 {
-
-	STATE eState = STATE::ATTACK; // = m_pCurState->Update_State(fTimeDelta);
-
+	STATE eState = m_pCurState->Tick(fTimeDelta);
 
 	// 현재 상태와 다른상태가 반환되면 반환된 상태로 변경
 	if (eState != m_eCurState)
 	{
 		Set_State(eState);
-		
 	}
+
+	if (STATE::_END == eState)
+		return E_FAIL;
+	else
+		return S_OK;
 }
 
-void CStateMachine::LateTick_StateMachine(const _float& fTimeDelta)
+HRESULT CStateMachine::LateTick(const _float& fTimeDelta)
 {
-	m_pCurState; // ->LateUpdate_State();
+	STATE eState = m_pCurState->LateTick(fTimeDelta);
+
+	if (STATE::_END == eState)
+		return E_FAIL;
+	else
+		return S_OK;
 }
 
-void CStateMachine::Render_StateMachine()
-{
-	m_pCurState; // ->Render_State();
-	
-}
-
-void CStateMachine::Set_State(STATE eState)
+HRESULT CStateMachine::Set_State(STATE eState)
 {
 	auto	iter = find_if(m_StateMap.begin(), m_StateMap.end(), [&](const pair<STATE, CState*>& pair) {
 		return eState == pair.first;
 		});
 
 	if (iter == m_StateMap.end())
-		return;
+		return E_FAIL;
 
 	m_pCurState = iter->second;
 	m_eCurState = eState;
+
+	return S_OK;
 }
 
 HRESULT CStateMachine::Add_State(STATE eState, CState* pState)
 {
-	if (nullptr == pState)
+	if (nullptr == pState || eState != pState->Get_State())
 		return E_FAIL;
 
-	m_StateMap.insert({ eState, pState });
+	m_StateMap.emplace(eState, pState);
 
 	return S_OK;
 }
@@ -101,7 +107,8 @@ void CStateMachine::Free()
 {
 	__super::Free();
 
-	m_StateMap.clear();
+	for (auto& iter : m_StateMap)
+		Safe_Release(iter.second);
 
-	
+	m_StateMap.clear();
 }

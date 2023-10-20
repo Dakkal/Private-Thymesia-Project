@@ -64,11 +64,11 @@ void CToolCamera::MouseMove(_float fTimeDelta)
     _long MouseMove = 0;
 
     /* Move */
-    if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
+    if (pGameInstance->Get_DIKeyState(DIK_LEFT) & 0x80)
     {
         m_pTransform->Go_Left(fTimeDelta);
     }
-    if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+    if (pGameInstance->Get_DIKeyState(DIK_RIGHT) & 0x80)
     {
         m_pTransform->Go_Right(fTimeDelta);
     }
@@ -76,11 +76,11 @@ void CToolCamera::MouseMove(_float fTimeDelta)
     {
         m_pTransform->Go_Up(m_fMouseSensitive * MouseMove * fTimeDelta);
     }
-    if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
+    if (pGameInstance->Get_DIKeyState(DIK_UP) & 0x80)
     {
         m_pTransform->Go_Forward(fTimeDelta);
     }
-    if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+    if (pGameInstance->Get_DIKeyState(DIK_DOWN) & 0x80)
     {
         m_pTransform->Go_Backward(fTimeDelta);
     }

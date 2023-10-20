@@ -95,6 +95,7 @@ HRESULT CBoss_Urd::Ready_PlayerParts()
 	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_Body"), &PartDesc_Body);
 	if (nullptr == pParts)
 		return E_FAIL;
+	dynamic_cast<CPartObject*>(pParts)->Set_Owner(this);
 	m_Parts.push_back(pParts);
 
 	/* For.Part_Weapon */
@@ -106,6 +107,7 @@ HRESULT CBoss_Urd::Ready_PlayerParts()
 	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_Weapon"), &PartDesc_Weapon);
 	if (nullptr == pParts)
 		return E_FAIL;
+	dynamic_cast<CPartObject*>(pParts)->Set_Owner(this);
 	m_Parts.push_back(pParts);
 
 	RELEASE_INSTANCE(CGameInstance);

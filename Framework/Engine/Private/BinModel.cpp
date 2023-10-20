@@ -115,6 +115,9 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex)
 	CurChannels = m_Animations[m_iCurAnimIndex]->Get_Channels();
 	NextChannels = m_Animations[m_iNextAnimIndex]->Get_Channels();
 
+	m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
+	m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
+
 	return S_OK;
 }
 
@@ -145,6 +148,8 @@ HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 				}
 
 				_float	fRatio = (m_fChangeTrackPosition - 0.f) / fDuration;
+				if (1.f < fRatio)
+					fRatio = 1.f;
 
 				_vector vSourScale = _vector(CurKeyframe.vScale);
 				_vector vDestScale = _vector(NextKeyframe.vScale);
@@ -164,10 +169,6 @@ HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 			}
 		}
 	}
-
-
-
-
 	return S_OK;
 }
 
@@ -175,7 +176,7 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 {
 	if (true == m_bIsAnimChange)
 	{
-		Change_Animation(0.2, fTimeDelta);
+		Change_Animation(0.2f, fTimeDelta);
 	}
 	if (false == m_bIsAnimChange)
 	{
@@ -194,9 +195,8 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 		m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
 		m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
 	}
-
 	m_PrevRootPos = m_CurRootPos;
-	m_CurRootPos = rootBone->Get_RootPos(m_PivotMatrix);
+	m_CurRootPos = rootBone->Get_RootPos();
 
 	return S_OK;
 }
@@ -253,10 +253,13 @@ _int CBinModel::Get_BoneIndex(const string& strBoneName) const
 	return iBoneIndex;
 }
 
-void CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDelta)
+HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDelta)
 {
+	if (nullptr == pTransform)
+		return E_FAIL;
+
 	if (true == m_bIsAnimChange)
-		return;
+		return S_OK;
 
 	_vector vPos = pTransform->Get_State(CTransform::STATE_POS);
 	_vector vDir = m_PrevRootPos - m_CurRootPos;
@@ -268,6 +271,8 @@ void CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDelta)
 
 	vPos += vWorldDir * fDist * fTimeDelta;
 	pTransform->Set_State(CTransform::STATE_POS, vPos);
+
+	return S_OK;
 }
 
 CBinBone* CBinModel::Get_BonePtr(const string& pBoneName) const

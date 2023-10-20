@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class CTransform;
+class CStateMachine;
 END
 
 BEGIN(Client)
@@ -11,7 +12,7 @@ BEGIN(Client)
 class CPlayer final : public CGameObject
 {
 public:
-	enum class PARTS { BODY, WEAPON, _END };
+	enum class PARTS { BODY, WEAPON_R, WEAPON_L, _END };
 
 protected:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -26,13 +27,15 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+public:
+	const CGameObject* Get_Parts(CPlayer::PARTS ePart) { return m_Parts[(_uint)ePart]; }
+
 private:
-	vector<class CGameObject*>		m_PlayerParts;
+	vector<class CGameObject*>		m_Parts;
 
 private: 
-	CTransform* m_pTransformCom = { nullptr };
-
-	_int	iIndex = 105;
+	CTransform*		m_pTransformCom = { nullptr };
+	CStateMachine* m_pStateMachineCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();

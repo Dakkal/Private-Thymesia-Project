@@ -31,6 +31,11 @@ _matrix CPartObject::Get_SocketPivotMatrix()
 }
 
 
+const _uint& CPartObject::Get_AnimationIndex()
+{
+	return m_pModelCom->Get_CurAnimIndex();
+}
+
 void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex)
 {
 	m_pModelCom->Set_Animation(isLoop, iAnimIndex);

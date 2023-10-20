@@ -48,6 +48,7 @@ private:
 	HRESULT Loading_Texture();
 	HRESULT Loading_Mesh();
 	HRESULT Loading_Shader();
+	HRESULT Loading_EtcComponent();
 	HRESULT Loading_Object();
 
 public:
