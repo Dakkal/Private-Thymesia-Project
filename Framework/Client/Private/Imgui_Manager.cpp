@@ -287,8 +287,8 @@ HRESULT CImgui_Manager::ToolBox(_float fTimeDelta)
 
             CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-            pGameInstance->Delete_Layer(LEVEL_EDIT, TEXT("Layer_Terrain"));
-            pGameInstance->Delete_Layer(LEVEL_EDIT, TEXT("Layer_Object"));
+            pGameInstance->Delete_Layer(LEVEL_EDIT, LAYER_EDITERRAIN);
+            pGameInstance->Delete_Layer(LEVEL_EDIT, LAYER_EDITOBJECT);
 
             if (!m_vecObjectList.empty())
             {
@@ -361,13 +361,13 @@ HRESULT CImgui_Manager::Setting_Terrain()
                     TerrainDesc.iNumVerticesZ = m_iNumVerticesZ[m_iCurLevel];
                     TerrainDesc.bIsWireFrame = m_bIsWireFrame[m_iCurLevel];
 
-                    if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
+                    if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN, TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
                     {
                         RELEASE_INSTANCE(CGameInstance);
                         return E_FAIL;
                     }
                     
-                    m_pSelectTerrain = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"));
+                    m_pSelectTerrain = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN);
                     if (nullptr == m_pSelectTerrain)
                     {
                         RELEASE_INSTANCE(CGameInstance);
@@ -387,7 +387,7 @@ HRESULT CImgui_Manager::Setting_Terrain()
 
                 CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index())))
+                if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN, TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index())))
                 {
                     RELEASE_INSTANCE(CGameInstance);
                     return E_FAIL;
@@ -414,7 +414,7 @@ HRESULT CImgui_Manager::Setting_Terrain()
             {
                 CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index()));
+                CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN, TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index()));
 
                 pInstance->Set_WireFrameMode(m_bIsWireFrame[m_iCurLevel]);
 
@@ -429,7 +429,7 @@ HRESULT CImgui_Manager::Setting_Terrain()
             {
                 CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index()));
+                CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN, TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index()));
 
                pInstance->Set_WireFrameMode(m_bIsWireFrame[m_iCurLevel]);
 
@@ -671,10 +671,10 @@ HRESULT CImgui_Manager::Setting_Object()
                     {
                         CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                        if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), m_strCurPropProtoObject[m_iCurLevel])))
+                        if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT, m_strCurPropProtoObject[m_iCurLevel])))
                             return E_FAIL;
 
-                        m_pSelectObject = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Object"));
+                        m_pSelectObject = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT);
                         if (nullptr == m_pSelectObject)
                             return E_FAIL;
 
@@ -705,7 +705,7 @@ HRESULT CImgui_Manager::Setting_Object()
                 {
                     CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                    pGameInstance->Delete_Layer(LEVEL_EDIT, TEXT("Layer_Object"));
+                    pGameInstance->Delete_Layer(LEVEL_EDIT, LAYER_EDITOBJECT);
 
                     m_vecObjectList.clear();
 
@@ -974,7 +974,7 @@ HRESULT CImgui_Manager::Mouse_Pos()
     {
         CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-        CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index()));
+        CEdit_Terrain* pInstance = dynamic_cast<CEdit_Terrain*>(pGameInstance->Find_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN, TEXT("Object_Edit_Terrain"), m_pSelectTerrain->Get_Index()));
 
         _vector vTerrainPos = pInstance->Picking_Terrain();
 
@@ -1049,7 +1049,7 @@ HRESULT CImgui_Manager::List_Object()
             {
                 CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-                m_pSelectObject = pGameInstance->Find_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), walpha, stoi(digits));
+                m_pSelectObject = pGameInstance->Find_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT, walpha, stoi(digits));
                 if (nullptr == m_pSelectObject)
                 {
                     RELEASE_INSTANCE(CGameInstance);
@@ -1090,7 +1090,7 @@ HRESULT CImgui_Manager::List_Object()
                 }     
             }
 
-            if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), m_pSelectObject->Get_Name(), m_pSelectObject->Get_Index())))
+            if (FAILED(pGameInstance->Delete_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT, m_pSelectObject->Get_Name(), m_pSelectObject->Get_Index())))
             {
                 RELEASE_INSTANCE(CGameInstance);
                 return E_FAIL;
@@ -1127,7 +1127,7 @@ HRESULT CImgui_Manager::List_Object()
         GetCursorPos(&pt);
         ScreenToClient(g_hWnd, &pt);
 
-        const list<CGameObject*>* pList = pGameInstance->Get_LayerList(LEVEL_EDIT, TEXT("Layer_Object"));
+        const list<CGameObject*>* pList = pGameInstance->Get_LayerList(LEVEL_EDIT, LAYER_EDITOBJECT);
 
         _bool IsFirstCheck = true;
         _vector vClosePick;
@@ -1303,7 +1303,7 @@ HRESULT CImgui_Manager::Save_MakeShift_Data(LEVEL eLevel)
     shared_ptr<CAsFileUtils> SaveObject = make_shared<CAsFileUtils>();
     SaveObject->Open(strFileObject, FileMode::Write);
 
-    auto listObject = pGameInstance->Get_LayerList(LEVEL_EDIT, TEXT("Layer_Object"));
+    auto listObject = pGameInstance->Get_LayerList(LEVEL_EDIT, LAYER_EDITOBJECT);
 
     _uint iObjCnt = listObject->size();
     SaveObject->Write<_uint>(iObjCnt);
@@ -1355,12 +1355,12 @@ HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
     TerrainDesc.iNumVerticesZ = m_iNumVerticesZ[m_iCurLevel];
     TerrainDesc.bIsWireFrame = m_bIsWireFrame[m_iCurLevel];
 
-    if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
+    if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN, TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
     {
         RELEASE_INSTANCE(CGameInstance);
         return E_FAIL;
     }
-    m_pSelectTerrain = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"));
+    m_pSelectTerrain = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN);
     if (nullptr == m_pSelectTerrain)
     {
         RELEASE_INSTANCE(CGameInstance);
@@ -1394,10 +1394,10 @@ HRESULT CImgui_Manager::Load_MakeShift_Data(LEVEL eLevel)
             eType = OBJECT_TYPE(iType);
             wstrTag.assign(strTag.begin(), strTag.end());
 
-            if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), wstrTag)))
+            if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT, wstrTag)))
                 return E_FAIL;
 
-            CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Object"));
+            CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT);
             if (nullptr == pObject)
                 return E_FAIL;
 
@@ -1447,7 +1447,7 @@ HRESULT CImgui_Manager::Save_Data(LEVEL eLevel)
     shared_ptr<CAsFileUtils> SaveObject = make_shared<CAsFileUtils>();
     SaveObject->Open(strFileObject, FileMode::Write);
 
-    auto listObject = pGameInstance->Get_LayerList(LEVEL_EDIT, TEXT("Layer_Object"));
+    auto listObject = pGameInstance->Get_LayerList(LEVEL_EDIT, LAYER_EDITOBJECT);
 
     _uint iObjCnt = listObject->size();
     SaveObject->Write<_uint>(iObjCnt);
@@ -1499,12 +1499,12 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
     TerrainDesc.iNumVerticesZ = m_iNumVerticesZ[m_iCurLevel];
     TerrainDesc.bIsWireFrame = m_bIsWireFrame[m_iCurLevel];
 
-    if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
+    if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN, TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
     {
         RELEASE_INSTANCE(CGameInstance);
         return E_FAIL;
     }
-    m_pSelectTerrain = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Terrain"));
+    m_pSelectTerrain = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITERRAIN);
     if (nullptr == m_pSelectTerrain)
     {
         RELEASE_INSTANCE(CGameInstance);
@@ -1538,10 +1538,10 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
         eType = OBJECT_TYPE(iType);
         wstrTag.assign(strTag.begin(), strTag.end());
 
-        if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, TEXT("Layer_Object"), wstrTag)))
+        if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT, wstrTag)))
             return E_FAIL;
 
-        CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_EDIT, TEXT("Layer_Object"));
+        CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT);
         if (nullptr == pObject)
             return E_FAIL;
 

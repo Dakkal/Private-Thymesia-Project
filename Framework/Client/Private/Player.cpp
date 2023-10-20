@@ -166,6 +166,8 @@ CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, c
 
 CGameObject* CPlayer::Clone(void* pArg)
 {
+	__super::Clone(pArg);
+
 	CPlayer* pInstance = new CPlayer(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))

@@ -56,6 +56,8 @@ void CBody_Player::LateTick(_float fTimeDelta)
 
 		if (Name == "Player_Corvus.Raven")
 			pMesh->Set_RenderState(false);
+		if (Name == "Player_Corvus.Cloak")
+			pMesh->Set_RenderState(false);
 	}
 
 
@@ -179,6 +181,8 @@ CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 CGameObject* CBody_Player::Clone(void* pArg)
 {
+	__super::Clone(pArg);
+
 	CBody_Player* pInstance = new CBody_Player(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))

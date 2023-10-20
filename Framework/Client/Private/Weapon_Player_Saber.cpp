@@ -170,6 +170,8 @@ CWeapon_Player_Saber* CWeapon_Player_Saber::Create(ID3D11Device* pDevice, ID3D11
 
 CGameObject* CWeapon_Player_Saber::Clone(void* pArg)
 {
+	__super::Clone(pArg);
+
 	CWeapon_Player_Saber* pInstance = new CWeapon_Player_Saber(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))

@@ -148,6 +148,12 @@
     <Filter Include="01.Utility\04.Component\Navigation\Cell_Shader">
       <UniqueIdentifier>{b2032699-0d33-423a-a446-e162f2cd4a3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.Component\StateMachine">
+      <UniqueIdentifier>{8b84395c-cacd-4498-bd23-88552f41cb10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Component\StateMachine\State">
+      <UniqueIdentifier>{d9089a8c-8d95-4e30-a009-31cf98c8fd2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -294,6 +300,12 @@
     <ClInclude Include="..\Public\VIBuffer_Cell.h">
       <Filter>01.Utility\04.Component\VIBuffer\Cell</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\StateMachine.h">
+      <Filter>01.Utility\04.Component\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State.h">
+      <Filter>01.Utility\04.Component\StateMachine\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -421,6 +433,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp">
       <Filter>01.Utility\04.Component\VIBuffer\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StateMachine.cpp">
+      <Filter>01.Utility\04.Component\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State.cpp">
+      <Filter>01.Utility\04.Component\StateMachine\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@ CLevel_Edit::CLevel_Edit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Edit::Initialize()
 {
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_ToolCamera"))))
+	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Light()))
@@ -77,7 +77,7 @@ HRESULT CLevel_Edit::Ready_Light()
 	return S_OK;
 }
 
-HRESULT CLevel_Edit::Ready_Layer_Camera(const wstring& strLayerTag)
+HRESULT CLevel_Edit::Ready_Layer_Camera(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -94,7 +94,7 @@ HRESULT CLevel_Edit::Ready_Layer_Camera(const wstring& strLayerTag)
 	CameraToolDesc.fSpeedPerSec = 50.f;
 	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, strLayerTag, TEXT("Prototype_GameObject_ToolCamera"), &CameraToolDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, iLayerIndex, TEXT("Prototype_GameObject_ToolCamera"), &CameraToolDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance)

@@ -91,12 +91,12 @@ _bool CCell::IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex)
 
 	return false;
 }
-
+#ifndef NDEBUG
 HRESULT CCell::Render()
 {
 	return m_pVIBuffer->Render();
 }
-
+#endif // !NDEBUG
 CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _uint iIndex)
 {
 	CCell* pInstance = new CCell(pDevice, pContext);

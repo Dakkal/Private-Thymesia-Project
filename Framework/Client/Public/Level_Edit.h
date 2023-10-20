@@ -21,7 +21,7 @@ public:
 	virtual HRESULT LateTick(_float fTimeDelta) override;
 
 	HRESULT Ready_Light();
-	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
+	HRESULT Ready_Layer_Camera(const _uint& iLayerIndex);
 
 
 private:

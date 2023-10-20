@@ -35,9 +35,7 @@ HRESULT CWeapon_Boss_Urd::Initialize(void* pArg)
 		return E_FAIL;
 
 	/* 부모 소켓행렬을 기준으로 자식의 상태를 제어한다.  */
-	//m_pTransformCom->Set_Scale(_float3(0.1f, 0.1f, 0.1f));
 	m_pTransformCom->Fix_Rotation(_vector(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
-	//m_pTransformCom->Set_State(CTransform::STATE_POS, XMVectorSet(-0.05f, 0.f, 0.f, 1.f));
 
 	return S_OK;
 }
@@ -170,6 +168,8 @@ CWeapon_Boss_Urd* CWeapon_Boss_Urd::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 
 CGameObject* CWeapon_Boss_Urd::Clone(void* pArg)
 {
+	__super::Clone(pArg);
+
 	CWeapon_Boss_Urd* pInstance = new CWeapon_Boss_Urd(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))

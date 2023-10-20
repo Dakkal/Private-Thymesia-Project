@@ -14,17 +14,17 @@ HRESULT CLevel_GamePlay::Initialize()
 	/*if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;*/
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Props(TEXT("Layer_Props"))))
+	if (FAILED(Ready_Layer_Props(LAYER_PROP)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
+	if (FAILED(Ready_Layer_Player(LAYER_PLAYER)))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Boss(TEXT("Layer_Boss"))))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
+		return E_FAIL;
 
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
@@ -44,11 +44,11 @@ HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Terrain"))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance)
@@ -56,7 +56,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -73,7 +73,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring& strLayerTag)
 	CameraToolDesc.fSpeedPerSec = 10.f;
 	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance)
@@ -81,11 +81,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Props(const wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Props(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Church"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Church"))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -93,11 +93,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Player(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Player"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Player"))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -105,17 +105,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Boss(const wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Boss(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	for (size_t i = 0; i < 20; i++)
+	for (size_t i = 0; i < 5; i++)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Boss_Urd"))))
+		if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Boss_Urd"))))
 			return E_FAIL;
 	}
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Light()

@@ -128,6 +128,8 @@ CBoss_Urd* CBoss_Urd::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 CGameObject* CBoss_Urd::Clone(void* pArg)
 {
+	__super::Clone(pArg);
+
 	CBoss_Urd* pInstance = new CBoss_Urd(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))

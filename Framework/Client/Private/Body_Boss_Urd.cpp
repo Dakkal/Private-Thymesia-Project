@@ -43,6 +43,8 @@ void CBody_Boss_Urd::Tick(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta);
 
+	m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta);
+
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -176,6 +178,8 @@ CBody_Boss_Urd* CBody_Boss_Urd::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 
 CGameObject* CBody_Boss_Urd::Clone(void* pArg)
 {
+	__super::Clone(pArg);
+
 	CBody_Boss_Urd* pInstance = new CBody_Boss_Urd(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))

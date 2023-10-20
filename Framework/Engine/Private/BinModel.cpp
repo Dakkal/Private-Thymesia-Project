@@ -264,7 +264,7 @@ void CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDelta)
 	vWorldDir.y *= -1;
 	vWorldDir.Normalize();
 
-	_float fDist = vDir.Length();
+	_float fDist = vDir.Length() * 0.65f;
 
 	vPos += vWorldDir * fDist * fTimeDelta;
 	pTransform->Set_State(CTransform::STATE_POS, vPos);

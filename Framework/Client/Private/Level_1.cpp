@@ -19,7 +19,7 @@ HRESULT CLevel_1::Initialize()
 
     m_eLevel = LEVELID::LEVEL_1;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Light()))
@@ -100,10 +100,10 @@ HRESULT CLevel_1::Load_Level(LEVELID eLevel)
 		{
 		case OBJECT_TYPE::PLAYER:
 		{
-			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Player"), wstrTag)))
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, LAYER_PLAYER, wstrTag)))
 				return E_FAIL;
 
-			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, TEXT("Layer_Player"));
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, LAYER_PLAYER);
 			if (nullptr == pObject)
 				return E_FAIL;
 
@@ -113,10 +113,10 @@ HRESULT CLevel_1::Load_Level(LEVELID eLevel)
 			break;
 		case OBJECT_TYPE::PORP:
 		{
-			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Prop"), wstrTag)))
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, LAYER_PROP, wstrTag)))
 				return E_FAIL;
 
-			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, TEXT("Layer_Prop"));
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, LAYER_PROP);
 			if (nullptr == pObject)
 				return E_FAIL;
 
@@ -126,10 +126,10 @@ HRESULT CLevel_1::Load_Level(LEVELID eLevel)
 			break;
 		case OBJECT_TYPE::MONSTER:
 		{
-			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Monster"), wstrTag)))
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, LAYER_MONSTER, wstrTag)))
 				return E_FAIL;
 
-			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, TEXT("Layer_Monster"));
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, LAYER_MONSTER);
 			if (nullptr == pObject)
 				return E_FAIL;
 
@@ -147,7 +147,7 @@ HRESULT CLevel_1::Load_Level(LEVELID eLevel)
     return S_OK;
 }
 
-HRESULT CLevel_1::Ready_Layer_Camera(const wstring& strLayerTag)
+HRESULT CLevel_1::Ready_Layer_Camera(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -164,7 +164,7 @@ HRESULT CLevel_1::Ready_Layer_Camera(const wstring& strLayerTag)
 	CameraToolDesc.fSpeedPerSec = 10.f;
 	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, strLayerTag, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, iLayerIndex, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance)

@@ -169,6 +169,8 @@ CWeapon_Player_Dagger* CWeapon_Player_Dagger::Create(ID3D11Device* pDevice, ID3D
 
 CGameObject* CWeapon_Player_Dagger::Clone(void* pArg)
 {
+	__super::Clone(pArg);
+
 	CWeapon_Player_Dagger* pInstance = new CWeapon_Player_Dagger(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))

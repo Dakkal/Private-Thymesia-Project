@@ -47,6 +47,10 @@ enum class CHANNELID {
 	CHANNEL_END
 };
 
+enum class STATE {
+	IDLE, ATTACK, HIT, RUN, PARRY, SKILL, _END
+};
+
 #include <cstdio>
 #include <typeinfo>
 #include <string>

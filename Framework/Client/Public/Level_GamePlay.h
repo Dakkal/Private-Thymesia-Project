@@ -17,11 +17,11 @@ public:
 	virtual HRESULT LateTick(_float fTimeDelta) override;
 
 private:
-	HRESULT Ready_Layer_BackGround(const wstring& strLayerTag);
-	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
-	HRESULT Ready_Layer_Props(const wstring& strLayerTag);
-	HRESULT Ready_Layer_Player(const wstring& strLayerTag);
-	HRESULT Ready_Layer_Boss(const wstring& strLayerTag);
+	HRESULT Ready_Layer_BackGround(const _uint& iLayerIndex);
+	HRESULT Ready_Layer_Camera(const _uint& iLayerIndex);
+	HRESULT Ready_Layer_Props(const _uint& iLayerIndex);
+	HRESULT Ready_Layer_Player(const _uint& iLayerIndex);
+	HRESULT Ready_Layer_Boss(const _uint& iLayerIndex);
 	HRESULT Ready_Light();
 
 public:

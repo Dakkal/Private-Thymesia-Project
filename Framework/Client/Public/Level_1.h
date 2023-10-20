@@ -18,7 +18,7 @@ public:
 
 private:
 	HRESULT Load_Level(LEVELID eLevel);
-	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
+	HRESULT Ready_Layer_Camera(const _uint& iLayerIndex);
 	HRESULT Ready_Light();
 
 private:
