@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "PartObject.h"
 #include "StateMachine.h"
+#include "State_Idle.h"
+#include "State_Walk.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -37,47 +39,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_PlayerParts()))
 		return E_FAIL;
 
+	if (FAILED(Ready_State()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	
-	if (pGameInstance->Get_DIKeyState(DIK_LEFT) & 0x80)
-	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * -1.f);
-	}
+	m_pStateMachineCom->Tick(fTimeDelta);
 
-	if (pGameInstance->Get_DIKeyState(DIK_RIGHT) & 0x80)
-	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_DOWN) & 0x80)
-	{
-		//m_pTransformCom->Go_Backward(fTimeDelta);
-		_uint AnimIndex = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_AnimationIndex();
-		--AnimIndex;
-		if (0 > AnimIndex)
-			AnimIndex = 0;
-
-		dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, AnimIndex);
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_UP) & 0x80)
-	{
-		//m_pTransformCom->Go_Forward(fTimeDelta);
-		_uint AnimIndex = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_AnimationIndex();
-		++AnimIndex;
-		if (AnimIndex > dynamic_cast<CBinModel*>(m_Parts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim())
-			AnimIndex = dynamic_cast<CBinModel*>(m_Parts[(_uint)PARTS::BODY]->Get_Component(TEXT("Com_Model")))->Get_NumAnim();
-
-		dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Set_AnimationIndex(true, AnimIndex);
-	}
-	
-	RELEASE_INSTANCE(CGameInstance);
-	
 	for (auto& pPart : m_Parts)
 	{
 		if (nullptr != pPart)
@@ -87,6 +58,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
+	m_pStateMachineCom->LateTick(fTimeDelta);
+
 	for (auto& pPart : m_Parts)
 	{
 		if (nullptr != pPart)
@@ -103,8 +76,8 @@ HRESULT CPlayer::Ready_Components()
 {
 	/* Com_Transform */
 	CTransform::TRANSFORM_DESC		TransformDesc;
-	TransformDesc.fSpeedPerSec = 10.f;
-	TransformDesc.fRotRadianPerSec = XMConvertToRadians(90.0f);
+	TransformDesc.fSpeedPerSec = 4.f;
+	TransformDesc.fRotRadianPerSec = XMConvertToRadians(120.0f);
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -158,6 +131,23 @@ HRESULT CPlayer::Ready_PlayerParts()
 
 	RELEASE_INSTANCE(CGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_State()
+{
+	CState* pState = CState_Walk::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::WALK);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_Idle::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::IDLE);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+
+	m_pStateMachineCom->Set_State(STATE::IDLE);
 	return S_OK;
 }
 

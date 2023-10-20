@@ -102,6 +102,12 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex)
 
 HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex)
 {
+	if (true == m_bIsAnimChange && iAnimationIndex == m_iCurAnimIndex)
+	{
+		m_bIsAnimChange = false;
+		return S_OK;
+	}
+
 	if (iAnimationIndex >= m_iNumAnims ||
 		iAnimationIndex == m_iCurAnimIndex)
 		return S_OK;
@@ -178,7 +184,7 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 	{
 		Change_Animation(0.2f, fTimeDelta);
 	}
-	if (false == m_bIsAnimChange)
+	else if (false == m_bIsAnimChange)
 	{
 		m_Animations[m_iCurAnimIndex]->Update_TransformationMatrix(m_Bones, fTimeDelta);
 	}

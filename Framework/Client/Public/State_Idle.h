@@ -15,9 +15,15 @@ public:
 	virtual STATE			Tick(const _float& fTimeDelta);
 	virtual STATE			LateTick(const _float& fTimeDelta);
 
+	virtual void			Enter_State();
 	virtual void			Reset_State();
 
+
 	virtual STATE			Key_Input(const _float& fTimeDelta);
+
+private:
+	class CPartObject*		m_pOwnerBodyPart;
+	CTransform*				m_pOwnerTransform;
 
 public:
 	static CState_Idle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);

@@ -34,8 +34,6 @@ HRESULT CBody_Player::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->First_Set_Animation(true, 105);
-
 	return S_OK;
 }
 

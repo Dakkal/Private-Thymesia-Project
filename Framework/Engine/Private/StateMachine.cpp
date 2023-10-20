@@ -20,8 +20,7 @@ HRESULT CStateMachine::Initialize_Prototype()
 
 HRESULT CStateMachine::Initialize(void* pArg)
 {
-	m_pOwnerModel = dynamic_cast<CBinModel*>(m_pOwner->Get_Component(TEXT("Com_Model")));
-
+	
 	return S_OK;
 }
 
@@ -32,7 +31,9 @@ HRESULT CStateMachine::Tick(const _float& fTimeDelta)
 	// 현재 상태와 다른상태가 반환되면 반환된 상태로 변경
 	if (eState != m_eCurState)
 	{
+		m_pCurState->Reset_State();
 		Set_State(eState);
+		m_pCurState->Enter_State();
 	}
 
 	if (STATE::_END == eState)

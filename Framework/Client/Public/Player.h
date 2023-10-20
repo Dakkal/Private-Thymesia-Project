@@ -28,7 +28,7 @@ public:
 	virtual HRESULT Render();
 
 public:
-	const CGameObject* Get_Parts(CPlayer::PARTS ePart) { return m_Parts[(_uint)ePart]; }
+	 CGameObject* Get_Parts(CPlayer::PARTS ePart) { return m_Parts[(_uint)ePart]; }
 
 private:
 	vector<class CGameObject*>		m_Parts;
@@ -40,6 +40,7 @@ private:
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PlayerParts();
+	HRESULT Ready_State();
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));

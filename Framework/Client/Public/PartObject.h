@@ -37,6 +37,7 @@ public:
 public:
 	const _uint& Get_AnimationIndex();
 	void Set_AnimationIndex(_bool isLoop, _uint iAnimIndex);
+	void First_Set_AnimationIndex(_bool isLoop, _uint iAnimIndex);
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);

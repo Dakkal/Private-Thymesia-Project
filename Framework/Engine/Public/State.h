@@ -17,6 +17,7 @@ public:
 	virtual STATE			Tick(const _float & fTimeDelta) PURE;
 	virtual STATE			LateTick(const _float & fTimeDelta) PURE;
 	virtual void			Reset_State() PURE;
+	virtual void			Enter_State() PURE;
 
 	virtual STATE			Key_Input(const _float & fTimeDelta) PURE;
 	

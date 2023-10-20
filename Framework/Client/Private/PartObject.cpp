@@ -41,6 +41,11 @@ void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex)
 	m_pModelCom->Set_Animation(isLoop, iAnimIndex);
 }
 
+void CPartObject::First_Set_AnimationIndex(_bool isLoop, _uint iAnimIndex)
+{
+	m_pModelCom->First_Set_Animation(isLoop, iAnimIndex);
+}
+
 HRESULT CPartObject::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
