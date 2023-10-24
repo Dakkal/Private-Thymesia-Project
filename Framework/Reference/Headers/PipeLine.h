@@ -19,6 +19,7 @@ public:
 	_matrix Get_Transform_Matrix(TRANSFORM_STATE eState) const;
 	_matrix Get_Transform_Matrix_Inverse(TRANSFORM_STATE eState) const;
 	_vector Get_CamPosition_Vector() const;
+	_vector Get_CamLook_Vector() const;
 
 public:
 	HRESULT Bind_TransformToShader(class CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORM_STATE eState);
@@ -32,6 +33,7 @@ private:
 	_matrix			m_TransformMatrices[D3DTS_END];
 	_matrix			m_TransformMatrices_Inverse[D3DTS_END];
 	_vector			m_vCamPosition = { 0.f, 0.f, 0.f, 1.f };
+	_vector			m_vCamLook = { 0.f, 0.f, 1.f, 0.f };
 
 public:
 	virtual void Free() override;

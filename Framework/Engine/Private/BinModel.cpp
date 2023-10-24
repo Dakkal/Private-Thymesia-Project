@@ -100,8 +100,20 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex)
 
 }
 
-HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex)
+HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _uint iStartNumKeyFrames)
 {
+	if (false == m_bIsFirstAnim)
+	{
+		m_iCurAnimIndex = iAnimationIndex;
+
+		m_Animations[m_iCurAnimIndex]->Reset();
+		m_Animations[m_iCurAnimIndex]->Set_Loop(isLoop);
+		m_Animations[m_iCurAnimIndex]->Set_StartKeyFrames(iStartNumKeyFrames);
+		m_bIsFirstAnim = true;
+
+		return S_OK;
+	}
+
 	if (true == m_bIsAnimChange && iAnimationIndex == m_iCurAnimIndex)
 	{
 		m_bIsAnimChange = false;
@@ -116,14 +128,11 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex)
 
 	m_iNextAnimIndex = iAnimationIndex;
 	m_bIsNextAnimLoop = isLoop;
+	m_iNextStartNumKeyFrames = iStartNumKeyFrames;
 	m_fChangeTrackPosition = 0.f;
 
 	CurChannels = m_Animations[m_iCurAnimIndex]->Get_Channels();
 	NextChannels = m_Animations[m_iNextAnimIndex]->Get_Channels();
-
-	m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
-	m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
-
 	return S_OK;
 }
 
@@ -135,45 +144,42 @@ HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 	_vector vRotation;
 	_vector vTranslation;
 
-	for (auto& pCurChannel : CurChannels)
+	for (size_t i = 0; i < CurChannels.size(); i++)
 	{
-		for (auto& pNextChannel : NextChannels)
+		KEYFRAME CurKeyframe = CurChannels[i]->Get_CurKeyFrame();
+		KEYFRAME NextKeyframe = NextChannels[i]->Get_KeyFrames().front();
+
+		while (m_fChangeTrackPosition >= fDuration)
 		{
-			if (pCurChannel->Get_Channel_BoneIndex() == pNextChannel->Get_Channel_BoneIndex())
-			{
-				KEYFRAME CurKeyframe = pCurChannel->Get_CurKeyFrame();
-				KEYFRAME NextKeyframe = pNextChannel->Get_KeyFrames().front();
-
-				while (m_fChangeTrackPosition >= fDuration)
-				{
-					m_bIsAnimChange = false;
-					m_iCurAnimIndex = m_iNextAnimIndex;
-					m_Animations[m_iCurAnimIndex]->Reset();
-					m_Animations[m_iCurAnimIndex]->Set_Loop(m_bIsNextAnimLoop);
-					return S_OK;
-				}
-
-				_float	fRatio = (m_fChangeTrackPosition - 0.f) / fDuration;
-				if (1.f < fRatio)
-					fRatio = 1.f;
-
-				_vector vSourScale = _vector(CurKeyframe.vScale);
-				_vector vDestScale = _vector(NextKeyframe.vScale);
-				vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
-
-				_vector vSourRotation = CurKeyframe.vRotation;
-				_vector vDestRotation = NextKeyframe.vRotation;
-				vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
-
-				_vector vSourTranslation = CurKeyframe.vTranslation;
-				_vector vDestTranslation = NextKeyframe.vTranslation;
-				vTranslation = XMVectorLerp(vSourTranslation, vDestTranslation, fRatio);
-
-				_matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, _vector(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
-
-				m_Bones[pCurChannel->Get_Channel_BoneIndex()]->Set_Transform(TransformationMatrix);
-			}
+			m_bIsAnimChange = false;
+			m_iCurAnimIndex = m_iNextAnimIndex;
+			m_Animations[m_iCurAnimIndex]->Reset();
+			m_Animations[m_iCurAnimIndex]->Set_Loop(m_bIsNextAnimLoop);
+			m_Animations[m_iCurAnimIndex]->Set_StartKeyFrames(m_iNextStartNumKeyFrames);
+			m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
+			m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
+			return S_OK;
 		}
+
+		_float	fRatio = (m_fChangeTrackPosition - 0.f) / fDuration;
+		if (1.f < fRatio)
+			fRatio = 1.f;
+
+		_vector vSourScale = _vector(CurKeyframe.vScale);
+		_vector vDestScale = _vector(NextKeyframe.vScale);
+		vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
+
+		_vector vSourRotation = CurKeyframe.vRotation;
+		_vector vDestRotation = NextKeyframe.vRotation;
+		vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
+
+		_vector vSourTranslation = CurKeyframe.vTranslation;
+		_vector vDestTranslation = NextKeyframe.vTranslation;
+		vTranslation = XMVectorLerp(vSourTranslation, vDestTranslation, fRatio);
+
+		_matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, _vector(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+
+		m_Bones[CurChannels[i]->Get_Channel_BoneIndex()]->Set_Transform(TransformationMatrix);
 	}
 	return S_OK;
 }
@@ -184,7 +190,7 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 	{
 		Change_Animation(0.2f, fTimeDelta);
 	}
-	else if (false == m_bIsAnimChange)
+	if (false == m_bIsAnimChange)
 	{
 		m_Animations[m_iCurAnimIndex]->Update_TransformationMatrix(m_Bones, fTimeDelta);
 	}
@@ -196,11 +202,12 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 	
 	auto rootBone = Get_BonePtr("root");
 
-	if (true == m_Animations[m_iCurAnimIndex]->IsFinished())
+	if (m_Animations[m_iCurAnimIndex]->IsLoop() && m_Animations[m_iCurAnimIndex]->IsFinished())
 	{
 		m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
 		m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
 	}
+
 	m_PrevRootPos = m_CurRootPos;
 	m_CurRootPos = rootBone->Get_RootPos();
 
@@ -273,7 +280,7 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 	vWorldDir.y *= -1;
 	vWorldDir.Normalize();
 
-	_float fDist = vDir.Length() * 0.65f;
+	_float fDist = vDir.Length() * 0.8f;
 
 	vPos += vWorldDir * fDist * fTimeDelta;
 	pTransform->Set_State(CTransform::STATE_POS, vPos);

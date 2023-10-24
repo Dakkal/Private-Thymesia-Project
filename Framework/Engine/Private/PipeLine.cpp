@@ -36,6 +36,11 @@ _vector CPipeLine::Get_CamPosition_Vector() const
 	return m_vCamPosition;
 }
 
+_vector CPipeLine::Get_CamLook_Vector() const
+{
+	return m_vCamLook;
+}
+
 HRESULT CPipeLine::Bind_TransformToShader(CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORM_STATE eState)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_TransformMatrices[eState]);
@@ -65,6 +70,7 @@ void CPipeLine::Tick()
 	}
 
 	memmove(&m_vCamPosition, &m_TransformMatrices_Inverse[D3DTS_VIEW].m[3][0], sizeof(_vector));
+	memmove(&m_vCamLook, &m_TransformMatrices_Inverse[D3DTS_VIEW].m[2][0], sizeof(_vector));
 }
 
 void CPipeLine::Free()

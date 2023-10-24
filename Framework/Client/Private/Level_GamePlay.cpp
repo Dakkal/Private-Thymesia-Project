@@ -13,10 +13,6 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	/*if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;*/
-
-	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
-		return E_FAIL;
-
 	if (FAILED(Ready_Layer_Props(LAYER_PROP)))
 		return E_FAIL;
 
@@ -24,6 +20,9 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Light()))
@@ -63,17 +62,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _uint& iLayerIndex)
 	CToolCamera::CAMERA_TOOL_DESC			CameraToolDesc;
 	ZeroMemory(&CameraToolDesc, sizeof CameraToolDesc);
 
-	CameraToolDesc.fMouseSensitive = 0.3f;
+	CameraToolDesc.fMouseSensitive = 10.f;
 	CameraToolDesc.vEye = _vector(0.f, 0.f, -1.f, 1.f);
 	CameraToolDesc.vAt = _vector(0.f, 0.f, 0.f, 1.f);
-	CameraToolDesc.fFovy = XMConvertToRadians(90.0f);
+	CameraToolDesc.fFovy = XMConvertToRadians(45.f);
 	CameraToolDesc.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
-	CameraToolDesc.fNear = 0.2f;
+	CameraToolDesc.fNear = 0.1f;
 	CameraToolDesc.fFar = 1000.f;
 	CameraToolDesc.fSpeedPerSec = 10.f;
-	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
+	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(90.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Camera"), &CameraToolDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_PlayerCamera"), &CameraToolDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance)

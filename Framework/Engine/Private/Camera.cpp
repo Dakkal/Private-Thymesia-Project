@@ -49,17 +49,16 @@ HRESULT CCamera::Initialize(void* pArg)
 
 void CCamera::Tick(_float fTimeDelta)
 {
+	
+}
+
+void CCamera::LateTick(_float fTimeDelta)
+{
 	if (nullptr == m_pPipeLine)
 		return;
 
 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransform->Get_WorldMatrix_Inverse());
 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
-}
-
-void CCamera::LateTick(_float fTimeDelta)
-{
-
-	__super::LateTick(fTimeDelta);
 }
 
 CGameObject* CCamera::Clone(void* pArg)

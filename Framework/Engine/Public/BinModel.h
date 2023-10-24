@@ -23,7 +23,7 @@ public:
 
 public:
 	HRESULT First_Set_Animation(_bool isLoop, _int iAnimationIndex);
-	HRESULT Set_Animation(_bool isLoop, _int iAnimationIndex);
+	HRESULT Set_Animation(_bool isLoop, _int iAnimationIndex, _uint iStatNumKeyFrames = 0);
 	HRESULT Change_Animation(_float fDuration, _float fTimeDelta);
 	HRESULT	Play_Animation(_float fTimeDelta);
 
@@ -74,11 +74,13 @@ private:
 	vector<class CBinChannel*>				NextChannels;
 	_float									m_fChangeTrackPosition = { 0.f };
 	_bool									m_bIsNextAnimLoop = { false };
+	_uint									m_iNextStartNumKeyFrames = { 0 };
 	_bool									m_bIsAnimChange = { false };
 	_int									m_iCurAnimIndex = { -1 };
 	_int									m_iNextAnimIndex = { -1 };
 	_uint									m_iNumAnims = { 0 };
 	vector<class CBinAnimation*>			m_Animations;
+	_bool									m_bIsFirstAnim = { false };
 
 private:
 	HRESULT Ready_Meshes(const SAVE_MESH tMehsDesc);

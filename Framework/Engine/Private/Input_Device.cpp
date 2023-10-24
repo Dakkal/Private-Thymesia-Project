@@ -6,6 +6,19 @@ CInput_Device::CInput_Device()
 {
 }
 
+_bool CInput_Device::Is_MosueMove()
+{
+	_ulong mouse = 0;
+
+	mouse = *(((_long*)&m_tMouseState) + _uint(MOUSEMOVE_STATE::X));
+	mouse = *(((_long*)&m_tMouseState) + _uint(MOUSEMOVE_STATE::Y));
+
+	if (0 != mouse)
+		return true;
+
+	return false;
+}
+
 HRESULT CInput_Device::Reserve_InputDevice(HINSTANCE hInst, HWND hWnd)
 {
 	if (FAILED(DirectInput8Create(hInst, DIRECTINPUT_VERSION, IID_IDirectInput8,

@@ -39,6 +39,7 @@ public: /* For.Input_Device */
 	_byte	Get_DIKeyState(_ubyte byKeyID);
 	_byte	Get_DIMouseState(CInput_Device::MOUSEKEY_STATE eMouse);
 	_long	Get_DIMouseMove(CInput_Device::MOUSEMOVE_STATE eMouseState);
+	_bool	Is_MouseMove();
 
 public: /* For.Level_Manager */
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
@@ -72,6 +73,7 @@ public: /* For.PipeLine */
 	_matrix Get_Transform_Matrix(CPipeLine::TRANSFORM_STATE eState) const;
 	_matrix Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORM_STATE eState) const;
 	_vector Get_CamPosition_Vector() const;
+	_vector Get_CamLook_Vector() const;
 
 public: /* For.Light_Manager */
 	const LIGHT_DESC* Get_LightDesc(_uint iLightIndex);

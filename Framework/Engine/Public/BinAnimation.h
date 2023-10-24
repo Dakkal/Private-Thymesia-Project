@@ -17,10 +17,13 @@ public:
 	void		Reset();
 
 public:
-	const vector<class CBinChannel*>&	Get_Channels() const { return m_Channels; }
-	const vector<_uint>&				Get_CurKeyFrames() const { return m_iCurKeyFrames; }
-	const _bool&						IsFinished() const { return m_isFinished; }
-	const _bool&						IsLoop() const { return m_isLoop; }
+	const vector<class CBinChannel*>&	Get_Channels() const		{ return m_Channels; }
+	const vector<_uint>&				Get_CurKeyFrames() const	{ return m_iCurKeyFrames; }
+	const _bool&						IsFinished() const			{ return m_isFinished; }
+	const _bool&						IsLoop() const				{ return m_isLoop; }
+
+public:
+	void	Set_StartKeyFrames(_uint iNumKeyFrame);
 
 public:
 	void Set_Loop(_bool isLoop) { m_isLoop = isLoop; }

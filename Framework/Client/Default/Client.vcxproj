@@ -60,6 +60,8 @@
     <ClCompile Include="..\Private\Level_1.cpp" />
     <ClCompile Include="..\Private\PartObject.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\PlayerCamera.cpp" />
+    <ClCompile Include="..\Private\State_Avoid.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
     <ClCompile Include="..\Private\State_Walk.cpp" />
     <ClCompile Include="..\Private\ToolCamera.cpp" />
@@ -109,6 +111,8 @@
     <ClInclude Include="..\Public\Level_1.h" />
     <ClInclude Include="..\Public\PartObject.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\PlayerCamera.h" />
+    <ClInclude Include="..\Public\State_Avoid.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
     <ClInclude Include="..\Public\State_Walk.h" />
     <ClInclude Include="..\Public\ToolCamera.h" />

@@ -142,6 +142,14 @@ _long CGameInstance::Get_DIMouseMove(CInput_Device::MOUSEMOVE_STATE eMouseState)
 	return m_pInput_Device->Get_DIMouseMove(eMouseState);
 }
 
+_bool CGameInstance::Is_MouseMove()
+{
+	if (nullptr == m_pInput_Device)
+		return 0;
+
+	return m_pInput_Device->Is_MosueMove();
+}
+
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 {
 	if (nullptr == m_pLevel_Manager)
@@ -325,6 +333,14 @@ _vector CGameInstance::Get_CamPosition_Vector() const
 		return _vector();
 
 	return m_pPipeLine->Get_CamPosition_Vector();
+}
+
+_vector CGameInstance::Get_CamLook_Vector() const
+{
+	if (nullptr == m_pPipeLine)
+		return _vector();
+
+	return m_pPipeLine->Get_CamLook_Vector();
 }
 
 const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iLightIndex)

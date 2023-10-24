@@ -6,6 +6,7 @@
 #include "Terrain.h"
 #include "Edit_Terrain.h"
 #include "ToolCamera.h"
+#include "PlayerCamera.h"
 
 #include "Church.h"
 #include "ChurchGrillesFloor.h"
@@ -553,7 +554,7 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), CTerrain::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		/* For.Camera*/
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CToolCamera::Create(m_pDevice, m_pContext))))
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerCamera"), CPlayerCamera::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"), CPlayer::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player")))))

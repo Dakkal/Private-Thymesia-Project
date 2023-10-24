@@ -8,7 +8,7 @@ class ENGINE_DLL CTransform final : public CComponent
 {
 public:
 	enum STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POS, STATE_END };
-
+	enum DIR { DIR_UP, DIR_DOWN, DIR_RIGHT, DIR_LEFT, DIR_UPRIGHT, DIR_UPLEFT, DIR_DOWNRIGHT, DIR_DOWNLEFT };
 public:
 	typedef struct tagTransformDesc
 	{
@@ -22,15 +22,17 @@ private:
 	virtual ~CTransform() = default;
 
 public:
-	_vector		Get_State(STATE eState);
-	_vector		Get_Scale();
-	_matrix		Get_WorldMatrix() const { return m_WorldMatrix;}
-	_matrix		Get_WorldMatrix_Inverse() const { return m_WorldMatrix.Invert();}
-	TRANSFORM_DESC Get_TransformDesc() const { return m_TrasformDesc; }
+	_vector			Get_State(STATE eState);
+	_vector			Get_Scale();
+	_matrix			Get_WorldMatrix() const { return m_WorldMatrix;}
+	_matrix			Get_WorldMatrix_Inverse() const { return m_WorldMatrix.Invert();}
+	TRANSFORM_DESC	Get_TransformDesc() const { return m_TrasformDesc; }
 
 	void		Set_State(STATE eState, _vector vState);
+	void		Set_Look(_vector vChangeLook);
 	void		Set_Scale(const _float3& vScale);
 	void		Set_WorldMatrix(_matrix matWorld);
+
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -40,6 +42,7 @@ public:
 	HRESULT		Bind_ShaderResources(class CShader* pShader, const char* pConstantName);
 
 public:
+	void Go_Dir(_vector vDir, _float fTimeDelta);
 	void Go_Forward(_float fTimeDelta);
 	void Go_Backward(_float fTimeDelta);
 	void Go_Up(_float fTimeDelta);

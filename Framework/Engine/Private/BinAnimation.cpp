@@ -53,7 +53,7 @@ void CBinAnimation::Update_TransformationMatrix(vector<class CBinBone*>& Bones, 
 			m_isFinished = false;
 	}
 
-	m_fTrackPosition += m_fTickPerSecond * fTimeDelta;
+	m_fTrackPosition += m_fTickPerSecond * fTimeDelta * 1.2f;
 
 	if (m_fTrackPosition >= m_fDuration)
 	{
@@ -88,6 +88,14 @@ void CBinAnimation::Reset()
 	for (auto& iCurKeyFrame : m_iCurKeyFrames)
 	{
 		iCurKeyFrame = 0;
+	}
+}
+
+void CBinAnimation::Set_StartKeyFrames(_uint iNumKeyFrame)
+{
+	for (auto& iCurKeyFrame : m_iCurKeyFrames)
+	{
+		iCurKeyFrame = iNumKeyFrame;
 	}
 }
 

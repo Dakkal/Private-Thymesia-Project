@@ -21,6 +21,7 @@ public:
 	_byte	Get_DIKeyState(_ubyte byKeyID) { return m_byKeyState[byKeyID]; }
 	_byte	Get_DIMouseState(MOUSEKEY_STATE eState) { return m_tMouseState.rgbButtons[_uint(eState)]; }
 	_long	Get_DIMouseMove(MOUSEMOVE_STATE eState) { return *(((_long*)&m_tMouseState) + _uint(eState)); }
+	_bool	Is_MosueMove();
 
 public:
 	HRESULT	Reserve_InputDevice(HINSTANCE hInst, HWND hWnd);

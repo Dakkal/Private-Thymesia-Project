@@ -13,10 +13,6 @@ namespace Client
 
 	const unsigned int		g_iWinSizeX = 1280;
 	const unsigned int		g_iWinSizeY = 720;
-
-	enum LAYER_TAG { LAYER_PLAYER, LAYER_MONSTER, LAYER_BOSS, LAYER_PROP, LAYER_MAP, 
-		LAYER_BACKGROUND, LAYER_CAMERA, LAYER_EDITOBJECT, LAYER_EDITERRAIN, 
-		LAYER_END };
 }
 
 extern HWND g_hWnd;
@@ -24,12 +20,12 @@ extern HINSTANCE	g_hInstance;
 
 using namespace Client;
 
-//#ifdef _DEBUG
-//
-//#ifdef UNICODE                                                                                      
-//#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
-//#else                                                                                                    
-//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")   
-//#endif                                                                                                   
-//
-//#endif  
+#ifdef _DEBUG
+
+#ifdef UNICODE                                                                                      
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
+#else                                                                                                    
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")   
+#endif                                                                                                   
+
+#endif  

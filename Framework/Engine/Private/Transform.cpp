@@ -32,6 +32,20 @@ void CTransform::Set_State(STATE eState, _vector vState)
 	memmove(m_WorldMatrix.m[eState], &vState, sizeof _vector);
 }
 
+void CTransform::Set_Look(_vector vChangeLook)
+{
+	_vector		vScaled = Get_Scale();
+
+	_vector		vPosition = Get_State(STATE_POS);
+	_vector		vLook = XMVector3Normalize(vChangeLook) * vScaled.z;
+	_vector		vRight = XMVector3Normalize(XMVector3Cross(_vector(0.f, 1.f, 0.f, 0.f), vLook)) * vScaled.x;
+	_vector		vUp = XMVector3Normalize(XMVector3Cross(vLook, vRight)) * vScaled.y;
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
 void CTransform::Set_Scale(const _float3& vScale)
 {
 	_vector		vRight = Get_State(STATE_RIGHT);
@@ -77,6 +91,16 @@ HRESULT CTransform::Initialize(void* pArg)
 HRESULT CTransform::Bind_ShaderResources(CShader* pShader, const char* pConstantName)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);
+}
+
+void CTransform::Go_Dir(_vector vDir, _float fTimeDelta)
+{
+	_vector		vPosition = Get_State(STATE_POS);
+
+	vDir.Normalize();
+	vPosition += vDir * m_TrasformDesc.fSpeedPerSec * fTimeDelta;
+
+	Set_State(STATE_POS, vPosition);
 }
 
 void CTransform::Go_Forward(_float fTimeDelta)

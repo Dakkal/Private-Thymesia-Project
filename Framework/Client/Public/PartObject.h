@@ -36,6 +36,7 @@ public:
 
 public:
 	const _uint& Get_AnimationIndex();
+	const _bool& IsAnimationEnd();
 	void Set_AnimationIndex(_bool isLoop, _uint iAnimIndex);
 	void First_Set_AnimationIndex(_bool isLoop, _uint iAnimIndex);
 

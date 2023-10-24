@@ -33,7 +33,6 @@ HRESULT CStateMachine::Tick(const _float& fTimeDelta)
 	{
 		m_pCurState->Reset_State();
 		Set_State(eState);
-		m_pCurState->Enter_State();
 	}
 
 	if (STATE::_END == eState)
@@ -63,6 +62,7 @@ HRESULT CStateMachine::Set_State(STATE eState)
 
 	m_pCurState = iter->second;
 	m_eCurState = eState;
+	m_pCurState->Enter_State();
 
 	return S_OK;
 }

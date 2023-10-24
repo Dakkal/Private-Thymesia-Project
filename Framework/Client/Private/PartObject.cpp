@@ -36,6 +36,11 @@ const _uint& CPartObject::Get_AnimationIndex()
 	return m_pModelCom->Get_CurAnimIndex();
 }
 
+const _bool& CPartObject::IsAnimationEnd()
+{
+	return m_pModelCom->Is_CurAnimFinished();
+}
+
 void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex)
 {
 	m_pModelCom->Set_Animation(isLoop, iAnimIndex);

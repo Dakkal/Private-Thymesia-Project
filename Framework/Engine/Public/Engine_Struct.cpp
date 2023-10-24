@@ -36,6 +36,5 @@ namespace Engine
 		{ "BLENDINDEX", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },	/* ª¿¿« ¿Œµ¶Ω∫µÈ */
 		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 },	/* ª¿¿« øµ«‚∑¬µÈ */
 	};
-
 }
 
