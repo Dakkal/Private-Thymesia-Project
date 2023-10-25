@@ -23,7 +23,7 @@ public:
 
 public:
 	HRESULT First_Set_Animation(_bool isLoop, _int iAnimationIndex);
-	HRESULT Set_Animation(_bool isLoop, _int iAnimationIndex, _uint iStatNumKeyFrames = 0);
+	HRESULT Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAnimSpeed, _uint iStatNumKeyFrames = 0);
 	HRESULT Change_Animation(_float fDuration, _float fTimeDelta);
 	HRESULT	Play_Animation(_float fTimeDelta);
 
@@ -40,6 +40,7 @@ public:
 	const vector<class CBinAnimation*>&		Get_Animations()	{ return m_Animations; }
 	const class CBinAnimation*				Get_CurAnimation()	{ return m_Animations[m_iCurAnimIndex]; }
 	const _uint&							Get_CurAnimIndex()  { return m_iCurAnimIndex; }
+	const _bool&							Is_CurAnimKeyFrame(_uint iIndex);
 	const _bool&							Is_CurAnimFinished(){ return m_Animations[m_iCurAnimIndex]->IsFinished(); }
 	
 

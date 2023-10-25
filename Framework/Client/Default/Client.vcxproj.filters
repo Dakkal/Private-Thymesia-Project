@@ -219,6 +219,9 @@
     <ClCompile Include="..\Private\State_Avoid.cpp">
       <Filter>02.GameObject\Object\Player\State</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\State_Attack.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -342,6 +345,9 @@
       <Filter>02.GameObject\Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Avoid.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Attack.h">
       <Filter>02.GameObject\Object\Player\State</Filter>
     </ClInclude>
   </ItemGroup>

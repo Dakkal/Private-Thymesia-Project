@@ -13,7 +13,7 @@ private:
 
 public:
 	HRESULT		Initialize(const class CBinModel* pModel, const SAVE_ANIM_INFO tAnimDesc);
-	void		Update_TransformationMatrix(vector<class CBinBone*>& Bones, _float fTimeDelta);
+	void		Update_TransformationMatrix(vector<class CBinBone*>* Bones, _float fTimeDelta);
 	void		Reset();
 
 public:
@@ -23,7 +23,8 @@ public:
 	const _bool&						IsLoop() const				{ return m_isLoop; }
 
 public:
-	void	Set_StartKeyFrames(_uint iNumKeyFrame);
+	void	Set_StartKeyFrames(_uint iNumKeyFrame, _float fTimeDelta);
+	void	Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 
 public:
 	void Set_Loop(_bool isLoop) { m_isLoop = isLoop; }
@@ -36,6 +37,8 @@ private:
 	_bool						m_isFinished = { false };
 	_bool						m_isStop = { false };
 	_bool						m_isLoop = { false };
+
+	_float						m_fAnimSpeed = { 1.2f };
 
 	string						m_strName = "";
 	_uint						m_iNumChannels = { 0 };

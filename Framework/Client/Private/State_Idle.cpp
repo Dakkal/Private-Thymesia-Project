@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "StateMachine.h"
 #include "State_Idle.h"
+#include "Input_Device.h"
 
 CState_Idle::CState_Idle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
@@ -15,7 +16,6 @@ HRESULT CState_Idle::Initialize()
 	m_pOwnerTransform = dynamic_cast<CTransform*>(m_pStateOwner->Get_Owner()->Get_Component(TEXT("Com_Transform")));
 	CGameObject* pOwnerBodyPart = dynamic_cast<CPlayer*>(m_pStateOwner->Get_Owner())->Get_Parts(CPlayer::PARTS::BODY);
 	m_pOwnerBodyPart = dynamic_cast<CPartObject*>(pOwnerBodyPart);
-	m_pOwnerBodyPart->Set_AnimationIndex(true, 90);
 
 	return S_OK;
 }
@@ -41,7 +41,7 @@ void CState_Idle::Reset_State()
 
 void CState_Idle::Enter_State()
 {
-	m_pOwnerBodyPart->Set_AnimationIndex(true, 90);
+	m_pOwnerBodyPart->Set_AnimationIndex(true, 90, 1.2f);
 }
 
 STATE CState_Idle::Key_Input(const _float& fTimeDelta)
@@ -53,24 +53,17 @@ STATE CState_Idle::Key_Input(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
+	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::ATTACK;
+	}
 
 
-	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::WALK;
-	}
-	if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::WALK;
-	}
-	if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::WALK;
-	}
-	if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
+		pGameInstance->Get_DIKeyState(DIK_D) & 0x80 ||
+		pGameInstance->Get_DIKeyState(DIK_S) & 0x80 ||
+		pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::WALK;

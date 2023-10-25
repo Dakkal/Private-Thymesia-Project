@@ -11,11 +11,15 @@ BEGIN(Client)
 
 class CState_Walk final : public CState
 {
+public:
 	enum KEY { KEY_W, KEY_D, KEY_S, KEY_A, KEY_END };
 
 private:
 	CState_Walk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
 	virtual ~CState_Walk() = default;
+
+public:
+	_vector	Get_KeyVector(CState_Walk::KEY eKey) { return m_vKeyVector[eKey]; }
 
 public:
 	virtual HRESULT			Initialize();

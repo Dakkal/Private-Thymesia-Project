@@ -26,10 +26,13 @@ HRESULT CBinChannel::Initialize(const CBinModel* pModel, const SAVE_CHANNEL tCha
 
 		m_KeyFrames.push_back(KeyFrame);
 	}
+
+	m_CurKeyFrame = m_KeyFrames.front();
+
 	return S_OK;
 }
 
-void CBinChannel::Update_TransformationMatrix(_uint* pCurKeyFrame, vector<class CBinBone*>& Bones, _float fTrackPosition)
+void CBinChannel::Update_TransformationMatrix(_uint* pCurKeyFrame, vector<class CBinBone*>* Bones, _float fTrackPosition)
 {
 	if (0.f == fTrackPosition)
 		*pCurKeyFrame = 0;
@@ -68,7 +71,8 @@ void CBinChannel::Update_TransformationMatrix(_uint* pCurKeyFrame, vector<class 
 
 	_matrix TransformationMatrix = XMMatrixAffineTransformation(m_CurKeyFrame.vScale, _vector(0.f, 0.f, 0.f, 1.f), m_CurKeyFrame.vRotation, m_CurKeyFrame.vTranslation);
 
-	Bones[m_iBoneIndex]->Set_Transform(TransformationMatrix);
+	if(nullptr != Bones)
+		(*Bones)[m_iBoneIndex]->Set_Transform(TransformationMatrix);
 }
 
 CBinChannel* CBinChannel::Create(const CBinModel* pModel, const SAVE_CHANNEL tChannel)

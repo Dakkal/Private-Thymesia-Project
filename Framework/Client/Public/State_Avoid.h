@@ -30,6 +30,8 @@ private:
 	class CPartObject* m_pOwnerBodyPart;
 	CTransform* m_pOwnerTransform;
 
+	_bool		m_bIsAttack = { false };
+
 public:
 	static CState_Avoid* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
 	virtual void	Free() override;

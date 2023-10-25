@@ -30,6 +30,10 @@ _matrix CPartObject::Get_SocketPivotMatrix()
 	return m_pModelCom->Get_PivotMatrix();
 }
 
+const _bool& CPartObject::Is_AnimCurKeyFrame(_uint iIndex)
+{
+	return m_pModelCom->Is_CurAnimKeyFrame(iIndex);
+}
 
 const _uint& CPartObject::Get_AnimationIndex()
 {
@@ -41,14 +45,9 @@ const _bool& CPartObject::IsAnimationEnd()
 	return m_pModelCom->Is_CurAnimFinished();
 }
 
-void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex)
+void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _uint iStartKeyFrame)
 {
-	m_pModelCom->Set_Animation(isLoop, iAnimIndex);
-}
-
-void CPartObject::First_Set_AnimationIndex(_bool isLoop, _uint iAnimIndex)
-{
-	m_pModelCom->First_Set_Animation(isLoop, iAnimIndex);
+	m_pModelCom->Set_Animation(isLoop, iAnimIndex, fAnimSpeed, iStartKeyFrame);
 }
 
 HRESULT CPartObject::Initialize_Prototype(const wstring& strProtoTag)

@@ -61,6 +61,7 @@
     <ClCompile Include="..\Private\PartObject.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerCamera.cpp" />
+    <ClCompile Include="..\Private\State_Attack.cpp" />
     <ClCompile Include="..\Private\State_Avoid.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
     <ClCompile Include="..\Private\State_Walk.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="..\Public\PartObject.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerCamera.h" />
+    <ClInclude Include="..\Public\State_Attack.h" />
     <ClInclude Include="..\Public\State_Avoid.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
     <ClInclude Include="..\Public\State_Walk.h" />

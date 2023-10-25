@@ -32,6 +32,11 @@ STATE CState_Walk::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
+	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::ATTACK;
+	}
 
 	if (true == pGameInstance->Is_MouseMove())
 	{
@@ -63,7 +68,7 @@ STATE CState_Walk::LateTick(const _float& fTimeDelta)
 	{
 		m_fMouseMoveTime += fTimeDelta;
 
-		if (m_fMouseMoveTime > 0.3f)
+		if (m_fMouseMoveTime >= 0.45f)
 		{
 			m_fMouseMoveTime = 0.f;
 			m_bIsMouseMove = false;
@@ -76,14 +81,16 @@ STATE CState_Walk::LateTick(const _float& fTimeDelta)
 
 void CState_Walk::Enter_State()
 {
-	m_pOwnerBodyPart->Set_AnimationIndex(true, 124);
-	m_fMouseMoveTime = 0.f;
-	m_bIsMouseMove = false;
-	Set_KeyVector();
+	m_pOwnerBodyPart->Set_AnimationIndex(true, 124, 1.2f);
+	
 }
 
 void CState_Walk::Reset_State()
 {
+	if (true == m_bIsMouseMove)
+		Set_KeyVector();
+	m_fMouseMoveTime = 0.f;
+	m_bIsMouseMove = false;
 }
 
 STATE CState_Walk::Key_Input(const _float& fTimeDelta)
@@ -132,6 +139,7 @@ STATE CState_Walk::Key_Input(const _float& fTimeDelta)
 
 		m_pOwnerTransform->Set_Look(RotDir);
 		m_pOwnerTransform->Go_Forward(fTimeDelta);
+		
 
 		RELEASE_INSTANCE(CGameInstance);
 		return m_eState;
@@ -146,19 +154,10 @@ STATE CState_Walk::Mouse_Move(const _float& fTimeDelta)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	m_bIsClick = false;
-	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
-	{
-		m_bIsClick = true;
-	}
-	if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
-	{
-		m_bIsClick = true;
-	}
-	if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
-	{
-		m_bIsClick = true;
-	}
-	if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
+		pGameInstance->Get_DIKeyState(DIK_D) & 0x80 ||
+		pGameInstance->Get_DIKeyState(DIK_S) & 0x80 ||
+		pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
 	{
 		m_bIsClick = true;
 	}

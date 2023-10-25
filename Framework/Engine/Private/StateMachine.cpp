@@ -77,6 +77,18 @@ HRESULT CStateMachine::Add_State(STATE eState, CState* pState)
 	return S_OK;
 }
 
+CState* CStateMachine::Get_State(STATE eState)	const
+{
+	auto	iter = find_if(m_StateMap.begin(), m_StateMap.end(), [&](const pair<STATE, CState*>& pair) {
+		return eState == pair.first;
+		});
+
+	if (iter == m_StateMap.end())
+		return nullptr;
+
+	return iter->second;
+}
+
 
 CStateMachine* CStateMachine::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

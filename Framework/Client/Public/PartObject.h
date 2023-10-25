@@ -35,10 +35,10 @@ public:
 	_matrix Get_SocketPivotMatrix();
 
 public:
+	const _bool& Is_AnimCurKeyFrame(_uint iIndex);
 	const _uint& Get_AnimationIndex();
 	const _bool& IsAnimationEnd();
-	void Set_AnimationIndex(_bool isLoop, _uint iAnimIndex);
-	void First_Set_AnimationIndex(_bool isLoop, _uint iAnimIndex);
+	void Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed,_uint iStartKeyFrame = 0);
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);

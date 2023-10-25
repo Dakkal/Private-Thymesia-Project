@@ -43,7 +43,7 @@ HRESULT CBinAnimation::Initialize(const CBinModel* pModel, const SAVE_ANIM_INFO 
 	}
 }
 
-void CBinAnimation::Update_TransformationMatrix(vector<class CBinBone*>& Bones, _float fTimeDelta)
+void CBinAnimation::Update_TransformationMatrix(vector<class CBinBone*>* Bones, _float fTimeDelta)
 {
 	if (true == m_isStop)
 		return;
@@ -53,7 +53,7 @@ void CBinAnimation::Update_TransformationMatrix(vector<class CBinBone*>& Bones, 
 			m_isFinished = false;
 	}
 
-	m_fTrackPosition += m_fTickPerSecond * fTimeDelta * 1.2f;
+	m_fTrackPosition += m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
 
 	if (m_fTrackPosition >= m_fDuration)
 	{
@@ -91,11 +91,31 @@ void CBinAnimation::Reset()
 	}
 }
 
-void CBinAnimation::Set_StartKeyFrames(_uint iNumKeyFrame)
+void CBinAnimation::Set_StartKeyFrames(_uint iNumKeyFrame, _float fTimeDelta)
 {
-	for (auto& iCurKeyFrame : m_iCurKeyFrames)
+	while (true)
 	{
-		iCurKeyFrame = iNumKeyFrame;
+		if (iNumKeyFrame == 0)
+		{
+			for (auto& pChannel : m_Channels)
+			{
+				pChannel->Reset_CurKeyFrame();
+			}
+			return;
+		}
+		else if (iNumKeyFrame <= m_fTrackPosition)
+			return;
+		
+			
+
+		m_fTrackPosition += m_fTickPerSecond * fTimeDelta * 1.2f;
+
+		_uint	iNumChannel = 0;
+
+		for (auto& pChannel : m_Channels)
+		{
+			pChannel->Update_TransformationMatrix(&m_iCurKeyFrames[iNumChannel++], nullptr, m_fTrackPosition);
+		}
 	}
 }
 

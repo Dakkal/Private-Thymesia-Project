@@ -7,6 +7,7 @@
 #include "State_Idle.h"
 #include "State_Walk.h"
 #include "State_Avoid.h"
+#include "State_Attack.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -148,6 +149,11 @@ HRESULT CPlayer::Ready_State()
 	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
 
 	pState = CState_Avoid::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::AVOID);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_Attack::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::ATTACK);
 	if (nullptr == pState)
 		return E_FAIL;
 	m_pStateMachineCom->Add_State(pState->Get_State(), pState);

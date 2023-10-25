@@ -19,8 +19,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;

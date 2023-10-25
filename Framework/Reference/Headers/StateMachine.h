@@ -24,6 +24,7 @@ public:
 	// 상태를 맵컨테이너에다가 추가해주는 함수
 	HRESULT				Add_State(STATE eState, class CState* pState);
 
+    CState*				Get_State(STATE eState) const;
 	const STATE&		Get_CurState()	{ return m_eCurState; }
 	const CBinModel*	Get_OwnerModel(){ return m_pOwnerModel; }
 

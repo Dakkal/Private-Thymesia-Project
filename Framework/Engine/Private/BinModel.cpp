@@ -100,7 +100,7 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex)
 
 }
 
-HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _uint iStartNumKeyFrames)
+HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAnimSpeed, _uint iStartNumKeyFrames)
 {
 	if (false == m_bIsFirstAnim)
 	{
@@ -108,7 +108,7 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _uint iStar
 
 		m_Animations[m_iCurAnimIndex]->Reset();
 		m_Animations[m_iCurAnimIndex]->Set_Loop(isLoop);
-		m_Animations[m_iCurAnimIndex]->Set_StartKeyFrames(iStartNumKeyFrames);
+		m_Animations[m_iCurAnimIndex]->Set_AnimSpeed(fAnimSpeed);
 		m_bIsFirstAnim = true;
 
 		return S_OK;
@@ -116,13 +116,20 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _uint iStar
 
 	if (true == m_bIsAnimChange && iAnimationIndex == m_iCurAnimIndex)
 	{
-		m_bIsAnimChange = false;
+  		m_bIsAnimChange = false;
+		m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
+		m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
 		return S_OK;
 	}
 
 	if (iAnimationIndex >= m_iNumAnims ||
 		iAnimationIndex == m_iCurAnimIndex)
+	{
+		
+		
 		return S_OK;
+	}
+		
 
 	m_bIsAnimChange = true;
 
@@ -131,13 +138,21 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _uint iStar
 	m_iNextStartNumKeyFrames = iStartNumKeyFrames;
 	m_fChangeTrackPosition = 0.f;
 
+	m_Animations[m_iCurAnimIndex]->Reset();
 	CurChannels = m_Animations[m_iCurAnimIndex]->Get_Channels();
 	NextChannels = m_Animations[m_iNextAnimIndex]->Get_Channels();
+	m_Animations[m_iNextAnimIndex]->Set_AnimSpeed(fAnimSpeed);
+
 	return S_OK;
 }
 
 HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 {
+	if (0.f == m_fChangeTrackPosition)
+	{
+		m_Animations[m_iNextAnimIndex]->Set_StartKeyFrames(m_iNextStartNumKeyFrames, fTimeDelta);
+	}
+
 	m_fChangeTrackPosition += fTimeDelta;
 
 	_vector	vScale;
@@ -147,7 +162,7 @@ HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 	for (size_t i = 0; i < CurChannels.size(); i++)
 	{
 		KEYFRAME CurKeyframe = CurChannels[i]->Get_CurKeyFrame();
-		KEYFRAME NextKeyframe = NextChannels[i]->Get_KeyFrames().front();
+		KEYFRAME NextKeyframe = NextChannels[i]->Get_CurKeyFrame();
 
 		while (m_fChangeTrackPosition >= fDuration)
 		{
@@ -155,7 +170,8 @@ HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 			m_iCurAnimIndex = m_iNextAnimIndex;
 			m_Animations[m_iCurAnimIndex]->Reset();
 			m_Animations[m_iCurAnimIndex]->Set_Loop(m_bIsNextAnimLoop);
-			m_Animations[m_iCurAnimIndex]->Set_StartKeyFrames(m_iNextStartNumKeyFrames);
+			m_Animations[m_iCurAnimIndex]->Set_StartKeyFrames(m_iNextStartNumKeyFrames, fTimeDelta);
+
 			m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
 			m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
 			return S_OK;
@@ -192,7 +208,7 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 	}
 	if (false == m_bIsAnimChange)
 	{
-		m_Animations[m_iCurAnimIndex]->Update_TransformationMatrix(m_Bones, fTimeDelta);
+		m_Animations[m_iCurAnimIndex]->Update_TransformationMatrix(&m_Bones, fTimeDelta);
 	}
 	
 	for (auto& pBone : m_Bones)
@@ -244,6 +260,19 @@ HRESULT CBinModel::Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame)
 	m_Meshes[iMeshIndex]->Set_RasterState(eWireFrame);
 
 	return S_OK;
+}
+
+const _bool& CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
+{
+	auto KeyFrames = m_Animations[m_iCurAnimIndex]->Get_CurKeyFrames();
+
+	for (auto& KeyFrame : KeyFrames)
+	{
+		if (iIndex <= KeyFrame)
+			return true;
+	}
+
+	return false;
 }
 
 _int CBinModel::Get_BoneIndex(const string& strBoneName) const
