@@ -30,14 +30,26 @@ STATE CState_Avoid::Tick(const _float& fTimeDelta)
 	{
 		eState = STATE::IDLE;
 
-		if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 || 
+
+
+		if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::PARRY;
+		}
+		if (true == m_bIsAttack)
+			return STATE::ATTACK;
+
+		if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
 			pGameInstance->Get_DIKeyState(DIK_D) & 0x80 ||
 			pGameInstance->Get_DIKeyState(DIK_S) & 0x80 ||
 			pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
-				eState = STATE::WALK;
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::WALK;
+		}
 
-		if(true == m_bIsAttack)
-			eState = STATE::ATTACK;
+		
 	
 	}
 	else

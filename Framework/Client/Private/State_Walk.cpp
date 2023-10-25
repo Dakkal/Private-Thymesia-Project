@@ -32,7 +32,12 @@ STATE CState_Walk::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
-	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::PARRY;
+	}
+	else if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::ATTACK;

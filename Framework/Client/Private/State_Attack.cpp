@@ -32,12 +32,17 @@ STATE CState_Attack::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
-	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepAttack && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	else if (true == m_bParry && false == m_bIdle && false == m_IsKeepAttack && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::PARRY;
+	}
+	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepAttack && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
-	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepAttack &&  true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepAttack &&  true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::WALK;
@@ -76,6 +81,15 @@ STATE CState_Attack::LateTick(const _float& fTimeDelta)
 		m_bAvoid = true;
 		m_bWalk = false;
 		m_bIdle = false;
+		m_bParry = false;
+		m_IsKeepAttack = false;
+	}
+	else if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
+	{
+		m_bAvoid = false;
+		m_bWalk = false;
+		m_bIdle = false;
+		m_bParry = true;
 		m_IsKeepAttack = false;
 	}
 	else if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
@@ -86,6 +100,7 @@ STATE CState_Attack::LateTick(const _float& fTimeDelta)
 		m_bAvoid = false;
 		m_bWalk = true;
 		m_bIdle = false;
+		m_bParry = false;
 		m_IsKeepAttack = false;
 	}
 	else
@@ -93,6 +108,7 @@ STATE CState_Attack::LateTick(const _float& fTimeDelta)
 		m_bAvoid = false;
 		m_bWalk = false;
 		m_bIdle = true;
+		m_bParry = false;
 		m_IsKeepAttack = false;
 	}
 
@@ -140,6 +156,11 @@ void CState_Attack::Reset_State()
 	m_bAttack2 = false;
 	m_bAttack3 = false;
 	m_bAttackRe = false;
+	m_bAvoid = false;
+	m_bWalk = false;
+	m_bIdle = false;
+	m_bParry = false;
+	m_IsKeepAttack = false;
 }
 
 STATE CState_Attack::Key_Input(const _float& fTimeDelta)

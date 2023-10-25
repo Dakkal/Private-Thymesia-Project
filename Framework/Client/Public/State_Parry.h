@@ -9,12 +9,12 @@ END
 
 BEGIN(Client)
 
-class CState_Attack final : public CState
+class CState_Parry final : public CState
 {
 
 private:
-	CState_Attack(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
-	virtual ~CState_Attack() = default;
+	CState_Parry(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
+	virtual ~CState_Parry() = default;
 
 public:
 	virtual HRESULT			Initialize();
@@ -30,20 +30,19 @@ private:
 	class CPartObject* m_pOwnerBodyPart;
 	CTransform* m_pOwnerTransform;
 
-	_bool	m_bAttack1 = { false };
-	_bool	m_bAttack2 = { false };
-	_bool	m_bAttack3 = { false };
-	_bool	m_bAttackRe = { false };
+	_bool	m_bParry1 = { false };
+	_bool	m_bParry2 = { false };
+	_bool	m_bParryRe = { false };
 
-	_bool	m_IsKeepAttack = { false };
+	_bool	m_IsKeepParry = { false };
 
 	_bool	m_bIdle = { false };
 	_bool	m_bAvoid = { false };
 	_bool	m_bWalk = { false };
-	_bool	m_bParry = { false };
+	_bool	m_bAttack = { false };
 
 public:
-	static CState_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
+	static CState_Parry* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
 	virtual void	Free() override;
 };
 

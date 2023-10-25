@@ -64,6 +64,7 @@
     <ClCompile Include="..\Private\State_Attack.cpp" />
     <ClCompile Include="..\Private\State_Avoid.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
+    <ClCompile Include="..\Private\State_Parry.cpp" />
     <ClCompile Include="..\Private\State_Walk.cpp" />
     <ClCompile Include="..\Private\ToolCamera.cpp" />
     <ClCompile Include="..\Private\Imgui_Manager.cpp">
@@ -116,6 +117,7 @@
     <ClInclude Include="..\Public\State_Attack.h" />
     <ClInclude Include="..\Public\State_Avoid.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
+    <ClInclude Include="..\Public\State_Parry.h" />
     <ClInclude Include="..\Public\State_Walk.h" />
     <ClInclude Include="..\Public\ToolCamera.h" />
     <ClInclude Include="..\Public\Imgui_Manager.h" />
