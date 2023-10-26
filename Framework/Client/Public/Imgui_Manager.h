@@ -108,6 +108,12 @@ private:
 	_vector			m_vPropRot[(_uint)LEVEL::_END];
 	_vector			m_vPropPos[(_uint)LEVEL::_END];
 
+	/* 네비메쉬용 변수*/
+	vector<_uint>	m_Passages;
+	vector<_float3>	m_NaviMeshes;
+	vector<_float3>	m_SortMeshes;
+
+
 public:
 	virtual void Free() override;
 

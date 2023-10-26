@@ -32,7 +32,7 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
-	else if (true == m_bAttack && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
+	else if (true == m_bAttack && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::ATTACK;
@@ -47,12 +47,12 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::WALK;
 	}
-	else if (true == m_bParry2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
+	else if (true == m_bParry2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
 	{
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 45, 2.f);
 		m_IsKeepParry = false;
 	}
-	else if (true == m_bParryRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
+	else if (true == m_bParryRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
 	{
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 2.f, 10);
 		m_IsKeepParry = false;

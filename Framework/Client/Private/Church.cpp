@@ -37,7 +37,7 @@ HRESULT CChurch::Initialize(void* pArg)
 
 void CChurch::PriorityTick(_float fTimeDelta)
 {
-	m_pNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+	//m_pNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CChurch::Tick(_float fTimeDelta)
@@ -70,8 +70,8 @@ HRESULT CChurch::Render()
 		m_pModelCom->Render(i);
 	}
 
-#ifndef NDEBUG
-	m_pNavigationCom->Render();
+#ifdef EDIT
+	//m_pNavigationCom->Render();
 #endif
 
 	return S_OK;
@@ -89,21 +89,21 @@ HRESULT CChurch::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
 		return E_FAIL;
 
-#ifndef NDEBUG
+#ifdef EDIT
 	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
+	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Church"),
+	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_Church"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* Com_Navigation */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+	/*if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), (CComponent**)&m_pNavigationCom)))
-		return E_FAIL;
+		return E_FAIL;*/
 #else
 	/* Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
@@ -205,7 +205,7 @@ void CChurch::Free()
 {
 	__super::Free();
 
-#ifndef NDEBUG
+#ifdef EDIT
 	Safe_Release(m_pNavigationCom);
 #endif // !NDEBUG
 

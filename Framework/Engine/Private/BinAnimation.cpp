@@ -106,8 +106,6 @@ void CBinAnimation::Set_StartKeyFrames(_uint iNumKeyFrame, _float fTimeDelta)
 		else if (iNumKeyFrame <= m_fTrackPosition)
 			return;
 		
-			
-
 		m_fTrackPosition += m_fTickPerSecond * fTimeDelta * 1.2f;
 
 		_uint	iNumChannel = 0;

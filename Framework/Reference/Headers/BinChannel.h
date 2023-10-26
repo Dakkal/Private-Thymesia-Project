@@ -17,7 +17,7 @@ public:
 public:
 	const vector<KEYFRAME>&		Get_KeyFrames() const { return m_KeyFrames; }
 	const _uint&				Get_Channel_BoneIndex() const { return m_iBoneIndex; }
-	KEYFRAME					Get_CurKeyFrame() { return m_CurKeyFrame; }
+	const KEYFRAME&					Get_CurKeyFrame() { return m_CurKeyFrame; }
 
 	void						Reset_CurKeyFrame() { m_CurKeyFrame = m_KeyFrames.front(); }
 

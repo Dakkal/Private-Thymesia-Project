@@ -15,11 +15,11 @@ CNavigation::CNavigation(CGameObject* pOwner, const CNavigation& rhs)
 	: CComponent(pOwner, rhs)
 	, m_iCurrentIndex(rhs.m_iCurrentIndex)
 	, m_Cells(rhs.m_Cells)
-#ifndef NDEBUG
+#ifdef EDIT
 	, m_pShader(rhs.m_pShader)
 #endif // !NDEBUG
 {
-#ifndef NDEBUG
+#ifdef EDIT
 	Safe_AddRef(m_pShader);
 #endif // !NDEBUG
 
@@ -32,12 +32,11 @@ HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationDataFiles)
 	CAsFileUtils In;
 	In.Open(strNavigationDataFiles, FileMode::Read);
 
-	_uint		iSize;
+	_uint		iCellSize;
 	_float3		vPoints[CCell::POINT_END] = {};
 	
-	In.Read<_uint>(iSize);
-
-	for (size_t i = 0; i < iSize; i+=3)
+	In.Read<_uint>(iCellSize);
+	for (size_t i = 0; i < iCellSize; i+=3)
 	{
 		In.Read<_float3>(vPoints[CCell::POINT_A]);
 		In.Read<_float3>(vPoints[CCell::POINT_B]);
@@ -53,7 +52,21 @@ HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationDataFiles)
 	if (FAILED(Set_Neighbors()))
 		return E_FAIL;
 
-#ifndef NDEBUG
+	_uint		iPassageSize;
+	_uint		iPassage;
+
+	In.Read<_uint>(iPassageSize);
+	for (size_t i = 0; i < iPassageSize; i++)
+	{
+		In.Read<_uint>(iPassage);
+		m_Passages.push_back(iPassage);
+	}
+
+	if (FAILED(Set_All_CelltoPassage()))
+		return E_FAIL;
+
+
+#ifdef EDIT
 	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cell.hlsl"), VTXPOS::tElements, VTXPOS::iNumElements);
 	if (nullptr == m_pShader)
 		return E_FAIL;
@@ -86,7 +99,7 @@ void CNavigation::Update(_matrix WorldMatrix)
 	}
 }
 
-_bool CNavigation::IsMove(_vector vPoint)
+const _int& CNavigation::IsMove(_vector vPoint)
 {
 	_int iNeighborIndex = 0;
 
@@ -97,7 +110,7 @@ _bool CNavigation::IsMove(_vector vPoint)
 			while (true)
 			{
 				if (-1 == iNeighborIndex)
-					return false;
+					return -1;
 
 				if (false == m_Cells[iNeighborIndex]->IsOut(vPoint, m_NaviWorldMatrix, iNeighborIndex))
 				{
@@ -105,17 +118,109 @@ _bool CNavigation::IsMove(_vector vPoint)
 					break;
 				}
 			}
-			return true;
+			return 0;
 		}
 		else
-			false;
+			-1;
 	
 	}
 	else
-		return true;
+		return 0;
 }
 
-#ifndef NDEBUG
+const _int& CNavigation::IsIn(_vector vPoint)
+{
+	_int iCurIndex = -1;
+
+	for (auto& pCell : m_Cells)
+	{
+		if (true == pCell->IsIn(vPoint, m_NaviWorldMatrix, iCurIndex))
+			return m_iCurrentIndex = iCurIndex;
+	}
+
+	return iCurIndex;
+}
+
+HRESULT CNavigation::Add_Cell(_float3* vPoints)
+{
+	CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, m_Cells.size());
+	if (nullptr == pCell)
+		return E_FAIL;
+
+	m_Cells.push_back(pCell);
+
+
+	if (FAILED(Set_Neighbors()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CNavigation::Delete_Last_Cell()
+{
+	Safe_Release(m_Cells.back());
+	m_Cells.pop_back();
+
+	return S_OK;
+}
+
+const _float3& CNavigation::Get_Closet_Cell_Point(_vector vPick)
+{
+	_float3 vWorldPick;
+	_float3	vReturnPoint;
+
+	for (auto& pCell : m_Cells)
+	{
+		if (nullptr != pCell->IsClose(vPick, m_NaviWorldMatrix, 0.5f, &vWorldPick))
+		{
+			return vReturnPoint = XMVector3TransformCoord(vWorldPick, m_NaviWorldMatrix);
+		}
+	}
+
+	return vReturnPoint = XMVector3TransformCoord(vPick, m_NaviWorldMatrix);
+}
+
+HRESULT CNavigation::Set_CelltoPassage(_uint iIndex)
+{
+	m_Cells[iIndex]->Set_Passage();
+
+	return S_OK;
+}
+
+HRESULT CNavigation::Set_All_CelltoPassage()
+{
+	for (auto& Passage : m_Passages)
+	{
+		m_Cells[Passage]->Set_Passage();
+	}
+
+	return S_OK;
+}
+
+HRESULT CNavigation::Save_Navi(const wstring& Path)
+{
+	CAsFileUtils Out;
+	Out.Open(Path, FileMode::Write);
+
+	Out.Write<_uint>(m_Cells.size());
+
+	for (size_t i = 0; i < m_Cells.size(); i++)
+	{
+		Out.Write<_float3>(*(m_Cells[i]->Get_Point(CCell::POINT_A)));
+		Out.Write<_float3>(*(m_Cells[i]->Get_Point(CCell::POINT_B)));
+		Out.Write<_float3>(*(m_Cells[i]->Get_Point(CCell::POINT_C)));
+	}
+
+	Out.Write<_uint>(m_Passages.size());
+	for (size_t i = 0; i < m_Passages.size(); i++)
+	{
+		Out.Write<_uint>(m_Passages[i]);
+	}
+
+	return S_OK;
+}
+
+#ifdef EDIT
 HRESULT CNavigation::Render()
 {
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_NaviWorldMatrix)))
@@ -233,7 +338,7 @@ void CNavigation::Free()
 {
 	__super::Free();
 
-#ifndef NDEBUG
+#ifdef EDIT
 	Safe_Release(m_pShader);
 #endif // !NDEBUG
 

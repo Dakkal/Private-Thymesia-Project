@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CTransform;
 class CStateMachine;
+class CNavigation;
 END
 
 BEGIN(Client)
@@ -34,8 +35,10 @@ private:
 	vector<class CGameObject*>		m_Parts;
 
 private: 
-	CTransform*		m_pTransformCom = { nullptr };
-	CStateMachine* m_pStateMachineCom = { nullptr };
+	CTransform*				m_pTransformCom = { nullptr };
+	CStateMachine*			m_pStateMachineCom = { nullptr };
+	CNavigation*			m_pCurNavigationCom = { nullptr };
+	vector<CNavigation*>	m_pNavigationComs;
 
 private:
 	HRESULT Ready_Components();

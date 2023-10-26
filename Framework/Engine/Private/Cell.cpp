@@ -23,11 +23,11 @@ HRESULT CCell::Initialize(const _float3* pPoints, _uint iIndex)
 
 	for (size_t i = 0; i < LINE_END; i++)
 	{
-		m_vNormals[i] = _float3(vLines[i].z * -1, 0.f, vLines[i].x);
+		m_vNormals[i] = _float3(vLines[i].z * -1, vLines[i].y, vLines[i].x);
 		m_vNormals[i].Normalize();
 	}
 
-#ifndef NDEBUG
+#ifdef EDIT
 	m_pVIBuffer = CVIBuffer_Cell::Create(m_pDevice, m_pContext, m_vPoints_Origin);
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
@@ -43,6 +43,16 @@ void CCell::Update(_matrix WorldMatrix)
 	{
 		m_vPoints_World[i] = XMVector3TransformCoord(m_vPoints_Origin[i], WorldMatrix);
 	}
+}
+
+void CCell::Set_Passage()
+{
+	if (-1 == m_iNeighborIndicies[LINE_AB])
+		m_iNeighborIndicies[LINE_AB] = -2;
+	if (-1 == m_iNeighborIndicies[LINE_BC])
+		m_iNeighborIndicies[LINE_AB] = -2;
+	if (-1 == m_iNeighborIndicies[LINE_CA])
+		m_iNeighborIndicies[LINE_AB] = -2;
 }
 
 _bool CCell::Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint)
@@ -91,7 +101,38 @@ _bool CCell::IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex)
 
 	return false;
 }
-#ifndef NDEBUG
+_bool CCell::IsIn(_vector vPoint, _matrix WorldMatrix, _int& pCurIndex)
+{
+	for (size_t i = 0; i < LINE_END; i++)
+	{
+		_vector vSour = vPoint - m_vPoints_World[i];
+		_vector vDest = XMVector3TransformNormal(m_vNormals[i], WorldMatrix);
+
+		if (0 >= vSour.Dot(vDest))
+		{
+			pCurIndex = m_iIndex;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+_float3* CCell::IsClose(_vector vPoint, _matrix WorldMatrix, _float CompareLength,  _float3* pPoint)
+{
+	for (size_t i = 0; i < POINT_END; i++)
+	{
+		_vector vDist = vPoint - m_vPoints_World[i];
+
+		if (0.5f >= vDist.Length())
+			return pPoint = &m_vPoints_World[i];
+
+	}
+
+	return nullptr;
+}
+
+#ifdef EDIT
 HRESULT CCell::Render()
 {
 	return m_pVIBuffer->Render();
@@ -114,7 +155,7 @@ void CCell::Free()
 {
 	__super::Free();
 
-#ifndef NDEBUG
+#ifdef EDIT
 	Safe_Release(m_pVIBuffer);
 #endif // !NDEBUG
 

@@ -6,6 +6,7 @@
 #include "Texture.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "Navigation.h"
 
 CBinModel::CBinModel(ID3D11Device* pDeivce, ID3D11DeviceContext* pContext)
 	: CComponent(pDeivce, pContext)
@@ -125,8 +126,7 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAni
 	if (iAnimationIndex >= m_iNumAnims ||
 		iAnimationIndex == m_iCurAnimIndex)
 	{
-		
-		
+	
 		return S_OK;
 	}
 		
@@ -264,7 +264,7 @@ HRESULT CBinModel::Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame)
 
 const _bool& CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
 {
-	auto KeyFrames = m_Animations[m_iCurAnimIndex]->Get_CurKeyFrames();
+	auto& KeyFrames = m_Animations[m_iCurAnimIndex]->Get_CurKeyFrames();
 
 	for (auto& KeyFrame : KeyFrames)
 	{
@@ -295,7 +295,7 @@ _int CBinModel::Get_BoneIndex(const string& strBoneName) const
 	return iBoneIndex;
 }
 
-HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDelta)
+HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDelta, class CNavigation* pNavi)
 {
 	if (nullptr == pTransform)
 		return E_FAIL;
@@ -312,7 +312,20 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 	_float fDist = vDir.Length() * 0.8f;
 
 	vPos += vWorldDir * fDist * fTimeDelta;
-	pTransform->Set_State(CTransform::STATE_POS, vPos);
+
+	if (nullptr != pNavi)
+	{
+		if(0 == pNavi->IsMove(vPos))
+			pTransform->Set_State(CTransform::STATE_POS, vPos);
+		else if (-2 == pNavi->IsMove(vPos))
+		{
+			if(true == m_pOwner->Find_NaviMesh())
+				pTransform->Set_State(CTransform::STATE_POS, vPos);
+		}
+			
+	}
+	else
+		pTransform->Set_State(CTransform::STATE_POS, vPos);
 
 	return S_OK;
 }

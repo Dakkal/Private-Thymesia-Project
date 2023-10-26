@@ -15,22 +15,25 @@ private:
 
 public:
 	void Set_Neighbor(LINE eLine, CCell* pCell) { m_iNeighborIndicies[eLine] = pCell->m_iIndex; }
+	void Set_Passage();
 public:
 	const _float3* Get_Point(POINTS ePoint) const { return &m_vPoints_Origin[ePoint]; }
 
 public:
-	HRESULT Initialize(const _float3* pPoints, _uint iIndex);
-	void	Update(_matrix WorldMatrix);
-	_bool	Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint);
-	_bool	IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex);
+	HRESULT		Initialize(const _float3* pPoints, _uint iIndex);
+	void		Update(_matrix WorldMatrix);
+	_bool		Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint);
+	_bool		IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex);
+	_bool		IsIn(_vector vPoint, _matrix WorldMatrix, _int& pCurIndex);
+	_float3*	IsClose(_vector vPoint, _matrix WorldMatrix, _float CompareLength, _float3* pPoint);
 
-#ifndef NDEBUG
+#ifdef EDIT
 public:
 	HRESULT Render();
 
 private:
 	class CVIBuffer_Cell* m_pVIBuffer = { nullptr };
-#endif // !NDEBUG
+#endif // !EDIT
 
 private:
 	ID3D11Device* m_pDevice = { nullptr };

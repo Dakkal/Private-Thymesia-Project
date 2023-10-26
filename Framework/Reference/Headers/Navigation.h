@@ -20,11 +20,21 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype(const wstring & strNavigationDataFiles);
 	virtual HRESULT Initialize(void* pArg) override;
-	void	Update(_matrix WorldMatrix);
+	void			Update(_matrix WorldMatrix);
 
-	_bool	IsMove(_vector vPoint);
+	const	_int&	IsMove(_vector vPoint);
+	const	_int&   IsIn(_vector vPoint);
 
-#ifndef NDEBUG
+public:
+	HRESULT	Add_Cell(_float3* vPoints);
+	HRESULT	Delete_Last_Cell();
+	const _float3& Get_Closet_Cell_Point(_vector vPick);
+
+	HRESULT	Set_CelltoPassage(_uint iIndex);
+	HRESULT	Set_All_CelltoPassage();
+	HRESULT	Save_Navi(const wstring& Path);
+
+#ifdef EDIT
 public:
 	HRESULT Render();
 
@@ -36,6 +46,7 @@ private:
 	static	_matrix			m_NaviWorldMatrix;
 	_int					m_iCurrentIndex = { -1 };
 	vector<class CCell*>	m_Cells;
+	vector<_uint>			m_Passages;
 
 private:
 	HRESULT	Set_Neighbors();

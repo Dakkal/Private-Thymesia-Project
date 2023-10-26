@@ -1,5 +1,7 @@
 #include "..\Public\Transform.h"
 #include "Shader.h"
+#include "Navigation.h"
+#include "GameObject.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -93,7 +95,7 @@ HRESULT CTransform::Bind_ShaderResources(CShader* pShader, const char* pConstant
 	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);
 }
 
-void CTransform::Go_Dir(_vector vDir, _float fTimeDelta)
+void CTransform::Go_Dir(_vector vDir, _float fTimeDelta, CNavigation* pNavi)
 {
 	_vector		vPosition = Get_State(STATE_POS);
 
@@ -103,7 +105,7 @@ void CTransform::Go_Dir(_vector vDir, _float fTimeDelta)
 	Set_State(STATE_POS, vPosition);
 }
 
-void CTransform::Go_Forward(_float fTimeDelta)
+void CTransform::Go_Forward(_float fTimeDelta, CNavigation* pNavi)
 {
 	_vector		vLook = Get_State(STATE_LOOK);
 	_vector		vPosition = Get_State(STATE_POS);
@@ -111,10 +113,22 @@ void CTransform::Go_Forward(_float fTimeDelta)
 	vLook.Normalize();
 	vPosition += vLook * m_TrasformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE_POS, vPosition);
+	if (nullptr != pNavi)
+	{
+		if (0 == pNavi->IsMove(vPosition))
+			Set_State(STATE_POS, vPosition);
+		else if (-2 == pNavi->IsMove(vPosition))
+		{
+			if (true == m_pOwner->Find_NaviMesh())
+				Set_State(STATE_POS, vPosition);
+		}
+
+	}
+	else
+		Set_State(STATE_POS, vPosition);
 }
 
-void CTransform::Go_Backward(_float fTimeDelta)
+void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNavi)
 {
 	_vector		vLook = Get_State(STATE_LOOK);
 	_vector		vPosition = Get_State(STATE_POS);
@@ -147,7 +161,7 @@ void CTransform::Go_Down(_float fTimeDelta)
 	Set_State(STATE_POS, vPosition);
 }
 
-void CTransform::Go_Left(_float fTimeDelta)
+void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNavi)
 {
 	_vector		vRight = Get_State(STATE_RIGHT);
 	_vector		vPosition = Get_State(STATE_POS);
@@ -158,7 +172,7 @@ void CTransform::Go_Left(_float fTimeDelta)
 	Set_State(STATE_POS, vPosition);
 }
 
-void CTransform::Go_Right(_float fTimeDelta)
+void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavi)
 {
 	_vector		vRight = Get_State(STATE_RIGHT);
 	_vector		vPosition = Get_State(STATE_POS);

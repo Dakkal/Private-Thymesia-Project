@@ -31,7 +31,7 @@ public:
 	HRESULT	Bind_MaterialTexture(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType eType);
 	HRESULT	Render(_uint iMeshIndex);
 	HRESULT Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame);
-	HRESULT	Set_OwnerPosToRootPos(class CTransform* pTransform, _float fTimeDelta);
+	HRESULT	Set_OwnerPosToRootPos(class CTransform* pTransform, _float fTimeDelta, class CNavigation* pNavi = nullptr);
 
 public:
 	const vector<class CBinMesh*>&			Get_Meshes()		{ return m_Meshes; }
