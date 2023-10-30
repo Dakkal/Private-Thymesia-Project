@@ -93,4 +93,5 @@ void CBinChannel::Free()
 	__super::Free();
 
 	m_KeyFrames.clear();
+
 }

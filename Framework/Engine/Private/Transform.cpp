@@ -147,7 +147,7 @@ void CTransform::Go_Forward(_float fTimeDelta, CNavigation* pNavi)
 				Set_State(STATE_POS, vPosition);
 			}
 		}
-		else
+		else if (-1 == iMove)
 		{
 			_vector vSlider = pNavi->Get_Cell_SliderVec(vLook);
 

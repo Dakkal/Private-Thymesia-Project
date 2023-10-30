@@ -126,6 +126,8 @@ _int CNavigation::IsMove(_vector vPoint)
 		{
 			while (true)
 			{
+				if (-2 == iNeighborIndex)
+					return -2;
 				if (-1 == iNeighborIndex)
 					return -1;
 
@@ -135,15 +137,15 @@ _int CNavigation::IsMove(_vector vPoint)
 					break;
 				}
 			}
-
 			return 0;
 		}
-		else if (-1 == iNeighborIndex)
+		else
 			return -1;
 	
 	}
 	else
 		return 0;
+
 }
 
 _int CNavigation::IsIn(_vector vPoint)
@@ -211,15 +213,10 @@ HRESULT CNavigation::Add_Cell(_float3* vPoints)
 
 HRESULT CNavigation::Delete_Last_Cell()
 {
-	CCell* pCell = nullptr;
 	if (0 < m_Cells.size())
 	{
-		pCell = m_Cells.back();
-		if (nullptr != pCell)
-		{
-			Safe_Release(pCell);
-			m_Cells.pop_back();
-		}
+		Safe_Release(m_Cells.back());
+		m_Cells.pop_back();
 	}
 	
 	return S_OK;

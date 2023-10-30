@@ -36,7 +36,7 @@ HRESULT CBoss_Urd::Initialize(void* pArg)
 	if (FAILED(Ready_PlayerParts()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POS, _vector(rand() % 20, 0.f, rand() % 20, 1.f));
+	//m_pTransformCom->Set_State(CTransform::STATE_POS, _vector(rand() % 20, 0.f, rand() % 20, 1.f));
 
 	return S_OK;
 }

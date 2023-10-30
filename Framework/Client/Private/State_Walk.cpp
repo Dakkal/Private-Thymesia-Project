@@ -207,6 +207,7 @@ void CState_Walk::Set_KeyVector()
 {
 	_vector vLook = m_pOwnerTransform->Get_State(CTransform::STATE_LOOK);
 	m_vKeyVector[KEY_W] = vLook;
+
 	_matrix matY = _matrix::CreateRotationY(XMConvertToRadians(90.f));
 	m_vKeyVector[KEY_D] = XMVector3TransformNormal(m_vKeyVector[KEY_W], matY);
 	m_vKeyVector[KEY_S] = XMVector3TransformNormal(m_vKeyVector[KEY_D], matY);

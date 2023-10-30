@@ -92,6 +92,8 @@ _bool CCell::IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex)
 	{
 		_vector vSour = vPoint - m_vPoints_World[i];
 		_vector vDest = XMVector3TransformNormal(m_vNormals[i], WorldMatrix);
+		vSour.Normalize();
+		vDest.Normalize();
 
 		if (0 < vSour.Dot(vDest))
 		{
@@ -114,6 +116,8 @@ _bool CCell::IsIn(_vector vPoint, _matrix WorldMatrix, _int& pCurIndex)
 	{
 		_vector vSour = vPoint - m_vPoints_World[i];
 		_vector vDest = XMVector3TransformNormal(m_vNormals[i], WorldMatrix);
+		vSour.Normalize();
+		vDest.Normalize();
 
 		if (0 < vSour.Dot(vDest))
 		{

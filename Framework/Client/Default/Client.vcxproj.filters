@@ -76,12 +76,6 @@
     <Filter Include="02.GameObject\Object\Monster">
       <UniqueIdentifier>{808aa973-9d4e-42ea-b5a7-0a17ff2ce930}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Object\Player\Body_Player">
-      <UniqueIdentifier>{57a98c84-04b1-4cce-a9fa-5b13005b1661}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Object\Player\Weapon_Player">
-      <UniqueIdentifier>{2b5430ab-562c-44f6-9dba-f5a5b5e25d0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Object\Boss">
       <UniqueIdentifier>{84aa8443-e56e-4668-836c-019926f3a692}</UniqueIdentifier>
     </Filter>
@@ -108,6 +102,15 @@
     </Filter>
     <Filter Include="02.GameObject\Object\Player\Camera_Player">
       <UniqueIdentifier>{98d54c00-4e02-410f-a281-38f55030571a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Player\Part">
+      <UniqueIdentifier>{83a1639c-7ae2-4904-b06b-a5c5c7b7cf01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Player\Part\Body_Player">
+      <UniqueIdentifier>{57a98c84-04b1-4cce-a9fa-5b13005b1661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Player\Part\Weapon_Player">
+      <UniqueIdentifier>{2b5430ab-562c-44f6-9dba-f5a5b5e25d0e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,13 +190,13 @@
       <Filter>02.GameObject\Object</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
-      <Filter>02.GameObject\Object\Player\Body_Player</Filter>
+      <Filter>02.GameObject\Object\Player\Part\Body_Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon_Player_Saber.cpp">
-      <Filter>02.GameObject\Object\Player\Weapon_Player</Filter>
+      <Filter>02.GameObject\Object\Player\Part\Weapon_Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon_Player_Dagger.cpp">
-      <Filter>02.GameObject\Object\Player\Weapon_Player</Filter>
+      <Filter>02.GameObject\Object\Player\Part\Weapon_Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Boss_Urd.cpp">
       <Filter>02.GameObject\Object\Boss\Boss_Urd</Filter>
@@ -318,13 +321,13 @@
       <Filter>02.GameObject\Object</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player_Saber.h">
-      <Filter>02.GameObject\Object\Player\Weapon_Player</Filter>
+      <Filter>02.GameObject\Object\Player\Part\Weapon_Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObject\Object\Player\Body_Player</Filter>
+      <Filter>02.GameObject\Object\Player\Part\Body_Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player_Dagger.h">
-      <Filter>02.GameObject\Object\Player\Weapon_Player</Filter>
+      <Filter>02.GameObject\Object\Player\Part\Weapon_Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Boss_Urd.h">
       <Filter>02.GameObject\Object\Boss\Boss_Urd</Filter>

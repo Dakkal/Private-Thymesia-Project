@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 #include "BinBone.h"
+#include "Collider.h"
+#include "Bounding_Sphere.h"
 
 CWeapon_Player_Dagger::CWeapon_Player_Dagger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -50,6 +52,9 @@ void CWeapon_Player_Dagger::Tick(_float fTimeDelta)
 	WorldMatrix.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
 
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix() * WorldMatrix);
+
+	/* 계산한뒤에 월드를 콜라이더에 업데이트 */
+	m_pColliderCom->Update(m_WorldMatrix);
 }
 
 void CWeapon_Player_Dagger::LateTick(_float fTimeDelta)
@@ -77,6 +82,10 @@ HRESULT CWeapon_Player_Dagger::Render()
 			return E_FAIL;
 	}
 
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+#endif
+
 	return S_OK;
 }
 
@@ -100,6 +109,15 @@ HRESULT CWeapon_Player_Dagger::Ready_Components()
 	/* Com_Transform */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
+		return E_FAIL;
+
+	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
+	SphereDesc.fRadius = 0.12f;
+	SphereDesc.vCenter = _float3(0.25f, 0.f, 0.f);
+	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider_Sphere"), (CComponent**)&m_pColliderCom, &SphereDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -186,6 +204,7 @@ void CWeapon_Player_Dagger::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);

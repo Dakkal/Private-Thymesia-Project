@@ -22,24 +22,10 @@ HRESULT CState_Avoid::Initialize()
 
 STATE CState_Avoid::Tick(const _float& fTimeDelta)
 {
-	STATE eState;
-
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (m_pOwnerBodyPart->IsAnimationEnd())
 	{
-		eState = STATE::IDLE;
-
-
-
-		if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
-		{
-			RELEASE_INSTANCE(CGameInstance);
-			return STATE::PARRY;
-		}
-		if (true == m_bIsAttack)
-			return STATE::ATTACK;
-
 		if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
 			pGameInstance->Get_DIKeyState(DIK_D) & 0x80 ||
 			pGameInstance->Get_DIKeyState(DIK_S) & 0x80 ||
@@ -48,16 +34,31 @@ STATE CState_Avoid::Tick(const _float& fTimeDelta)
 			RELEASE_INSTANCE(CGameInstance);
 			return STATE::WALK;
 		}
-
+		else
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::IDLE;
+		}
 		
-	
 	}
-	else
-		eState = m_eState;
+	else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	{
+		if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::PARRY;
+		}
+		if (true == m_bIsAttack)
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::ATTACK;
+		}
+			
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
 
-	return eState;
+	return m_eState;
 }
 
 STATE CState_Avoid::LateTick(const _float& fTimeDelta)

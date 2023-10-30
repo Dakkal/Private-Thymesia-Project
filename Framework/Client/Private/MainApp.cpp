@@ -175,36 +175,6 @@ HRESULT CMainApp::Create_FakeTexture()
 	Safe_Delete_Array(pPixel);
 	Safe_Release(pTexture2D);
 
-	// 가라 네비
-	CAsFileUtils Out;
-	Out.Open(TEXT("../Bin/Data/Navigation.dat"), FileMode::Write);
-
-	_float3			vPoints;
-	vector<_float3> vecPoints;
-
-	vecPoints.push_back(_float3(0.f, 0.f, 10.f));
-	vecPoints.push_back(_float3(10.f, 0.f, 0.f));
-	vecPoints.push_back(_float3(0.f, 0.f, 0.f));
-
-	vecPoints.push_back(_float3(0.f, 0.f, 10.f));
-	vecPoints.push_back(_float3(10.f, 0.f, 10.f));
-	vecPoints.push_back(_float3(10.f, 0.f, 0.f));
-
-	vecPoints.push_back(_float3(0.f, 0.f, 20.f));
-	vecPoints.push_back(_float3(10.f, 0.f, 10.f));
-	vecPoints.push_back(_float3(0.f, 0.f, 10.f));
-
-	vecPoints.push_back(_float3(10.f, 0.f, 10.f));
-	vecPoints.push_back(_float3(20.f, 0.f, 0.f));
-	vecPoints.push_back(_float3(10.f, 0.f, 0.f));
-
-	Out.Write<_uint>(vecPoints.size());
-
-	for (size_t i = 0; i < vecPoints.size(); i++)
-	{
-		Out.Write<_float3>(vecPoints[i]);
-	}
-
 	return S_OK;
 }
 

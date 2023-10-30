@@ -114,7 +114,7 @@ void CLandObject::Free()
 		{
 			Safe_Release(pNavi);
 		}
-		m_NavigationComs.clear();
 	}
+	m_NavigationComs.clear();
 
 }

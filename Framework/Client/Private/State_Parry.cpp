@@ -32,29 +32,29 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
-	else if (true == m_bAttack && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	else if (true == m_bAttack && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::ATTACK;
 	}
-	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
-	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::WALK;
 	}
 	else if (true == m_bParry2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 45, 2.8f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 45, 3.f);
 		m_IsKeepParry = false;
 	}
 	else if (true == m_bParryRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 2.8f, 10);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 3.f, 10);
 		m_IsKeepParry = false;
 	}
 	else
@@ -134,7 +134,7 @@ STATE CState_Parry::LateTick(const _float& fTimeDelta)
 
 void CState_Parry::Enter_State()
 {
-	m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 2.5f);
+	m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 3.f);
 	m_bParry1 = true;
 }
 

@@ -3,12 +3,16 @@
 
 #include "GameInstance.h"
 #include "PartObject.h"
+
 #include "StateMachine.h"
 #include "State_Idle.h"
 #include "State_Walk.h"
 #include "State_Avoid.h"
 #include "State_Attack.h"
 #include "State_Parry.h"
+
+#include "Collider.h"
+#include "Bounding_Sphere.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLandObject(pDevice, pContext)
@@ -57,6 +61,8 @@ void CPlayer::Tick(_float fTimeDelta)
 		if (nullptr != pPart)
 			pPart->Tick(fTimeDelta);
 	}
+
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
@@ -77,10 +83,9 @@ HRESULT CPlayer::Render()
 #ifdef _DEBUG
 	if (nullptr != m_pCurNavigationCom)
 		m_pCurNavigationCom->Render();
+
+	m_pColliderCom->Render();
 #endif // DEBUG
-
-
-	
 
 	return S_OK;
 }
@@ -113,8 +118,17 @@ HRESULT CPlayer::Ready_Components()
 	m_NavigationComs.push_back(pNavigation);
 
 	m_pCurNavigationCom = pNavigation;
-	m_pCurNavigationCom->Update(m_pCurNavigationCom->Get_Navi_Matrix());
 	m_pCurNavigationCom->Set_toCell(5, m_pTransformCom);
+
+	/* Com_Collider_Sphere */
+	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
+	SphereDesc.fRadius = 2.f;
+	SphereDesc.vCenter = _float3(0.f, 0.01f, 0.f);
+	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	SphereDesc.vColor = _vector(1.f, 1.f, 0.f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider_Sphere"), (CComponent**)&m_pColliderCom, &SphereDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -232,6 +246,7 @@ void CPlayer::Free()
 		Safe_Release(pPart);
 	m_Parts.clear();
 
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pStateMachineCom);

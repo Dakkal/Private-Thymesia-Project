@@ -63,8 +63,6 @@ STATE CState_Idle::Key_Input(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::PARRY;
 	}
-
-
 	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
 		pGameInstance->Get_DIKeyState(DIK_D) & 0x80 ||
 		pGameInstance->Get_DIKeyState(DIK_S) & 0x80 ||

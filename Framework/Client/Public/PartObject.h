@@ -8,6 +8,7 @@ class CBinModel;
 class CShader;
 class CTransform;
 class CRenderer;
+class CCollider;
 END
 
 BEGIN(Client)
@@ -62,6 +63,7 @@ protected:
 	CTransform* m_pTransformCom = { nullptr };
 	CShader*	m_pShaderCom = { nullptr };
 	CBinModel*	m_pModelCom = { nullptr };
+	CCollider*	m_pColliderCom = { nullptr };
 
 protected:
 	HRESULT Compute_RenderMatrix(_matrix ChildMatrix);

@@ -18,6 +18,14 @@
 #include <DirectXTK\ScreenGrab.h>
 #include <DirectXCollision.h>
 #include <DirectXCollision.inl>
+
+#include <DirectXTK\PrimitiveBatch.h>
+#include <DirectXTK\VertexTypes.h>
+#include <DirectXTK\Effects.h>
+
+#include <DirectXTK\SpriteBatch.h>
+#include <DirectXTK\SpriteFont.h>
+
 using namespace DirectX;
 
 /* assimp */

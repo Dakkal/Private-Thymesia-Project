@@ -140,7 +140,6 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAni
 
 	m_Animations[m_iNextAnimIndex]->Reset();
 	m_Animations[m_iNextAnimIndex]->Set_AnimSpeed(fAnimSpeed);
-	
 
 	return S_OK;
 }
@@ -264,6 +263,7 @@ HRESULT CBinModel::Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame)
 
 _bool CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
 {
+	/* 애니메이션 전환중에는 확인할 필요X */
 	if (true == m_bIsAnimChange)
 		return false;
 

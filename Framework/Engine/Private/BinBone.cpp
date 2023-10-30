@@ -37,7 +37,6 @@ HRESULT CBinBone::Update_CombinedTransformationMatrix(const vector<class CBinBon
 			memcpy(&m_RootPos, &m_RootCombinedMatrix.m[3], sizeof(_vector));
 
 			_vector Zero = _vector(0.f, 0.f, 0.f, 1.f);
-
 			memcpy(&m_ComBinedTransformationMatrix.m[3], &Zero, sizeof(_vector));
 		}
 	}

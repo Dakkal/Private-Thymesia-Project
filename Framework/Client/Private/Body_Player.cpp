@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "BinMesh.h"
 #include "LandObject.h"
+#include "Collider.h"
+#include "Bounding_AABB.h"
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -46,6 +48,9 @@ void CBody_Player::Tick(_float fTimeDelta)
 	dynamic_cast<CLandObject*>(m_pOwner)->Set_On_NaviMesh(m_pParentTransform);
 
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix());
+
+	/* 계산한뒤에 월드를 업데이트 */
+	m_pColliderCom->Update(m_WorldMatrix);
 }
 
 void CBody_Player::LateTick(_float fTimeDelta)
@@ -87,6 +92,10 @@ HRESULT CBody_Player::Render()
 			return E_FAIL;
 	}
 
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+#endif
+
 	return S_OK;
 }
 
@@ -112,6 +121,16 @@ HRESULT CBody_Player::Ready_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	/* For.Com_Collider_AABB */
+	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
+	AABBDesc.vExtents = _float3(0.3f, 0.85f, 0.3f);
+	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
+	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	AABBDesc.vColor = _vector( 0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider_AABB"), (CComponent**)&m_pColliderCom, &AABBDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -198,6 +217,7 @@ void CBody_Player::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);

@@ -8,8 +8,8 @@ class ENGINE_DLL CVIBuffer_Terrain final : public CVIBuffer
 public:
 	typedef struct tagTerrain_Desc 
 	{
-		_int			iNumVerticesX;
-		_int			iNumVerticesZ;
+		_ulong			iNumVerticesX;
+		_ulong			iNumVerticesZ;
 		_bool			bIsWireFrame;
 
 	}TERRAIN_DESC;
