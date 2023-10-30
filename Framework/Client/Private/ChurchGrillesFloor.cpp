@@ -80,7 +80,7 @@ HRESULT CChurchGrillesFloor::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
 		return E_FAIL;
 
-#ifdef EDIT
+#ifdef _DEBUG
 	/* Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))

@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "BinMesh.h"
+#include "LandObject.h"
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -41,7 +42,8 @@ void CBody_Player::Tick(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta);
 
-	m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta);
+	m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta, dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom());
+	dynamic_cast<CLandObject*>(m_pOwner)->Set_On_NaviMesh(m_pParentTransform);
 
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix());
 }

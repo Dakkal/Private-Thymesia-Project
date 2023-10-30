@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CGameObject;
+class CNavigation;
 END
 
 
@@ -50,6 +51,11 @@ private:
 
 	HRESULT List_Object();
 	void	ChangeListToSelectObj();
+
+	/* 네비메쉬용 함수 */
+	HRESULT NaviMesh();
+	HRESULT SortPoint(_float3* pPoints);
+
 
 
 	void ImGuiStyles();
@@ -109,9 +115,12 @@ private:
 	_vector			m_vPropPos[(_uint)LEVEL::_END];
 
 	/* 네비메쉬용 변수*/
+	_int	m_iInCell = { -1 };
+	_bool m_bIsMakeNavi = { false };
+	class CNavigation* pNavigation = { nullptr };
 	vector<_uint>	m_Passages;
 	vector<_float3>	m_NaviMeshes;
-	vector<_float3>	m_SortMeshes;
+	vector<_float3> m_Points;
 
 
 public:

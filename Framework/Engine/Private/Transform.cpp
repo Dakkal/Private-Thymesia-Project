@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Navigation.h"
 #include "GameObject.h"
+#include "LandObject.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -97,12 +98,30 @@ HRESULT CTransform::Bind_ShaderResources(CShader* pShader, const char* pConstant
 
 void CTransform::Go_Dir(_vector vDir, _float fTimeDelta, CNavigation* pNavi)
 {
+	_vector		vLook = Get_State(STATE_LOOK);
 	_vector		vPosition = Get_State(STATE_POS);
 
 	vDir.Normalize();
 	vPosition += vDir * m_TrasformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE_POS, vPosition);
+	if (nullptr != pNavi)
+	{
+		_int iMove = pNavi->IsMove(vPosition);
+
+		if (0 == iMove)
+		{
+			Set_State(STATE_POS, vPosition);
+		}
+		else if (-2 == iMove)
+		{
+			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
+			{
+				Set_State(STATE_POS, vPosition);
+			}
+		}
+	}
+	else
+		Set_State(STATE_POS, vPosition);
 }
 
 void CTransform::Go_Forward(_float fTimeDelta, CNavigation* pNavi)
@@ -115,12 +134,25 @@ void CTransform::Go_Forward(_float fTimeDelta, CNavigation* pNavi)
 
 	if (nullptr != pNavi)
 	{
-		if (0 == pNavi->IsMove(vPosition))
-			Set_State(STATE_POS, vPosition);
-		else if (-2 == pNavi->IsMove(vPosition))
+		_int iMove = pNavi->IsMove(vPosition);
+
+		if (0 == iMove)
 		{
-			if (true == m_pOwner->Find_NaviMesh())
+			Set_State(STATE_POS, vPosition);
+		}
+		else if (-2 == iMove)
+		{
+			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
+			{
 				Set_State(STATE_POS, vPosition);
+			}
+		}
+		else
+		{
+			_vector vSlider = pNavi->Get_Cell_SliderVec(vLook);
+
+			if (-1 != vSlider.w)
+				Go_Dir(vSlider, fTimeDelta, pNavi);
 		}
 
 	}
@@ -136,7 +168,26 @@ void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNavi)
 	vLook.Normalize();
 	vPosition -= vLook * m_TrasformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE_POS, vPosition);
+	if (nullptr != pNavi)
+	{
+		_int iMove = pNavi->IsMove(vPosition);
+
+		if (0 == iMove)
+		{
+			Set_State(STATE_POS, vPosition);
+		}
+		else if (-2 == iMove)
+		{
+			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
+			{
+				Set_State(STATE_POS, vPosition);
+			}
+		}
+		
+
+	}
+	else
+		Set_State(STATE_POS, vPosition);
 }
 
 void CTransform::Go_Up(_float fTimeDelta)
@@ -169,7 +220,25 @@ void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNavi)
 	vRight.Normalize();
 	vPosition -= vRight * m_TrasformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE_POS, vPosition);
+	if (nullptr != pNavi)
+	{
+		_int iMove = pNavi->IsMove(vPosition);
+
+		if (0 == iMove)
+		{
+			Set_State(STATE_POS, vPosition);
+		}
+		else if (-2 == iMove)
+		{
+			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
+			{
+				Set_State(STATE_POS, vPosition);
+			}
+		}
+
+	}
+	else
+		Set_State(STATE_POS, vPosition);
 }
 
 void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavi)
@@ -180,7 +249,25 @@ void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavi)
 	vRight.Normalize();
 	vPosition += vRight * m_TrasformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE_POS, vPosition);
+	if (nullptr != pNavi)
+	{
+		_int iMove = pNavi->IsMove(vPosition);
+
+		if (0 == iMove)
+		{
+			Set_State(STATE_POS, vPosition);
+		}
+		else if (-2 == iMove)
+		{
+			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
+			{
+				Set_State(STATE_POS, vPosition);
+			}
+		}
+
+	}
+	else
+		Set_State(STATE_POS, vPosition);
 }
 
 void CTransform::Fix_Rotation(_vector vAxis, _float fRadian)

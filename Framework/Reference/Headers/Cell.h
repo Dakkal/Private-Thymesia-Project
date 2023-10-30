@@ -25,9 +25,13 @@ public:
 	_bool		Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint);
 	_bool		IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex);
 	_bool		IsIn(_vector vPoint, _matrix WorldMatrix, _int& pCurIndex);
-	_float3*	IsClose(_vector vPoint, _matrix WorldMatrix, _float CompareLength, _float3* pPoint);
+	_float3*	IsClose(_vector vPoint, _float CompareLength);
+	
+public:
+	_float3		Get_Middle_Pos();
+	const _vector&	Get_SlideNormal() { return m_vSlideNormal; }
 
-#ifdef EDIT
+#ifdef _DEBUG
 public:
 	HRESULT Render();
 
@@ -43,9 +47,9 @@ private:
 	_uint				m_iIndex = {};
 
 	_float3				m_vPoints_Origin[POINT_END];
-	
 	_float3				m_vPoints_World[POINT_END];
 	_float3				m_vNormals[LINE_END];
+	_vector				m_vSlideNormal = { -1.f, -1.f, -1.f, -1.f };
 
 	_int				m_iNeighborIndicies[LINE_END] = { -1, -1, -1 };
 

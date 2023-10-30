@@ -47,7 +47,7 @@ STATE CState_Attack::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::WALK;
 	}
-	else if (true == m_bAttack2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(22))
+	else if (true == m_bAttack2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
 	{
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 105, 2.f);
 		m_IsKeepAttack = false;

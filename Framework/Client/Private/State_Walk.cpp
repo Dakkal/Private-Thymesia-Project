@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "StateMachine.h"
 #include "State_Walk.h"
+#include "LandObject.h"
 
 CState_Walk::CState_Walk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
@@ -143,7 +144,8 @@ STATE CState_Walk::Key_Input(const _float& fTimeDelta)
 		}
 
 		m_pOwnerTransform->Set_Look(RotDir);
-		m_pOwnerTransform->Go_Forward(fTimeDelta);
+		m_pOwnerTransform->Go_Forward(fTimeDelta, dynamic_cast<CLandObject*>(m_pRealOwner)->Get_CurNaviCom());
+		dynamic_cast<CLandObject*>(m_pRealOwner)->Set_On_NaviMesh(m_pOwnerTransform);
 		
 
 		RELEASE_INSTANCE(CGameInstance);
@@ -189,7 +191,8 @@ STATE CState_Walk::Mouse_Move(const _float& fTimeDelta)
 		}
 
 		m_pOwnerTransform->Set_Look(RotDir);
-		m_pOwnerTransform->Go_Forward(fTimeDelta);
+		m_pOwnerTransform->Go_Forward(fTimeDelta, dynamic_cast<CLandObject*>(m_pRealOwner)->Get_CurNaviCom());
+		dynamic_cast<CLandObject*>(m_pRealOwner)->Set_On_NaviMesh(m_pOwnerTransform);
 
 		RELEASE_INSTANCE(CGameInstance);
 		return m_eState;

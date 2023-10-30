@@ -15,6 +15,8 @@
 #include "Layer.h"
 #include "VIBuffer.h"
 #include "BinMesh.h"
+#include "Navigation.h"
+#include "LandObject.h"
 
 IMPLEMENT_SINGLETON(CImgui_Manager)
 
@@ -85,6 +87,9 @@ HRESULT CImgui_Manager::Tick(_float fTimeDelta)
     // 마우스 좌표 출력
     Mouse_Pos();
     List_Object();
+
+    /* 네비메쉬 */
+    NaviMesh();
 
 	return S_OK;
 }
@@ -1225,6 +1230,135 @@ void CImgui_Manager::ChangeListToSelectObj()
         m_vPropPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
 ;
     }
+}
+
+HRESULT CImgui_Manager::NaviMesh()
+{
+    ImGui::Begin("Navi Mesh");
+
+    if (ImGui::Button("Create NaviMesh"))
+    {
+        CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+        if (nullptr != m_pSelectObject)
+        {
+            CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
+            _matrix mat = pTransform->Get_WorldMatrix();
+            CNavigation* pNavi = CNavigation::Create(m_pDevice, m_pContext, mat);
+
+            dynamic_cast<CLandObject*>(m_pSelectObject)->Set_CurNaviCom(pNavi);
+        }
+        RELEASE_INSTANCE(CGameInstance);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Save"))
+    {
+        wstring strName = m_pSelectObject->Get_Name();
+        wstring strPath = TEXT("../Bin/Data/Navigation/") + strName + TEXT(".dat");
+
+        dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->Save_Navi(strPath);
+    }
+    if (ImGui::CollapsingHeader("Let's Make Navi"))
+    {
+        if (ImGui::Button("Start|Pause"))
+        {
+            if (false == m_bIsMakeNavi)
+            {
+                m_bIsMakeNavi = true;
+            }
+            else
+            {
+                m_bIsMakeNavi = false;
+                m_Points.clear();
+            }
+
+               
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Delete"))
+        {
+            dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->Delete_Last_Cell();
+        }
+        ImGui::Spacing();
+        if (ImGui::Button("Get Index"))
+        {
+            m_iInCell = dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->CheckIn(m_vObjectPos[m_iCurLevel]);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("SetPassage"))
+        {
+            if (false == m_bIsMakeNavi)
+            {
+                if (m_iInCell != -1)
+                {
+                    dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->Set_CelltoPassage(m_iInCell);
+                }
+            }  
+        }
+        ImGui::Spacing();
+        ImGui::Text("Navi Index : %d", m_iInCell);
+        if (true == m_bIsMakeNavi)
+        {
+            ImGui::Text("Make Cell Activated");
+        }
+        else
+        {
+            ImGui::Text("Make Cell DeActivated");
+        }
+
+        if (nullptr != m_pSelectObject && true == m_bIsMakeNavi)
+        {
+            CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+            _vector vPick = m_vObjectPos[m_iCurLevel];
+
+            if (false == Is_MouseClickedGUI() && pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON))
+            {
+                _float3 vRealPick = dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->Get_Closet_Cell_Point(vPick);
+
+                m_Points.push_back(vRealPick);
+            }
+
+            if (3 <= m_Points.size())
+            {
+                _float3* pPoints = new _float3[3];
+
+                for (size_t i = 0; i < 3; i++)
+                {
+                    pPoints[i] = m_Points[i];
+                }
+                SortPoint(pPoints);
+                dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->Add_Cell(pPoints);
+
+                Safe_Delete_Array(pPoints);
+                m_Points.clear();
+            }
+
+
+            RELEASE_INSTANCE(CGameInstance);
+        }
+       
+    }
+  
+
+    ImGui::End();
+
+    return S_OK;
+}
+
+HRESULT CImgui_Manager::SortPoint(_float3* pPoints)
+{
+    _float fValue1 = pPoints[0].x * pPoints[1].z + pPoints[1].x * pPoints[2].z + pPoints[2].x * pPoints[0].z;
+    _float fValue2 = pPoints[1].x * pPoints[0].z + pPoints[2].x * pPoints[1].z + pPoints[0].x * pPoints[2].z;
+    _float fResult = fValue1 - fValue2;
+
+    if (fResult > 0)
+    {
+        _float3 vTemp = pPoints[0];
+        pPoints[0] = pPoints[2];
+        pPoints[2] = vTemp;
+    }
+    return S_OK;
 }
 
 void CImgui_Manager::ImGuiStyles()

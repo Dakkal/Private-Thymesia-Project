@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "PipeLine.h"
 #include "AsFileUtils.h"
+#include "Transform.h"
 
 _matrix CNavigation::m_NaviWorldMatrix = {};
 
@@ -15,11 +16,11 @@ CNavigation::CNavigation(CGameObject* pOwner, const CNavigation& rhs)
 	: CComponent(pOwner, rhs)
 	, m_iCurrentIndex(rhs.m_iCurrentIndex)
 	, m_Cells(rhs.m_Cells)
-#ifdef EDIT
+#ifdef _DEBUG
 	, m_pShader(rhs.m_pShader)
 #endif // !NDEBUG
 {
-#ifdef EDIT
+#ifdef _DEBUG
 	Safe_AddRef(m_pShader);
 #endif // !NDEBUG
 
@@ -36,7 +37,7 @@ HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationDataFiles)
 	_float3		vPoints[CCell::POINT_END] = {};
 	
 	In.Read<_uint>(iCellSize);
-	for (size_t i = 0; i < iCellSize; i+=3)
+	for (size_t i = 0; i < iCellSize; i++)
 	{
 		In.Read<_float3>(vPoints[CCell::POINT_A]);
 		In.Read<_float3>(vPoints[CCell::POINT_B]);
@@ -65,8 +66,20 @@ HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationDataFiles)
 	if (FAILED(Set_All_CelltoPassage()))
 		return E_FAIL;
 
+#ifdef _DEBUG
+	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cell.hlsl"), VTXPOS::tElements, VTXPOS::iNumElements);
+	if (nullptr == m_pShader)
+		return E_FAIL;
+#endif // !NDEBUG
 
-#ifdef EDIT
+	return S_OK;
+}
+
+HRESULT CNavigation::Initialize_Alone(const _matrix& NaviMatrix)
+{
+	m_NaviWorldMatrix = NaviMatrix;
+
+#ifdef _DEBUG
 	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cell.hlsl"), VTXPOS::tElements, VTXPOS::iNumElements);
 	if (nullptr == m_pShader)
 		return E_FAIL;
@@ -99,13 +112,17 @@ void CNavigation::Update(_matrix WorldMatrix)
 	}
 }
 
-const _int& CNavigation::IsMove(_vector vPoint)
+_int CNavigation::IsMove(_vector vPoint)
 {
 	_int iNeighborIndex = 0;
 
 	if (true == m_Cells[m_iCurrentIndex]->IsOut(vPoint, m_NaviWorldMatrix, iNeighborIndex))
 	{
-		if (-1 != iNeighborIndex)
+		if (-2 == iNeighborIndex)
+		{
+			return -2;
+		}
+		else if (-1 != iNeighborIndex)
 		{
 			while (true)
 			{
@@ -118,17 +135,18 @@ const _int& CNavigation::IsMove(_vector vPoint)
 					break;
 				}
 			}
+
 			return 0;
 		}
-		else
-			-1;
+		else if (-1 == iNeighborIndex)
+			return -1;
 	
 	}
 	else
 		return 0;
 }
 
-const _int& CNavigation::IsIn(_vector vPoint)
+_int CNavigation::IsIn(_vector vPoint)
 {
 	_int iCurIndex = -1;
 
@@ -137,8 +155,44 @@ const _int& CNavigation::IsIn(_vector vPoint)
 		if (true == pCell->IsIn(vPoint, m_NaviWorldMatrix, iCurIndex))
 			return m_iCurrentIndex = iCurIndex;
 	}
-
 	return iCurIndex;
+}
+
+_int CNavigation::CheckIn(_vector vPoint)
+{
+	_int iCurIndex = -1;
+
+	for (auto& pCell : m_Cells)
+	{
+		if (true == pCell->IsIn(vPoint, m_NaviWorldMatrix, iCurIndex))
+			return iCurIndex;
+	}
+	return iCurIndex;
+}
+
+HRESULT CNavigation::Set_toCell(_uint iIndex, CTransform* pTransform)
+{
+	if (iIndex >= m_Cells.size())
+		return E_FAIL;
+
+	m_iCurrentIndex = iIndex;
+	_float3 vPos = m_Cells[iIndex]->Get_Middle_Pos();
+	_vector vSetPos = _vector(vPos);
+	vSetPos.w = 1;
+	pTransform->Set_State(CTransform::STATE_POS, vSetPos);
+
+	return S_OK;
+}
+
+_vector CNavigation::Get_Cell_SliderVec(_vector vLook)
+{
+	_vector vContactNormal = m_Cells[m_iCurrentIndex]->Get_SlideNormal();
+	if (-1 == vContactNormal.w)
+		return vContactNormal;
+
+	_vector vSlider = vLook - vLook.Dot(vContactNormal) * vContactNormal;
+
+	return vSlider;
 }
 
 HRESULT CNavigation::Add_Cell(_float3* vPoints)
@@ -149,7 +203,6 @@ HRESULT CNavigation::Add_Cell(_float3* vPoints)
 
 	m_Cells.push_back(pCell);
 
-
 	if (FAILED(Set_Neighbors()))
 		return E_FAIL;
 
@@ -158,31 +211,43 @@ HRESULT CNavigation::Add_Cell(_float3* vPoints)
 
 HRESULT CNavigation::Delete_Last_Cell()
 {
-	Safe_Release(m_Cells.back());
-	m_Cells.pop_back();
-
+	CCell* pCell = nullptr;
+	if (0 < m_Cells.size())
+	{
+		pCell = m_Cells.back();
+		if (nullptr != pCell)
+		{
+			Safe_Release(pCell);
+			m_Cells.pop_back();
+		}
+	}
+	
 	return S_OK;
 }
 
-const _float3& CNavigation::Get_Closet_Cell_Point(_vector vPick)
+_float3 CNavigation::Get_Closet_Cell_Point(_vector vPick)
 {
-	_float3 vWorldPick;
+	_float3* pWorldPick = nullptr;
 	_float3	vReturnPoint;
 
 	for (auto& pCell : m_Cells)
 	{
-		if (nullptr != pCell->IsClose(vPick, m_NaviWorldMatrix, 0.5f, &vWorldPick))
+		pWorldPick = pCell->IsClose(vPick, 0.3f);
+		if (nullptr != pWorldPick)
 		{
-			return vReturnPoint = XMVector3TransformCoord(vWorldPick, m_NaviWorldMatrix);
+			vReturnPoint = XMVector3TransformCoord(*pWorldPick, m_NaviWorldMatrix.Invert());
+			return vReturnPoint;
 		}
 	}
 
-	return vReturnPoint = XMVector3TransformCoord(vPick, m_NaviWorldMatrix);
+	vReturnPoint = XMVector3TransformCoord(vPick, m_NaviWorldMatrix.Invert());
+	return vReturnPoint;
 }
 
 HRESULT CNavigation::Set_CelltoPassage(_uint iIndex)
 {
 	m_Cells[iIndex]->Set_Passage();
+	m_Passages.push_back(iIndex);
 
 	return S_OK;
 }
@@ -220,7 +285,7 @@ HRESULT CNavigation::Save_Navi(const wstring& Path)
 	return S_OK;
 }
 
-#ifdef EDIT
+#ifdef _DEBUG
 HRESULT CNavigation::Render()
 {
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_NaviWorldMatrix)))
@@ -247,7 +312,7 @@ HRESULT CNavigation::Render()
 		if (FAILED(m_pShader->Bind_RawValue("g_vLineColor", &vColor, sizeof(_vector))))
 			return E_FAIL;
 
-		fHeight = 0.1f;
+		fHeight = 0.02f;
 		if (FAILED(m_pShader->Bind_RawValue("g_fHeight", &fHeight, sizeof(_float))))
 			return E_FAIL;
 
@@ -266,7 +331,7 @@ HRESULT CNavigation::Render()
 		if (FAILED(m_pShader->Bind_RawValue("g_vLineColor", &vColor, sizeof(_vector))))
 			return E_FAIL;
 
-		fHeight = 0.2f;
+		fHeight = 0.04f;
 		if (FAILED(m_pShader->Bind_RawValue("g_fHeight", &fHeight, sizeof(_float))))
 			return E_FAIL;
 
@@ -321,6 +386,19 @@ CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	return pInstance;
 }
 
+CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _matrix& NaviMatrix)
+{
+	CNavigation* pInstance = new CNavigation(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Alone(NaviMatrix)))
+	{
+		MSG_BOX("Failed to Created : CNavigation");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
 CComponent* CNavigation::Clone(CGameObject* pOwner, void* pArg)
 {
 	CNavigation* pInstance = new CNavigation(pOwner, *this);
@@ -338,7 +416,7 @@ void CNavigation::Free()
 {
 	__super::Free();
 
-#ifdef EDIT
+#ifdef _DEBUG
 	Safe_Release(m_pShader);
 #endif // !NDEBUG
 

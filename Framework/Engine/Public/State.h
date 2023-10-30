@@ -29,6 +29,7 @@ protected:
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 	// 어떤 상태머신이 자신을 지니고 있는지 알려주는 변수
 	CStateMachine*			m_pStateOwner = { nullptr };
+	class CGameObject*		m_pRealOwner = { nullptr };
 	// 어떤 상태인지 정해주는 변수
 	STATE					m_eState = { STATE::_END};
 	// 처음들어오면 

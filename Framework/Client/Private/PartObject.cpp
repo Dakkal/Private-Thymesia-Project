@@ -30,12 +30,12 @@ _matrix CPartObject::Get_SocketPivotMatrix()
 	return m_pModelCom->Get_PivotMatrix();
 }
 
-const _bool& CPartObject::Is_AnimCurKeyFrame(_uint iIndex)
+_bool CPartObject::Is_AnimCurKeyFrame(_uint iIndex)
 {
 	return m_pModelCom->Is_CurAnimKeyFrame(iIndex);
 }
 
-const _uint& CPartObject::Get_AnimationIndex()
+const _int& CPartObject::Get_AnimationIndex()
 {
 	return m_pModelCom->Get_CurAnimIndex();
 }

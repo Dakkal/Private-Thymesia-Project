@@ -91,7 +91,7 @@ HRESULT CLevel_Edit::Ready_Layer_Camera(const _uint& iLayerIndex)
 	CameraToolDesc.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
 	CameraToolDesc.fNear = 0.2f;
 	CameraToolDesc.fFar = 1000.f;
-	CameraToolDesc.fSpeedPerSec = 50.f;
+	CameraToolDesc.fSpeedPerSec = 30.f;
 	CameraToolDesc.fRotRadianPerSec = XMConvertToRadians(30.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, iLayerIndex, TEXT("Prototype_GameObject_ToolCamera"), &CameraToolDesc)))

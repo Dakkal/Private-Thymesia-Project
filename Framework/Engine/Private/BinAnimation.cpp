@@ -41,6 +41,8 @@ HRESULT CBinAnimation::Initialize(const CBinModel* pModel, const SAVE_ANIM_INFO 
 
 		m_Channels.push_back(pChannel);
 	}
+
+	return S_OK;
 }
 
 void CBinAnimation::Update_TransformationMatrix(vector<class CBinBone*>* Bones, _float fTimeDelta)
@@ -106,7 +108,7 @@ void CBinAnimation::Set_StartKeyFrames(_uint iNumKeyFrame, _float fTimeDelta)
 		else if (iNumKeyFrame <= m_fTrackPosition)
 			return;
 		
-		m_fTrackPosition += m_fTickPerSecond * fTimeDelta * 1.2f;
+		m_fTrackPosition += m_fTickPerSecond * fTimeDelta;
 
 		_uint	iNumChannel = 0;
 

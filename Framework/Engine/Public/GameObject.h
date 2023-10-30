@@ -34,7 +34,6 @@ public:
 
 public:
     class  CComponent* Get_Component(const wstring& strComponentTag) { return Find_Component(strComponentTag); }
-    virtual _bool      Find_NaviMesh() { return S_OK; };
 
 protected:
     ID3D11Device*           m_pDevice = { nullptr };

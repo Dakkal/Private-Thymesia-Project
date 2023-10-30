@@ -1,5 +1,6 @@
 #include "..\Public\Cell.h"
 #include "VIBuffer_Cell.h"
+#include "Transform.h"
 
 CCell::CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -23,11 +24,11 @@ HRESULT CCell::Initialize(const _float3* pPoints, _uint iIndex)
 
 	for (size_t i = 0; i < LINE_END; i++)
 	{
-		m_vNormals[i] = _float3(vLines[i].z * -1, vLines[i].y, vLines[i].x);
+		m_vNormals[i] = _float3(vLines[i].z * -1.f, 0.f, vLines[i].x);
 		m_vNormals[i].Normalize();
 	}
 
-#ifdef EDIT
+#ifdef _DEBUG
 	m_pVIBuffer = CVIBuffer_Cell::Create(m_pDevice, m_pContext, m_vPoints_Origin);
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
@@ -94,6 +95,11 @@ _bool CCell::IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex)
 
 		if (0 < vSour.Dot(vDest))
 		{
+			if (-1 == m_iNeighborIndicies[i])
+			{
+				m_vSlideNormal = vDest;
+			}
+
 			pNeighborIndex = m_iNeighborIndicies[i];
 			return true;
 		}
@@ -101,6 +107,7 @@ _bool CCell::IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex)
 
 	return false;
 }
+
 _bool CCell::IsIn(_vector vPoint, _matrix WorldMatrix, _int& pCurIndex)
 {
 	for (size_t i = 0; i < LINE_END; i++)
@@ -108,36 +115,53 @@ _bool CCell::IsIn(_vector vPoint, _matrix WorldMatrix, _int& pCurIndex)
 		_vector vSour = vPoint - m_vPoints_World[i];
 		_vector vDest = XMVector3TransformNormal(m_vNormals[i], WorldMatrix);
 
-		if (0 >= vSour.Dot(vDest))
+		if (0 < vSour.Dot(vDest))
 		{
-			pCurIndex = m_iIndex;
-			return true;
+			return false;
 		}
 	}
 
-	return false;
+	pCurIndex = m_iIndex;
+	return true;
 }
 
-_float3* CCell::IsClose(_vector vPoint, _matrix WorldMatrix, _float CompareLength,  _float3* pPoint)
+_float3* CCell::IsClose(_vector vPoint, _float CompareLength)
 {
 	for (size_t i = 0; i < POINT_END; i++)
 	{
-		_vector vDist = vPoint - m_vPoints_World[i];
+		_float fDeltaX = vPoint.x - m_vPoints_World[i].x;
+		_float fDeltaY = vPoint.y - m_vPoints_World[i].y;
+		_float fDeltaZ = vPoint.z - m_vPoints_World[i].z;
 
-		if (0.5f >= vDist.Length())
-			return pPoint = &m_vPoints_World[i];
+		_float fDist = sqrt(fDeltaX * fDeltaX + fDeltaY * fDeltaY + fDeltaZ * fDeltaZ);
 
+		if (CompareLength >= fDist)
+		{
+			return &m_vPoints_World[i];
+		}
+			
 	}
 
 	return nullptr;
 }
 
-#ifdef EDIT
+_float3 CCell::Get_Middle_Pos()
+{
+	_float3 midPoint;
+	midPoint.x = (m_vPoints_World[POINT_A].x + m_vPoints_World[POINT_B].x + m_vPoints_World[POINT_C].x) / 3.f;
+	midPoint.y = (m_vPoints_World[POINT_A].y + m_vPoints_World[POINT_B].y + m_vPoints_World[POINT_C].y) / 3.f;
+	midPoint.z = (m_vPoints_World[POINT_A].z + m_vPoints_World[POINT_B].z + m_vPoints_World[POINT_C].z) / 3.f;
+
+	return midPoint;
+}
+
+#ifdef _DEBUG
 HRESULT CCell::Render()
 {
 	return m_pVIBuffer->Render();
 }
 #endif // !NDEBUG
+
 CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _uint iIndex)
 {
 	CCell* pInstance = new CCell(pDevice, pContext);
@@ -155,7 +179,7 @@ void CCell::Free()
 {
 	__super::Free();
 
-#ifdef EDIT
+#ifdef _DEBUG
 	Safe_Release(m_pVIBuffer);
 #endif // !NDEBUG
 

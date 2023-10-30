@@ -504,8 +504,8 @@ HRESULT CLoader::Loading_EtcComponent()
 		break;
 	case Client::LEVEL_GAMEPLAY:
 		/* For.Prototype_Component_Navigation */
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
-			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation.dat")))))
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
+			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation/Church.dat")))))
 			return E_FAIL;
 		/* For.Prototype_Component_StateMachine*/
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
@@ -521,12 +521,8 @@ HRESULT CLoader::Loading_EtcComponent()
 	case Client::LEVEL_4:
 		break;
 	case Client::LEVEL_EDIT:
-		/* For.Prototype_Component_Navigation */
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Navigation"),
-			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation.dat")))))
-			return E_FAIL;
 		/* For.Prototype_Component_StateMachine*/
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_StateMachine"),
 			CStateMachine::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		break;

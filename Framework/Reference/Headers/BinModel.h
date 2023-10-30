@@ -39,8 +39,8 @@ public:
 	const vector<class CBinBone*>&			Get_Bones()			{ return m_Bones; }
 	const vector<class CBinAnimation*>&		Get_Animations()	{ return m_Animations; }
 	const class CBinAnimation*				Get_CurAnimation()	{ return m_Animations[m_iCurAnimIndex]; }
-	const _uint&							Get_CurAnimIndex()  { return m_iCurAnimIndex; }
-	const _bool&							Is_CurAnimKeyFrame(_uint iIndex);
+	const _int&								Get_CurAnimIndex()  { return m_iCurAnimIndex; }
+	_bool									Is_CurAnimKeyFrame(_uint iIndex);
 	const _bool&							Is_CurAnimFinished(){ return m_Animations[m_iCurAnimIndex]->IsFinished(); }
 	
 

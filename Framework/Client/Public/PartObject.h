@@ -35,8 +35,8 @@ public:
 	_matrix Get_SocketPivotMatrix();
 
 public:
-	const _bool& Is_AnimCurKeyFrame(_uint iIndex);
-	const _uint& Get_AnimationIndex();
+	_bool Is_AnimCurKeyFrame(_uint iIndex);
+	const _int& Get_AnimationIndex();
 	const _bool& IsAnimationEnd();
 	void Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed,_uint iStartKeyFrame = 0);
 

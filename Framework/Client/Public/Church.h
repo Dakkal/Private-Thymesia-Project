@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "LandObject.h"
 
 BEGIN(Engine)
 class CBinModel;
@@ -13,7 +13,7 @@ END
 
 BEGIN(Client)
 
-class CChurch final : public CGameObject
+class CChurch final : public CLandObject
 {
 protected:
 	CChurch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -33,7 +33,6 @@ private:
 	CTransform* m_pTransformCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CBinModel* m_pModelCom = { nullptr };
-	CNavigation* m_pNavigationCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();

@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "Navigation.h"
+#include "LandObject.h"
 
 CBinModel::CBinModel(ID3D11Device* pDeivce, ID3D11DeviceContext* pContext)
 	: CComponent(pDeivce, pContext)
@@ -79,6 +80,7 @@ HRESULT CBinModel::Initialize_Prototype(TYPE eModelType, const wstring& pModelFi
 			return E_FAIL;
 	}
 	
+	return S_OK;
 }
 
 HRESULT CBinModel::Initialize(void* pArg)
@@ -118,19 +120,14 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAni
 	if (true == m_bIsAnimChange && iAnimationIndex == m_iCurAnimIndex)
 	{
   		m_bIsAnimChange = false;
-		m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
-		m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
+
 		return S_OK;
 	}
 
 	if (iAnimationIndex >= m_iNumAnims ||
 		iAnimationIndex == m_iCurAnimIndex)
-	{
-	
-		return S_OK;
-	}
+			return S_OK;
 		
-
 	m_bIsAnimChange = true;
 
 	m_iNextAnimIndex = iAnimationIndex;
@@ -138,10 +135,12 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAni
 	m_iNextStartNumKeyFrames = iStartNumKeyFrames;
 	m_fChangeTrackPosition = 0.f;
 
-	m_Animations[m_iCurAnimIndex]->Reset();
 	CurChannels = m_Animations[m_iCurAnimIndex]->Get_Channels();
 	NextChannels = m_Animations[m_iNextAnimIndex]->Get_Channels();
+
+	m_Animations[m_iNextAnimIndex]->Reset();
 	m_Animations[m_iNextAnimIndex]->Set_AnimSpeed(fAnimSpeed);
+	
 
 	return S_OK;
 }
@@ -174,11 +173,12 @@ HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 
 			m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
 			m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
+
 			return S_OK;
 		}
 
 		_float	fRatio = (m_fChangeTrackPosition - 0.f) / fDuration;
-		if (1.f < fRatio)
+		if (1.f <= fRatio)
 			fRatio = 1.f;
 
 		_vector vSourScale = _vector(CurKeyframe.vScale);
@@ -262,8 +262,11 @@ HRESULT CBinModel::Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame)
 	return S_OK;
 }
 
-const _bool& CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
+_bool CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
 {
+	if (true == m_bIsAnimChange)
+		return false;
+
 	auto& KeyFrames = m_Animations[m_iCurAnimIndex]->Get_CurKeyFrames();
 
 	for (auto& KeyFrame : KeyFrames)
@@ -300,7 +303,7 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 	if (nullptr == pTransform)
 		return E_FAIL;
 
-	if (true == m_bIsAnimChange)
+	if (true == m_bIsAnimChange || 0.f == m_CurRootPos.z)
 		return S_OK;
 
 	_vector vPos = pTransform->Get_State(CTransform::STATE_POS);
@@ -315,14 +318,15 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 
 	if (nullptr != pNavi)
 	{
-		if(0 == pNavi->IsMove(vPos))
+		_int iMove = pNavi->IsMove(vPos);
+
+		if (0 == iMove)
 			pTransform->Set_State(CTransform::STATE_POS, vPos);
-		else if (-2 == pNavi->IsMove(vPos))
+		else if (-2 == iMove)
 		{
-			if(true == m_pOwner->Find_NaviMesh())
+			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPos))
 				pTransform->Set_State(CTransform::STATE_POS, vPos);
 		}
-			
 	}
 	else
 		pTransform->Set_State(CTransform::STATE_POS, vPos);
@@ -399,6 +403,8 @@ HRESULT CBinModel::Ready_Materials(const SAVE_MATERIAL strTexture, const wstring
 
 		m_Materials.push_back(MeshMaterial);
 	}
+
+	return S_OK;
 }
 
 HRESULT CBinModel::Ready_Bones(const SAVE_BONE tBoneDesc)
@@ -411,6 +417,8 @@ HRESULT CBinModel::Ready_Bones(const SAVE_BONE tBoneDesc)
 
 		m_Bones.push_back(pBone);
 	}
+
+	return S_OK;
 }
 
 HRESULT CBinModel::Ready_Animations(const SAVE_ANIM tAnimDesc)

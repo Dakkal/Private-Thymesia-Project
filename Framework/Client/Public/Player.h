@@ -1,16 +1,17 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "LandObject.h"
 
 BEGIN(Engine)
 class CTransform;
 class CStateMachine;
 class CNavigation;
+class CRenderer;
 END
 
 BEGIN(Client)
 
-class CPlayer final : public CGameObject
+class CPlayer final : public CLandObject
 {
 public:
 	enum class PARTS { BODY, WEAPON_R, WEAPON_L, _END };
@@ -35,10 +36,9 @@ private:
 	vector<class CGameObject*>		m_Parts;
 
 private: 
+	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
 	CStateMachine*			m_pStateMachineCom = { nullptr };
-	CNavigation*			m_pCurNavigationCom = { nullptr };
-	vector<CNavigation*>	m_pNavigationComs;
 
 private:
 	HRESULT Ready_Components();

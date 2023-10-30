@@ -67,6 +67,8 @@ CGameObject* CLayer::Find_GameObject(const wstring& ObjName, _uint iCloneIndex)
 		else
 			return nullptr;
 	}
+
+	return nullptr;
 }
 
 HRESULT CLayer::Delete_GameObject(const wstring& ObjName, _uint iCloneIndex)
@@ -83,6 +85,8 @@ HRESULT CLayer::Delete_GameObject(const wstring& ObjName, _uint iCloneIndex)
 			return S_OK;
 		}
 	}
+
+	return S_OK;
 }
 
 HRESULT CLayer::Delete_Layer()

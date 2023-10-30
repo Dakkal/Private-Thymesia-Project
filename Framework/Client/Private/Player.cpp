@@ -11,13 +11,13 @@
 #include "State_Parry.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CLandObject(pDevice, pContext)
 {
 
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
-	: CGameObject(rhs)
+	: CLandObject(rhs)
 {
 
 }
@@ -68,15 +68,30 @@ void CPlayer::LateTick(_float fTimeDelta)
 		if (nullptr != pPart)
 			pPart->LateTick(fTimeDelta);
 	}
+
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 }
 
 HRESULT CPlayer::Render()
 {
+#ifdef _DEBUG
+	if (nullptr != m_pCurNavigationCom)
+		m_pCurNavigationCom->Render();
+#endif // DEBUG
+
+
+	
+
 	return S_OK;
 }
 
 HRESULT CPlayer::Ready_Components()
 {
+	/* Com_Renderer */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
+		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
+
 	/* Com_Transform */
 	CTransform::TRANSFORM_DESC		TransformDesc;
 	TransformDesc.fSpeedPerSec = 4.f;
@@ -89,6 +104,17 @@ HRESULT CPlayer::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
 		TEXT("Com_StateMachine"), (CComponent**)&m_pStateMachineCom)))
 		return E_FAIL;
+
+	/* Com_Navigation */
+	CNavigation* pNavigation = { nullptr };
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
+		TEXT("Com_Navigation1"), (CComponent**)&pNavigation)))
+		return E_FAIL;
+	m_NavigationComs.push_back(pNavigation);
+
+	m_pCurNavigationCom = pNavigation;
+	m_pCurNavigationCom->Update(m_pCurNavigationCom->Get_Navi_Matrix());
+	m_pCurNavigationCom->Set_toCell(5, m_pTransformCom);
 
 	return S_OK;
 }
@@ -206,6 +232,7 @@ void CPlayer::Free()
 		Safe_Release(pPart);
 	m_Parts.clear();
 
+	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pStateMachineCom);
 }
