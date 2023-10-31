@@ -16,9 +16,9 @@ HRESULT CVIBuffer_Cell::Initialize_Prototype(const _float3* pPoints)
 	m_iStride = sizeof(VTXPOS); 
 	m_iNumVertices = 3;
 	m_iIndexStride = 2; 
-	m_iNumIndices = 4;
+	m_iNumIndices = 3;
 	m_eIndexFormat = m_iIndexStride == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
-	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_iNumVBs = 1;
 
 #pragma region VERTEX_BUFFER
@@ -62,7 +62,6 @@ HRESULT CVIBuffer_Cell::Initialize_Prototype(const _float3* pPoints)
 	pIndices[0] = 0;
 	pIndices[1] = 1;
 	pIndices[2] = 2;
-	pIndices[3] = 0;
 
 	ZeroMemory(&m_tInitialData, sizeof m_tInitialData);
 	m_tInitialData.pSysMem = pIndices;

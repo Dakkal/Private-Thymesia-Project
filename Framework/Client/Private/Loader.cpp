@@ -7,6 +7,7 @@
 #include "Edit_Terrain.h"
 #include "ToolCamera.h"
 #include "PlayerCamera.h"
+#include "SkyDome.h"
 
 #include "Church.h"
 #include "ChurchGrillesFloor.h"
@@ -364,6 +365,11 @@ HRESULT CLoader::Loading_Mesh()
 			CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
 			return E_FAIL;
 
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SkyDome"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/SkyDome/Sky.dat")))))
+			return E_FAIL;
+
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player_Body"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Player/Body/Player.dat"), ModelInitMatrix))))
@@ -455,6 +461,12 @@ HRESULT CLoader::Loading_Shader()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::tElements, VTXMESH::iNumElements))))
 			return E_FAIL;
+
+		/* For.Proto_VtxDome */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxDome"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxDome.hlsl"), VTXPOSTEX::tElements, VTXPOSTEX::iNumElements))))
+			return E_FAIL;
+
 		break;
 	case Client::LEVEL_1:
 		/* For.Proto_VtxPosNorTex */
@@ -590,6 +602,9 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Church"), CChurch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Church")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyDome"), CSkyDome::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_SkyDome")))))
 			return E_FAIL;
 
 		break;

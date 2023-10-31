@@ -254,13 +254,6 @@ HRESULT CBinModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-HRESULT CBinModel::Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame)
-{
-	m_Meshes[iMeshIndex]->Set_RasterState(eWireFrame);
-
-	return S_OK;
-}
-
 _bool CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
 {
 	/* 애니메이션 전환중에는 확인할 필요X */

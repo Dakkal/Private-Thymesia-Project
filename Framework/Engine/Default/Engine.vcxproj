@@ -139,6 +139,10 @@
     <ClCompile Include="..\Public\Engine_Struct.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -52,9 +52,6 @@ HRESULT CChurchGrillesFloor::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Set_Model_WireFrame(i, false);
-
-
 		m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
 		//m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
 

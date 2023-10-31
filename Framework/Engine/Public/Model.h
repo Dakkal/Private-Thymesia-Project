@@ -30,7 +30,6 @@ public:
 	HRESULT Bind_BoneMatrices(class CShader* pShader, _uint iMeshIndex, const char* pConstantName);
 	HRESULT	Bind_MaterialTexture(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType eType);
 	HRESULT	Render(_uint iMeshIndex);
-	HRESULT Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame);
 
 public:
 	_uint					Get_NumMeshes() const { return m_iNumMeshes; }

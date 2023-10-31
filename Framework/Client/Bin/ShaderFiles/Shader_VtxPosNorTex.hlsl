@@ -1,3 +1,4 @@
+#include "Engine_Shader_Defines.hlsl"
 
 /* 상수테이블. */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -21,24 +22,6 @@ Texture2D		g_BrushTexture;
 
 vector			g_vBrushPos = vector(35.f, 0.f, 35.f, 1.f);
 float			g_fBrushRange = 15.0f;
-
-
-/* 샘플러  */
-sampler LinearSampler = sampler_state {
-	Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
-};
-
-sampler PointSampler = sampler_state {
-	Filter = MIN_MAG_MIP_POINT;
-    AddressU = wrap;
-    AddressV = wrap;
-};
-
-RasterizerState RasterState_WireFrame {
-    FillMode = WireFrame;
-};
 
 /* 버텍스 쉐이더 */
 struct VS_IN
@@ -160,6 +143,10 @@ technique11 DefaultTechnique
 {
 	pass Terrain_Directional
 	{
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		HullShader = NULL;
@@ -167,8 +154,25 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
     }
 
+    pass Terrain_Edit
+    {
+        SetRasterizerState(RS_Edit);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
+    }
+
     pass Terrain_Point
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;

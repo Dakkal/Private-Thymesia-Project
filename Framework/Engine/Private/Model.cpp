@@ -112,13 +112,6 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-HRESULT CModel::Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame)
-{
-	m_Meshes[iMeshIndex]->Set_RasterState(eWireFrame);
-
-	return S_OK;
-}
-
 _int CModel::Get_BoneIndex(const char* pBoneName) const
 {
 	_uint	iBoneIndex = 0;

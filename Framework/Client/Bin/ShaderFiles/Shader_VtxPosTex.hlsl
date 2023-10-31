@@ -1,18 +1,9 @@
+#include "Engine_Shader_Defines.hlsl"
 
 /* 상수테이블. */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D		g_Texture;
 Texture2D		g_Textures[2];
-
-
-sampler LinearSampler = sampler_state {
-	Filter = MIN_MAG_MIP_LINEAR;
-};
-
-sampler PointSampler = sampler_state {
-	Filter = MIN_MAG_MIP_POINT;
-};
-
 
 struct VS_IN
 {
@@ -80,6 +71,10 @@ technique11 DefaultTechnique
 {
 	pass UI
 	{
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		HullShader = NULL;
@@ -89,6 +84,10 @@ technique11 DefaultTechnique
 
     pass Edit
     {
+        SetRasterizerState(RS_Edit);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;

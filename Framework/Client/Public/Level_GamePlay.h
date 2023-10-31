@@ -18,6 +18,7 @@ public:
 
 private:
 	HRESULT Ready_Layer_BackGround(const _uint& iLayerIndex);
+	HRESULT Ready_Layer_SkyDome(const _uint& iLayerIndex);
 	HRESULT Ready_Layer_Camera(const _uint& iLayerIndex);
 	HRESULT Ready_Layer_Props(const _uint& iLayerIndex);
 	HRESULT Ready_Layer_Player(const _uint& iLayerIndex);

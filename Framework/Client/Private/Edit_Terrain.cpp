@@ -55,14 +55,6 @@ HRESULT CEdit_Terrain::Render()
 	return S_OK;
 }
 
-HRESULT CEdit_Terrain::Set_WireFrameMode(_bool bWireFrame)
-{
-	if (FAILED(m_pVIBufferCom->Set_RasterState(bWireFrame)))
-		return E_FAIL;
-
-	return S_OK;
-}
-
 _vector CEdit_Terrain::Picking_Terrain()
 {
 	RECT rc = { 0, 0, g_iWinSizeX, g_iWinSizeY };
@@ -167,7 +159,7 @@ HRESULT CEdit_Terrain::Bind_ShaderResources()
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightRange", &pLightDesc->fLightRange, sizeof(_float))))
 			return E_FAIL;
-		iPassIndex = 1;
+		iPassIndex = 2;
 	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_vector))))
@@ -179,7 +171,10 @@ HRESULT CEdit_Terrain::Bind_ShaderResources()
 
 	RELEASE_INSTANCE(CGameInstance);
 
-	m_pShaderCom->Begin(iPassIndex);
+	if(true == m_bIsWireFrame)
+		m_pShaderCom->Begin(1);
+	else
+		m_pShaderCom->Begin(iPassIndex);
 
 	return S_OK;
 }

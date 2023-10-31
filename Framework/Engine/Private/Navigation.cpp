@@ -305,7 +305,7 @@ HRESULT CNavigation::Render()
 
 	if (-1 == m_iCurrentIndex)
 	{
-		vColor = { 0.f, 1.f, 0.f, 1.f };
+		vColor = { 0.f, 1.f, 0.f, 0.1f };
 		if (FAILED(m_pShader->Bind_RawValue("g_vLineColor", &vColor, sizeof(_vector))))
 			return E_FAIL;
 
@@ -321,10 +321,23 @@ HRESULT CNavigation::Render()
 			if (nullptr != pCell)
 				pCell->Render();
 		}
+
+		vColor = { 0.f, 1.f, 0.f, 1.f };
+		if (FAILED(m_pShader->Bind_RawValue("g_vLineColor", &vColor, sizeof(_vector))))
+			return E_FAIL;
+
+		if (FAILED(m_pShader->Begin(1)))
+			return E_FAIL;
+
+		for (auto& pCell : m_Cells)
+		{
+			if (nullptr != pCell)
+				pCell->Render();
+		}
 	}
 	else
 	{
-		vColor = { 1.f, 0.f, 0.f, 1.f };
+		vColor = { 1.f, 0.f, 0.f, 0.5f };
 		if (FAILED(m_pShader->Bind_RawValue("g_vLineColor", &vColor, sizeof(_vector))))
 			return E_FAIL;
 
@@ -332,7 +345,7 @@ HRESULT CNavigation::Render()
 		if (FAILED(m_pShader->Bind_RawValue("g_fHeight", &fHeight, sizeof(_float))))
 			return E_FAIL;
 
-		if (FAILED(m_pShader->Begin(0)))
+		if (FAILED(m_pShader->Begin(1)))
 			return E_FAIL;
 
 		m_Cells[m_iCurrentIndex]->Render();

@@ -26,7 +26,7 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-	HRESULT	Set_WireFrameMode(_bool bWireFrame);
+	void	Set_WireFrameMode(_bool bWireFrame) { m_bIsWireFrame = bWireFrame; }
 
 	_vector	Picking_Terrain();
 

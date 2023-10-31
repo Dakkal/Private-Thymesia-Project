@@ -167,8 +167,6 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 		m_tTerrainDesc.iNumVerticesZ = pTerrain_Desc->iNumVerticesZ;
 		m_tTerrainDesc.bIsWireFrame = pTerrain_Desc->bIsWireFrame;
 
-		Set_RasterState(m_tTerrainDesc.bIsWireFrame);
-
 		m_iStride = sizeof(VTXPOSNORTEX); /* 정점하나의 크기 .*/
 		m_iNumVertices = m_tTerrainDesc.iNumVerticesX * m_tTerrainDesc.iNumVerticesZ;
 

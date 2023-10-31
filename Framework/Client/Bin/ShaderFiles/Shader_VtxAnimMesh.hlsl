@@ -1,3 +1,4 @@
+#include "Engine_Shader_Defines.hlsl"
 
 /* 상수테이블. */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -19,20 +20,6 @@ vector			g_vCamPosition;
 Texture2D		g_DiffuseTexture;
 Texture2D		g_NormalTexture;
 
-
-
-/* 샘플러  */
-sampler LinearSampler = sampler_state {
-	Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
-};
-
-sampler PointSampler = sampler_state {
-	Filter = MIN_MAG_MIP_POINT;
-    AddressU = wrap;
-    AddressV = wrap;
-};
 
 /* 버텍스 쉐이더 */
 struct VS_IN
@@ -144,6 +131,10 @@ technique11 DefaultTechnique
 {
     pass Mesh_Alpha
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
@@ -153,6 +144,10 @@ technique11 DefaultTechnique
 
     pass Mesh_NonAlpha
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;

@@ -30,7 +30,7 @@ public:
 	HRESULT Bind_BoneMatrices(class CShader* pShader, _uint iMeshIndex, const char* pConstantName);
 	HRESULT	Bind_MaterialTexture(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType eType);
 	HRESULT	Render(_uint iMeshIndex);
-	HRESULT Set_Model_WireFrame(_uint iMeshIndex, _bool eWireFrame);
+	
 	HRESULT	Set_OwnerPosToRootPos(class CTransform* pTransform, _float fTimeDelta, class CNavigation* pNavi = nullptr);
 
 public:

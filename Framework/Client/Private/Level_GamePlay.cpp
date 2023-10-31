@@ -13,6 +13,10 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	/*if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;*/
+
+	if (FAILED(Ready_Layer_SkyDome(LAYER_SKY)))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Props(LAYER_PROP)))
 		return E_FAIL;
 
@@ -53,6 +57,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _uint& iLayerIndex)
 	RELEASE_INSTANCE(CGameInstance)
 
 	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_SkyDome(const _uint& iLayerIndex)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_SkyDome"))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _uint& iLayerIndex)

@@ -175,6 +175,9 @@
     <Filter Include="01.Utility\04.Component\Colider\Bounding\Sphere">
       <UniqueIdentifier>{3d986ac8-7078-44f2-adcc-5075dca2391f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\07.Shader_Files">
+      <UniqueIdentifier>{4e919104-2bbd-4fb2-9fd8-900c3783aa0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -507,6 +510,9 @@
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl">
       <Filter>01.Utility\04.Component\Navigation\Cell_Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsl">
+      <Filter>01.Utility\07.Shader_Files</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

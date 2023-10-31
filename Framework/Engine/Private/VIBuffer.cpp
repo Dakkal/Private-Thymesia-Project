@@ -16,14 +16,11 @@ CVIBuffer::CVIBuffer(CGameObject* pOwner, const CVIBuffer& rhs)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_eTopology(rhs.m_eTopology)
 	, m_iNumVBs(rhs.m_iNumVBs)
-	, m_pRasterState(rhs.m_pRasterState)
-	, m_tRasterDesc(rhs.m_tRasterDesc)
 	, m_Indicies(rhs.m_Indicies)
 	, m_BufferPoses(rhs.m_BufferPoses)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
-	Safe_AddRef(m_pRasterState);
 }
 
 HRESULT CVIBuffer::Initialize_Prototype()
@@ -52,9 +49,6 @@ HRESULT CVIBuffer::Render()
 
 	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
 
-	if(nullptr != m_pRasterState)
-		m_pContext->RSSetState(m_pRasterState);
-
 	m_pContext->IASetPrimitiveTopology(m_eTopology);
 
 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
@@ -63,32 +57,6 @@ HRESULT CVIBuffer::Render()
 	return S_OK;
 }
 
-HRESULT CVIBuffer::Set_RasterState(_bool eWireFrame)
-{
-	if (nullptr != m_pRasterState)
-		Safe_Release(m_pRasterState);
-
-	if (true == eWireFrame)
-	{
-		ZeroMemory(&m_tRasterDesc, sizeof(D3D11_RASTERIZER_DESC));
-		m_tRasterDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
-		m_tRasterDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
-
-		if (FAILED(m_pDevice->CreateRasterizerState(&m_tRasterDesc, &m_pRasterState)))
-			return E_FAIL;
-	}
-	if (false == eWireFrame)
-	{
-		ZeroMemory(&m_tRasterDesc, sizeof(D3D11_RASTERIZER_DESC));
-		m_tRasterDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
-		m_tRasterDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
-
-		if (FAILED(m_pDevice->CreateRasterizerState(&m_tRasterDesc, &m_pRasterState)))
-			return E_FAIL;
-	}
-
-	return S_OK;
-}
 
 HRESULT CVIBuffer::Create_Buffer(_Inout_ ID3D11Buffer** ppOut)
 {
@@ -102,7 +70,6 @@ void CVIBuffer::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pRasterState);
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
 }

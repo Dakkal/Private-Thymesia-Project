@@ -122,7 +122,7 @@ HRESULT CPlayer::Ready_Components()
 
 	/* Com_Collider_Sphere */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
-	SphereDesc.fRadius = 2.f;
+	SphereDesc.fRadius = 3.f;
 	SphereDesc.vCenter = _float3(0.f, 0.01f, 0.f);
 	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	SphereDesc.vColor = _vector(1.f, 1.f, 0.f, 1.f);

@@ -18,9 +18,6 @@ public:
 	vector<_float3>& Get_Buffer_Pos() { return m_BufferPoses; }
 	vector<_ulong>& Get_Indicies() { return m_Indicies; }
 
-public:
-	HRESULT			Set_RasterState(_bool eWireFrame = false);
-
 protected:
 	ID3D11Buffer*		m_pVB = { nullptr };
 	ID3D11Buffer*		m_pIB = { nullptr };
@@ -34,9 +31,6 @@ protected:
 	DXGI_FORMAT					m_eIndexFormat;
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
 	_uint						m_iNumVBs = { 0 };
-
-	ID3D11RasterizerState*		m_pRasterState = { nullptr };
-	D3D11_RASTERIZER_DESC		m_tRasterDesc;
 
 	vector<_float3> m_BufferPoses;
 	vector<_ulong> m_Indicies;

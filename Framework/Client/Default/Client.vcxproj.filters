@@ -112,6 +112,9 @@
     <Filter Include="02.GameObject\Object\Player\Part\Weapon_Player">
       <UniqueIdentifier>{2b5430ab-562c-44f6-9dba-f5a5b5e25d0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\SkyDome">
+      <UniqueIdentifier>{a8b6da27-dac7-4f7a-a9fa-879c9b75871b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -227,6 +230,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Parry.cpp">
       <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkyDome.cpp">
+      <Filter>02.GameObject\Object\SkyDome</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +364,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Parry.h">
       <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkyDome.h">
+      <Filter>02.GameObject\Object\SkyDome</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
