@@ -23,7 +23,7 @@ HRESULT CBody_Player::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::PLAYER;
+	m_eObjType = OBJECT_TYPE::PART;
 	m_strObjectName = TEXT("Player_Body");
 
 	return S_OK;
@@ -125,7 +125,7 @@ HRESULT CBody_Player::Ready_Components()
 
 	/* For.Com_Collider_AABB */
 	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
-	AABBDesc.vExtents = _float3(0.3f, 0.85f, 0.3f);
+	AABBDesc.vExtents = _float3(0.25f, 0.85f, 0.25f);
 	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
 	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	AABBDesc.vColor = _vector( 0.33f, 0.63f, 0.93f, 1.f);

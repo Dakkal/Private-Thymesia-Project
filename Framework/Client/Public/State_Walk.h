@@ -36,9 +36,6 @@ private:
 	void	Set_KeyVector();
 
 private:
-	class CPartObject*			m_pOwnerBodyPart = {nullptr};
-	CTransform*					m_pOwnerTransform = { nullptr };
-
 	_bool						m_bIsMouseMove = { false };
 	_bool						m_bIsMouseStop = { false };
 	_float						m_fMouseMoveTime = { 0.f };

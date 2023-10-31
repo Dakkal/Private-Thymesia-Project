@@ -1,5 +1,4 @@
-#include "pch.h"
-#include "..\Public\PartObject.h"
+#include "PartObject.h"
 
 #include "GameInstance.h"
 #include "BinBone.h"

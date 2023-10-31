@@ -1,8 +1,10 @@
 #include "pch.h"
-#include "..\Public\Weapon_Boss_Urd.h"
+#include "Weapon_Boss_Urd.h"
 
 #include "GameInstance.h"
 #include "BinBone.h"
+#include "Bounding_Sphere.h"
+#include "Collider.h"
 
 CWeapon_Boss_Urd::CWeapon_Boss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -20,7 +22,7 @@ HRESULT CWeapon_Boss_Urd::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::BOSS;
+	m_eObjType = OBJECT_TYPE::PART;
 	m_strObjectName = TEXT("Boss_Urd_Weapon");
 
 	return S_OK;
@@ -49,6 +51,9 @@ void CWeapon_Boss_Urd::Tick(_float fTimeDelta)
 	WorldMatrix.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
 
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix() * WorldMatrix);
+
+	/* 계산한뒤에 월드를 업데이트 */
+	m_pColliderCom->Update(m_WorldMatrix);
 }
 
 void CWeapon_Boss_Urd::LateTick(_float fTimeDelta)
@@ -101,6 +106,15 @@ HRESULT CWeapon_Boss_Urd::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
 		return E_FAIL;
 
+	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
+	SphereDesc.fRadius = 0.12f;
+	SphereDesc.vCenter = _float3(0.9f, 0.f, 0.f);
+	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider_Sphere"), (CComponent**)&m_pColliderCom, &SphereDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -150,6 +164,10 @@ HRESULT CWeapon_Boss_Urd::Bind_ShaderResources()
 
 	Safe_Release(pGameInstance);
 
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+#endif
+
 	return S_OK;
 }
 
@@ -185,6 +203,7 @@ void CWeapon_Boss_Urd::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);

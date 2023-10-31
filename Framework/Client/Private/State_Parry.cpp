@@ -14,9 +14,7 @@ CState_Parry::CState_Parry(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 
 HRESULT CState_Parry::Initialize()
 {
-	m_pOwnerTransform = dynamic_cast<CTransform*>(m_pStateOwner->Get_Owner()->Get_Component(TEXT("Com_Transform")));
-	CGameObject* pOwnerBodyPart = dynamic_cast<CPlayer*>(m_pStateOwner->Get_Owner())->Get_Parts(CPlayer::PARTS::BODY);
-	m_pOwnerBodyPart = dynamic_cast<CPartObject*>(pOwnerBodyPart);
+	__super::Initialize();
 
 	return S_OK;
 }

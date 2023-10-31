@@ -22,8 +22,6 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
-	class CPartObject* m_pOwnerBodyPart = { nullptr };
-	CTransform* m_pOwnerTransform = { nullptr };
 
 public:
 	static CState_Idle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);

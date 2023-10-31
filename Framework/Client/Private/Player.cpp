@@ -56,10 +56,10 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	m_pStateMachineCom->Tick(fTimeDelta);
 
-	for (auto& pPart : m_Parts)
+	for (auto& iter : m_Parts)
 	{
-		if (nullptr != pPart)
-			pPart->Tick(fTimeDelta);
+		if (nullptr != iter.second)
+			iter.second->Tick(fTimeDelta);
 	}
 
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
@@ -69,10 +69,10 @@ void CPlayer::LateTick(_float fTimeDelta)
 {
 	m_pStateMachineCom->LateTick(fTimeDelta);
 
-	for (auto& pPart : m_Parts)
+	for (auto& iter : m_Parts)
 	{
-		if (nullptr != pPart)
-			pPart->LateTick(fTimeDelta);
+		if (nullptr != iter.second)
+			iter.second->LateTick(fTimeDelta);
 	}
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
@@ -118,7 +118,7 @@ HRESULT CPlayer::Ready_Components()
 	m_NavigationComs.push_back(pNavigation);
 
 	m_pCurNavigationCom = pNavigation;
-	m_pCurNavigationCom->Set_toCell(5, m_pTransformCom);
+	m_pCurNavigationCom->Set_toCell(3, m_pTransformCom);
 
 	/* Com_Collider_Sphere */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
@@ -147,30 +147,30 @@ HRESULT CPlayer::Ready_PlayerParts()
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
 	dynamic_cast<CPartObject*>(pPlayerParts)->Set_Owner(this);
-	m_Parts.push_back(pPlayerParts);
+	m_Parts.emplace(CGameObject::PARTS::BODY, pPlayerParts);
 
 	/* For.Part_Weapon */
 	CPartObject::PART_DESC			PartDesc_Weapon_Saber;
 	PartDesc_Weapon_Saber.pParentTransform = m_pTransformCom;
-	PartDesc_Weapon_Saber.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_SocketBonePtr("weapon_r");
-	PartDesc_Weapon_Saber.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_SocketPivotMatrix();
+	PartDesc_Weapon_Saber.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[CPartObject::PARTS::BODY])->Get_SocketBonePtr("weapon_r");
+	PartDesc_Weapon_Saber.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[CPartObject::PARTS::BODY])->Get_SocketPivotMatrix();
 
 	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Weapon_Saber"), &PartDesc_Weapon_Saber);
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
 	dynamic_cast<CPartObject*>(pPlayerParts)->Set_Owner(this);
-	m_Parts.push_back(pPlayerParts);
+	m_Parts.emplace(CGameObject::PARTS::WEAPON_R, pPlayerParts);
 
 	CPartObject::PART_DESC			PartDesc_Weapon_Dagger;
 	PartDesc_Weapon_Dagger.pParentTransform = m_pTransformCom;
-	PartDesc_Weapon_Dagger.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_SocketBonePtr("weapon_l");
-	PartDesc_Weapon_Dagger.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[(_uint)PARTS::BODY])->Get_SocketPivotMatrix();
+	PartDesc_Weapon_Dagger.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[CPartObject::PARTS::BODY])->Get_SocketBonePtr("weapon_l");
+	PartDesc_Weapon_Dagger.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[CPartObject::PARTS::BODY])->Get_SocketPivotMatrix();
 
 	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Weapon_Dagger"), &PartDesc_Weapon_Dagger);
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
 	dynamic_cast<CPartObject*>(pPlayerParts)->Set_Owner(this);
-	m_Parts.push_back(pPlayerParts);
+	m_Parts.emplace(CGameObject::PARTS::WEAPON_L, pPlayerParts);
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -242,8 +242,8 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-	for (auto& pPart : m_Parts)
-		Safe_Release(pPart);
+	for (auto& iter : m_Parts)
+		Safe_Release(iter.second);
 	m_Parts.clear();
 
 	Safe_Release(m_pColliderCom);

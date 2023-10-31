@@ -1,7 +1,6 @@
 #include "..\Public\GameObject.h"
 #include "GameInstance.h"
 
-
 CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
@@ -52,6 +51,16 @@ void CGameObject::LateTick(_float fTimeDelta)
 HRESULT CGameObject::Render()
 {
 	return S_OK;
+}
+
+CGameObject* CGameObject::Get_Parts(PARTS ePart)
+{
+	auto iter = m_Parts.find(ePart);
+
+	if (iter == m_Parts.end())
+		return nullptr;
+
+	return iter->second;
 }
 
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const wstring& strPrototypeRag, const wstring& strComponentTag, _Inout_ CComponent** ppOut, void* pArg)

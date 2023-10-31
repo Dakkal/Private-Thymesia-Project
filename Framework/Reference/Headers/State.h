@@ -12,7 +12,7 @@ protected:
 	virtual ~CState() = default;
 
 public:
-	virtual HRESULT			Initialize() PURE;
+	virtual HRESULT			Initialize();
 	// 상태타입을 반환하여 체인지 검사;
 	virtual STATE			Tick(const _float & fTimeDelta) PURE;
 	virtual STATE			LateTick(const _float & fTimeDelta) PURE;
@@ -25,6 +25,9 @@ public:
 	virtual	STATE			Get_State() { return m_eState; }
 
 protected:
+	class CPartObject*		m_pOwnerBodyPart = { nullptr };
+	CTransform*				m_pOwnerTransform = { nullptr };
+
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 	// 어떤 상태머신이 자신을 지니고 있는지 알려주는 변수

@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "LandObject.h"
+#include "PartObject.h"
 
 BEGIN(Engine)
 class CTransform;
@@ -14,9 +15,6 @@ BEGIN(Client)
 
 class CPlayer final : public CLandObject
 {
-public:
-	enum class PARTS { BODY, WEAPON_R, WEAPON_L, _END };
-
 protected:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& rhs);
@@ -29,12 +27,6 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
-
-public:
-	 CGameObject* Get_Parts(CPlayer::PARTS ePart) { return m_Parts[(_uint)ePart]; }
-
-private:
-	vector<class CGameObject*>		m_Parts;
 
 private: 
 	CRenderer*				m_pRendererCom = { nullptr };

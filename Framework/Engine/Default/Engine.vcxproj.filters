@@ -178,6 +178,9 @@
     <Filter Include="01.Utility\07.Shader_Files">
       <UniqueIdentifier>{4e919104-2bbd-4fb2-9fd8-900c3783aa0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.GameObject\PartObject">
+      <UniqueIdentifier>{2d0d5cc2-7f31-48e2-8bb8-b3fbb27969e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -351,6 +354,9 @@
     <ClInclude Include="..\Public\Bounding_Sphere.h">
       <Filter>01.Utility\04.Component\Colider\Bounding\Sphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PartObject.h">
+      <Filter>01.Utility\03.GameObject\PartObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -505,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bounding_Sphere.cpp">
       <Filter>01.Utility\04.Component\Colider\Bounding\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PartObject.cpp">
+      <Filter>01.Utility\03.GameObject\PartObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

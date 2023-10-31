@@ -1,26 +1,16 @@
 #pragma once
-#include "Client_Defines.h"
 #include "GameObject.h"
 
 BEGIN(Engine)
-class CBinBone;
-class CBinModel;
-class CShader;
-class CTransform;
-class CRenderer;
-class CCollider;
-END
 
-BEGIN(Client)
-
-class CPartObject abstract : public CGameObject
+class ENGINE_DLL CPartObject abstract : public CGameObject
 {
 public:
 	typedef struct tagPartDesc
 	{
 		CGameObject*	pOwner = { nullptr };
-		CTransform*		pParentTransform = { nullptr };
-		CBinBone*		pSocketBone = { nullptr };
+		class CTransform*		pParentTransform = { nullptr };
+		class CBinBone*		pSocketBone = { nullptr };
 		_matrix			SocketPivot;
 
 	}PART_DESC;
@@ -32,7 +22,7 @@ protected:
 	virtual ~CPartObject() = default;
 
 public:
-	CBinBone* Get_SocketBonePtr(const char* pBoneName);
+	class CBinBone* Get_SocketBonePtr(const char* pBoneName);
 	_matrix Get_SocketPivotMatrix();
 
 public:
@@ -51,19 +41,19 @@ public:
 	void Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
 
 protected:
-	CGameObject*	m_pOwner = { nullptr };
-	CTransform*		m_pParentTransform = { nullptr };
-	CBinBone*		m_pSocketBone = { nullptr };
-	_matrix			m_SocketPivotMatrix;
-	_matrix			m_WorldMatrix;
+	CGameObject*			m_pOwner = { nullptr };
+	class CTransform*		m_pParentTransform = { nullptr };
+	class CBinBone*			m_pSocketBone = { nullptr };
+	_matrix					m_SocketPivotMatrix;
+	_matrix					m_WorldMatrix;
 
 
 protected: 
-	CRenderer*	m_pRendererCom = { nullptr };
-	CTransform* m_pTransformCom = { nullptr };
-	CShader*	m_pShaderCom = { nullptr };
-	CBinModel*	m_pModelCom = { nullptr };
-	CCollider*	m_pColliderCom = { nullptr };
+	class CRenderer*	m_pRendererCom = { nullptr };
+	class CTransform* m_pTransformCom = { nullptr };
+	class CShader*	m_pShaderCom = { nullptr };
+	class CBinModel*	m_pModelCom = { nullptr };
+	class CCollider*	m_pColliderCom = { nullptr };
 
 protected:
 	HRESULT Compute_RenderMatrix(_matrix ChildMatrix);

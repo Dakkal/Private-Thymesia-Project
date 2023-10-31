@@ -3,7 +3,6 @@
 #include "Client_Defines.h"
 #include "PartObject.h"
 
-
 BEGIN(Engine)
 class CBinBone;
 class CBinModel;
@@ -21,8 +20,6 @@ protected:
 	CBody_Boss_Urd(const CBody_Boss_Urd& rhs);
 
 	virtual ~CBody_Boss_Urd() = default;
-
-
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);

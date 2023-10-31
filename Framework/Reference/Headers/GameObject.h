@@ -5,6 +5,9 @@ BEGIN(Engine)
 
 class ENGINE_DLL CGameObject abstract : public CBase
 {
+public:
+    enum PARTS { BODY, WEAPON_R, WEAPON_L, _END };
+
 protected:
     CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     CGameObject(const CGameObject& rhs);
@@ -34,6 +37,12 @@ public:
 
 public:
     class  CComponent* Get_Component(const wstring& strComponentTag) { return Find_Component(strComponentTag); }
+
+public:
+    CGameObject* Get_Parts(PARTS ePart);
+
+protected:
+    map<PARTS, class CGameObject*>		m_Parts;
 
 protected:
     ID3D11Device*           m_pDevice = { nullptr };

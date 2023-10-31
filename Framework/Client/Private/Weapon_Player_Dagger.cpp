@@ -22,7 +22,7 @@ HRESULT CWeapon_Player_Dagger::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::PLAYER;
+	m_eObjType = OBJECT_TYPE::PART;
 	m_strObjectName = TEXT("Player_Weapon_Dagger");
 
 	return S_OK;

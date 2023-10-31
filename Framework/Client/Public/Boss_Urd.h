@@ -1,18 +1,19 @@
 #pragma once
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "LandObject.h"
+#include "PartObject.h"
 
 BEGIN(Engine)
 class CTransform;
+class CRenderer;
+class CStateMachine;
+class CCollider;
 END
 
 BEGIN(Client)
 
-class CBoss_Urd final : public CGameObject
+class CBoss_Urd final : public CLandObject
 {
-public:
-	enum class PARTS { BODY, WEAPON_R, WEAPON_L, _END };
-
 protected:
 	CBoss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBoss_Urd(const CBoss_Urd& rhs);
@@ -26,14 +27,11 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-public:
-	const CGameObject* Get_Parts(CBoss_Urd::PARTS ePart) { return m_Parts[(_uint)ePart]; }
-
 private:
-	vector<class CGameObject*>		m_Parts;
-
-private:
+	CRenderer* m_pRendererCom = { nullptr };
 	CTransform* m_pTransformCom = { nullptr };
+	CStateMachine* m_pStateMachineCom = { nullptr };
+	CCollider* m_pColliderCom = { nullptr };
 
 	_int	iIndex = 0;
 

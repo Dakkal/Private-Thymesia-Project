@@ -27,9 +27,6 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
-	class CPartObject* m_pOwnerBodyPart = { nullptr };
-	CTransform* m_pOwnerTransform = { nullptr };
-
 	_bool	m_bAttack1 = { false };
 	_bool	m_bAttack2 = { false };
 	_bool	m_bAttack3 = { false };

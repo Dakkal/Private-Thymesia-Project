@@ -23,8 +23,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER)))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
@@ -67,6 +67,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyDome(const _uint& iLayerIndex)
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _uint& iLayerIndex)
@@ -122,11 +124,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Boss(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	for (size_t i = 0; i < 5; i++)
-	{
-		if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Boss_Urd"))))
-			return E_FAIL;
-	}
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Boss_Urd"))))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 

@@ -4,6 +4,9 @@
 #include "GameInstance.h"
 #include "BinMesh.h"
 
+#include "Bounding_AABB.h"
+#include "Collider.h"
+
 CBody_Boss_Urd::CBody_Boss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
 {
@@ -20,7 +23,7 @@ HRESULT CBody_Boss_Urd::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::BOSS;
+	m_eObjType = OBJECT_TYPE::PART;
 	m_strObjectName = TEXT("Boss_Urd_Body");
 
 	return S_OK;
@@ -34,7 +37,7 @@ HRESULT CBody_Boss_Urd::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->First_Set_Animation(true, rand() % 15);
+	m_pModelCom->Set_Animation(true, 19, 1.2f);
 
 	return S_OK;
 }
@@ -46,6 +49,9 @@ void CBody_Boss_Urd::Tick(_float fTimeDelta)
 	m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta);
 
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix());
+
+	/* 계산한뒤에 월드를 업데이트 */
+	m_pColliderCom->Update(m_WorldMatrix);
 }
 
 void CBody_Boss_Urd::LateTick(_float fTimeDelta)
@@ -84,6 +90,10 @@ HRESULT CBody_Boss_Urd::Render()
 			return E_FAIL;
 	}
 
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+#endif
+
 	return S_OK;
 }
 
@@ -109,6 +119,16 @@ HRESULT CBody_Boss_Urd::Ready_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	/* For.Com_Collider_AABB */
+	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
+	AABBDesc.vExtents = _float3(0.25f, 1.f, 0.25f);
+	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
+	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	AABBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider_AABB"), (CComponent**)&m_pColliderCom, &AABBDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -195,6 +215,7 @@ void CBody_Boss_Urd::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
