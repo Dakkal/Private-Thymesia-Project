@@ -85,7 +85,7 @@ public: /* For.Calculaotr */
 	_vector		Picking_Object(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
 
 public: /* For.Collider_Manager */
-	void	Check_Collision(const _uint iLevel, const LAYER_TAG & _eType1, const LAYER_TAG & _eType2);
+	void	Check_Collision(const _uint iLevel, const LAYER_TAG & _eType1, const LAYER_TAG & _eType2, _float fTimedelta);
 
 private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };

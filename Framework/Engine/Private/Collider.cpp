@@ -109,30 +109,30 @@ void CCollider::Set_Colli(_bool _IsColli)
 	return m_pBounding->Set_Coll(_IsColli);
 }
 
-void CCollider::OnCollision_Enter(CGameObject* _pColObj)
+void CCollider::OnCollision_Enter(CGameObject* _pColObj, _float fTimedelta)
 {
 	if (false == m_bActive)
 		return;
 
 	++m_iNumbCol;
-	m_pOwner->OnCollision_Enter(_pColObj);
+	m_pOwner->OnCollision_Enter(_pColObj, fTimedelta);
 }
 
-void CCollider::OnCollision_Stay(CGameObject* _pColObj)
+void CCollider::OnCollision_Stay(CGameObject* _pColObj, _float fTimedelta)
 {
 	if (false == m_bActive)
 		return;
 
-	m_pOwner->OnCollision_Stay(_pColObj);
+	m_pOwner->OnCollision_Stay(_pColObj, fTimedelta);
 }
 
-void CCollider::OnCollision_Exit(CGameObject* _pColObj)
+void CCollider::OnCollision_Exit(CGameObject* _pColObj, _float fTimedelta)
 {
 	if (false == m_bActive)
 		return;
 
 	--m_iNumbCol;
-	m_pOwner->OnCollision_Exit(_pColObj);
+	m_pOwner->OnCollision_Exit(_pColObj, fTimedelta);
 }
 
 #ifdef _DEBUG

@@ -88,15 +88,15 @@ HRESULT CWeapon_Player_Saber::Render()
 	return S_OK;
 }
 
-void CWeapon_Player_Saber::OnCollision_Enter(CGameObject* _pColObj)
+void CWeapon_Player_Saber::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 
-void CWeapon_Player_Saber::OnCollision_Stay(CGameObject* _pColObj)
+void CWeapon_Player_Saber::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 
-void CWeapon_Player_Saber::OnCollision_Exit(CGameObject* _pColObj)
+void CWeapon_Player_Saber::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 

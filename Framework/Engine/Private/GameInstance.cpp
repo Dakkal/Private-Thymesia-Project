@@ -378,12 +378,12 @@ _vector CGameInstance::Picking_Object(RECT rc, POINT pt, CTransform* pTransform,
 	return m_pCalculator->Picking_Object(rc, pt, pTransform, pBuffer);
 }
 
-void CGameInstance::Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1, const LAYER_TAG& _eType2)
+void CGameInstance::Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1, const LAYER_TAG& _eType2, _float fTimedelta)
 {
 	if (nullptr == m_pCollider_Manager)
 		return;
 
-	return m_pCollider_Manager->Check_Collision(iLevel, _eType1, _eType2);
+	return m_pCollider_Manager->Check_Collision(iLevel, _eType1, _eType2, fTimedelta);
 }
 
 void CGameInstance::Release_Engine()

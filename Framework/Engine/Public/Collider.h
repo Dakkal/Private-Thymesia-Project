@@ -17,18 +17,19 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 
 public:
-	void			Update(_matrix TransformMatrix);
-	void			LateUpdate();
-	_bool			IsCollision(CCollider * pTargetCollider);
-	void			Set_Colli(_bool _IsColli);
-	const TYPE&		Get_ColliderType() const { return m_eColliderType; }
+	void					Update(_matrix TransformMatrix);
+	void					LateUpdate();
+	_bool					IsCollision(CCollider * pTargetCollider);
+	void					Set_Colli(_bool _IsColli);
+	const TYPE&				Get_ColliderType() const { return m_eColliderType; }
+	class CBounding*	Get_ParentBouning() const { return m_pBounding; }
 
 	_bool			Is_Colli() const { return (0 < m_iNumbCol) ? true : false; }
 	const _uint&	Get_ID() const { return m_iColID; }
 
-	void			OnCollision_Enter(CGameObject* _pColObj);
-	void			OnCollision_Stay(CGameObject* _pColObj);
-	void			OnCollision_Exit(CGameObject* _pColObj);
+	void			OnCollision_Enter(CGameObject* _pColObj, _float fTimedelta);
+	void			OnCollision_Stay(CGameObject* _pColObj, _float fTimedelta);
+	void			OnCollision_Exit(CGameObject* _pColObj, _float fTimedelta);
 
 #ifdef _DEBUG
 public:

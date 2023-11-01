@@ -9,7 +9,7 @@ CCollideManager::CCollideManager()
 {
 }
 
-void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1, const LAYER_TAG& _eType2)
+void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1, const LAYER_TAG& _eType2, _float fTimedelta)
 {
 	CGameObject* pObj1 = nullptr;
 	CGameObject* pObj2 = nullptr;
@@ -45,29 +45,29 @@ void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eTyp
 			{
 				if (0 < pObj1->Get_Parts_Size() && 0 < pObj2->Get_Parts_Size())
 				{
-					Check_Part_Collision(pObj1, pObj2);
+					Check_Part_Collision(pObj1, pObj2, fTimedelta);
 				}
 
 				if (iter->second) // 이전에도 충돌
 				{
 					if (nullptr == pObj1 || nullptr == pObj2) // 둘 중 하나 삭제 예정
 					{
-						pCol1->OnCollision_Exit(pObj2);
-						pCol2->OnCollision_Exit(pObj1);
+						pCol1->OnCollision_Exit(pObj2, fTimedelta);
+						pCol2->OnCollision_Exit(pObj1, fTimedelta);
 						iter->second = false;
 					}
 					else // 삭제 예정 없음
 					{
-						pCol1->OnCollision_Stay(pObj2);
-						pCol2->OnCollision_Stay(pObj1);
+						pCol1->OnCollision_Stay(pObj2, fTimedelta);
+						pCol2->OnCollision_Stay(pObj1, fTimedelta);
 					}
 				}
 				else // 이번에 충돌
 				{
 					if (nullptr != pObj1 && nullptr != pObj2) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
 					{
-						pCol1->OnCollision_Enter(pObj2);
-						pCol2->OnCollision_Enter(pObj1);
+						pCol1->OnCollision_Enter(pObj2, fTimedelta);
+						pCol2->OnCollision_Enter(pObj1, fTimedelta);
 						iter->second = true;
 					}
 				}
@@ -76,8 +76,8 @@ void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eTyp
 			{
 				if (iter->second) // 이전에 충돌
 				{
-					pCol1->OnCollision_Exit(pObj2);
-					pCol2->OnCollision_Exit(pObj1);
+					pCol1->OnCollision_Exit(pObj2, fTimedelta);
+					pCol2->OnCollision_Exit(pObj1, fTimedelta);
 					iter->second = false;
 				}
 			}
@@ -87,7 +87,7 @@ void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eTyp
 	RELEASE_INSTANCE(CGameInstance);
 }
 
-void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pObj2)
+void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pObj2, _float fTimedelta)
 {
 	CCollider* pCol1 = nullptr;
 	CCollider* pCol2 = nullptr;
@@ -114,22 +114,22 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 				{
 					if (nullptr == pPart1.second || nullptr == pPart2.second) // 둘 중 하나 삭제 예정
 					{
-						pCol1->OnCollision_Exit(pPart2.second);
-						pCol2->OnCollision_Exit(pPart1.second);
+						pCol1->OnCollision_Exit(pPart2.second, fTimedelta);
+						pCol2->OnCollision_Exit(pPart1.second, fTimedelta);
 						iter->second = false;
 					}
 					else // 삭제 예정 없음
 					{
-						pCol1->OnCollision_Stay(pPart2.second);
-						pCol2->OnCollision_Stay(pPart1.second);
+						pCol1->OnCollision_Stay(pPart2.second, fTimedelta);
+						pCol2->OnCollision_Stay(pPart1.second, fTimedelta);
 					}
 				}
 				else // 이번에 충돌
 				{
 					if (nullptr != pPart1.second && nullptr != pPart2.second) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
 					{
-						pCol1->OnCollision_Enter(pPart2.second);
-						pCol2->OnCollision_Enter(pPart1.second);
+						pCol1->OnCollision_Enter(pPart2.second, fTimedelta);
+						pCol2->OnCollision_Enter(pPart1.second, fTimedelta);
 						iter->second = true;
 					}
 				}
@@ -138,8 +138,8 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 			{
 				if (iter->second) // 이전에 충돌
 				{
-					pCol1->OnCollision_Exit(pPart2.second);
-					pCol2->OnCollision_Exit(pPart1.second);
+					pCol1->OnCollision_Exit(pPart2.second, fTimedelta);
+					pCol2->OnCollision_Exit(pPart1.second, fTimedelta);
 					iter->second = false;
 				}
 			}

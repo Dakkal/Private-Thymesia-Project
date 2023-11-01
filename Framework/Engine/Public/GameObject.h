@@ -36,10 +36,9 @@ public:
     void            Reset_CloneIndex() { m_iCloneIndex = 0; }
 
 public:
-public:
-    virtual void	OnCollision_Enter(CGameObject* _pColObj) {};
-    virtual void	OnCollision_Stay(CGameObject* _pColObj) {};
-    virtual void	OnCollision_Exit(CGameObject* _pColObj) {};
+    virtual void	OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta) {};
+    virtual void	OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta) {};
+    virtual void	OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta) {};
 
 public:
     class  CComponent* Get_Component(const wstring& strComponentTag) { return Find_Component(strComponentTag); }

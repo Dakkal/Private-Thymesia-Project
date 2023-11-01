@@ -89,15 +89,15 @@ HRESULT CWeapon_Player_Dagger::Render()
 	return S_OK;
 }
 
-void CWeapon_Player_Dagger::OnCollision_Enter(CGameObject* _pColObj)
+void CWeapon_Player_Dagger::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 
-void CWeapon_Player_Dagger::OnCollision_Stay(CGameObject* _pColObj)
+void CWeapon_Player_Dagger::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 
-void CWeapon_Player_Dagger::OnCollision_Exit(CGameObject* _pColObj)
+void CWeapon_Player_Dagger::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 

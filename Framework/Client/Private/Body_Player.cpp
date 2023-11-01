@@ -7,6 +7,8 @@
 #include "Collider.h"
 #include "Bounding_AABB.h"
 #include "PartObject.h"
+#include "PipeLine.h"
+#include "Bounding.h"
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -100,7 +102,7 @@ HRESULT CBody_Player::Render()
 	return S_OK;
 }
 
-void CBody_Player::OnCollision_Enter(CGameObject* _pColObj)
+void CBody_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
@@ -113,13 +115,74 @@ void CBody_Player::OnCollision_Enter(CGameObject* _pColObj)
 	case OBJECT_TYPE::BOSS:
 		break;
 	case OBJECT_TYPE::PART:
+		if (PARTS::BODY == dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index())
+		{
+			CCollider* pCollider = dynamic_cast<CCollider*>(_pColObj->Get_Component(TEXT("Com_Collider")));
+
+			_float3 vTargetCenter = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Center;
+			_float3 vPlayerCenter = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Center;
+			_float3 vFinalCenter = vPlayerCenter - vTargetCenter;
+
+			_float3 vTargetExtents = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Extents;
+			_float3 vPlayerExtents = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Extents;
+			_float3 vFinalExtents = 0.5f * _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
+
+			if (vFinalExtents.x >= vFinalExtents.y && vFinalExtents.x >= vFinalExtents.z)
+			{
+				// 충돌이 X 축에서 발생.
+
+				// TODO -> Left or Right
+				if (vPlayerCenter.x > vTargetCenter.x)
+				{
+					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
+
+					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE_POS);
+					vPos.x += vFinalExtents;
+
+					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+				}
+				else
+				{
+					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
+
+					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE::STATE_POS);
+					vPos.x -= vFinalExtents;
+
+					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+				}
+			}
+			else if (vFinalExtents.z >= vFinalExtents.y && vFinalExtents.z >= vFinalExtents.x)
+			{
+				// 충돌이 X 축에서 발생.
+
+				// TODO -> Left or Right
+				if (vPlayerCenter.z > vTargetCenter.z)
+				{
+					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
+
+					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE_POS);
+					vPos.z += vFinalExtents;
+
+					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+				}
+				else
+				{
+					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
+
+					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE::STATE_POS);
+					vPos.z -= vFinalExtents;
+
+					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+				}
+			}
+		}
 		break;
 	default:
 		break;
 	}
 }
 
-void CBody_Player::OnCollision_Stay(CGameObject* _pColObj)
+void CBody_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
@@ -132,13 +195,74 @@ void CBody_Player::OnCollision_Stay(CGameObject* _pColObj)
 	case OBJECT_TYPE::BOSS:
 		break;
 	case OBJECT_TYPE::PART:
+		if (PARTS::BODY == dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index())
+		{
+			CCollider* pCollider = dynamic_cast<CCollider*>(_pColObj->Get_Component(TEXT("Com_Collider")));
+
+			_float3 vTargetCenter = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Center;
+			_float3 vPlayerCenter = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Center;
+			_float3 vFinalCenter = vPlayerCenter - vTargetCenter;
+
+			_float3 vTargetExtents = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Extents;
+			_float3 vPlayerExtents = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Extents;
+			_float3 vFinalExtents = 0.5f * _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
+
+			if (vFinalExtents.x >= vFinalExtents.y && vFinalExtents.x >= vFinalExtents.z)
+			{
+				// 충돌이 X 축에서 발생.
+
+				// TODO -> Left or Right
+				if (vPlayerCenter.x > vTargetCenter.x)
+				{
+					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
+
+					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE_POS);
+					vPos.x += vFinalExtents;
+
+					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+				}
+				else
+				{
+					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
+
+					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE::STATE_POS);
+					vPos.x -= vFinalExtents;
+
+					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+				}
+			}
+			else if (vFinalExtents.z >= vFinalExtents.y && vFinalExtents.z >= vFinalExtents.x)
+			{
+				// 충돌이 X 축에서 발생.
+
+				// TODO -> Left or Right
+				if (vPlayerCenter.z > vTargetCenter.z)
+				{
+					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
+
+					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE_POS);
+					vPos.z += vFinalExtents;
+
+					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+				}
+				else
+				{
+					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
+
+					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE::STATE_POS);
+					vPos.z -= vFinalExtents;
+
+					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+				}
+			}
+		}
 		break;
 	default:
 		break;
 	}
 }
 
-void CBody_Player::OnCollision_Exit(CGameObject* _pColObj)
+void CBody_Player::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 

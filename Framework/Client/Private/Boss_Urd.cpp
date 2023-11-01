@@ -82,7 +82,7 @@ HRESULT CBoss_Urd::Render()
 	return S_OK;
 }
 
-void CBoss_Urd::OnCollision_Enter(CGameObject* _pColObj)
+void CBoss_Urd::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 	for (auto& iter : m_Parts)
 	{
@@ -94,11 +94,11 @@ void CBoss_Urd::OnCollision_Enter(CGameObject* _pColObj)
 	}
 }
 
-void CBoss_Urd::OnCollision_Stay(CGameObject* _pColObj)
+void CBoss_Urd::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 
-void CBoss_Urd::OnCollision_Exit(CGameObject* _pColObj)
+void CBoss_Urd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 	for (auto& iter : m_Parts)
 	{

@@ -25,8 +25,8 @@ private:
 	virtual ~CCollideManager() = default;
 
 public:
-	void	Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1, const LAYER_TAG& _eType2); 
-	void	Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pObj2);
+	void	Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1, const LAYER_TAG& _eType2, _float fTimedelta);
+	void	Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pObj2, _float fTimedelta);
 
 private:
 	typedef map<_ulonglong, _bool> CHECKCOLLI;

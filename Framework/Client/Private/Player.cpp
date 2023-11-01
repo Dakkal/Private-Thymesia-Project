@@ -91,7 +91,7 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
-void CPlayer::OnCollision_Enter(CGameObject* _pColObj)
+void CPlayer::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 	for (auto& iter : m_Parts)
 	{
@@ -103,11 +103,11 @@ void CPlayer::OnCollision_Enter(CGameObject* _pColObj)
 	}
 }
 
-void CPlayer::OnCollision_Stay(CGameObject* _pColObj)
+void CPlayer::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 
-void CPlayer::OnCollision_Exit(CGameObject* _pColObj)
+void CPlayer::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 	for (auto& iter : m_Parts)
 	{

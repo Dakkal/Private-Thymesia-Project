@@ -84,15 +84,15 @@ HRESULT CWeapon_Boss_Urd::Render()
 	return S_OK;
 }
 
-void CWeapon_Boss_Urd::OnCollision_Enter(CGameObject* _pColObj)
+void CWeapon_Boss_Urd::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 
-void CWeapon_Boss_Urd::OnCollision_Stay(CGameObject* _pColObj)
+void CWeapon_Boss_Urd::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 
-void CWeapon_Boss_Urd::OnCollision_Exit(CGameObject* _pColObj)
+void CWeapon_Boss_Urd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 }
 

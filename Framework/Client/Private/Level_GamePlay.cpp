@@ -46,7 +46,7 @@ HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_BOSS);
+	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_BOSS, fTimeDelta);
 
 	RELEASE_INSTANCE(CGameInstance)
 
