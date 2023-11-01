@@ -22,12 +22,12 @@ public:
 	const _bool&	Is_Active() const { return m_bActive; }
 
 protected:
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
-	class CGameObject* m_pOwner = { nullptr };
+	ID3D11Device*			m_pDevice = { nullptr };
+	ID3D11DeviceContext*	m_pContext = { nullptr };
+	class CGameObject*		m_pOwner = { nullptr };
 
 	_bool		m_IsCloned = { false };
-	_bool		m_bActive = { false };
+	_bool		m_bActive = { true };
 
 public:
 	virtual CComponent* Clone(class CGameObject* pOwner, void* pArg) = 0;

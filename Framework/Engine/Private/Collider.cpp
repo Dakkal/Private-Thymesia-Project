@@ -46,6 +46,8 @@ HRESULT CCollider::Initialize_Prototype(TYPE eColliderType)
 		return E_FAIL;
 #endif
 
+	m_bActive = false;
+
 	return S_OK;
 }
 

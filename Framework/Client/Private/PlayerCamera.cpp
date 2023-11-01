@@ -58,7 +58,7 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
     vCamDir = XMVector3TransformNormal(vCamDir, matX);
     vCamDir = XMVector3TransformNormal(vCamDir, matY);
     _vector vCamOffset = vCamDir * m_fOffsetDis;
-    vCamOffset.y += 3.f;
+    vCamOffset.y -= 1.f;
 
     _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
     _vector vOffsetPos = vPlayerPos + vCamOffset;

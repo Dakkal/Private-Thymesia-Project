@@ -64,6 +64,7 @@ HRESULT CPartObject::Initialize(void* pArg)
 	{
 		PART_DESC* pPartDesc = (PART_DESC*)pArg;
 		m_pOwner = pPartDesc->pOwner;
+		m_ePart = pPartDesc->ePart;
 		m_pParentTransform = pPartDesc->pParentTransform;
 		Safe_AddRef(m_pParentTransform);
 		m_pSocketBone = pPartDesc->pSocketBone;

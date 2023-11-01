@@ -32,6 +32,9 @@ _vector CTransform::Get_Scale()
 
 void CTransform::Set_State(STATE eState, _vector vState)
 {
+	if (false == m_bActive)
+		return;
+
 	memmove(m_WorldMatrix.m[eState], &vState, sizeof _vector);
 }
 

@@ -174,6 +174,7 @@ HRESULT CPlayer::Ready_PlayerParts()
 	/* For.Part_Body */
 	CPartObject::PART_DESC			PartDesc_Body;
 	PartDesc_Body.pOwner = this;
+	PartDesc_Body.ePart = PARTS::BODY;
 	PartDesc_Body.pParentTransform = m_pTransformCom;
 
 	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Body"), &PartDesc_Body);
@@ -184,6 +185,7 @@ HRESULT CPlayer::Ready_PlayerParts()
 	/* For.Part_Weapon */
 	CPartObject::PART_DESC			PartDesc_Weapon_Saber;
 	PartDesc_Weapon_Saber.pOwner = this;
+	PartDesc_Weapon_Saber.ePart = PARTS::WEAPON_R;
 	PartDesc_Weapon_Saber.pParentTransform = m_pTransformCom;
 	PartDesc_Weapon_Saber.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_r");
 	PartDesc_Weapon_Saber.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
@@ -195,6 +197,7 @@ HRESULT CPlayer::Ready_PlayerParts()
 
 	CPartObject::PART_DESC			PartDesc_Weapon_Dagger;
 	PartDesc_Weapon_Dagger.pOwner = this;
+	PartDesc_Weapon_Dagger.ePart = PARTS::WEAPON_L;
 	PartDesc_Weapon_Dagger.pParentTransform = m_pTransformCom;
 	PartDesc_Weapon_Dagger.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_l");
 	PartDesc_Weapon_Dagger.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();

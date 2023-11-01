@@ -28,7 +28,7 @@ public:
 	void	MouseMove(_float fTimeDelta);
 
 private:
-	_float			m_fOffsetDis = 3.f;
+	_float			m_fOffsetDis = 4.f;
 	_vector			m_vOffset;
 	_vector			m_vAngle;
 

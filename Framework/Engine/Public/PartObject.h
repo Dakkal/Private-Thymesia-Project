@@ -9,6 +9,7 @@ public:
 	typedef struct tagPartDesc
 	{
 		CGameObject*	pOwner = { nullptr };
+		PARTS			ePart = { PARTS::_END };
 		class CTransform*		pParentTransform = { nullptr };
 		class CBinBone*		pSocketBone = { nullptr };
 		_matrix			SocketPivot;
@@ -27,6 +28,7 @@ public:
 
 public:
 	_bool Is_AnimCurKeyFrame(_uint iIndex);
+	const PARTS& Get_Part_Index() { return m_ePart; }
 	const _int& Get_AnimationIndex();
 	const _bool& IsAnimationEnd();
 	void Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed,_uint iStartKeyFrame = 0);
@@ -40,6 +42,7 @@ public:
 
 protected:
 	CGameObject*			m_pOwner = { nullptr };
+	PARTS					m_ePart = { PARTS::_END };
 	class CTransform*		m_pParentTransform = { nullptr };
 	class CBinBone*			m_pSocketBone = { nullptr };
 	_matrix					m_SocketPivotMatrix;

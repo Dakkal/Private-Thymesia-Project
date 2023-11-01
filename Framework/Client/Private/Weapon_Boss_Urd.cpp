@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "BinBone.h"
-#include "Bounding_Sphere.h"
+#include "Bounding_OBB.h"
 #include "Collider.h"
 
 CWeapon_Boss_Urd::CWeapon_Boss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -118,13 +118,14 @@ HRESULT CWeapon_Boss_Urd::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
 		return E_FAIL;
 
-	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
-	SphereDesc.fRadius = 0.12f;
-	SphereDesc.vCenter = _float3(0.9f, 0.f, 0.f);
-	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
-	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
+	CBounding_OBB::BOUNDING_OBB_DESC		OBBDesc = {};
+	OBBDesc.vExtents = _float3(0.55f, 0.05f, 0.05f);
+	OBBDesc.vCenter = _float3(OBBDesc.vExtents.x, 0.f, 0.f);
+	OBBDesc.vDegree = _float3(0.0f, 0.f, 0.f);
+	OBBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	OBBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &OBBDesc)))
 		return E_FAIL;
 
 	return S_OK;

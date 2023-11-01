@@ -136,7 +136,7 @@ HRESULT CBody_Boss_Urd::Ready_Components()
 
 	/* For.Com_Collider_AABB */
 	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
-	AABBDesc.vExtents = _float3(0.25f, 1.f, 0.25f);
+	AABBDesc.vExtents = _float3(0.3f, 1.f, 0.3f);
 	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
 	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	AABBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);

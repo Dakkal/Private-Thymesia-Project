@@ -47,17 +47,17 @@ STATE CState_Attack::Tick(const _float& fTimeDelta)
 	}
 	else if (true == m_bAttack2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 105, 2.f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 105, 2.5f);
 		m_IsKeepAttack = false;
 	}
 	else if (true == m_bAttack3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 106, 2.f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 106, 2.8f);
 		m_IsKeepAttack = false;
 	}
 	else if (true == m_bAttackRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.f, 10);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f, 10);
 		m_IsKeepAttack = false;
 	}
 	else
@@ -144,7 +144,7 @@ STATE CState_Attack::LateTick(const _float& fTimeDelta)
 
 void CState_Attack::Enter_State()
 {
-	m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.f);
+	m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f);
 	m_bAttack1 = true;
 }
 

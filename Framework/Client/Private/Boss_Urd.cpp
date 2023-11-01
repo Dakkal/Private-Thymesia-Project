@@ -160,6 +160,7 @@ HRESULT CBoss_Urd::Ready_PlayerParts()
 	/* For.Part_Body */
 	CPartObject::PART_DESC			PartDesc_Body;
 	PartDesc_Body.pOwner = this;
+	PartDesc_Body.ePart = PARTS::BODY;
 	PartDesc_Body.pParentTransform = m_pTransformCom;
 
 	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_Body"), &PartDesc_Body);
@@ -170,6 +171,7 @@ HRESULT CBoss_Urd::Ready_PlayerParts()
 	/* For.Part_Weapon */
 	CPartObject::PART_DESC			PartDesc_Weapon;
 	PartDesc_Weapon.pOwner = this;
+	PartDesc_Weapon.ePart = PARTS::WEAPON_R;
 	PartDesc_Weapon.pParentTransform = m_pTransformCom;
 	PartDesc_Weapon.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_r");
 	PartDesc_Weapon.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();

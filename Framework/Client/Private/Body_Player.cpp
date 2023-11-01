@@ -6,6 +6,7 @@
 #include "LandObject.h"
 #include "Collider.h"
 #include "Bounding_AABB.h"
+#include "PartObject.h"
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -101,14 +102,59 @@ HRESULT CBody_Player::Render()
 
 void CBody_Player::OnCollision_Enter(CGameObject* _pColObj)
 {
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
+	{
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		break;
+	case OBJECT_TYPE::BOSS:
+		break;
+	case OBJECT_TYPE::PART:
+		break;
+	default:
+		break;
+	}
 }
 
 void CBody_Player::OnCollision_Stay(CGameObject* _pColObj)
 {
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
+	{
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		break;
+	case OBJECT_TYPE::BOSS:
+		break;
+	case OBJECT_TYPE::PART:
+		break;
+	default:
+		break;
+	}
 }
 
 void CBody_Player::OnCollision_Exit(CGameObject* _pColObj)
 {
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
+	{
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		break;
+	case OBJECT_TYPE::BOSS:
+		break;
+	case OBJECT_TYPE::PART:
+		break;
+	default:
+		break;
+	}
 }
 
 HRESULT CBody_Player::Ready_Components()
@@ -137,7 +183,7 @@ HRESULT CBody_Player::Ready_Components()
 
 	/* For.Com_Collider_AABB */
 	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
-	AABBDesc.vExtents = _float3(0.25f, 0.85f, 0.25f);
+	AABBDesc.vExtents = _float3(0.3f, 0.85f, 0.3f);
 	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
 	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	AABBDesc.vColor = _vector( 0.33f, 0.63f, 0.93f, 1.f);
