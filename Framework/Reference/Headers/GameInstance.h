@@ -7,6 +7,7 @@
 #include "Object_Manager.h"
 #include "Sound_Manager.h"
 #include "Light_Manager.h"
+#include "CollideManager.h"
 #include "PipeLine.h"
 #include "Input_Device.h"
 #include "Calculator.h"
@@ -54,7 +55,7 @@ public: /* For.Object_Manager */
 	HRESULT			Delete_GameObject(_uint iLevelIndex, const _uint & iLayerIndex, const wstring & ObjName, _uint iCloneIndex = 1);
 	HRESULT			Delete_Layer(_uint iLevelIndex, const _uint & iLayerIndex);
 	const map<const wstring, class CGameObject*>*	Get_Prototypes();
-	const list<class CGameObject*>*					Get_LayerList(_uint iLevelIndex, const _uint & iLayerIndex);
+	list<class CGameObject*>*					Get_LayerList(_uint iLevelIndex, const _uint & iLayerIndex);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, class CComponent* pPrototype);
@@ -82,6 +83,10 @@ public: /* For.Light_Manager */
 public: /* For.Calculaotr */
 	_vector		Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
 	_vector		Picking_Object(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
+
+public: /* For.Collider_Manager */
+	void	Check_Collision(const _uint iLevel, const LAYER_TAG & _eType1, const LAYER_TAG & _eType2);
+
 private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -93,6 +98,7 @@ private:
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CPipeLine*			m_pPipeLine = { nullptr };
 	class CCalculator*			m_pCalculator = { nullptr };
+	class CCollideManager*		m_pCollider_Manager = { nullptr };
 
 public:
 	static void Release_Engine();

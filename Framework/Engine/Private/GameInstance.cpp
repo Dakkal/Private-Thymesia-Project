@@ -13,6 +13,7 @@ CGameInstance::CGameInstance()
 	, m_pInput_Device(CInput_Device::GetInstance())
 	, m_pLight_Manager(CLight_Manager::GetInstance())
 	, m_pCalculator(CCalculator::GetInstance())
+	, m_pCollider_Manager(CCollideManager::GetInstance())
 {
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pTimer_Manager);
@@ -24,6 +25,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pInput_Device);
 	Safe_AddRef(m_pLight_Manager);
 	Safe_AddRef(m_pCalculator);
+	Safe_AddRef(m_pCollider_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(const GRAPHIC_DESC& GraphicDesc, HINSTANCE hInstance, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _uint iLevelIndex)
@@ -182,7 +184,7 @@ const map<const wstring, class CGameObject*>* CGameInstance::Get_Prototypes()
 	return m_pObject_Manager->Get_Prototypes();
 }
 
-const list<class CGameObject*>* CGameInstance::Get_LayerList(_uint iLevelIndex, const _uint& iLayerIndex)
+list<class CGameObject*>* CGameInstance::Get_LayerList(_uint iLevelIndex, const _uint& iLayerIndex)
 {
 	if (nullptr == m_pObject_Manager)
 		return  nullptr;
@@ -376,6 +378,14 @@ _vector CGameInstance::Picking_Object(RECT rc, POINT pt, CTransform* pTransform,
 	return m_pCalculator->Picking_Object(rc, pt, pTransform, pBuffer);
 }
 
+void CGameInstance::Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1, const LAYER_TAG& _eType2)
+{
+	if (nullptr == m_pCollider_Manager)
+		return;
+
+	return m_pCollider_Manager->Check_Collision(iLevel, _eType1, _eType2);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -386,6 +396,7 @@ void CGameInstance::Release_Engine()
 	CSound_Manager::GetInstance()->DestroyInstance();
 	CPipeLine::GetInstance()->DestroyInstance();
 	CCalculator::GetInstance()->DestroyInstance();
+	CCollideManager::GetInstance()->DestroyInstance();
 	CInput_Device::GetInstance()->DestroyInstance();
 	CLight_Manager::GetInstance()->DestroyInstance();
 	CGraphic_Device::GetInstance()->DestroyInstance();
@@ -404,5 +415,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pCalculator);
+	Safe_Release(m_pCollider_Manager);
 	Safe_Release(m_pGraphic_Device);
 }

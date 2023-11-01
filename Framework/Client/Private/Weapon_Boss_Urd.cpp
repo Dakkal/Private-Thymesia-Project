@@ -58,7 +58,7 @@ void CWeapon_Boss_Urd::Tick(_float fTimeDelta)
 
 void CWeapon_Boss_Urd::LateTick(_float fTimeDelta)
 {
-
+	m_pColliderCom->LateUpdate();
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_BLEND, this);
 }
 
@@ -82,6 +82,18 @@ HRESULT CWeapon_Boss_Urd::Render()
 	}
 
 	return S_OK;
+}
+
+void CWeapon_Boss_Urd::OnCollision_Enter(CGameObject* _pColObj)
+{
+}
+
+void CWeapon_Boss_Urd::OnCollision_Stay(CGameObject* _pColObj)
+{
+}
+
+void CWeapon_Boss_Urd::OnCollision_Exit(CGameObject* _pColObj)
+{
 }
 
 HRESULT CWeapon_Boss_Urd::Ready_Components()
@@ -112,7 +124,7 @@ HRESULT CWeapon_Boss_Urd::Ready_Components()
 	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider_Sphere"), (CComponent**)&m_pColliderCom, &SphereDesc)))
+		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
 		return E_FAIL;
 
 	return S_OK;

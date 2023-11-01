@@ -337,7 +337,7 @@ HRESULT CNavigation::Render()
 	}
 	else
 	{
-		vColor = { 1.f, 0.f, 0.f, 0.5f };
+		vColor = { 1.f, 0.f, 0.f, 1.f };
 		if (FAILED(m_pShader->Bind_RawValue("g_vLineColor", &vColor, sizeof(_vector))))
 			return E_FAIL;
 

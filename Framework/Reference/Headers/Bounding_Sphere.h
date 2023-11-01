@@ -18,10 +18,10 @@ public:
 	const BoundingSphere* Get_Bouding() const { return m_pSphere; }
 
 public:
-	virtual HRESULT Initialize(const BOUNDING_DESC* pDesc) override;
-	virtual void	Update(_matrix TransformMatrix) override;
+	virtual HRESULT			Initialize(const BOUNDING_DESC* pDesc) override;
+	virtual void			Update(_matrix TransformMatrix) override;
 
-	virtual _bool	IsCollision(CCollider::TYPE eType, CBounding* pBouding);
+	virtual _bool			IsCollision(CCollider::TYPE eType, CBounding* pBouding);
 
 #ifdef _DEBUG
 public:

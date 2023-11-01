@@ -21,10 +21,10 @@ public:
 
 
 public:
-	virtual HRESULT Initialize(const BOUNDING_DESC* pDesc) override;
-	virtual void	Update(_matrix TransformMatrix);
+	virtual HRESULT			Initialize(const BOUNDING_DESC* pDesc) override;
+	virtual void			Update(_matrix TransformMatrix);
 
-	virtual _bool	IsCollision(CCollider::TYPE eType, CBounding* pBouding);
+	virtual _bool			IsCollision(CCollider::TYPE eType, CBounding* pBouding);
 
 #ifdef _DEBUG
 public:

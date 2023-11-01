@@ -1,8 +1,11 @@
 #include "..\Public\Collider.h"
+#include "GameObject.h"
 #include "Bounding_AABB.h"
 #include "Bounding_OBB.h"
 #include "Bounding_Sphere.h"
 #include "PipeLine.h"
+
+_uint CCollider::g_iNextID = 0;
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -11,6 +14,7 @@ CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CCollider::CCollider(CGameObject* pOwner, const CCollider& rhs)
 	: CComponent(pOwner, rhs)
+	, m_iColID(g_iNextID++)
 	, m_eColliderType(rhs.m_eColliderType)
 #ifdef _DEBUG
 	, m_pBatch(rhs.m_pBatch)
@@ -70,17 +74,71 @@ HRESULT CCollider::Initialize(void* pArg)
 
 void CCollider::Update(_matrix TransformMatrix)
 {
+	if (false == m_bActive)
+		return;
+
 	m_pBounding->Update(TransformMatrix);
+}
+
+void CCollider::LateUpdate()
+{
+	if (false == m_bActive)
+		return;
+
+	if (true == Is_Colli())
+		m_pBounding->Set_Coll(true);
+	else
+		m_pBounding->Set_Coll(false);
 }
 
 _bool CCollider::IsCollision(CCollider* pTargetCollider)
 {
+	if (false == m_bActive)
+		return false;
+
 	return m_pBounding->IsCollision(pTargetCollider->m_eColliderType, pTargetCollider->m_pBounding);
+}
+
+void CCollider::Set_Colli(_bool _IsColli)
+{
+	if (false == m_bActive)
+		return;
+
+	return m_pBounding->Set_Coll(_IsColli);
+}
+
+void CCollider::OnCollision_Enter(CGameObject* _pColObj)
+{
+	if (false == m_bActive)
+		return;
+
+	++m_iNumbCol;
+	m_pOwner->OnCollision_Enter(_pColObj);
+}
+
+void CCollider::OnCollision_Stay(CGameObject* _pColObj)
+{
+	if (false == m_bActive)
+		return;
+
+	m_pOwner->OnCollision_Stay(_pColObj);
+}
+
+void CCollider::OnCollision_Exit(CGameObject* _pColObj)
+{
+	if (false == m_bActive)
+		return;
+
+	--m_iNumbCol;
+	m_pOwner->OnCollision_Exit(_pColObj);
 }
 
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {
+	if (false == m_bActive)
+		return S_OK;
+
 	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
 
 	m_pEffect->SetWorld(XMMatrixIdentity());

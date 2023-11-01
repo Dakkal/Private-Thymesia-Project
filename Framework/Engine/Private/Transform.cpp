@@ -152,7 +152,8 @@ void CTransform::Go_Forward(_float fTimeDelta, CNavigation* pNavi)
 			_vector vSlider = pNavi->Get_Cell_SliderVec(vLook);
 
 			if (-1 != vSlider.w)
-				Go_Dir(vSlider, fTimeDelta, pNavi);
+				m_vSlide = vSlider;
+			Go_Dir(m_vSlide, fTimeDelta, pNavi);
 		}
 
 	}

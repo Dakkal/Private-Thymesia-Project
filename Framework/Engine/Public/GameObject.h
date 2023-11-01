@@ -36,13 +36,21 @@ public:
     void            Reset_CloneIndex() { m_iCloneIndex = 0; }
 
 public:
+public:
+    virtual void	OnCollision_Enter(CGameObject* _pColObj) {};
+    virtual void	OnCollision_Stay(CGameObject* _pColObj) {};
+    virtual void	OnCollision_Exit(CGameObject* _pColObj) {};
+
+public:
     class  CComponent* Get_Component(const wstring& strComponentTag) { return Find_Component(strComponentTag); }
 
 public:
-    CGameObject* Get_Parts(PARTS ePart);
+    CGameObject* Get_Index_Parts(_uint iParts)  { return m_Parts[iParts]; }
+    auto&        Get_Parts() const { return m_Parts; }
+    _uint        Get_Parts_Size() { return m_Parts.size();}
 
 protected:
-    map<PARTS, class CGameObject*>		m_Parts;
+    map<_uint, class CGameObject*>		m_Parts;
 
 protected:
     ID3D11Device*           m_pDevice = { nullptr };

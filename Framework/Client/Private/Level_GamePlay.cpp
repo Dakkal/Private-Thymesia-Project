@@ -44,6 +44,12 @@ HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
 {
 	SetWindowText(g_hWnd, TEXT("게임플레이레벨 입니다."));
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_BOSS);
+
+	RELEASE_INSTANCE(CGameInstance)
+
 	return S_OK;
 }
 

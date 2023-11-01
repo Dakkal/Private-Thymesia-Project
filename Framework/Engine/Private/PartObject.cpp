@@ -63,6 +63,7 @@ HRESULT CPartObject::Initialize(void* pArg)
 	if (nullptr != pArg)
 	{
 		PART_DESC* pPartDesc = (PART_DESC*)pArg;
+		m_pOwner = pPartDesc->pOwner;
 		m_pParentTransform = pPartDesc->pParentTransform;
 		Safe_AddRef(m_pParentTransform);
 		m_pSocketBone = pPartDesc->pSocketBone;
@@ -92,11 +93,6 @@ HRESULT CPartObject::Compute_RenderMatrix(_matrix ChildMatrix)
 	m_WorldMatrix = ChildMatrix * m_pParentTransform->Get_WorldMatrix();
 
 	return S_OK;
-}
-
-CPartObject* CPartObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	return nullptr;
 }
 
 CGameObject* CPartObject::Clone(void* pArg)

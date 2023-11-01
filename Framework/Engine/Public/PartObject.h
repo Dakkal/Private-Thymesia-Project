@@ -38,8 +38,6 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-	void Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
-
 protected:
 	CGameObject*			m_pOwner = { nullptr };
 	class CTransform*		m_pParentTransform = { nullptr };
@@ -50,8 +48,8 @@ protected:
 
 protected: 
 	class CRenderer*	m_pRendererCom = { nullptr };
-	class CTransform* m_pTransformCom = { nullptr };
-	class CShader*	m_pShaderCom = { nullptr };
+	class CTransform*	m_pTransformCom = { nullptr };
+	class CShader*		m_pShaderCom = { nullptr };
 	class CBinModel*	m_pModelCom = { nullptr };
 	class CCollider*	m_pColliderCom = { nullptr };
 
@@ -59,7 +57,6 @@ protected:
 	HRESULT Compute_RenderMatrix(_matrix ChildMatrix);
 
 public:
-	static CPartObject* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 

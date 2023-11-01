@@ -29,7 +29,7 @@ public:
 	HRESULT		 Delete_Layer(_uint iLevelIndex, const _uint& iLayerIndex);
 
 	const auto*		Get_Prototypes()	{ return &m_mapPrototypes; }
-	const list<class CGameObject*>*		Get_LayerList(_uint iLevelIndex, const _uint& iLayerIndex);
+	list<class CGameObject*>*		Get_LayerList(_uint iLevelIndex, const _uint& iLayerIndex);
 
 private:
 	map<const wstring, class CGameObject*>	m_mapPrototypes;

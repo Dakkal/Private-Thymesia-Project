@@ -22,14 +22,17 @@ protected:
 
 	virtual ~CBody_Player() = default;
 
-
-
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
+
+public:
+	virtual void OnCollision_Enter(CGameObject* _pColObj) override;
+	virtual void OnCollision_Stay(CGameObject* _pColObj) override;
+	virtual void OnCollision_Exit(CGameObject* _pColObj) override;
 
 private:
 	HRESULT Ready_Components();

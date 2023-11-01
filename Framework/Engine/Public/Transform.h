@@ -61,6 +61,8 @@ private:
 
 	TRANSFORM_DESC		m_TrasformDesc;
 
+	_vector				m_vSlide;
+
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(class CGameObject* pOwner, void* pArg) override;

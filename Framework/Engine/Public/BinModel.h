@@ -23,7 +23,7 @@ public:
 
 public:
 	HRESULT First_Set_Animation(_bool isLoop, _int iAnimationIndex);
-	HRESULT Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAnimSpeed, _uint iStatNumKeyFrames = 0);
+	HRESULT Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStatNumKeyFrames = 0);
 	HRESULT Change_Animation(_float fDuration, _float fTimeDelta);
 	HRESULT	Play_Animation(_float fTimeDelta);
 

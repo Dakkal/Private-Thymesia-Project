@@ -17,8 +17,18 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 
 public:
-	void	Update(_matrix TransformMatrix);
-	_bool	IsCollision(CCollider * pTargetCollider);
+	void			Update(_matrix TransformMatrix);
+	void			LateUpdate();
+	_bool			IsCollision(CCollider * pTargetCollider);
+	void			Set_Colli(_bool _IsColli);
+	const TYPE&		Get_ColliderType() const { return m_eColliderType; }
+
+	_bool			Is_Colli() const { return (0 < m_iNumbCol) ? true : false; }
+	const _uint&	Get_ID() const { return m_iColID; }
+
+	void			OnCollision_Enter(CGameObject* _pColObj);
+	void			OnCollision_Stay(CGameObject* _pColObj);
+	void			OnCollision_Exit(CGameObject* _pColObj);
 
 #ifdef _DEBUG
 public:
@@ -33,6 +43,11 @@ private:
 private:
 	TYPE			 m_eColliderType = { TYPE_END };
 	class CBounding* m_pBounding = { nullptr };
+
+	_uint			 m_iColID = { 0 };
+	_uint			 m_iNumbCol = { 0 };
+
+	static _uint		g_iNextID;
 
 public:
 	static CCollider* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eColliderType);

@@ -8,9 +8,10 @@ class CBounding abstract : public CBase
 public:
 	typedef struct tagBoundingDesc
 	{
-		_float3			vCenter;
-		_vector			vCollideColor;
-		_vector			vColor;
+		CCollider*			pOwner;
+		_float3				vCenter;
+		_vector				vCollideColor;
+		_vector				vColor;
 	}BOUNDING_DESC;
 protected:
 	CBounding();
@@ -22,8 +23,10 @@ public:
 
 public:
 	virtual _bool	IsCollision(CCollider::TYPE eType, CBounding * pBouding) PURE;
+	virtual void	Set_Coll(_bool _bIsColli) { m_IsColl = _bIsColli; }
 
 protected:
+	CCollider*		m_pBoundingOwner = { nullptr };
 	_bool			m_IsColl = { false };
 
 	_vector			m_vColor;

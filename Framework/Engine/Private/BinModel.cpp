@@ -103,7 +103,7 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex)
 
 }
 
-HRESULT CBinModel::Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAnimSpeed, _uint iStartNumKeyFrames)
+HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStartNumKeyFrames)
 {
 	if (false == m_bIsFirstAnim)
 	{

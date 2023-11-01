@@ -75,6 +75,7 @@ void CPlayer::LateTick(_float fTimeDelta)
 			iter.second->LateTick(fTimeDelta);
 	}
 
+	m_pColliderCom->LateUpdate();
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 }
 
@@ -88,6 +89,34 @@ HRESULT CPlayer::Render()
 #endif // DEBUG
 
 	return S_OK;
+}
+
+void CPlayer::OnCollision_Enter(CGameObject* _pColObj)
+{
+	for (auto& iter : m_Parts)
+	{
+		if (nullptr != iter.second)
+		{
+			CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
+			pCollider->Set_Active(true);
+		}
+	}
+}
+
+void CPlayer::OnCollision_Stay(CGameObject* _pColObj)
+{
+}
+
+void CPlayer::OnCollision_Exit(CGameObject* _pColObj)
+{
+	for (auto& iter : m_Parts)
+	{
+		if (nullptr != iter.second)
+		{
+			CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
+			pCollider->Set_Active(false);
+		}
+	}
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -127,11 +156,14 @@ HRESULT CPlayer::Ready_Components()
 	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	SphereDesc.vColor = _vector(1.f, 1.f, 0.f, 1.f);
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider_Sphere"), (CComponent**)&m_pColliderCom, &SphereDesc)))
+		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
 		return E_FAIL;
+	m_pColliderCom->Set_Active(true);
 
 	return S_OK;
 }
+
+
 
 HRESULT CPlayer::Ready_PlayerParts()
 {
@@ -141,35 +173,35 @@ HRESULT CPlayer::Ready_PlayerParts()
 
 	/* For.Part_Body */
 	CPartObject::PART_DESC			PartDesc_Body;
+	PartDesc_Body.pOwner = this;
 	PartDesc_Body.pParentTransform = m_pTransformCom;
 
 	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Body"), &PartDesc_Body);
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
-	dynamic_cast<CPartObject*>(pPlayerParts)->Set_Owner(this);
 	m_Parts.emplace(CGameObject::PARTS::BODY, pPlayerParts);
 
 	/* For.Part_Weapon */
 	CPartObject::PART_DESC			PartDesc_Weapon_Saber;
+	PartDesc_Weapon_Saber.pOwner = this;
 	PartDesc_Weapon_Saber.pParentTransform = m_pTransformCom;
-	PartDesc_Weapon_Saber.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[CPartObject::PARTS::BODY])->Get_SocketBonePtr("weapon_r");
-	PartDesc_Weapon_Saber.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[CPartObject::PARTS::BODY])->Get_SocketPivotMatrix();
+	PartDesc_Weapon_Saber.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_r");
+	PartDesc_Weapon_Saber.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
 
 	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Weapon_Saber"), &PartDesc_Weapon_Saber);
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
-	dynamic_cast<CPartObject*>(pPlayerParts)->Set_Owner(this);
 	m_Parts.emplace(CGameObject::PARTS::WEAPON_R, pPlayerParts);
 
 	CPartObject::PART_DESC			PartDesc_Weapon_Dagger;
+	PartDesc_Weapon_Dagger.pOwner = this;
 	PartDesc_Weapon_Dagger.pParentTransform = m_pTransformCom;
-	PartDesc_Weapon_Dagger.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[CPartObject::PARTS::BODY])->Get_SocketBonePtr("weapon_l");
-	PartDesc_Weapon_Dagger.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[CPartObject::PARTS::BODY])->Get_SocketPivotMatrix();
+	PartDesc_Weapon_Dagger.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_l");
+	PartDesc_Weapon_Dagger.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
 
 	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_Weapon_Dagger"), &PartDesc_Weapon_Dagger);
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
-	dynamic_cast<CPartObject*>(pPlayerParts)->Set_Owner(this);
 	m_Parts.emplace(CGameObject::PARTS::WEAPON_L, pPlayerParts);
 
 	RELEASE_INSTANCE(CGameInstance);

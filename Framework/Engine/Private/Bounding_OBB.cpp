@@ -25,6 +25,7 @@ HRESULT CBounding_OBB::Initialize(const BOUNDING_DESC* pDesc)
 	m_vCollideColor = pOBBDesc->vCollideColor;
 	m_vColor = pOBBDesc->vColor;
 
+	m_pBoundingOwner = pOBBDesc->pOwner;
 
 	return S_OK;
 }
@@ -36,22 +37,22 @@ void CBounding_OBB::Update(_matrix TransformMatrix)
 
 _bool CBounding_OBB::IsCollision(CCollider::TYPE eType, CBounding* pBouding)
 {
-	m_IsColl = false;
+	_bool IsColl = false;
 
 	switch (eType)
 	{
 	case CCollider::TYPE_AABB:
-		m_IsColl = m_pOBB->Intersects(*(dynamic_cast<CBounding_AABB*>(pBouding))->Get_Bouding());
+		IsColl = m_pOBB->Intersects(*(dynamic_cast<CBounding_AABB*>(pBouding))->Get_Bouding());
 		break;
 	case CCollider::TYPE_OBB:
-		m_IsColl = m_pOBB->Intersects(*(dynamic_cast<CBounding_OBB*>(pBouding))->Get_Bouding());
+		IsColl = m_pOBB->Intersects(*(dynamic_cast<CBounding_OBB*>(pBouding))->Get_Bouding());
 		break;
 	case CCollider::TYPE_SPHERE:
-		m_IsColl = m_pOBB->Intersects(*(dynamic_cast<CBounding_Sphere*>(pBouding))->Get_Bouding());
+		IsColl = m_pOBB->Intersects(*(dynamic_cast<CBounding_Sphere*>(pBouding))->Get_Bouding());
 		break;
 	}
 
-	return m_IsColl;
+	return IsColl;
 }
 
 #ifdef _DEBUG

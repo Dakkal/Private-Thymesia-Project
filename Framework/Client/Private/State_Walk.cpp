@@ -93,6 +93,7 @@ void CState_Walk::Reset_State()
 {
 	if (true == m_bIsMouseMove)
 		Set_KeyVector();
+
 	m_fMouseMoveTime = 0.f;
 	m_bIsMouseMove = false;
 }

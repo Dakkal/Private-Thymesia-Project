@@ -28,6 +28,11 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+public:
+	virtual void OnCollision_Enter(CGameObject* _pColObj) override;
+	virtual void OnCollision_Stay(CGameObject* _pColObj) override;
+	virtual void OnCollision_Exit(CGameObject* _pColObj) override;
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
