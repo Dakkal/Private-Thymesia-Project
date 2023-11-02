@@ -152,6 +152,30 @@ _bool CGameInstance::Is_MouseMove()
 	return m_pInput_Device->Is_MosueMove();
 }
 
+_bool CGameInstance::Key_Pressing(_int _iKey)
+{
+	if (nullptr == m_pInput_Device)
+		return false;
+
+	return m_pInput_Device->Key_Pressing(_iKey);
+}
+
+_bool CGameInstance::Key_Down(_int _iKey)
+{
+	if (nullptr == m_pInput_Device)
+		return false;
+
+	return m_pInput_Device->Key_Down(_iKey);
+}
+
+_bool CGameInstance::Key_Up(_int _iKey)
+{
+	if (nullptr == m_pInput_Device)
+		return false;
+
+	return m_pInput_Device->Key_Up(_iKey);
+}
+
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 {
 	if (nullptr == m_pLevel_Manager)

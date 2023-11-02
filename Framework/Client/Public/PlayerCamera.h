@@ -28,13 +28,16 @@ public:
 	void	MouseMove(_float fTimeDelta);
 
 private:
-	_float			m_fOffsetDis = 4.f;
+	_float			m_fOffsetDis = 4.5f;
+	_float			m_fTargetOffsetDis = 5.f;
 	_vector			m_vOffset;
 	_vector			m_vAngle;
 
 	_float			m_fMouseSensitive = { 0.0f };
 	_bool			m_bIsMouseMove = { false };
 	CTransform*		m_pPlayerTransform = { nullptr };
+
+	_vector			m_vPlayerPos;
 
 public:
 	static CPlayerCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));

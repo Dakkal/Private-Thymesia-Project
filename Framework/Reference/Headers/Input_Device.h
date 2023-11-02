@@ -18,6 +18,10 @@ private:
 	virtual ~CInput_Device() = default;
 
 public:
+	_bool	Key_Pressing(_int _iKey);
+	_bool	Key_Down(_int _iKey);
+	_bool	Key_Up(_int _iKey);
+
 	_byte	Get_DIKeyState(_ubyte byKeyID) { return m_byKeyState[byKeyID]; }
 	_byte	Get_DIMouseState(MOUSEKEY_STATE eState) { return m_tMouseState.rgbButtons[_uint(eState)]; }
 	_long	Get_DIMouseMove(MOUSEMOVE_STATE eState) { return *(((_long*)&m_tMouseState) + _uint(eState)); }
@@ -37,6 +41,8 @@ private:
 private:
 	_byte					m_byKeyState[256];
 	DIMOUSESTATE			m_tMouseState;
+
+	_bool					m_bKeyState[VK_MAX];
 
 public:
 	virtual void	Free();

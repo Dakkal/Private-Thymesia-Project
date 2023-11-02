@@ -264,7 +264,7 @@ _bool CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
 
 	for (auto& KeyFrame : KeyFrames)
 	{
-		if (iIndex <= KeyFrame)
+		if (iIndex == KeyFrame)
 			return true;
 	}
 

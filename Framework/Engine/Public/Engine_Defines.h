@@ -56,7 +56,8 @@ enum class CHANNELID {
 };
 
 enum class STATE {
-	IDLE, WALK, RUN, AVOID, ATTACK, RAVENATTACK, HIT, WAKE, PARRY, SKILL, _END
+	IDLE, WALK, RUN, AVOID, ATTACK, RAVENATTACK, HIT, WAKE, PARRY, SKILL, 
+	LOCK_IDLE, _END
 };
 
 enum LAYER_TAG {
@@ -86,6 +87,8 @@ using namespace std;
 #include "Engine_Struct.h"
 #include "Engine_Function.h"
 using namespace Engine;
+
+#define	VK_MAX				0xff
 
 #ifdef _DEBUG
 

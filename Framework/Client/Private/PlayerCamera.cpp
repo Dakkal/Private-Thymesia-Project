@@ -34,7 +34,9 @@ HRESULT CPlayerCamera::Initialize(void* pArg)
     m_pPlayerTransform = dynamic_cast<CTransform*>(pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_PLAYER)->Get_Component(TEXT("Com_Transform")));
 
     m_vEye = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
-    m_vAt = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+    _vector vAt = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+    vAt.y += 1.5f;
+    m_vAt = vAt;
 
     RELEASE_INSTANCE(CGameInstance);
 
@@ -43,7 +45,8 @@ HRESULT CPlayerCamera::Initialize(void* pArg)
 
 void CPlayerCamera::Tick(_float fTimeDelta)
 {
-    MouseMove(fTimeDelta);
+    if(nullptr == m_pTargetTransform)
+        MouseMove(fTimeDelta);
 
     __super::Tick(fTimeDelta);
 }
@@ -53,22 +56,55 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
     _matrix matX = _matrix::CreateRotationX(XMConvertToRadians(m_vAngle.x));
     _matrix matY = _matrix::CreateRotationY(XMConvertToRadians(m_vAngle.y));
 
-    _vector vCamDir = { 0.f, 1.f, -1.f, 0.f };
+    _vector vCamDir;
+    _vector vCamOffset;
 
-    vCamDir = XMVector3TransformNormal(vCamDir, matX);
-    vCamDir = XMVector3TransformNormal(vCamDir, matY);
-    _vector vCamOffset = vCamDir * m_fOffsetDis;
-    vCamOffset.y -= 1.f;
+    if (nullptr == m_pTargetTransform)
+    {
+        vCamDir = { 0.f, 1.f, -1.f, 0.f };
+        vCamDir = XMVector3TransformNormal(vCamDir, matX);
+        vCamDir = XMVector3TransformNormal(vCamDir, matY);
+        vCamOffset = vCamDir * m_fOffsetDis;
+        vCamOffset.y -= 2.f;
 
-    _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
-    _vector vOffsetPos = vPlayerPos + vCamOffset;
+        _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+        _vector vOffsetPos = vPlayerPos + vCamOffset;
 
-    m_pTransform->Set_State(CTransform::STATE_POS, XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_POS), vOffsetPos, 10.f * fTimeDelta));
+        _vector vCamPos = _vector::Lerp(m_pTransform->Get_State(CTransform::STATE_POS), vOffsetPos, 10.f * fTimeDelta);
+        if (0.3f >= vCamPos.y)
+            vCamPos.y = 0.3f;
 
-    _vector vLookAt = vPlayerPos;
-    vLookAt.y += 1.5f;
-    m_pTransform->LookAt(vLookAt);
+        m_pTransform->Set_State(CTransform::STATE_POS, vCamPos);
 
+        vPlayerPos.y += 1.5f;
+        m_vAt = _vector::Lerp(m_vAt, vPlayerPos, 4.f * fTimeDelta);
+        m_pTransform->LookAt(m_vAt);
+    }
+    else
+    {
+        _vector vPlayer_Pos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+        _vector vTarget_Pos = m_pTargetTransform->Get_State(CTransform::STATE_POS);
+        vPlayer_Pos.y = 0; vTarget_Pos.y = 0;
+
+        _vector vCamDir = vTarget_Pos - vPlayer_Pos;
+        vCamDir.Normalize();
+        vCamDir.x *= -1.f; vCamDir.y = 1.f; vCamDir.z *= -1.f;
+        vCamOffset = vCamDir * m_fOffsetDis;
+        vCamOffset.y -= 2.5f;
+
+        _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+        _vector vOffsetPos = vPlayerPos + vCamOffset;
+        
+        _vector vCamPos = _vector::Lerp(m_pTransform->Get_State(CTransform::STATE_POS), vOffsetPos, 4.f * fTimeDelta);
+        if (0.3f >= vCamPos.y)
+            vCamPos.y = 0.3f;
+
+        m_pTransform->Set_State(CTransform::STATE_POS, vCamPos);
+
+        vTarget_Pos.y += 1.5f;
+        m_vAt = _vector::Lerp(m_vAt, vTarget_Pos, 4.f * fTimeDelta);
+        m_pTransform->LookAt(m_vAt);
+    }  
 
     __super::LateTick(fTimeDelta);
 }

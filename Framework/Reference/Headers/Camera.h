@@ -25,6 +25,9 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void LateTick(_float fTimeDelta) override;
 
+public:
+	virtual void Set_TargetTransform(class CTransform* pTransform) { m_pTargetTransform = pTransform; }
+
 protected:
 	_vector			m_vEye, m_vAt;
 	_float			m_fFovy, m_fAspect, m_fNear, m_fFar;
@@ -32,6 +35,8 @@ protected:
 protected:
 	class CTransform*	m_pTransform = { nullptr };
 	class CPipeLine*	m_pPipeLine = { nullptr };
+
+	class CTransform* m_pTargetTransform = { nullptr };
 
 public:
 	virtual CGameObject* Clone(void* pArg);

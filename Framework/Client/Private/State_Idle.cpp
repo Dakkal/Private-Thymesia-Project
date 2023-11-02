@@ -29,6 +29,8 @@ STATE CState_Idle::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	
+
 	return eState;
 }
 
@@ -39,6 +41,8 @@ void CState_Idle::Reset_State()
 
 void CState_Idle::Enter_State()
 {
+	//dynamic_cast<CPlayer*>(m_pRealOwner)->Reset_TargetEnemy();
+
 	m_pOwnerBodyPart->Set_AnimationIndex(true, 90, 1.2f);
 }
 
@@ -46,17 +50,22 @@ STATE CState_Idle::Key_Input(const _float& fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
+	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::WHEELBUTTON) & 0x80)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::LOCK_IDLE;
+	}
+	if (pGameInstance->Key_Down(VK_SPACE) & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
-	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
+	if (pGameInstance->Key_Down(VK_LBUTTON))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::ATTACK;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
+	if (pGameInstance->Key_Down('F') & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::PARRY;

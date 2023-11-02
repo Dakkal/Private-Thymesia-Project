@@ -4,12 +4,15 @@
 #include "GameInstance.h"
 #include "PartObject.h"
 
+#include "PlayerCamera.h"
+
 #include "StateMachine.h"
 #include "State_Idle.h"
 #include "State_Walk.h"
 #include "State_Avoid.h"
 #include "State_Attack.h"
 #include "State_Parry.h"
+#include "State_Lockon_Idle.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -117,6 +120,54 @@ void CPlayer::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 			pCollider->Set_Active(false);
 		}
 	}
+}
+
+void CPlayer::Reset_TargetEnemy()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	m_pTargetEnemy = nullptr;
+	CPlayerCamera* pPlayerCamera = dynamic_cast<CPlayerCamera*>(pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_CAMERA));
+	if(nullptr != pPlayerCamera)
+		pPlayerCamera->Set_TargetTransform(nullptr);
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+HRESULT CPlayer::Search_TargetEnemy()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	auto pList = pGameInstance->Get_LayerList(LEVEL_GAMEPLAY, LAYER_BOSS);
+
+	_float fCloseDist = 30.f;
+
+	for (auto& pObj : *pList)
+	{
+		CTransform* pEnemyTransform = dynamic_cast<CTransform*>(pObj->Get_Component(TEXT("Com_Transform")));
+
+		_vector vTargetPos = pEnemyTransform->Get_State(CTransform::STATE_POS);
+		_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
+
+		_float fDist = _vector(vTargetPos - vPlayerPos).Length();
+
+		if (fDist < fCloseDist)
+		{
+			fCloseDist = fDist;
+			m_pTargetEnemy = pObj;
+		}
+	}
+
+	if (nullptr != m_pTargetEnemy)
+	{
+		CPlayerCamera* pPlayerCamera = dynamic_cast<CPlayerCamera*>(pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_CAMERA));
+		CTransform* pTargetTransform = dynamic_cast<CTransform*>(m_pTargetEnemy->Get_Component(TEXT("Com_Transform")));
+		pPlayerCamera->Set_TargetTransform(pTargetTransform);
+	}
+	
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -239,6 +290,10 @@ HRESULT CPlayer::Ready_State()
 		return E_FAIL;
 	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
 
+	pState = CState_Lockon_Idle::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_IDLE);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
 
 
 	m_pStateMachineCom->Set_State(STATE::IDLE);

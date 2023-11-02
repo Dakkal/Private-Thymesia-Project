@@ -125,13 +125,11 @@ void CBody_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 
 			_float3 vTargetExtents = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Extents;
 			_float3 vPlayerExtents = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Extents;
-			_float3 vFinalExtents = 0.5f * _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
+			_float3 vFinalExtents = _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
 
 			if (vFinalExtents.x >= vFinalExtents.y && vFinalExtents.x >= vFinalExtents.z)
 			{
 				// 충돌이 X 축에서 발생.
-
-				// TODO -> Left or Right
 				if (vPlayerCenter.x > vTargetCenter.x)
 				{
 					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
@@ -153,9 +151,7 @@ void CBody_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 			}
 			else if (vFinalExtents.z >= vFinalExtents.y && vFinalExtents.z >= vFinalExtents.x)
 			{
-				// 충돌이 X 축에서 발생.
-
-				// TODO -> Left or Right
+				// 충돌이 Z 축에서 발생.
 				if (vPlayerCenter.z > vTargetCenter.z)
 				{
 					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
@@ -205,13 +201,11 @@ void CBody_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 
 			_float3 vTargetExtents = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Extents;
 			_float3 vPlayerExtents = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Extents;
-			_float3 vFinalExtents = 0.5f * _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
+			_float3 vFinalExtents = _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
 
 			if (vFinalExtents.x >= vFinalExtents.y && vFinalExtents.x >= vFinalExtents.z)
 			{
 				// 충돌이 X 축에서 발생.
-
-				// TODO -> Left or Right
 				if (vPlayerCenter.x > vTargetCenter.x)
 				{
 					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
@@ -233,9 +227,7 @@ void CBody_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 			}
 			else if (vFinalExtents.z >= vFinalExtents.y && vFinalExtents.z >= vFinalExtents.x)
 			{
-				// 충돌이 X 축에서 발생.
-
-				// TODO -> Left or Right
+				// 충돌이 Z 축에서 발생.
 				if (vPlayerCenter.z > vTargetCenter.z)
 				{
 					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
@@ -307,7 +299,7 @@ HRESULT CBody_Player::Ready_Components()
 
 	/* For.Com_Collider_AABB */
 	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
-	AABBDesc.vExtents = _float3(0.3f, 0.85f, 0.3f);
+	AABBDesc.vExtents = _float3(0.5f, 0.85f, 0.5f);
 	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
 	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	AABBDesc.vColor = _vector( 0.33f, 0.63f, 0.93f, 1.f);

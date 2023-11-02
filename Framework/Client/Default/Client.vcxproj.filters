@@ -234,6 +234,12 @@
     <ClCompile Include="..\Private\SkyDome.cpp">
       <Filter>02.GameObject\Object\SkyDome</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\State_Lockon_Idle.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Lockon_Walk.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -364,6 +370,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\SkyDome.h">
       <Filter>02.GameObject\Object\SkyDome</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Lockon_Idle.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Lockon_Walk.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

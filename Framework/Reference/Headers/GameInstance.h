@@ -41,6 +41,9 @@ public: /* For.Input_Device */
 	_byte	Get_DIMouseState(CInput_Device::MOUSEKEY_STATE eMouse);
 	_long	Get_DIMouseMove(CInput_Device::MOUSEMOVE_STATE eMouseState);
 	_bool	Is_MouseMove();
+	_bool	Key_Pressing(_int _iKey);
+	_bool	Key_Down(_int _iKey);
+	_bool	Key_Up(_int _iKey);
 
 public: /* For.Level_Manager */
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
