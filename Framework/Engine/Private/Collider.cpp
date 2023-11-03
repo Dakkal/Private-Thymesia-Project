@@ -3,6 +3,7 @@
 #include "Bounding_AABB.h"
 #include "Bounding_OBB.h"
 #include "Bounding_Sphere.h"
+#include "Bounding_Frustrum.h"
 #include "PipeLine.h"
 
 _uint CCollider::g_iNextID = 0;
@@ -65,6 +66,9 @@ HRESULT CCollider::Initialize(void* pArg)
 		break;
 	case TYPE_SPHERE:
 		m_pBounding = CBounding_Sphere::Create(pBoundingDesc);
+		break;
+	case TYPE_FRUSTUM:
+		m_pBounding = CBounding_Frustrum::Create(pBoundingDesc);
 		break;
 	}
 

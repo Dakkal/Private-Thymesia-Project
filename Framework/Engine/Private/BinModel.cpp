@@ -88,7 +88,7 @@ HRESULT CBinModel::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex)
+HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAnimSpeed)
 {
 	if (iAnimationIndex >= m_iNumAnims ||
 		iAnimationIndex == m_iCurAnimIndex)
@@ -98,6 +98,7 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex)
 
 	m_Animations[m_iCurAnimIndex]->Reset();
 	m_Animations[m_iCurAnimIndex]->Set_Loop(isLoop);
+	m_Animations[m_iCurAnimIndex]->Set_AnimSpeed(fAnimSpeed);
 
 	return S_OK;
 
@@ -105,6 +106,8 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex)
 
 HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStartNumKeyFrames)
 {
+	cout << "¾Ö´Ô¹Ù²ñ" << endl;
+
 	if (false == m_bIsFirstAnim)
 	{
 		m_iCurAnimIndex = iAnimationIndex;
@@ -305,7 +308,7 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 	vWorldDir.y *= -1;
 	vWorldDir.Normalize();
 
-	_float fDist = vDir.Length() * 0.8f;
+	_float fDist = vDir.Length() * 0.55f;
 
 	vPos += vWorldDir * fDist * fTimeDelta;
 

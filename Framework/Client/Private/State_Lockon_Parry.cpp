@@ -3,24 +3,51 @@
 #include "PartObject.h"
 #include "Player.h"
 #include "StateMachine.h"
-#include "State_Parry.h"
+#include "State_Lockon_Parry.h"
 #include "Input_Device.h"
-#include "State_Walk.h"
 
-CState_Parry::CState_Parry(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
+CState_Lockon_Parry::CState_Lockon_Parry(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
 {
 }
 
-HRESULT CState_Parry::Initialize()
+HRESULT CState_Lockon_Parry::Initialize()
 {
 	__super::Initialize();
 
 	return S_OK;
 }
 
-STATE CState_Parry::Tick(const _float& fTimeDelta)
+STATE CState_Lockon_Parry::Tick(const _float& fTimeDelta)
 {
+	CGameObject* pTarget = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy();
+	if (nullptr == pTarget)
+		return STATE::IDLE;
+
+	CComponent* pCom = pTarget->Get_Component(TEXT("Com_Transform"));
+	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pCom);
+
+	_vector vLook = m_pOwnerTransform->Get_State(CTransform::STATE_LOOK);
+	_vector vDir = pTargetTransform->Get_State(CTransform::STATE_POS) - m_pOwnerTransform->Get_State(CTransform::STATE_POS);
+	vDir.Normalize();
+	vDir.y = 0.f;
+
+	_float fRotMax = 66.f;
+	_float fRotNormal = 20.f;
+
+	_vector RotDir;
+
+	if (3.f < acosf(vDir.Dot(vLook)))
+	{
+		RotDir = _vector::Lerp(vLook, vDir, fRotMax);
+	}
+	else
+	{
+		RotDir = _vector::Lerp(vLook, vDir, fRotNormal * fTimeDelta);
+	}
+	m_pOwnerTransform->Set_Look(RotDir);
+
+
 	STATE eState = m_eState;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -28,22 +55,22 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 	if (true == m_bIdle && m_pOwnerBodyPart->Is_AnimCurKeyFrame(120))
 	{
 		RELEASE_INSTANCE(CGameInstance);
-		return STATE::IDLE;
+		return STATE::LOCK_IDLE;
 	}
 	else if (true == m_bAttack && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
-		return STATE::ATTACK;
+		return STATE::LOCK_ATTACK;
 	}
 	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
-		return STATE::AVOID;
+		return STATE::LOCK_AVOID;
 	}
 	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
-		return STATE::WALK;
+		return STATE::LOCK_WALK;
 	}
 	else if (true == m_bParry2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
@@ -63,7 +90,7 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 	return eState;
 }
 
-STATE CState_Parry::LateTick(const _float& fTimeDelta)
+STATE CState_Lockon_Parry::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
@@ -130,13 +157,13 @@ STATE CState_Parry::LateTick(const _float& fTimeDelta)
 	return eState;
 }
 
-void CState_Parry::Enter_State()
+void CState_Lockon_Parry::Enter_State()
 {
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 3.f);
 	m_bParry1 = true;
 }
 
-void CState_Parry::Reset_State()
+void CState_Lockon_Parry::Reset_State()
 {
 	m_bAttack = false;
 	m_bAvoid = false;
@@ -148,26 +175,26 @@ void CState_Parry::Reset_State()
 	m_bParryRe = false;
 }
 
-STATE CState_Parry::Key_Input(const _float& fTimeDelta)
+STATE CState_Lockon_Parry::Key_Input(const _float& fTimeDelta)
 {
 	return STATE();
 }
 
 
-CState_Parry* CState_Parry::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
+CState_Lockon_Parry* CState_Lockon_Parry::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 {
-	CState_Parry* pInstance = new CState_Parry(pDevice, pContext, pOwner, eState);
+	CState_Lockon_Parry* pInstance = new CState_Lockon_Parry(pDevice, pContext, pOwner, eState);
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created : CState_Parry");
+		MSG_BOX("Failed to Created : CState_Lockon_Parry");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CState_Parry::Free()
+void CState_Lockon_Parry::Free()
 {
 	__super::Free();
 }

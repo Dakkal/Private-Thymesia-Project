@@ -118,6 +118,12 @@
     <Filter Include="02.GameObject\Object\Boss\Boss_Urd\Part\Weapon_Boss_Urd">
       <UniqueIdentifier>{e6670a69-81fc-4a01-8901-e539d9793c34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Boss\Boss_Urd\State">
+      <UniqueIdentifier>{acf21e79-ef8e-4cc9-b6c3-10f2936f8cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\General Parts">
+      <UniqueIdentifier>{7b69b7e9-aedc-4b14-a345-200addb4d436}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -238,6 +244,15 @@
       <Filter>02.GameObject\Object\Player\State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Lockon_Walk.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Lockon_Avoid.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Lockon_Parry.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Lockon_Attack.cpp">
       <Filter>02.GameObject\Object\Player\State</Filter>
     </ClCompile>
   </ItemGroup>
@@ -375,6 +390,15 @@
       <Filter>02.GameObject\Object\Player\State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Lockon_Walk.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Lockon_Avoid.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Lockon_Parry.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Lockon_Attack.h">
       <Filter>02.GameObject\Object\Player\State</Filter>
     </ClInclude>
   </ItemGroup>

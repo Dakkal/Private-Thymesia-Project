@@ -2,6 +2,7 @@
 
 #include "Bounding_OBB.h"
 #include "Bounding_Sphere.h"
+#include "Bounding_Frustrum.h"
 #include "DebugDraw.h"
 
 CBounding_AABB::CBounding_AABB()
@@ -51,6 +52,9 @@ _bool CBounding_AABB::IsCollision(CCollider::TYPE eType, CBounding* pBouding)
 		break;
 	case CCollider::TYPE_SPHERE:
 		IsColl = m_pAABB->Intersects(*(dynamic_cast<CBounding_Sphere*>(pBouding))->Get_Bouding());
+		break;
+	case CCollider::TYPE_FRUSTUM:
+		IsColl = m_pAABB->Intersects(*(dynamic_cast<CBounding_Frustrum*>(pBouding))->Get_Bouding());
 		break;
 	}
 

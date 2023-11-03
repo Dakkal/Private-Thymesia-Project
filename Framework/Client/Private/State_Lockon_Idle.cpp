@@ -21,7 +21,11 @@ HRESULT CState_Lockon_Idle::Initialize()
 
 STATE CState_Lockon_Idle::Tick(const _float& fTimeDelta)
 {
-	CComponent* pCom = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy()->Get_Component(TEXT("Com_Transform"));
+	CGameObject* pTarget = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy();
+	if(nullptr == pTarget)
+		return STATE::IDLE;
+
+	CComponent* pCom = pTarget->Get_Component(TEXT("Com_Transform"));
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pCom);
 
 	_vector vLook = m_pOwnerTransform->Get_State(CTransform::STATE_LOOK);
@@ -67,8 +71,6 @@ void CState_Lockon_Idle::Enter_State()
 {
 	dynamic_cast<CPlayer*>(m_pRealOwner)->Search_TargetEnemy();
 
-
-
 	m_pOwnerBodyPart->Set_AnimationIndex(true, 90, 1.2f);
 }
 
@@ -76,25 +78,20 @@ STATE CState_Lockon_Idle::Key_Input(const _float& fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::WHEELBUTTON) & 0x80)
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::IDLE;
-	}
 	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
-		return STATE::AVOID;
+		return STATE::LOCK_AVOID;
 	}
 	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
-		return STATE::ATTACK;
+		return STATE::LOCK_ATTACK;
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
-		return STATE::PARRY;
+		return STATE::LOCK_PARRY;
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
 		pGameInstance->Get_DIKeyState(DIK_D) & 0x80 ||
@@ -102,7 +99,12 @@ STATE CState_Lockon_Idle::Key_Input(const _float& fTimeDelta)
 		pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
-		return STATE::WALK;
+		return STATE::LOCK_WALK;
+	}
+	if (pGameInstance->Key_Down(VK_LSHIFT))
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::IDLE;
 	}
 
 	RELEASE_INSTANCE(CGameInstance);

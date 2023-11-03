@@ -184,6 +184,9 @@
     <Filter Include="01.Utility\04.Component\Colider\Manager">
       <UniqueIdentifier>{b69bb1ea-98d8-42b3-9ca2-12c8c8cccbb2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.Component\Colider\Bounding\Frustum">
+      <UniqueIdentifier>{b2841e60-1d86-4c04-88f6-f6a49c9cab5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -363,6 +366,9 @@
     <ClInclude Include="..\Public\CollideManager.h">
       <Filter>01.Utility\04.Component\Colider\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bounding_Frustrum.h">
+      <Filter>01.Utility\04.Component\Colider\Bounding\Frustum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -523,6 +529,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CollideManager.cpp">
       <Filter>01.Utility\04.Component\Colider\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_Frustrum.cpp">
+      <Filter>01.Utility\04.Component\Colider\Bounding\Frustum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -385,7 +385,7 @@ HRESULT CLoader::Loading_Mesh()
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Player/Weapon/Weapon_Dagger/Weapon_Player_Dagger.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
-		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Boss_Urd_Body"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Boss/Body/Boss_Urd.dat"), ModelInitMatrix))))
 			return E_FAIL;
@@ -525,6 +525,12 @@ HRESULT CLoader::Loading_EtcComponent()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
 			CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
 			return E_FAIL;
+
+		/* For.Prototype_Component_Collider_Sphere */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Frustrum"),
+			CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_FRUSTUM))))
+			return E_FAIL;
+
 		/* For.Prototype_Component_Navigation */
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
 			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation/Church.dat")))))

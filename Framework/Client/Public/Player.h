@@ -34,12 +34,13 @@ public:
 	virtual void OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
 public:
-	void	Reset_TargetEnemy();
-	HRESULT	Search_TargetEnemy();
-	CGameObject* Get_TargetEnemy() const { return m_pTargetEnemy; }
+	void			Reset_TargetEnemy();
+	HRESULT			Search_TargetEnemy();
+	CGameObject*	Get_TargetEnemy() const { return m_pTargetEnemy; }
 
-private: 
-	CGameObject*			m_pTargetEnemy = { nullptr };
+private:
+	vector<CGameObject*>	m_vecTargetEnemy;	
+	CGameObject*			m_pTargetEnemy;
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
 	CStateMachine*			m_pStateMachineCom = { nullptr };

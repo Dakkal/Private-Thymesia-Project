@@ -187,7 +187,6 @@ void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNavi)
 				Set_State(STATE_POS, vPosition);
 			}
 		}
-		
 
 	}
 	else

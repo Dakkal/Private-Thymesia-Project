@@ -19,7 +19,7 @@ public:
 	const _uint&				Get_Channel_BoneIndex() const	{ return m_iBoneIndex; }
 	const KEYFRAME&				Get_CurKeyFrame()				{ return m_CurKeyFrame; }
 
-	void						Reset_CurKeyFrame() { m_CurKeyFrame = m_KeyFrames.front(); }
+	void						Reset_CurKeyFrame()				{ m_CurKeyFrame = m_KeyFrames.front(); }
 
 private:
 	string	m_strName = "";

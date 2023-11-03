@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Bounding_Frustrum.h"
 
 BEGIN(Engine)
 
@@ -13,6 +14,8 @@ public:
 		class CTransform*		pParentTransform = { nullptr };
 		class CBinBone*		pSocketBone = { nullptr };
 		_matrix			SocketPivot;
+
+		CBounding_Frustrum::BOUNDING_FRUSTRUM_DESC FrustrumDesc;
 
 	}PART_DESC;
 
@@ -32,6 +35,7 @@ public:
 	const _int& Get_AnimationIndex();
 	const _bool& IsAnimationEnd();
 	void Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed,_uint iStartKeyFrame = 0);
+	void First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);

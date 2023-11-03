@@ -41,6 +41,11 @@ STATE CState_Walk::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::ATTACK;
 	}
+	else if (pGameInstance->Key_Down(VK_LSHIFT))
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::LOCK_WALK;
+	}
 
 	if (true == pGameInstance->Is_MouseMove())
 	{
@@ -85,8 +90,9 @@ STATE CState_Walk::LateTick(const _float& fTimeDelta)
 
 void CState_Walk::Enter_State()
 {
+	dynamic_cast<CPlayer*>(m_pRealOwner)->Reset_TargetEnemy();
+
 	m_pOwnerBodyPart->Set_AnimationIndex(true, 124, 1.2f);
-	
 }
 
 void CState_Walk::Reset_State()
@@ -110,7 +116,7 @@ STATE CState_Walk::Key_Input(const _float& fTimeDelta)
 		m_vDir += m_vKeyVector[KEY_W];
 		m_bIsClick = true;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
 	{
 		m_vDir += m_vKeyVector[KEY_S];
 		m_bIsClick = true;	
@@ -120,11 +126,12 @@ STATE CState_Walk::Key_Input(const _float& fTimeDelta)
 		m_vDir += m_vKeyVector[KEY_A];
 		m_bIsClick = true;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
 	{
 		m_vDir += m_vKeyVector[KEY_D];
 		m_bIsClick = true;
 	}
+
 
 	if (true == m_bIsClick)
 	{

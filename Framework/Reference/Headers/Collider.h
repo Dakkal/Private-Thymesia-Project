@@ -6,7 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CCollider final : public CComponent
 {
 public:
-	enum TYPE { TYPE_AABB, TYPE_OBB, TYPE_SPHERE, TYPE_END };
+	enum TYPE { TYPE_AABB, TYPE_OBB, TYPE_SPHERE, TYPE_FRUSTUM, TYPE_END };
 private:
 	CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCollider(class CGameObject* pOwner, const CCollider& rhs);
@@ -22,7 +22,7 @@ public:
 	_bool					IsCollision(CCollider * pTargetCollider);
 	void					Set_Colli(_bool _IsColli);
 	const TYPE&				Get_ColliderType() const { return m_eColliderType; }
-	class CBounding*	Get_ParentBouning() const { return m_pBounding; }
+	class CBounding*		Get_ParentBouning() const { return m_pBounding; }
 
 	_bool			Is_Colli() const { return (0 < m_iNumbCol) ? true : false; }
 	const _uint&	Get_ID() const { return m_iColID; }

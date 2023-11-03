@@ -7,6 +7,9 @@ BEGIN(Client)
 class CState_Lockon_Walk final : public CState
 {
 private:
+	enum KEY { ZERO, W, S, THREE, A, FIVE, SIX, SEVEN, D, _END};
+
+private:
 	CState_Lockon_Walk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
 	virtual ~CState_Lockon_Walk() = default;
 
@@ -22,6 +25,8 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
+	_uint m_iCalculeIndex = { 0 };
+	_uint m_iAnimIndex = { 0 };
 
 public:
 	static CState_Lockon_Walk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);

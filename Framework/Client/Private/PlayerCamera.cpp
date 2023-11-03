@@ -65,7 +65,7 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
         vCamDir = XMVector3TransformNormal(vCamDir, matX);
         vCamDir = XMVector3TransformNormal(vCamDir, matY);
         vCamOffset = vCamDir * m_fOffsetDis;
-        vCamOffset.y -= 2.f;
+        vCamOffset.y -= 2.5f;
 
         _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
         _vector vOffsetPos = vPlayerPos + vCamOffset;
@@ -89,7 +89,7 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
         _vector vCamDir = vTarget_Pos - vPlayer_Pos;
         vCamDir.Normalize();
         vCamDir.x *= -1.f; vCamDir.y = 1.f; vCamDir.z *= -1.f;
-        vCamOffset = vCamDir * m_fOffsetDis;
+        vCamOffset = vCamDir * m_fTargetOffsetDis;
         vCamOffset.y -= 2.5f;
 
         _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
@@ -101,7 +101,7 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
 
         m_pTransform->Set_State(CTransform::STATE_POS, vCamPos);
 
-        vTarget_Pos.y += 1.5f;
+        vTarget_Pos.y += 0.5f;
         m_vAt = _vector::Lerp(m_vAt, vTarget_Pos, 4.f * fTimeDelta);
         m_pTransform->LookAt(m_vAt);
     }  

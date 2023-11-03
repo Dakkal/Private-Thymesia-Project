@@ -81,6 +81,11 @@ HRESULT CWeapon_Boss_Urd::Render()
 			return E_FAIL;
 	}
 
+
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+#endif
+
 	return S_OK;
 }
 
@@ -176,10 +181,6 @@ HRESULT CWeapon_Boss_Urd::Bind_ShaderResources()
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
-
-#ifdef _DEBUG
-	m_pColliderCom->Render();
-#endif
 
 	return S_OK;
 }

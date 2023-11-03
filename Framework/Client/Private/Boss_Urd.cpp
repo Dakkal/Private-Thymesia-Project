@@ -45,6 +45,9 @@ HRESULT CBoss_Urd::Initialize(void* pArg)
 
 void CBoss_Urd::Tick(_float fTimeDelta)
 {
+	Out_Player(fTimeDelta);
+	Look_Player(fTimeDelta);
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	for (auto& iter : m_Parts)
@@ -84,14 +87,33 @@ HRESULT CBoss_Urd::Render()
 
 void CBoss_Urd::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
-	for (auto& iter : m_Parts)
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
 	{
-		if (nullptr != iter.second)
+	case OBJECT_TYPE::PLAYER:
+		for (auto& iter : m_Parts)
 		{
-			CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-			pCollider->Set_Active(true);
+			if (nullptr != iter.second)
+			{
+				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
+				pCollider->Set_Active(true);
+			}
 		}
+		Get_PlayerTransform();
+		m_bIsOutPlayer = false;
+		m_fReleaseTimeAcc = 0.f;
+		break;
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		break;
+	case OBJECT_TYPE::PART:
+		break;
+	default:
+		break;
 	}
+	
 }
 
 void CBoss_Urd::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
@@ -100,14 +122,96 @@ void CBoss_Urd::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 
 void CBoss_Urd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
-	for (auto& iter : m_Parts)
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
 	{
-		if (nullptr != iter.second)
+	case OBJECT_TYPE::PLAYER:
+		for (auto& iter : m_Parts)
 		{
-			CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-			pCollider->Set_Active(false);
+			if (nullptr != iter.second)
+			{
+				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
+				pCollider->Set_Active(false);
+			}
 		}
+		m_bIsOutPlayer = true;
+		break;
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		break;
+	case OBJECT_TYPE::PART:
+		break;
+	default:
+		break;
 	}
+}
+
+void CBoss_Urd::Out_Player(_float fTimeDelta)
+{
+	if (false == m_bIsOutPlayer)
+		return;
+
+	m_fReleaseTimeAcc += fTimeDelta;
+	if (5.f <= m_fReleaseTimeAcc)
+	{
+		m_pPlayerTransform = nullptr;
+		m_fReleaseTimeAcc = 0.f;
+		m_bIsOutPlayer = false;
+	}
+}
+
+void CBoss_Urd::Look_Player(_float fTimeDelta)
+{
+	if (nullptr == m_pPlayerTransform)
+		return;
+
+	_vector vDir = m_pPlayerTransform->Get_State(CTransform::STATE_POS) - m_pTransformCom->Get_State(CTransform::CTransform::STATE_POS);
+	_float fDist = vDir.Length();
+
+	if (50 >= fDist)
+	{
+		_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+		vDir.Normalize();
+		vDir.y = 0.f;
+
+		_float fRotMax = 66.f;
+		_float fRotNormal = 20.f;
+
+		_vector RotDir;
+
+		if (3.f < acosf(vDir.Dot(vLook)))
+		{
+			RotDir = _vector::Lerp(vLook, vDir, fRotMax);
+		}
+		else
+		{
+			RotDir = _vector::Lerp(vLook, vDir, fRotNormal * fTimeDelta);
+		}
+		m_pTransformCom->Set_Look(RotDir);
+	}
+
+}
+
+void CBoss_Urd::Get_PlayerTransform()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	auto pList = pGameInstance->Get_LayerList(LEVEL_GAMEPLAY, LAYER_PLAYER);
+	if (nullptr == pList)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return;
+	}
+
+
+	for (auto& pObj : *pList)
+	{
+		m_pPlayerTransform = dynamic_cast<CTransform*>(pObj->Get_Component(TEXT("Com_Transform")));
+	}
+
+	RELEASE_INSTANCE(CGameInstance)
 }
 
 HRESULT CBoss_Urd::Ready_Components()
@@ -138,7 +242,7 @@ HRESULT CBoss_Urd::Ready_Components()
 
 	/* Com_Collider_Sphere */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
-	SphereDesc.fRadius = 3.f;
+	SphereDesc.fRadius = 5.f;
 	SphereDesc.vCenter = _float3(0.f, 0.01f, 0.f);
 	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	SphereDesc.vColor = _vector(1.f, 1.f, 0.f, 1.f);

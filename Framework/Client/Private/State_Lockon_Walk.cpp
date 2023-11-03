@@ -6,6 +6,7 @@
 #include "State_Lockon_Walk.h"
 #include "Input_Device.h"
 #include "Player.h"
+#include "Navigation.h"
 
 CState_Lockon_Walk::CState_Lockon_Walk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
@@ -21,7 +22,11 @@ HRESULT CState_Lockon_Walk::Initialize()
 
 STATE CState_Lockon_Walk::Tick(const _float& fTimeDelta)
 {
-	CComponent* pCom = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy()->Get_Component(TEXT("Com_Transform"));
+	CGameObject* pTarget = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy();
+	if (nullptr == pTarget)
+		return STATE::IDLE;
+
+	CComponent* pCom = pTarget->Get_Component(TEXT("Com_Transform"));
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pCom);
 
 	_vector vLook = m_pOwnerTransform->Get_State(CTransform::STATE_LOOK);
@@ -44,6 +49,31 @@ STATE CState_Lockon_Walk::Tick(const _float& fTimeDelta)
 	}
 	m_pOwnerTransform->Set_Look(RotDir);
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	
+	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::LOCK_AVOID;
+	}
+	else if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::LOCK_PARRY;
+	}
+	else if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::LOCK_ATTACK;
+	}
+	else if (pGameInstance->Key_Down(VK_LSHIFT))
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::WALK;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	STATE eState = Key_Input(fTimeDelta);
 
@@ -54,6 +84,7 @@ STATE CState_Lockon_Walk::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	
 
 	return eState;
 }
@@ -67,47 +98,156 @@ void CState_Lockon_Walk::Enter_State()
 {
 	dynamic_cast<CPlayer*>(m_pRealOwner)->Search_TargetEnemy();
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	_uint iAnimIndex = 0;
+	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
+	{
+		iAnimIndex += KEY::W;
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+	{
+		iAnimIndex += KEY::S;
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
+	{
+		iAnimIndex += KEY::A;
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+	{
+		iAnimIndex += KEY::D;
+	}
 
-	m_pOwnerBodyPart->Set_AnimationIndex(true, 90, 1.2f);
+	if (KEY::W == iAnimIndex)
+	{
+		m_pOwnerBodyPart->Set_AnimationIndex(true, 124, 1.2f);
+		m_iAnimIndex = iAnimIndex;
+	}
+	else if (KEY::S == iAnimIndex)
+	{
+		m_pOwnerBodyPart->Set_AnimationIndex(true, 121, 1.2f);
+		m_iAnimIndex = iAnimIndex;
+	}
+	else if (KEY::A == iAnimIndex)
+	{
+		m_pOwnerBodyPart->Set_AnimationIndex(true, 127, 1.2f);
+		m_iAnimIndex = iAnimIndex;
+	}
+	else if (KEY::D == iAnimIndex)
+	{
+		m_pOwnerBodyPart->Set_AnimationIndex(true, 128, 1.2f);
+		m_iAnimIndex = iAnimIndex;
+	}
+	else if (KEY::W + KEY::A == iAnimIndex)
+	{
+		m_pOwnerBodyPart->Set_AnimationIndex(true, 125, 1.2f);
+		m_iAnimIndex = iAnimIndex;
+	}
+	else if (KEY::W + KEY::D == iAnimIndex)
+	{
+		m_pOwnerBodyPart->Set_AnimationIndex(true, 126, 1.2f);
+		m_iAnimIndex = iAnimIndex;
+	}
+	else if (KEY::S + KEY::A == iAnimIndex)
+	{
+		m_pOwnerBodyPart->Set_AnimationIndex(true, 122, 1.2f);
+		m_iAnimIndex = iAnimIndex;
+	}
+	else if (KEY::S + KEY::D == iAnimIndex)
+	{
+		m_pOwnerBodyPart->Set_AnimationIndex(true, 123, 1.2f);
+		m_iAnimIndex = iAnimIndex;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 STATE CState_Lockon_Walk::Key_Input(const _float& fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::WHEELBUTTON) & 0x80)
+	CNavigation* pNavi = dynamic_cast<CLandObject*>(m_pRealOwner)->Get_CurNaviCom();
+
+	_bool bClicked = false;
+	m_iCalculeIndex = 0;
+	if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
 	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::IDLE;
+		m_pOwnerTransform->Go_Left(fTimeDelta, pNavi);
+		m_iCalculeIndex += KEY::A;
+		bClicked = true;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
 	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::AVOID;
+		m_pOwnerTransform->Go_Right(fTimeDelta, pNavi);
+		m_iCalculeIndex += KEY::D;
+		bClicked = true;
 	}
-	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
+	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
 	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::ATTACK;
+		m_pOwnerTransform->Go_Forward(fTimeDelta, pNavi);
+		m_iCalculeIndex += KEY::W;
+		bClicked = true;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
 	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::PARRY;
+		m_pOwnerTransform->Go_Backward(fTimeDelta, pNavi);
+		m_iCalculeIndex += KEY::S;
+		bClicked = true;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
-		pGameInstance->Get_DIKeyState(DIK_D) & 0x80 ||
-		pGameInstance->Get_DIKeyState(DIK_S) & 0x80 ||
-		pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
+	
+
+	if (true == bClicked)
 	{
+		if (m_iAnimIndex != m_iCalculeIndex)
+		{
+			if (KEY::W == m_iCalculeIndex)
+			{
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 124, 1.2f);
+				m_iAnimIndex = m_iCalculeIndex;
+			}
+			else if (KEY::S == m_iCalculeIndex)
+			{
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 121, 1.2f);
+				m_iAnimIndex = m_iCalculeIndex;
+			}
+			else if (KEY::A == m_iCalculeIndex)
+			{
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 127, 1.2f);
+				m_iAnimIndex = m_iCalculeIndex;
+			}
+			else if (KEY::D == m_iCalculeIndex)
+			{
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 128, 1.2f);
+				m_iAnimIndex = m_iCalculeIndex;
+			}
+			else if (KEY::W + KEY::A == m_iCalculeIndex)
+			{
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 125, 1.2f);
+				m_iAnimIndex = m_iCalculeIndex;
+			}
+			else if (KEY::W + KEY::D == m_iCalculeIndex)
+			{
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 126, 1.2f);
+				m_iAnimIndex = m_iCalculeIndex;
+			}
+			else if (KEY::S + KEY::A == m_iCalculeIndex)
+			{
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 122, 1.2f);
+				m_iAnimIndex = m_iCalculeIndex;
+			}
+			else if (KEY::S + KEY::D == m_iCalculeIndex)
+			{
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 123, 1.2f);
+				m_iAnimIndex = m_iCalculeIndex;
+			}
+		}
 		RELEASE_INSTANCE(CGameInstance);
-		return STATE::WALK;
+		return m_eState;
 	}
+	
 
 	RELEASE_INSTANCE(CGameInstance);
-
-	return m_eState;
+	return STATE::LOCK_IDLE;
 }
 
 CState_Lockon_Walk* CState_Lockon_Walk::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)

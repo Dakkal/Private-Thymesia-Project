@@ -13,6 +13,10 @@
 #include "State_Attack.h"
 #include "State_Parry.h"
 #include "State_Lockon_Idle.h"
+#include "State_Lockon_Walk.h"
+#include "State_Lockon_Avoid.h"
+#include "State_Lockon_Parry.h"
+#include "State_Lockon_Attack.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -96,14 +100,41 @@ HRESULT CPlayer::Render()
 
 void CPlayer::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
-	for (auto& iter : m_Parts)
+	
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
 	{
-		if (nullptr != iter.second)
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		for (auto& iter : m_Parts)
 		{
-			CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-			pCollider->Set_Active(true);
+			if (nullptr != iter.second)
+			{
+				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
+				pCollider->Set_Active(true);
+			}
 		}
+		m_vecTargetEnemy.push_back(_pColObj);
+		break;
+	case OBJECT_TYPE::BOSS:
+		for (auto& iter : m_Parts)
+		{
+			if (nullptr != iter.second)
+			{
+				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
+				pCollider->Set_Active(true);
+			}
+		}
+		m_vecTargetEnemy.push_back(_pColObj);
+		break;
+	case OBJECT_TYPE::PART:
+		break;
+	default:
+		break;
 	}
+
 }
 
 void CPlayer::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
@@ -112,13 +143,54 @@ void CPlayer::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 
 void CPlayer::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
-	for (auto& iter : m_Parts)
+	
+
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
 	{
-		if (nullptr != iter.second)
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		for (auto& iter : m_Parts)
 		{
-			CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-			pCollider->Set_Active(false);
+			if (nullptr != iter.second)
+			{
+				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
+				pCollider->Set_Active(false);
+			}
 		}
+		for (auto iter = m_vecTargetEnemy.begin(); iter != m_vecTargetEnemy.end(); ++iter)
+		{
+			if (_pColObj == *iter)
+			{
+				m_vecTargetEnemy.erase(iter);
+				break;
+			}
+		}
+		break;
+	case OBJECT_TYPE::BOSS:
+		for (auto& iter : m_Parts)
+		{
+			if (nullptr != iter.second)
+			{
+				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
+				pCollider->Set_Active(false);
+			}
+		}
+		for (auto iter = m_vecTargetEnemy.begin(); iter != m_vecTargetEnemy.end(); ++iter)
+		{
+			if (_pColObj == *iter)
+			{
+				m_vecTargetEnemy.erase(iter);
+				break;
+			}
+		}
+		break;
+	case OBJECT_TYPE::PART:
+		break;
+	default:
+		break;
 	}
 }
 
@@ -136,35 +208,35 @@ void CPlayer::Reset_TargetEnemy()
 
 HRESULT CPlayer::Search_TargetEnemy()
 {
+	if (0 >= m_vecTargetEnemy.size())
+	{
+		m_pTargetEnemy = nullptr;
+		return S_OK;
+	}
+		
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	auto pList = pGameInstance->Get_LayerList(LEVEL_GAMEPLAY, LAYER_BOSS);
-
 	_float fCloseDist = 30.f;
-
-	for (auto& pObj : *pList)
+	for (auto& pTarget : m_vecTargetEnemy)
 	{
-		CTransform* pEnemyTransform = dynamic_cast<CTransform*>(pObj->Get_Component(TEXT("Com_Transform")));
+		CTransform* pTargetTransform = dynamic_cast<CTransform*>(pTarget->Get_Component(TEXT("Com_Transform")));
+		_vector TargetPos = pTargetTransform->Get_State(CTransform::STATE_POS);
+		_vector PlayerPos = pTargetTransform->Get_State(CTransform::STATE_POS);
+		_float fDist = _vector(TargetPos - PlayerPos).Length();
 
-		_vector vTargetPos = pEnemyTransform->Get_State(CTransform::STATE_POS);
-		_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
-
-		_float fDist = _vector(vTargetPos - vPlayerPos).Length();
-
-		if (fDist < fCloseDist)
+		if (fCloseDist > fDist)
 		{
 			fCloseDist = fDist;
-			m_pTargetEnemy = pObj;
+			m_pTargetEnemy = pTarget;
 		}
+
 	}
 
-	if (nullptr != m_pTargetEnemy)
-	{
-		CPlayerCamera* pPlayerCamera = dynamic_cast<CPlayerCamera*>(pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_CAMERA));
-		CTransform* pTargetTransform = dynamic_cast<CTransform*>(m_pTargetEnemy->Get_Component(TEXT("Com_Transform")));
-		pPlayerCamera->Set_TargetTransform(pTargetTransform);
-	}
-	
+	CPlayerCamera* pPlayerCamera = dynamic_cast<CPlayerCamera*>(pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_CAMERA));
+	CTransform* pTargetTransform = dynamic_cast<CTransform*>(m_pTargetEnemy->Get_Component(TEXT("Com_Transform")));
+	pPlayerCamera->Set_TargetTransform(pTargetTransform);
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -201,14 +273,21 @@ HRESULT CPlayer::Ready_Components()
 	m_pCurNavigationCom->Set_toCell(3, m_pTransformCom);
 
 	/* Com_Collider_Sphere */
-	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
-	SphereDesc.fRadius = 3.f;
-	SphereDesc.vCenter = _float3(0.f, 0.01f, 0.f);
-	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
-	SphereDesc.vColor = _vector(1.f, 1.f, 0.f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
+	CBounding_Frustrum::BOUNDING_FRUSTRUM_DESC	FrustrumDesc = {};
+	FrustrumDesc.vCenter = _float3(0.f, 1.f, 0.f);
+	FrustrumDesc.vDegree = _float3(0.f, 0.f, 0.f);
+	FrustrumDesc.fLeftSlope = -1.f;
+	FrustrumDesc.fRightSlope = 1.f;
+	FrustrumDesc.fTopSlope = 1.f;
+	FrustrumDesc.fBottomSlope = -1.f;
+	FrustrumDesc.fNear = 0.1f;
+	FrustrumDesc.fFar = 30.f;
+	FrustrumDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	FrustrumDesc.vColor = _vector(1.f, 1.f, 0.f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Frustrum"),
+		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &FrustrumDesc)))
 		return E_FAIL;
+
 	m_pColliderCom->Set_Active(true);
 
 	return S_OK;
@@ -291,6 +370,26 @@ HRESULT CPlayer::Ready_State()
 	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
 
 	pState = CState_Lockon_Idle::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_IDLE);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_Lockon_Walk::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_WALK);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_Lockon_Avoid::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_AVOID);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_Lockon_Parry::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_PARRY);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_Lockon_Attack::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_ATTACK);
 	if (nullptr == pState)
 		return E_FAIL;
 	m_pStateMachineCom->Add_State(pState->Get_State(), pState);

@@ -33,12 +33,21 @@ public:
 	virtual void OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
 private:
+	void	Out_Player(_float fTimeDelta);
+	void	Look_Player(_float fTimeDelta);
+	void	Get_PlayerTransform();
+
+private:
+	CTransform* m_pPlayerTransform = { nullptr };
 	CRenderer* m_pRendererCom = { nullptr };
 	CTransform* m_pTransformCom = { nullptr };
 	CStateMachine* m_pStateMachineCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
 
 	_int	iIndex = 0;
+
+	_float	m_fReleaseTimeAcc = { 0.f };
+	_bool	m_bIsOutPlayer = { false };
 
 private:
 	HRESULT Ready_Components();
