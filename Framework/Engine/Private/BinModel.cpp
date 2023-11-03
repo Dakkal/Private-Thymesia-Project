@@ -106,8 +106,6 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex, _floa
 
 HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStartNumKeyFrames)
 {
-	cout << "¾Ö´Ô¹Ù²ñ" << endl;
-
 	if (false == m_bIsFirstAnim)
 	{
 		m_iCurAnimIndex = iAnimationIndex;
