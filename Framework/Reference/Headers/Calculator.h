@@ -14,6 +14,7 @@ private:
 public:
 	_vector		Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform,class CVIBuffer* pBuffer);
 	_vector		Picking_Object(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
+	HRESULT		Detrude_Collide(class CGameObject* pColObj, class CCollider* pObjCol, class CTransform* pObjTransform);
 
 public:
 	virtual void Free() override;

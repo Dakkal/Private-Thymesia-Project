@@ -91,14 +91,236 @@ HRESULT CWeapon_Boss_Urd::Render()
 
 void CWeapon_Boss_Urd::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
+	{
+	case OBJECT_TYPE::PLAYER:
+		break;
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		break;
+	case OBJECT_TYPE::PART:
+		OnCollision_Part_Enter(_pColObj, fTimeDelta);
+		break;
+	}
 }
 
 void CWeapon_Boss_Urd::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
+	{
+	case OBJECT_TYPE::PLAYER:
+		break;
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		break;
+	case OBJECT_TYPE::PART:
+		OnCollision_Part_Stay(_pColObj, fTimeDelta);
+		break;
+	}
 }
 
 void CWeapon_Boss_Urd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
+	{
+	case OBJECT_TYPE::PLAYER:
+		break;
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		break;
+	case OBJECT_TYPE::PART:
+		OnCollision_Part_Exit(_pColObj, fTimeDelta);
+		break;
+	}
+}
+
+void CWeapon_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+}
+
+void CWeapon_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+}
+
+void CWeapon_Boss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
 }
 
 HRESULT CWeapon_Boss_Urd::Ready_Components()

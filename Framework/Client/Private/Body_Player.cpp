@@ -108,72 +108,14 @@ void CBody_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 
 	switch (eObject)
 	{
+	case OBJECT_TYPE::BOSS:
+		break;
 	case OBJECT_TYPE::PORP:
 		break;
 	case OBJECT_TYPE::MONSTER:
 		break;
-	case OBJECT_TYPE::BOSS:
-		break;
 	case OBJECT_TYPE::PART:
-		if (PARTS::BODY == dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index())
-		{
-			CCollider* pCollider = dynamic_cast<CCollider*>(_pColObj->Get_Component(TEXT("Com_Collider")));
-
-			_float3 vTargetCenter = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Center;
-			_float3 vPlayerCenter = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Center;
-			_float3 vFinalCenter = vPlayerCenter - vTargetCenter;
-
-			_float3 vTargetExtents = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Extents;
-			_float3 vPlayerExtents = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Extents;
-			_float3 vFinalExtents = _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
-
-			if (vFinalExtents.x >= vFinalExtents.y && vFinalExtents.x >= vFinalExtents.z)
-			{
-				// 충돌이 X 축에서 발생.
-				if (vPlayerCenter.x > vTargetCenter.x)
-				{
-					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
-
-					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE_POS);
-					vPos.x += vFinalExtents;
-
-					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
-				}
-				else
-				{
-					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
-
-					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE::STATE_POS);
-					vPos.x -= vFinalExtents;
-
-					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
-				}
-			}
-			else if (vFinalExtents.z >= vFinalExtents.y && vFinalExtents.z >= vFinalExtents.x)
-			{
-				// 충돌이 Z 축에서 발생.
-				if (vPlayerCenter.z > vTargetCenter.z)
-				{
-					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
-
-					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE_POS);
-					vPos.z += vFinalExtents;
-
-					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
-				}
-				else
-				{
-					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
-
-					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE::STATE_POS);
-					vPos.z -= vFinalExtents;
-
-					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
-				}
-			}
-		}
-		break;
-	default:
+		OnCollision_Part_Enter(_pColObj, fTimeDelta);
 		break;
 	}
 }
@@ -184,72 +126,14 @@ void CBody_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 
 	switch (eObject)
 	{
+	case OBJECT_TYPE::BOSS:
+		break;
 	case OBJECT_TYPE::PORP:
 		break;
 	case OBJECT_TYPE::MONSTER:
 		break;
-	case OBJECT_TYPE::BOSS:
-		break;
 	case OBJECT_TYPE::PART:
-		if (PARTS::BODY == dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index())
-		{
-			CCollider* pCollider = dynamic_cast<CCollider*>(_pColObj->Get_Component(TEXT("Com_Collider")));
-
-			_float3 vTargetCenter = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Center;
-			_float3 vPlayerCenter = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Center;
-			_float3 vFinalCenter = vPlayerCenter - vTargetCenter;
-
-			_float3 vTargetExtents = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Extents;
-			_float3 vPlayerExtents = dynamic_cast<CBounding_AABB*>(m_pColliderCom->Get_ParentBouning())->Get_Bouding()->Extents;
-			_float3 vFinalExtents = _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
-
-			if (vFinalExtents.x >= vFinalExtents.y && vFinalExtents.x >= vFinalExtents.z)
-			{
-				// 충돌이 X 축에서 발생.
-				if (vPlayerCenter.x > vTargetCenter.x)
-				{
-					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
-
-					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE_POS);
-					vPos.x += vFinalExtents;
-
-					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
-				}
-				else
-				{
-					_float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
-
-					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE::STATE_POS);
-					vPos.x -= vFinalExtents;
-
-					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
-				}
-			}
-			else if (vFinalExtents.z >= vFinalExtents.y && vFinalExtents.z >= vFinalExtents.x)
-			{
-				// 충돌이 Z 축에서 발생.
-				if (vPlayerCenter.z > vTargetCenter.z)
-				{
-					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
-
-					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE_POS);
-					vPos.z += vFinalExtents;
-
-					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
-				}
-				else
-				{
-					_float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
-
-					Vec4 vPos = m_pParentTransform->Get_State(CTransform::STATE::STATE_POS);
-					vPos.z -= vFinalExtents;
-
-					m_pParentTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
-				}
-			}
-		}
-		break;
-	default:
+		OnCollision_Part_Stay(_pColObj, fTimeDelta);
 		break;
 	}
 }
@@ -260,17 +144,210 @@ void CBody_Player::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 
 	switch (eObject)
 	{
+	case OBJECT_TYPE::BOSS:
+		break;
 	case OBJECT_TYPE::PORP:
 		break;
 	case OBJECT_TYPE::MONSTER:
 		break;
-	case OBJECT_TYPE::BOSS:
-		break;
 	case OBJECT_TYPE::PART:
-		break;
-	default:
+		OnCollision_Part_Exit(_pColObj, fTimeDelta);
 		break;
 	}
+}
+
+void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::BOSS:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+		break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+		break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+		break;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CBody_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::BOSS:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+		break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+		break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+		break;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CBody_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::BOSS:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+		break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+		break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+		break;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CBody_Player::Ready_Components()

@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "PartObject.h"
 #include "StateMachine.h"
+#include "State_Idle_Urd.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -37,7 +38,10 @@ HRESULT CBoss_Urd::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(Ready_PlayerParts()))
+	if (FAILED(Ready_Parts()))
+		return E_FAIL;
+
+	if (FAILED(Ready_State()))
 		return E_FAIL;
 
 	return S_OK;
@@ -47,6 +51,8 @@ void CBoss_Urd::Tick(_float fTimeDelta)
 {
 	Out_Player(fTimeDelta);
 	Look_Player(fTimeDelta);
+	
+	m_pStateMachineCom->Tick(fTimeDelta);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -63,6 +69,8 @@ void CBoss_Urd::Tick(_float fTimeDelta)
 
 void CBoss_Urd::LateTick(_float fTimeDelta)
 {
+	m_pStateMachineCom->LateTick(fTimeDelta);
+
 	for (auto& iter : m_Parts)
 	{
 		if (nullptr != iter.second)
@@ -92,15 +100,7 @@ void CBoss_Urd::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	switch (eObject)
 	{
 	case OBJECT_TYPE::PLAYER:
-		for (auto& iter : m_Parts)
-		{
-			if (nullptr != iter.second)
-			{
-				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-				pCollider->Set_Active(true);
-			}
-		}
-		Get_PlayerTransform();
+		Set_PlayerTransform();
 		m_bIsOutPlayer = false;
 		m_fReleaseTimeAcc = 0.f;
 		break;
@@ -109,15 +109,28 @@ void CBoss_Urd::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	case OBJECT_TYPE::MONSTER:
 		break;
 	case OBJECT_TYPE::PART:
-		break;
-	default:
+		OnCollision_Part_Enter(_pColObj, fTimeDelta);
 		break;
 	}
-	
 }
 
 void CBoss_Urd::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
+	{
+	case OBJECT_TYPE::PLAYER:
+		break;
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
+		break;
+		/* For. Parts */
+	case OBJECT_TYPE::PART:
+		OnCollision_Part_Stay(_pColObj, fTimeDelta);
+		break;
+	}
 }
 
 void CBoss_Urd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
@@ -127,24 +140,197 @@ void CBoss_Urd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 	switch (eObject)
 	{
 	case OBJECT_TYPE::PLAYER:
-		for (auto& iter : m_Parts)
-		{
-			if (nullptr != iter.second)
-			{
-				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-				pCollider->Set_Active(false);
-			}
-		}
 		m_bIsOutPlayer = true;
 		break;
 	case OBJECT_TYPE::PORP:
 		break;
 	case OBJECT_TYPE::MONSTER:
 		break;
+		/* For. Parts */
 	case OBJECT_TYPE::PART:
+		OnCollision_Part_Exit(_pColObj, fTimeDelta);
 		break;
-	default:
-		break;
+	}
+}
+
+void CBoss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			m_bIsLookPlayer = true;
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+}
+
+void CBoss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+}
+
+void CBoss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
 	}
 }
 
@@ -159,12 +345,13 @@ void CBoss_Urd::Out_Player(_float fTimeDelta)
 		m_pPlayerTransform = nullptr;
 		m_fReleaseTimeAcc = 0.f;
 		m_bIsOutPlayer = false;
+		m_bIsLookPlayer = false;
 	}
 }
 
 void CBoss_Urd::Look_Player(_float fTimeDelta)
 {
-	if (nullptr == m_pPlayerTransform)
+	if (nullptr == m_pPlayerTransform || false == m_bIsLookPlayer)
 		return;
 
 	_vector vDir = m_pPlayerTransform->Get_State(CTransform::STATE_POS) - m_pTransformCom->Get_State(CTransform::CTransform::STATE_POS);
@@ -194,22 +381,18 @@ void CBoss_Urd::Look_Player(_float fTimeDelta)
 
 }
 
-void CBoss_Urd::Get_PlayerTransform()
+void CBoss_Urd::Set_PlayerTransform()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	auto pList = pGameInstance->Get_LayerList(LEVEL_GAMEPLAY, LAYER_PLAYER);
-	if (nullptr == pList)
+	auto pObj = pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_PLAYER);
+	if (nullptr == pObj)
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return;
 	}
 
-
-	for (auto& pObj : *pList)
-	{
-		m_pPlayerTransform = dynamic_cast<CTransform*>(pObj->Get_Component(TEXT("Com_Transform")));
-	}
+	m_pPlayerTransform = dynamic_cast<CTransform*>(pObj->Get_Component(TEXT("Com_Transform")));
 
 	RELEASE_INSTANCE(CGameInstance)
 }
@@ -228,6 +411,11 @@ HRESULT CBoss_Urd::Ready_Components()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	/* Com_StateMachine*/
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
+		TEXT("Com_StateMachine"), (CComponent**)&m_pStateMachineCom)))
 		return E_FAIL;
 
 	/* Com_Navigation */
@@ -250,12 +438,10 @@ HRESULT CBoss_Urd::Ready_Components()
 		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
 		return E_FAIL;
 
-	m_pColliderCom->Set_Active(true);
-
 	return S_OK;
 }
 
-HRESULT CBoss_Urd::Ready_PlayerParts()
+HRESULT CBoss_Urd::Ready_Parts()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -287,6 +473,19 @@ HRESULT CBoss_Urd::Ready_PlayerParts()
 
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CBoss_Urd::Ready_State()
+{
+	CState* pState = CState_Idle_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::IDLE);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+
+	m_pStateMachineCom->Set_State(STATE::IDLE);
 
 	return S_OK;
 }

@@ -32,6 +32,9 @@ public:
 	virtual void OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta) override;
 	virtual void OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta) override;
 	virtual void OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
+	virtual void OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta) override;
+	virtual void OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta) override;
+	virtual void OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
 public:
 	void			Reset_TargetEnemy();
@@ -40,7 +43,7 @@ public:
 
 private:
 	vector<CGameObject*>	m_vecTargetEnemy;	
-	CGameObject*			m_pTargetEnemy;
+	CGameObject*			m_pTargetEnemy = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
 	CStateMachine*			m_pStateMachineCom = { nullptr };

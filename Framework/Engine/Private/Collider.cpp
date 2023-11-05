@@ -47,14 +47,14 @@ HRESULT CCollider::Initialize_Prototype(TYPE eColliderType)
 		return E_FAIL;
 #endif
 
-	m_bActive = false;
-
 	return S_OK;
 }
 
 HRESULT CCollider::Initialize(void* pArg)
 {
-	const CBounding::BOUNDING_DESC* pBoundingDesc = (const CBounding::BOUNDING_DESC*)pArg;
+	CBounding::BOUNDING_DESC* pBoundingDesc = (CBounding::BOUNDING_DESC*)pArg;
+
+	pBoundingDesc->pOwner = this;
 
 	switch (m_eColliderType)
 	{
@@ -107,18 +107,16 @@ _bool CCollider::IsCollision(CCollider* pTargetCollider)
 
 void CCollider::Set_Colli(_bool _IsColli)
 {
-	if (false == m_bActive)
-		return;
-
 	return m_pBounding->Set_Coll(_IsColli);
 }
 
 void CCollider::OnCollision_Enter(CGameObject* _pColObj, _float fTimedelta)
 {
+	++m_iNumbCol;
+
 	if (false == m_bActive)
 		return;
 
-	++m_iNumbCol;
 	m_pOwner->OnCollision_Enter(_pColObj, fTimedelta);
 }
 
@@ -132,10 +130,11 @@ void CCollider::OnCollision_Stay(CGameObject* _pColObj, _float fTimedelta)
 
 void CCollider::OnCollision_Exit(CGameObject* _pColObj, _float fTimedelta)
 {
+	--m_iNumbCol;
+
 	if (false == m_bActive)
 		return;
 
-	--m_iNumbCol;
 	m_pOwner->OnCollision_Exit(_pColObj, fTimedelta);
 }
 

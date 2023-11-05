@@ -108,30 +108,13 @@ void CPlayer::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	case OBJECT_TYPE::PORP:
 		break;
 	case OBJECT_TYPE::MONSTER:
-		for (auto& iter : m_Parts)
-		{
-			if (nullptr != iter.second)
-			{
-				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-				pCollider->Set_Active(true);
-			}
-		}
 		m_vecTargetEnemy.push_back(_pColObj);
 		break;
 	case OBJECT_TYPE::BOSS:
-		for (auto& iter : m_Parts)
-		{
-			if (nullptr != iter.second)
-			{
-				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-				pCollider->Set_Active(true);
-			}
-		}
 		m_vecTargetEnemy.push_back(_pColObj);
 		break;
 	case OBJECT_TYPE::PART:
-		break;
-	default:
+		OnCollision_Part_Enter(_pColObj, fTimeDelta);
 		break;
 	}
 
@@ -139,12 +122,6 @@ void CPlayer::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 
 void CPlayer::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
-}
-
-void CPlayer::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
-{
-	
-
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
 	switch (eObject)
@@ -152,14 +129,24 @@ void CPlayer::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 	case OBJECT_TYPE::PORP:
 		break;
 	case OBJECT_TYPE::MONSTER:
-		for (auto& iter : m_Parts)
-		{
-			if (nullptr != iter.second)
-			{
-				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-				pCollider->Set_Active(false);
-			}
-		}
+		break;
+	case OBJECT_TYPE::BOSS:
+		break;
+	case OBJECT_TYPE::PART:
+		OnCollision_Part_Stay(_pColObj, fTimeDelta);
+		break;
+	}
+}
+
+void CPlayer::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
+{
+	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
+
+	switch (eObject)
+	{
+	case OBJECT_TYPE::PORP:
+		break;
+	case OBJECT_TYPE::MONSTER:
 		for (auto iter = m_vecTargetEnemy.begin(); iter != m_vecTargetEnemy.end(); ++iter)
 		{
 			if (_pColObj == *iter)
@@ -170,14 +157,6 @@ void CPlayer::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 		}
 		break;
 	case OBJECT_TYPE::BOSS:
-		for (auto& iter : m_Parts)
-		{
-			if (nullptr != iter.second)
-			{
-				CCollider* pCollider = dynamic_cast<CCollider*>(iter.second->Get_Component(TEXT("Com_Collider")));
-				pCollider->Set_Active(false);
-			}
-		}
 		for (auto iter = m_vecTargetEnemy.begin(); iter != m_vecTargetEnemy.end(); ++iter)
 		{
 			if (_pColObj == *iter)
@@ -188,10 +167,203 @@ void CPlayer::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 		}
 		break;
 	case OBJECT_TYPE::PART:
+		OnCollision_Part_Exit(_pColObj, fTimeDelta);
 		break;
 	default:
 		break;
 	}
+}
+
+void CPlayer::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::BOSS:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CPlayer::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::BOSS:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CPlayer::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::BOSS:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 void CPlayer::Reset_TargetEnemy()
@@ -288,12 +460,8 @@ HRESULT CPlayer::Ready_Components()
 		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &FrustrumDesc)))
 		return E_FAIL;
 
-	m_pColliderCom->Set_Active(true);
-
 	return S_OK;
 }
-
-
 
 HRESULT CPlayer::Ready_PlayerParts()
 {

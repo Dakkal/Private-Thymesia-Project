@@ -1,5 +1,7 @@
 #include "..\Public\Calculator.h"
 #include "GameInstance.h"
+#include "Collider.h"
+#include "Bounding_AABB.h"
 
 IMPLEMENT_SINGLETON(CCalculator)
 
@@ -11,7 +13,7 @@ _vector CCalculator::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, 
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	
-	_float3		vMousePos(pt.x, pt.y, 0.f);
+	_float3		vMousePos(pt.x, pt.y, 1.f);
 	SimpleMath::Viewport viewport(rc);
 
     _float3 WordlMousePos = viewport.Unproject(vMousePos,
@@ -136,6 +138,69 @@ _vector CCalculator::Picking_Object(RECT rc, POINT pt, CTransform* pTransform, C
     RELEASE_INSTANCE(CGameInstance);
 
     return _vector(-1.f, -1.f, -1.f, -1.f);
+}
+
+HRESULT CCalculator::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform)
+{
+    if (nullptr == pColObj || nullptr == pObjCol || nullptr == pObjTransform)
+        return E_FAIL;
+
+    CCollider* pCollider = dynamic_cast<CCollider*>(pColObj->Get_Component(TEXT("Com_Collider")));
+
+    _float3 vTargetCenter = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Center;
+    _float3 vPlayerCenter = dynamic_cast<CBounding_AABB*>(pObjCol->Get_ParentBouning())->Get_Bouding()->Center;
+    _float3 vFinalCenter = vPlayerCenter - vTargetCenter;
+
+    _float3 vTargetExtents = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Extents;
+    _float3 vPlayerExtents = dynamic_cast<CBounding_AABB*>(pObjCol->Get_ParentBouning())->Get_Bouding()->Extents;
+    _float3 vFinalExtents = 0.5 * _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
+
+    if (vFinalExtents.x >= vFinalExtents.z)
+    {
+        // 충돌이 X 축에서 발생.
+        if (vPlayerCenter.x > vTargetCenter.x)
+        {
+            _float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
+
+            Vec4 vPos = pObjTransform->Get_State(CTransform::STATE_POS);
+            vPos.x += vFinalExtents;
+
+            pObjTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+        }
+        else
+        {
+            _float vFinalExtents = fabs((vPlayerExtents.x + vTargetExtents.x)) - fabs(vFinalCenter.x);
+
+            Vec4 vPos = pObjTransform->Get_State(CTransform::STATE::STATE_POS);
+            vPos.x -= vFinalExtents;
+
+            pObjTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+        }
+    }
+    else if (vFinalExtents.z >= vFinalExtents.x)
+    {
+        // 충돌이 Z 축에서 발생.
+        if (vPlayerCenter.z > vTargetCenter.z)
+        {
+            _float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
+
+            Vec4 vPos = pObjTransform->Get_State(CTransform::STATE_POS);
+            vPos.z += vFinalExtents;
+
+            pObjTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+        }
+        else
+        {
+            _float vFinalExtents = fabs((vPlayerExtents.z + vTargetExtents.z)) - fabs(vFinalCenter.z);
+
+            Vec4 vPos = pObjTransform->Get_State(CTransform::STATE::STATE_POS);
+            vPos.z -= vFinalExtents;
+
+            pObjTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+        }
+    }
+
+    return S_OK;
 }
 
 void CCalculator::Free()

@@ -9,11 +9,11 @@ class ENGINE_DLL CPartObject abstract : public CGameObject
 public:
 	typedef struct tagPartDesc
 	{
-		CGameObject*	pOwner = { nullptr };
-		PARTS			ePart = { PARTS::_END };
-		class CTransform*		pParentTransform = { nullptr };
+		CGameObject*		pOwner = { nullptr };
+		PARTS				ePart = { PARTS::_END };
+		class CTransform*	pParentTransform = { nullptr };
 		class CBinBone*		pSocketBone = { nullptr };
-		_matrix			SocketPivot;
+		_matrix				SocketPivot;
 
 		CBounding_Frustrum::BOUNDING_FRUSTRUM_DESC FrustrumDesc;
 
@@ -27,21 +27,22 @@ protected:
 
 public:
 	class CBinBone* Get_SocketBonePtr(const char* pBoneName);
-	_matrix Get_SocketPivotMatrix();
+	_matrix			Get_SocketPivotMatrix();
+	const PARTS&	Get_Part_Index() { return m_ePart; }
+	const _int&		Get_AnimationIndex();
+	CGameObject*	Get_PartOwner() { return m_pOwner; }
 
 public:
-	_bool Is_AnimCurKeyFrame(_uint iIndex);
-	const PARTS& Get_Part_Index() { return m_ePart; }
-	const _int& Get_AnimationIndex();
-	const _bool& IsAnimationEnd();
-	void Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed,_uint iStartKeyFrame = 0);
-	void First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
+	_bool			Is_AnimCurKeyFrame(_uint iIndex);
+	const _bool&	IsAnimationEnd();
+	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed,_uint iStartKeyFrame = 0);
+	void			First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
 
 public:
-	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
+	virtual HRESULT Initialize_Prototype(const wstring & strProtoTag);
 	virtual HRESULT Initialize(void* pArg);
-	virtual void Tick(_float fTimeDelta);
-	virtual void LateTick(_float fTimeDelta);
+	virtual void	Tick(_float fTimeDelta);
+	virtual void	LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
 protected:
@@ -53,7 +54,7 @@ protected:
 	_matrix					m_WorldMatrix;
 
 
-protected: 
+protected:
 	class CRenderer*	m_pRendererCom = { nullptr };
 	class CTransform*	m_pTransformCom = { nullptr };
 	class CShader*		m_pShaderCom = { nullptr };

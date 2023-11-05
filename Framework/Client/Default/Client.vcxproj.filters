@@ -255,6 +255,9 @@
     <ClCompile Include="..\Private\State_Lockon_Attack.cpp">
       <Filter>02.GameObject\Object\Player\State</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\State_Idle_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -400,6 +403,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Lockon_Attack.h">
       <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

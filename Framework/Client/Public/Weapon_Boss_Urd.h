@@ -22,6 +22,9 @@ public:
 	virtual void OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta) override;
 	virtual void OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta) override;
 	virtual void OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
+	virtual void OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta) override;
+	virtual void OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta) override;
+	virtual void OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
 private:
 	HRESULT Ready_Components();

@@ -31,11 +31,18 @@ public:
 	virtual void OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta) override;
 	virtual void OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta) override;
 	virtual void OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
+	virtual void OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta) override;
+	virtual void OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta) override;
+	virtual void OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
-private:
+public:
+	CTransform* Get_PlayerTransform() const { return m_pPlayerTransform; }
+	void		Set_LookPlayer(_bool bIsLook) { m_bIsLookPlayer = bIsLook; }
+
+public:
 	void	Out_Player(_float fTimeDelta);
 	void	Look_Player(_float fTimeDelta);
-	void	Get_PlayerTransform();
+	void	Set_PlayerTransform();
 
 private:
 	CTransform* m_pPlayerTransform = { nullptr };
@@ -48,10 +55,12 @@ private:
 
 	_float	m_fReleaseTimeAcc = { 0.f };
 	_bool	m_bIsOutPlayer = { false };
+	_bool	m_bIsLookPlayer = { false };
 
 private:
 	HRESULT Ready_Components();
-	HRESULT Ready_PlayerParts();
+	HRESULT Ready_Parts();
+	HRESULT Ready_State();
 
 public:
 	static CBoss_Urd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));

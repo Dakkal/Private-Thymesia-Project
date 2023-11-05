@@ -88,7 +88,7 @@ HRESULT CBinModel::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CBinModel::First_Set_Animation(_bool isLoop, _int iAnimationIndex, _float fAnimSpeed)
+HRESULT CBinModel::First_Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed)
 {
 	if (iAnimationIndex >= m_iNumAnims ||
 		iAnimationIndex == m_iCurAnimIndex)

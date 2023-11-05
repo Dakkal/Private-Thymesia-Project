@@ -402,6 +402,14 @@ _vector CGameInstance::Picking_Object(RECT rc, POINT pt, CTransform* pTransform,
 	return m_pCalculator->Picking_Object(rc, pt, pTransform, pBuffer);
 }
 
+HRESULT CGameInstance::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform)
+{
+	if (nullptr == m_pCalculator)
+		return E_FAIL;
+
+	return m_pCalculator->Detrude_Collide(pColObj, pObjCol, pObjTransform);
+}
+
 void CGameInstance::Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1, const LAYER_TAG& _eType2, _float fTimedelta)
 {
 	if (nullptr == m_pCollider_Manager)
