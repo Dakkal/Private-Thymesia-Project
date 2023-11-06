@@ -30,12 +30,13 @@ public:
 	_matrix			Get_SocketPivotMatrix();
 	const PARTS&	Get_Part_Index() { return m_ePart; }
 	const _int&		Get_AnimationIndex();
+	_uint			Get_CurKeyFrameNumb();
 	CGameObject*	Get_PartOwner() { return m_pOwner; }
 
 public:
 	_bool			Is_AnimCurKeyFrame(_uint iIndex);
 	const _bool&	IsAnimationEnd();
-	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed,_uint iStartKeyFrame = 0);
+	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed,_uint iStartKeyFrame = 0, _float fChangeDuration = 0.2f);
 	void			First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
 
 public:

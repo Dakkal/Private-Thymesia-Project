@@ -410,6 +410,22 @@ HRESULT CGameInstance::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol,
 	return m_pCalculator->Detrude_Collide(pColObj, pObjCol, pObjTransform);
 }
 
+_float3 CGameInstance::QuaternionToEuler(_vector vQuaternion)
+{
+	if (nullptr == m_pCalculator)
+		return _float3();
+
+	return m_pCalculator->QuaternionToEuler(vQuaternion);
+}
+
+_float CGameInstance::Clamp(float value, float min, float max)
+{
+	if (nullptr == m_pCalculator)
+		return _float();
+
+	return m_pCalculator->Clamp(value, min, max);
+}
+
 void CGameInstance::Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1, const LAYER_TAG& _eType2, _float fTimedelta)
 {
 	if (nullptr == m_pCollider_Manager)

@@ -1,4 +1,5 @@
 #include "../Public/BinModel.h"
+#include "GameInstance.h"
 #include "BinAnimation.h"
 #include "BinBone.h"
 #include "BinMesh.h"
@@ -104,7 +105,7 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _uint iAnimationIndex, _flo
 
 }
 
-HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStartNumKeyFrames)
+HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStartNumKeyFrames, _float fChangeDuration)
 {
 	if (false == m_bIsFirstAnim)
 	{
@@ -135,6 +136,7 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAn
 	m_bIsNextAnimLoop = isLoop;
 	m_iNextStartNumKeyFrames = iStartNumKeyFrames;
 	m_fChangeTrackPosition = 0.f;
+	m_fChangeDuration = fChangeDuration;
 
 	CurChannels = m_Animations[m_iCurAnimIndex]->Get_Channels();
 	NextChannels = m_Animations[m_iNextAnimIndex]->Get_Channels();
@@ -204,7 +206,7 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 {
 	if (true == m_bIsAnimChange)
 	{
-		Change_Animation(0.2f, fTimeDelta);
+		Change_Animation(m_fChangeDuration, fTimeDelta);
 	}
 	if (false == m_bIsAnimChange)
 	{
@@ -253,6 +255,21 @@ HRESULT CBinModel::Render(_uint iMeshIndex)
 		m_Meshes[iMeshIndex]->Render();
 
 	return S_OK;
+}
+
+_uint CBinModel::Get_CurKeyFrameNumb()
+{
+	_uint iNumb = 0;
+
+	auto& KeyFrames = m_Animations[m_iCurAnimIndex]->Get_CurKeyFrames();
+
+	for (auto& KeyFrame : KeyFrames)
+	{
+		if (iNumb < KeyFrame)
+			iNumb = KeyFrame;
+	}
+
+	return iNumb;
 }
 
 _bool CBinModel::Is_CurAnimKeyFrame(_uint iIndex)

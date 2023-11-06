@@ -87,6 +87,8 @@ public: /* For.Calculaotr */
 	_vector		Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
 	_vector		Picking_Object(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
 	HRESULT		Detrude_Collide(class CGameObject* pColObj, class CCollider* pObjCol, class CTransform* pObjTransform);
+	_float3		QuaternionToEuler(_vector vQuaternion);
+	_float		Clamp(float value, float min, float max);
 
 public: /* For.Collider_Manager */
 	void	Check_Collision(const _uint iLevel, const LAYER_TAG & _eType1, const LAYER_TAG & _eType2, _float fTimedelta);

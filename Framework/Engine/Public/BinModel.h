@@ -23,7 +23,7 @@ public:
 
 public:
 	HRESULT First_Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed);
-	HRESULT Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStatNumKeyFrames = 0);
+	HRESULT Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStatNumKeyFrames = 0, _float fChangeDuration = 0.2);
 	HRESULT Change_Animation(_float fDuration, _float fTimeDelta);
 	HRESULT	Play_Animation(_float fTimeDelta);
 
@@ -40,6 +40,8 @@ public:
 	const vector<class CBinAnimation*>&		Get_Animations()	{ return m_Animations; }
 	const class CBinAnimation*				Get_CurAnimation()	{ return m_Animations[m_iCurAnimIndex]; }
 	const _int&								Get_CurAnimIndex()  { return m_iCurAnimIndex; }
+	_uint									Get_CurKeyFrameNumb();
+
 	_bool									Is_CurAnimKeyFrame(_uint iIndex);
 	const _bool&							Is_CurAnimFinished(){ return m_Animations[m_iCurAnimIndex]->IsFinished(); }
 	
@@ -82,6 +84,8 @@ private:
 	_uint									m_iNumAnims = { 0 };
 	vector<class CBinAnimation*>			m_Animations;
 	_bool									m_bIsFirstAnim = { false };
+
+	_float									m_fChangeDuration = { 0.2f };
 
 private:
 	HRESULT Ready_Meshes(const SAVE_MESH tMehsDesc);

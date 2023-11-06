@@ -203,6 +203,27 @@ HRESULT CCalculator::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, C
     return S_OK;
 }
 
+_float3 CCalculator::QuaternionToEuler(_vector vQuaternion)
+{
+    _float3 euler;
+
+    _matrix rotationMatrix = XMMatrixRotationQuaternion(vQuaternion);
+
+    euler.x = atan2f(rotationMatrix(2, 1), rotationMatrix(2, 2));
+    euler.y = asinf(-rotationMatrix(2, 0));
+    euler.z = atan2f(rotationMatrix(1, 0), rotationMatrix(0, 0));
+
+    return euler;
+}
+
+_float CCalculator::Clamp(_float value, _float min, _float max)
+{
+    if (value < min) return min;
+    if (value > max) return max;
+
+    return value;
+}
+
 void CCalculator::Free()
 {
 	__super::Free();

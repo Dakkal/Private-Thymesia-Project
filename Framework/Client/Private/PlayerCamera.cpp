@@ -90,7 +90,7 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
         vCamDir.Normalize();
         vCamDir.x *= -1.f; vCamDir.y = 1.f; vCamDir.z *= -1.f;
         vCamOffset = vCamDir * m_fTargetOffsetDis;
-        vCamOffset.y -= 2.5f;
+        vCamOffset.y -= 2.f;
 
         _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
         _vector vOffsetPos = vPlayerPos + vCamOffset;

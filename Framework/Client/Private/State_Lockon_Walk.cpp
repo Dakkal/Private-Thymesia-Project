@@ -212,12 +212,16 @@ STATE CState_Lockon_Walk::Key_Input(const _float& fTimeDelta)
 			}
 			else if (KEY::A == m_iCalculeIndex)
 			{
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 127, 1.2f);
+				cout << "키프레임 : " << m_pOwnerBodyPart->Get_CurKeyFrameNumb() << endl;
+
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 127, 1.2f, m_pOwnerBodyPart->Get_CurKeyFrameNumb());
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 			else if (KEY::D == m_iCalculeIndex)
 			{
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 128, 1.2f);
+				cout << "키프레임 : " << m_pOwnerBodyPart->Get_CurKeyFrameNumb() << endl;
+
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 128, 1.2f, m_pOwnerBodyPart->Get_CurKeyFrameNumb());
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 			else if (KEY::W + KEY::A == m_iCalculeIndex)
