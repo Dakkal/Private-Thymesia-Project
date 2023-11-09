@@ -5,6 +5,8 @@
 #include "PartObject.h"
 #include "StateMachine.h"
 #include "State_Idle_Urd.h"
+#include "State_Hit_Urd.h"
+#include "State_Avoid_Urd.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -69,6 +71,8 @@ void CBoss_Urd::Tick(_float fTimeDelta)
 
 void CBoss_Urd::LateTick(_float fTimeDelta)
 {
+	if(true == m_IsHit) m_IsHit = false;
+
 	m_pStateMachineCom->LateTick(fTimeDelta);
 
 	for (auto& iter : m_Parts)
@@ -78,18 +82,18 @@ void CBoss_Urd::LateTick(_float fTimeDelta)
 	}
 
 	m_pColliderCom->LateUpdate();
+
+#ifdef _DEBUG
+	m_pRendererCom->Add_Debug(m_pColliderCom);
+
+	if (nullptr != m_pCurNavigationCom)
+		m_pRendererCom->Add_Debug(m_pCurNavigationCom);
+#endif
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 }
 
 HRESULT CBoss_Urd::Render()
 {
-#ifdef _DEBUG
-	if (nullptr != m_pCurNavigationCom)
-		m_pCurNavigationCom->Render();
-
-	m_pColliderCom->Render();
-#endif // DEBUG
-
 	return S_OK;
 }
 
@@ -363,14 +367,14 @@ void CBoss_Urd::Look_Player(_float fTimeDelta)
 		vDir.Normalize();
 		vDir.y = 0.f;
 
-		_float fRotMax = 66.f;
-		_float fRotNormal = 20.f;
+		_float fRotMax = 20.f;
+		_float fRotNormal = 15.f;
 
 		_vector RotDir;
 
 		if (3.f < acosf(vDir.Dot(vLook)))
 		{
-			RotDir = _vector::Lerp(vLook, vDir, fRotMax);
+			RotDir = _vector::Lerp(vLook, vDir, fRotMax * fTimeDelta);
 		}
 		else
 		{
@@ -471,6 +475,16 @@ HRESULT CBoss_Urd::Ready_Parts()
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::WEAPON_R, pParts);
 
+	CPartObject::PART_DESC			PartDesc_HitBox;
+	PartDesc_HitBox.pOwner = this;
+	PartDesc_HitBox.ePart = PARTS::HITBOX;
+	PartDesc_HitBox.pParentTransform = m_pTransformCom;
+
+	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_HitBox"), &PartDesc_HitBox);
+	if (nullptr == pParts)
+		return E_FAIL;
+	m_Parts.emplace(CGameObject::PARTS::HITBOX, pParts);
+	
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -482,7 +496,17 @@ HRESULT CBoss_Urd::Ready_State()
 	CState* pState = CState_Idle_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::IDLE);
 	if (nullptr == pState)
 		return E_FAIL;
-	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+	m_pStateMachineCom->Add_State(STATE::IDLE, pState);
+
+	pState = CState_Hit_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::HIT);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::HIT, pState);
+
+	pState = CState_Avoid_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::AVOID);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::AVOID, pState);
 
 
 	m_pStateMachineCom->Set_State(STATE::IDLE);

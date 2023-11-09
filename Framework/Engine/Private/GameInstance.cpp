@@ -1,4 +1,5 @@
 #include "GameInstance.h"
+#include "TargetManager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -14,7 +15,10 @@ CGameInstance::CGameInstance()
 	, m_pLight_Manager(CLight_Manager::GetInstance())
 	, m_pCalculator(CCalculator::GetInstance())
 	, m_pCollider_Manager(CCollideManager::GetInstance())
+	, m_pRandom_Manager(CRandomManager::GetInstance())
+	, m_pTarget_Manager(CTargetManager::GetInstance())
 {
+	Safe_AddRef(m_pTarget_Manager);
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pTimer_Manager);
 	Safe_AddRef(m_pGraphic_Device);
@@ -26,6 +30,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pLight_Manager);
 	Safe_AddRef(m_pCalculator);
 	Safe_AddRef(m_pCollider_Manager);
+	Safe_AddRef(m_pRandom_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(const GRAPHIC_DESC& GraphicDesc, HINSTANCE hInstance, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _uint iLevelIndex)
@@ -434,15 +439,42 @@ void CGameInstance::Check_Collision(const _uint iLevel, const LAYER_TAG& _eType1
 	return m_pCollider_Manager->Check_Collision(iLevel, _eType1, _eType2, fTimedelta);
 }
 
+const _float& CGameInstance::Random_Float(_float fMin, _float fMax)
+{
+	if (nullptr == m_pRandom_Manager)
+		return _float();
+
+	return m_pRandom_Manager->Random_Float(fMin, fMax);
+}
+
+const _int& CGameInstance::Random_Int(_int iMin, _int iMax)
+{
+	if (nullptr == m_pRandom_Manager)
+		return _int();
+
+	return m_pRandom_Manager->Random_Float(iMin, iMax);
+}
+
+const _bool& CGameInstance::Random_Coin(_float fProbality)
+{
+	if (nullptr == m_pRandom_Manager)
+		return false;
+
+	return m_pRandom_Manager->Random_Coin(fProbality);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
+
+	CTargetManager::GetInstance()->DestroyInstance();
 	CLevel_Manager::GetInstance()->DestroyInstance();
 	CObject_Manager::GetInstance()->DestroyInstance();
 	CComponent_Manager::GetInstance()->DestroyInstance();
 	CTimer_Manager::GetInstance()->DestroyInstance();
 	CSound_Manager::GetInstance()->DestroyInstance();
 	CPipeLine::GetInstance()->DestroyInstance();
+	CRandomManager::GetInstance()->DestroyInstance();
 	CCalculator::GetInstance()->DestroyInstance();
 	CCollideManager::GetInstance()->DestroyInstance();
 	CInput_Device::GetInstance()->DestroyInstance();
@@ -454,6 +486,7 @@ void CGameInstance::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pComponent_Manager);
 	Safe_Release(m_pObject_Manager);
@@ -463,6 +496,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pCalculator);
+	Safe_Release(m_pRandom_Manager);
 	Safe_Release(m_pCollider_Manager);
 	Safe_Release(m_pGraphic_Device);
 }

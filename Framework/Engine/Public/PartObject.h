@@ -36,8 +36,8 @@ public:
 public:
 	_bool			Is_AnimCurKeyFrame(_uint iIndex);
 	const _bool&	IsAnimationEnd();
-	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed,_uint iStartKeyFrame = 0, _float fChangeDuration = 0.2f);
-	void			First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
+	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset = false, _uint iStartKeyFrame = 0, _float fChangeDuration = 0.2f);
+	void			Set_First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring & strProtoTag);

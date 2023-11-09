@@ -102,10 +102,9 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _uint iAnimationIndex, _flo
 	m_Animations[m_iCurAnimIndex]->Set_AnimSpeed(fAnimSpeed);
 
 	return S_OK;
-
 }
 
-HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStartNumKeyFrames, _float fChangeDuration)
+HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _bool bWantReset, _uint iStartNumKeyFrames, _float fChangeDuration)
 {
 	if (false == m_bIsFirstAnim)
 	{
@@ -118,10 +117,22 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAn
 
 		return S_OK;
 	}
+	if (true == bWantReset && iAnimationIndex == m_iCurAnimIndex)
+	{
+		m_bIsAnimChange = false;
 
+		m_Animations[m_iCurAnimIndex]->Reset();
+		m_Animations[m_iCurAnimIndex]->Set_Loop(isLoop);
+		m_Animations[m_iCurAnimIndex]->Set_AnimSpeed(fAnimSpeed);
+
+		m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
+		m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
+
+		return S_OK;
+	}
 	if (true == m_bIsAnimChange && iAnimationIndex == m_iCurAnimIndex)
 	{
-  		m_bIsAnimChange = false;
+		m_bIsAnimChange = false;
 
 		return S_OK;
 	}
@@ -228,7 +239,7 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 
 	m_PrevRootPos = m_CurRootPos;
 	m_CurRootPos = rootBone->Get_RootPos();
-
+	
 	return S_OK;
 }
 
@@ -245,6 +256,9 @@ HRESULT CBinModel::Bind_MaterialTexture(CShader* pShader, const char* pConstantN
 	_uint iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
+
+	if (nullptr == m_Materials[iMaterialIndex].pTextures[eType])
+		return S_OK;
 
 	return m_Materials[iMaterialIndex].pTextures[eType]->Bind_ShaderResource(pShader, pConstantName, 0);
 }
@@ -287,6 +301,11 @@ _bool CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
 	}
 
 	return false;
+}
+
+_bool CBinModel::Is_CurAnimFinished()
+{
+	return m_Animations[m_iCurAnimIndex]->IsFinished(); 
 }
 
 _int CBinModel::Get_BoneIndex(const string& strBoneName) const
@@ -354,6 +373,9 @@ CBinBone* CBinModel::Get_BonePtr(const string& pBoneName) const
 
 			return false;
 		});
+
+	if (m_Bones.end() == iter)
+		return nullptr;
 
 	return *iter;
 }

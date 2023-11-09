@@ -11,6 +11,7 @@
 #include "PipeLine.h"
 #include "Input_Device.h"
 #include "Calculator.h"
+#include "RandomManager.h"
 
 BEGIN(Engine)
 
@@ -93,6 +94,10 @@ public: /* For.Calculaotr */
 public: /* For.Collider_Manager */
 	void	Check_Collision(const _uint iLevel, const LAYER_TAG & _eType1, const LAYER_TAG & _eType2, _float fTimedelta);
 
+public:
+	const _float&	Random_Float(_float fMin, _float fMax);
+	const _int&		Random_Int(_int iMin, _int iMax);
+	const _bool&	Random_Coin(_float fProbality);
 
 private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -106,6 +111,8 @@ private:
 	class CPipeLine*			m_pPipeLine = { nullptr };
 	class CCalculator*			m_pCalculator = { nullptr };
 	class CCollideManager*		m_pCollider_Manager = { nullptr };
+	class CRandomManager*		m_pRandom_Manager = { nullptr };
+	class CTargetManager*		m_pTarget_Manager = { nullptr };
 
 public:
 	static void Release_Engine();

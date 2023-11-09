@@ -49,12 +49,12 @@ const _bool& CPartObject::IsAnimationEnd()
 	return m_pModelCom->Is_CurAnimFinished();
 }
 
-void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _uint iStartKeyFrame, _float fChangeDuration)
+void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset, _uint iStartKeyFrame, _float fChangeDuration)
 {
-	m_pModelCom->Set_Animation(isLoop, iAnimIndex, fAnimSpeed, iStartKeyFrame, fChangeDuration);
+	m_pModelCom->Set_Animation(isLoop, iAnimIndex, fAnimSpeed, bWantReset, iStartKeyFrame, fChangeDuration);
 }
 
-void CPartObject::First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed)
+void CPartObject::Set_First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed)
 {
 	m_pModelCom->First_Set_Animation(isLoop, iAnimIndex, fAnimSpeed);
 }

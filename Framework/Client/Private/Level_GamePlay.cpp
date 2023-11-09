@@ -145,29 +145,28 @@ HRESULT CLevel_GamePlay::Ready_Light()
 	LIGHT_DESC			LightDesc;
 
 	/* 방향성 광원을 추가하낟. */
-	ZeroMemory(&LightDesc, sizeof LightDesc);
+	/*ZeroMemory(&LightDesc, sizeof LightDesc);
 	LightDesc.eLightType = LIGHT_DESC::TYPE::DIRECTIONAL;
 	LightDesc.vLightDir = _vector(1.f, -1.f, 1.f, 0.f);
 
+	LightDesc.vDiffuse = _vector(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _vector(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _vector(0.f, 0.f, 0.f, 1.f);
+
+	if (FAILED(pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;*/
+
+	/* 점 광원을 추가한다. */
+	ZeroMemory(&LightDesc, sizeof LightDesc);
+	LightDesc.eLightType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vLightPos = _vector(50.f, 20.f, 10.f, 1.f);
+	LightDesc.fLightRange = 120.f;
 	LightDesc.vDiffuse = _vector(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _vector(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _vector(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
-
-	/* 점 광원을 추가한다. */
-	/*ZeroMemory(&LightDesc, sizeof LightDesc);
-	LightDesc.eLightType = LIGHT_DESC::TYPE::POINT;
-	LightDesc.vLightPos = _vector(35.f, 3.f, 35.f, 1.f);
-	LightDesc.fLightRange = 20.f;
-
-	LightDesc.vDiffuse = _vector(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _vector(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vSpecular = _vector(1.f, 1.f, 1.f, 1.f);
-
-	if (FAILED(pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;*/
 
 	RELEASE_INSTANCE(CGameInstance);
 

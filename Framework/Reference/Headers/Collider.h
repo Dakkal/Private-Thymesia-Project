@@ -33,12 +33,13 @@ public:
 
 #ifdef _DEBUG
 public:
-	HRESULT Render();
+	virtual HRESULT Render();
 
 private:
 	PrimitiveBatch<DirectX::VertexPositionColor>* m_pBatch = { nullptr };
 	BasicEffect*		m_pEffect = { nullptr };
 	ID3D11InputLayout*  m_pInputLayout = { nullptr };
+	ID3D11DepthStencilState* m_pDSState = { nullptr };
 #endif
 
 private:

@@ -47,7 +47,7 @@ public:
 
 #ifdef _DEBUG
 public:
-	HRESULT Render();
+	virtual HRESULT Render();
 
 private:
 	class CShader* m_pShader = { nullptr };

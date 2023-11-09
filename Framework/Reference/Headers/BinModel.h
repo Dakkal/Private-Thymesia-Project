@@ -23,7 +23,7 @@ public:
 
 public:
 	HRESULT First_Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed);
-	HRESULT Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _uint iStatNumKeyFrames = 0, _float fChangeDuration = 0.2);
+	HRESULT Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _bool bWantReset = false,_uint iStatNumKeyFrames = 0, _float fChangeDuration = 0.2);
 	HRESULT Change_Animation(_float fDuration, _float fTimeDelta);
 	HRESULT	Play_Animation(_float fTimeDelta);
 
@@ -43,7 +43,7 @@ public:
 	_uint									Get_CurKeyFrameNumb();
 
 	_bool									Is_CurAnimKeyFrame(_uint iIndex);
-	const _bool&							Is_CurAnimFinished(){ return m_Animations[m_iCurAnimIndex]->IsFinished(); }
+	_bool									Is_CurAnimFinished();
 	
 
 	_uint									Get_NumMeshes() const { return m_iNumMeshes; }

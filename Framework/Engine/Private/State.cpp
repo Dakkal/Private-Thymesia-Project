@@ -11,7 +11,7 @@ CState::CState(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachi
 
 HRESULT CState::Initialize()
 {
-	m_pOwnerTransform = dynamic_cast<CTransform*>(m_pStateOwner->Get_Owner()->Get_Component(TEXT("Com_Transform")));
+	m_pOwnerTransform = dynamic_cast<CTransform*>(m_pRealOwner->Get_Component(TEXT("Com_Transform")));
 	CGameObject* pOwnerBodyPart = m_pStateOwner->Get_Owner()->Get_Index_Parts(CGameObject::PARTS::BODY);
 	m_pOwnerBodyPart = dynamic_cast<CPartObject*>(pOwnerBodyPart);
 

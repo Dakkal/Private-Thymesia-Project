@@ -24,6 +24,33 @@ STATE CState_Idle_Urd::Tick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	if (true == m_pRealOwner->Is_Hit())
+		return STATE::HIT;
+
+	CTransform* pPlayerTransform = dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerTransform();
+	if (nullptr != pPlayerTransform)
+	{
+		_vector vPlayerPos = pPlayerTransform->Get_State(CTransform::STATE_POS);
+		_vector vOwnerPos = m_pOwnerTransform->Get_State(CTransform::STATE_POS);
+
+		_float fDist = _vector(vPlayerPos - vOwnerPos).Length();
+
+		cout << fDist << endl;
+
+		if (5 >= fDist)
+		{
+			return STATE::AVOID;
+		}
+		else if (5 < fDist && 10 >= fDist)
+		{
+			return STATE::AVOID;
+		}
+		else if(10 < fDist)
+		{
+			return STATE::AVOID;
+		}
+	}
+	
 
 	return eState;
 }

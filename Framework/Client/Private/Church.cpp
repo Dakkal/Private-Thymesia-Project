@@ -50,8 +50,12 @@ void CChurch::Tick(_float fTimeDelta)
 
 void CChurch::LateTick(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	if (nullptr != m_pCurNavigationCom)
+		m_pRendererCom->Add_Debug(m_pCurNavigationCom);
+#endif
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_BLEND, this);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 }
 
 HRESULT CChurch::Render()
@@ -63,18 +67,18 @@ HRESULT CChurch::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-		//m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
+		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
+			return E_FAIL;
 
 		m_pShaderCom->Begin(0);
 
 		m_pModelCom->Render(i);
 	}
 
-#ifdef _DEBUG
-	if (nullptr != m_pCurNavigationCom)
-		m_pCurNavigationCom->Render();
-#endif
+
 
 	return S_OK;
 }
@@ -148,37 +152,7 @@ HRESULT CChurch::Bind_ShaderResources()
 			return E_FAIL;
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 		return E_FAIL;
-	if (FAILED(pGameInstance->Bind_CamPosToShader(m_pShaderCom, "g_vCamPosition")))
-		return E_FAIL;
 
-	const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
-	if (nullptr == pLightDesc)
-		return E_FAIL;
-
-	_uint	iPassIndex = 0;
-
-	if (LIGHT_DESC::TYPE::DIRECTIONAL == pLightDesc->eLightType)
-	{
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vLightDir, sizeof(_vector))))
-			return E_FAIL;
-
-		iPassIndex = 0;
-	}
-	else
-	{
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightPos", &pLightDesc->vLightPos, sizeof(_vector))))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightRange", &pLightDesc->fLightRange, sizeof(_float))))
-			return E_FAIL;
-		iPassIndex = 1;
-	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_vector))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_vector))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_vector))))
-		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 

@@ -105,7 +105,7 @@ void CState_Lockon_Walk::Enter_State()
 	{
 		iAnimIndex += KEY::W;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
 	{
 		iAnimIndex += KEY::S;
 	}
@@ -113,7 +113,7 @@ void CState_Lockon_Walk::Enter_State()
 	{
 		iAnimIndex += KEY::A;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+	else if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
 	{
 		iAnimIndex += KEY::D;
 	}
@@ -130,6 +130,7 @@ void CState_Lockon_Walk::Enter_State()
 	}
 	else if (KEY::A == iAnimIndex)
 	{
+
 		m_pOwnerBodyPart->Set_AnimationIndex(true, 127, 1.2f);
 		m_iAnimIndex = iAnimIndex;
 	}
@@ -198,50 +199,64 @@ STATE CState_Lockon_Walk::Key_Input(const _float& fTimeDelta)
 
 	if (true == bClicked)
 	{
+		_int fChangeKeyFrame = 12 - m_pOwnerBodyPart->Get_CurKeyFrameNumb();
+		if (0 > fChangeKeyFrame)
+			fChangeKeyFrame = abs(fChangeKeyFrame);
+
 		if (m_iAnimIndex != m_iCalculeIndex)
 		{
 			if (KEY::W == m_iCalculeIndex)
 			{
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 124, 1.2f);
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 124, 1.2f, fChangeKeyFrame);
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 			else if (KEY::S == m_iCalculeIndex)
 			{
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 121, 1.2f);
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 121, 1.2f, fChangeKeyFrame);
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 			else if (KEY::A == m_iCalculeIndex)
 			{
-				cout << "키프레임 : " << m_pOwnerBodyPart->Get_CurKeyFrameNumb() << endl;
-
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 127, 1.2f, m_pOwnerBodyPart->Get_CurKeyFrameNumb());
+				if (KEY::D == m_iAnimIndex)
+				{
+					m_pOwnerBodyPart->Set_First_AnimationIndex(true, 127, 1.2f);
+				}
+				else
+				{
+					m_pOwnerBodyPart->Set_AnimationIndex(true, 127, 1.2f, fChangeKeyFrame);
+				}
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 			else if (KEY::D == m_iCalculeIndex)
 			{
-				cout << "키프레임 : " << m_pOwnerBodyPart->Get_CurKeyFrameNumb() << endl;
-
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 128, 1.2f, m_pOwnerBodyPart->Get_CurKeyFrameNumb());
+				if (KEY::A == m_iAnimIndex)
+				{
+					m_pOwnerBodyPart->Set_First_AnimationIndex(true, 128, 1.2f);
+				}
+				else
+				{
+					m_pOwnerBodyPart->Set_AnimationIndex(true, 128, 1.2f, fChangeKeyFrame);
+				}
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 			else if (KEY::W + KEY::A == m_iCalculeIndex)
 			{
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 125, 1.2f);
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 125, 1.2f, fChangeKeyFrame);
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 			else if (KEY::W + KEY::D == m_iCalculeIndex)
 			{
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 126, 1.2f);
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 126, 1.2f, fChangeKeyFrame);
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 			else if (KEY::S + KEY::A == m_iCalculeIndex)
 			{
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 122, 1.2f);
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 122, 1.2f, fChangeKeyFrame);
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 			else if (KEY::S + KEY::D == m_iCalculeIndex)
 			{
-				m_pOwnerBodyPart->Set_AnimationIndex(true, 123, 1.2f);
+				m_pOwnerBodyPart->Set_AnimationIndex(true, 123, 1.2f, fChangeKeyFrame);
 				m_iAnimIndex = m_iCalculeIndex;
 			}
 		}

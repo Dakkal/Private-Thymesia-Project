@@ -16,10 +16,12 @@
 #include "Body_Player.h"
 #include "Weapon_Player_Saber.h"
 #include "Weapon_Player_Dagger.h"
+#include "HitBox_Player.h"
 
 #include "Boss_Urd.h"
 #include "Body_Boss_Urd.h"
 #include "Weapon_Boss_Urd.h"
+#include "HitBox_Boss_Urd.h"
 
 #include "BinModel.h"
 
@@ -593,6 +595,9 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Dagger"), CWeapon_Player_Dagger::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Dagger")))))
 			return E_FAIL;
 
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_HitBox"), CHitBox_Player::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_HitBox")))))
+			return E_FAIL;
+
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd"), CBoss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd")))))
 			return E_FAIL;
 
@@ -600,6 +605,9 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_Weapon"), CWeapon_Boss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_Weapon")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_HitBox"), CHitBox_Boss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_HitBox")))))
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Church"), CChurch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Church")))))

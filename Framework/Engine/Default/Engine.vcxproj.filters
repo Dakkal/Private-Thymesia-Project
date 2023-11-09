@@ -73,12 +73,6 @@
     <Filter Include="01.Utility\04.Component\Texture">
       <UniqueIdentifier>{4297234c-52cf-4e82-be63-a6b5c52ab5a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\09.Handler">
-      <UniqueIdentifier>{edb0f703-3fd5-4ce5-8e60-ee17125af604}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\09.Handler\EventManager">
-      <UniqueIdentifier>{a6badf53-8c42-4f9b-ada5-ce8d37981529}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\04.Component\Transform">
       <UniqueIdentifier>{7d052662-be8f-4f55-9010-0516ddb1dab8}</UniqueIdentifier>
     </Filter>
@@ -186,6 +180,21 @@
     </Filter>
     <Filter Include="01.Utility\04.Component\Colider\Bounding\Frustum">
       <UniqueIdentifier>{b2841e60-1d86-4c04-88f6-f6a49c9cab5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\09.Random">
+      <UniqueIdentifier>{92c2b171-cfc4-4a25-acbf-37d4b583a5d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11.Handler">
+      <UniqueIdentifier>{edb0f703-3fd5-4ce5-8e60-ee17125af604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11.Handler\EventManager">
+      <UniqueIdentifier>{a6badf53-8c42-4f9b-ada5-ce8d37981529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\10.RenderTarget">
+      <UniqueIdentifier>{83efb22b-e6d0-4316-82ba-2ababe41d800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\10.RenderTarget\Manager">
+      <UniqueIdentifier>{5a6b83ce-66b4-4031-9bb6-b35c2cc500bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -369,6 +378,15 @@
     <ClInclude Include="..\Public\Bounding_Frustrum.h">
       <Filter>01.Utility\04.Component\Colider\Bounding\Frustum</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RandomManager.h">
+      <Filter>01.Utility\09.Random</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget.h">
+      <Filter>01.Utility\10.RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TargetManager.h">
+      <Filter>01.Utility\10.RenderTarget\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -533,12 +551,24 @@
     <ClCompile Include="..\Private\Bounding_Frustrum.cpp">
       <Filter>01.Utility\04.Component\Colider\Bounding\Frustum</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\RandomManager.cpp">
+      <Filter>01.Utility\09.Random</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>01.Utility\10.RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TargetManager.cpp">
+      <Filter>01.Utility\10.RenderTarget\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl">
       <Filter>01.Utility\04.Component\Navigation\Cell_Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsl">
+      <Filter>01.Utility\07.Shader_Files</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
       <Filter>01.Utility\07.Shader_Files</Filter>
     </FxCompile>
   </ItemGroup>

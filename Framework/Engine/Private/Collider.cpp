@@ -21,9 +21,11 @@ CCollider::CCollider(CGameObject* pOwner, const CCollider& rhs)
 	, m_pBatch(rhs.m_pBatch)
 	, m_pEffect(rhs.m_pEffect)
 	, m_pInputLayout(rhs.m_pInputLayout)
+	, m_pDSState(rhs.m_pDSState)
 #endif // _DEBUG
 {
 #ifdef _DEBUG
+	Safe_AddRef(m_pDSState);
 	Safe_AddRef(m_pInputLayout);
 #endif // _DEBUG
 }
@@ -45,6 +47,17 @@ HRESULT CCollider::Initialize_Prototype(TYPE eColliderType)
 
 	if (FAILED(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderByteCode, iShaderByteCodeLength, &m_pInputLayout)))
 		return E_FAIL;
+
+	D3D11_DEPTH_STENCIL_DESC	DSStateDesc = {};
+	DSStateDesc.DepthEnable = true;
+	DSStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	DSStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+	DSStateDesc.StencilEnable = false;
+
+	if (FAILED(m_pDevice->CreateDepthStencilState(&DSStateDesc, &m_pDSState)))
+		return E_FAIL;
+
 #endif
 
 	return S_OK;
@@ -144,6 +157,8 @@ HRESULT CCollider::Render()
 	if (false == m_bActive)
 		return S_OK;
 
+	m_pContext->OMSetDepthStencilState(m_pDSState, 0);
+
 	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
 
 	m_pEffect->SetWorld(XMMatrixIdentity());
@@ -198,6 +213,7 @@ void CCollider::Free()
 	Safe_Release(m_pBounding);
 
 #ifdef _DEBUG
+	Safe_Release(m_pDSState);
 	Safe_Release(m_pInputLayout);
 
 	if (false == m_IsCloned)

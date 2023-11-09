@@ -14,6 +14,10 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 
+#ifdef _DEBUG
+	virtual HRESULT Render() { return S_OK; }
+#endif
+
 public:
 	CGameObject* Get_Owner() const { return m_pOwner; }
 

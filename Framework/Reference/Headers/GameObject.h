@@ -6,7 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CGameObject abstract : public CBase
 {
 public:
-    enum PARTS { BODY, WEAPON_R, WEAPON_L, SIGHT, _END };
+    enum PARTS { BODY, WEAPON_R, WEAPON_L, SIGHT, HITBOX, _END };
 
 protected:
     CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -37,11 +37,13 @@ public:
     _bool           Is_Cloned()  { return m_IsCloned; }
     _bool           Is_Dead()    { return m_IsDead; }
     _bool           Is_Hit()     { return m_IsHit; }
+    _bool           Is_Attack()  { return m_IsAttack; }
     _bool           Is_OktoHit() { return m_bOktoHit; }
 
 public:
     void            Set_Index(_uint iIndex)     { m_iIndex = iIndex; }
     void            Set_Hit(_bool IsHit)        { m_IsHit = IsHit; }
+    void            Set_Attack(_bool IsAttack)  { m_IsAttack = IsAttack; }
     void            Set_OktoHit(_bool OktoHit)  { m_bOktoHit = OktoHit; }
 
 public:
@@ -73,6 +75,7 @@ protected:
     _bool	    m_IsCloned = { false };
     _bool       m_IsRemain = { false };
     _bool       m_IsDead = { false };
+    _bool       m_IsAttack = { false };
     _bool       m_IsHit = { false };
     _bool       m_bOktoHit = { false };
    

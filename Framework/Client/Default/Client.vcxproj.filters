@@ -124,6 +124,12 @@
     <Filter Include="02.GameObject\Object\General Parts">
       <UniqueIdentifier>{7b69b7e9-aedc-4b14-a345-200addb4d436}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Boss\Boss_Urd\Part\HitBox_Boss_Urd">
+      <UniqueIdentifier>{2e268c27-0d5a-4e6d-87c5-bcf985d2813c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Player\Part\HitBox_Player">
+      <UniqueIdentifier>{fc26cd27-c3c1-41fa-8f8a-5aa90a40aff6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -258,6 +264,21 @@
     <ClCompile Include="..\Private\State_Idle_Urd.cpp">
       <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\State_Hit_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitBox_Boss_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Part\HitBox_Boss_Urd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Avoid_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitBox_Player.cpp">
+      <Filter>02.GameObject\Object\Player\Part\HitBox_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Attack_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -350,9 +371,6 @@
     <ClInclude Include="..\Public\Weapon_Player_Saber.h">
       <Filter>02.GameObject\Object\Player\Part\Weapon_Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObject\Object\Player\Part\Body_Player</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player_Dagger.h">
       <Filter>02.GameObject\Object\Player\Part\Weapon_Player</Filter>
     </ClInclude>
@@ -405,6 +423,24 @@
       <Filter>02.GameObject\Object\Player\State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Idle_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Hit_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitBox_Boss_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Part\HitBox_Boss_Urd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Avoid_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Player.h">
+      <Filter>02.GameObject\Object\Player\Part\Body_Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitBox_Player.h">
+      <Filter>02.GameObject\Object\Player\Part\HitBox_Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Attack_Urd.h">
       <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
     </ClInclude>
   </ItemGroup>

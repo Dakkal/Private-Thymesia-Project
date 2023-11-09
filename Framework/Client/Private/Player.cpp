@@ -83,18 +83,18 @@ void CPlayer::LateTick(_float fTimeDelta)
 	}
 
 	m_pColliderCom->LateUpdate();
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+
+
+#ifdef _DEBUG
+	m_pRendererCom->Add_Debug(m_pColliderCom);
+
+	if (nullptr != m_pCurNavigationCom)
+		m_pRendererCom->Add_Debug(m_pCurNavigationCom);
+#endif
 }
 
 HRESULT CPlayer::Render()
 {
-#ifdef _DEBUG
-	if (nullptr != m_pCurNavigationCom)
-		m_pCurNavigationCom->Render();
-
-	m_pColliderCom->Render();
-#endif // DEBUG
-
 	return S_OK;
 }
 
@@ -504,6 +504,16 @@ HRESULT CPlayer::Ready_PlayerParts()
 	if (nullptr == pPlayerParts)
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::WEAPON_L, pPlayerParts);
+
+	CPartObject::PART_DESC			PartDesc_HitBox;
+	PartDesc_HitBox.pOwner = this;
+	PartDesc_HitBox.ePart = PARTS::HITBOX;
+	PartDesc_HitBox.pParentTransform = m_pTransformCom;
+
+	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_HitBox"), &PartDesc_HitBox);
+	if (nullptr == pPlayerParts)
+		return E_FAIL;
+	m_Parts.emplace(CGameObject::PARTS::HITBOX, pPlayerParts);
 
 	RELEASE_INSTANCE(CGameInstance);
 
