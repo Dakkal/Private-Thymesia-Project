@@ -174,7 +174,8 @@ void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDel
 		switch (ePart)
 		{
 		case Engine::CGameObject::BODY:
-			pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+			if (true == m_pOwner->Is_Move())
+				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -239,7 +240,8 @@ void CBody_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelt
 		switch (ePart)
 		{
 		case Engine::CGameObject::BODY:
-			pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+			if (true == m_pOwner->Is_Move())
+				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;

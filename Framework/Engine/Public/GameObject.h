@@ -39,12 +39,14 @@ public:
     _bool           Is_Hit()     { return m_IsHit; }
     _bool           Is_Attack()  { return m_IsAttack; }
     _bool           Is_OktoHit() { return m_bOktoHit; }
+    _bool           Is_Move()    { return m_IsMove; }
 
 public:
     void            Set_Index(_uint iIndex)     { m_iIndex = iIndex; }
     void            Set_Hit(_bool IsHit)        { m_IsHit = IsHit; }
     void            Set_Attack(_bool IsAttack)  { m_IsAttack = IsAttack; }
     void            Set_OktoHit(_bool OktoHit)  { m_bOktoHit = OktoHit; }
+    void            Set_Move(_bool IsMove)      { m_IsMove = IsMove; }
 
 public:
     wstring         Get_Name()       { return m_strObjectName; }
@@ -77,6 +79,7 @@ protected:
     _bool       m_IsDead = { false };
     _bool       m_IsAttack = { false };
     _bool       m_IsHit = { false };
+    _bool       m_IsMove = { false };
     _bool       m_bOktoHit = { false };
    
     OBJECT_TYPE m_eObjType = OBJECT_TYPE::_END;

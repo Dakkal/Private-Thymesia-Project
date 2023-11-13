@@ -44,7 +44,7 @@ _uint CPartObject::Get_CurKeyFrameNumb()
 	return m_pModelCom->Get_CurKeyFrameNumb();
 }
 
-const _bool& CPartObject::IsAnimationEnd()
+_bool CPartObject::IsAnimationEnd()
 {
 	return m_pModelCom->Is_CurAnimFinished();
 }

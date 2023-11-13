@@ -114,7 +114,11 @@ _bool CCell::IsIn(_vector vPoint, _matrix WorldMatrix, _int& pCurIndex)
 {
 	for (size_t i = 0; i < LINE_END; i++)
 	{
-		_vector vSour = vPoint - m_vPoints_World[i];
+		_float3 WorldPoint = m_vPoints_World[i];
+		_vector Point = vPoint;
+		Point.y = 0; WorldPoint.y = 0;
+
+		_vector vSour = Point - WorldPoint;
 		_vector vDest = XMVector3TransformNormal(m_vNormals[i], WorldMatrix);
 		vSour.Normalize();
 		vDest.Normalize();

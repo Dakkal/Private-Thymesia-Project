@@ -160,6 +160,8 @@ void CBody_Boss_Urd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 
 void CBody_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
@@ -171,6 +173,8 @@ void CBody_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 		switch (ePart)
 		{
 		case Engine::CGameObject::BODY:
+			if(true == m_pOwner->Is_Move())
+				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -216,10 +220,15 @@ void CBody_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 	}
 		break;
 	}
+
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 void CBody_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
@@ -231,6 +240,8 @@ void CBody_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 		switch (ePart)
 		{
 		case Engine::CGameObject::BODY:
+			if (true == m_pOwner->Is_Move())
+				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -276,6 +287,8 @@ void CBody_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 	}
 	break;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 void CBody_Boss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)

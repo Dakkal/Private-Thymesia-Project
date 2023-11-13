@@ -191,6 +191,8 @@ STATE CState_Lockon_Attack::LateTick(const _float& fTimeDelta)
 
 void CState_Lockon_Attack::Enter_State()
 {
+	m_pRealOwner->Set_Move(true);
+
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f);
 	m_bAttack1 = true;
 }

@@ -96,6 +96,8 @@ void CState_Lockon_Walk::Reset_State()
 
 void CState_Lockon_Walk::Enter_State()
 {
+	m_pRealOwner->Set_Move(true);
+
 	dynamic_cast<CPlayer*>(m_pRealOwner)->Search_TargetEnemy();
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

@@ -85,12 +85,6 @@
     <Filter Include="02.GameObject\Object\Porps">
       <UniqueIdentifier>{5bbb44bc-fd26-40a6-84e9-0f3b1f392a71}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Object\Porps\ChurchGrillesFloor">
-      <UniqueIdentifier>{ecbc253c-ea08-4874-99a2-11d4172e0106}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Object\Porps\Church">
-      <UniqueIdentifier>{09edb94f-992b-41ea-a07f-205a86a2792f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Object\Player\State">
       <UniqueIdentifier>{7ae48c94-2722-46bc-83a5-4555c8215b9c}</UniqueIdentifier>
     </Filter>
@@ -129,6 +123,42 @@
     </Filter>
     <Filter Include="02.GameObject\Object\Player\Part\HitBox_Player">
       <UniqueIdentifier>{fc26cd27-c3c1-41fa-8f8a-5aa90a40aff6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Land">
+      <UniqueIdentifier>{ba71fdb8-9bc5-4e97-a570-3f0b416ee6a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco">
+      <UniqueIdentifier>{f8cb89e8-4a2a-4174-b791-de097e27c9d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Land\Stair">
+      <UniqueIdentifier>{82e7e12c-0e94-4708-9195-7e9cb9f4760e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Land\BossRoom">
+      <UniqueIdentifier>{09b213f6-7bc5-44e3-8420-72b26d03de2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Land\Church">
+      <UniqueIdentifier>{09edb94f-992b-41ea-a07f-205a86a2792f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\ChurchWindowGriles">
+      <UniqueIdentifier>{faeffdc1-fec4-46c3-904f-d052cbb3781b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\ChurchSideDoor">
+      <UniqueIdentifier>{26286da7-1577-46b9-b43a-b641f083354f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\ChurchRightDoor">
+      <UniqueIdentifier>{90ab0c53-618a-4177-bd55-bc98868251f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\ChurchLeftDoor">
+      <UniqueIdentifier>{ab6032dd-cb79-4614-b22e-d40b7668f2db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\ChurchGrillesFloor">
+      <UniqueIdentifier>{ecbc253c-ea08-4874-99a2-11d4172e0106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Halberd">
+      <UniqueIdentifier>{385549ff-b4a7-43e8-8cbf-0005cbb4e961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_GreatSword">
+      <UniqueIdentifier>{b485e113-b842-4023-99da-0ceaea92e73a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,7 +217,7 @@
       <Filter>999. Imgui\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ChurchGrillesFloor.cpp">
-      <Filter>02.GameObject\Object\Porps\ChurchGrillesFloor</Filter>
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchGrillesFloor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Imgui\imgui_spectrum.cpp">
       <Filter>999. Imgui\gui</Filter>
@@ -223,7 +253,7 @@
       <Filter>02.GameObject\Object\Boss\Boss_Urd\Part\Weapon_Boss_Urd</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Church.cpp">
-      <Filter>02.GameObject\Object\Porps\Church</Filter>
+      <Filter>02.GameObject\Object\Porps\Land\Church</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Walk.cpp">
       <Filter>02.GameObject\Object\Player\State</Filter>
@@ -278,6 +308,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Attack_Urd.cpp">
       <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Hit.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ChurchWindowGriles.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchWindowGriles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossRoom.cpp">
+      <Filter>02.GameObject\Object\Porps\Land\BossRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ChurchSideDoor.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchSideDoor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ChurchLeftDoor.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchLeftDoor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ChurchRightDoor.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchRightDoor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stair.cpp">
+      <Filter>02.GameObject\Object\Porps\Land\Stair</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -354,7 +411,7 @@
       <Filter>01.Levels\09.Edit</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ChurchGrillesFloor.h">
-      <Filter>02.GameObject\Object\Porps\ChurchGrillesFloor</Filter>
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchGrillesFloor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Imgui\imgui_spectrum.h">
       <Filter>999. Imgui\gui</Filter>
@@ -384,7 +441,7 @@
       <Filter>02.GameObject\Object\Boss\Boss_Urd\Part\Weapon_Boss_Urd</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Church.h">
-      <Filter>02.GameObject\Object\Porps\Church</Filter>
+      <Filter>02.GameObject\Object\Porps\Land\Church</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Walk.h">
       <Filter>02.GameObject\Object\Player\State</Filter>
@@ -442,6 +499,33 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Attack_Urd.h">
       <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Hit.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ChurchWindowGriles.h">
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchWindowGriles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PUblic\BossRoom.h">
+      <Filter>02.GameObject\Object\Porps\Land\BossRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ChurchSideDoor.h">
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchSideDoor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ChurchLeftDoor.h">
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchLeftDoor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ChurchRightDoor.h">
+      <Filter>02.GameObject\Object\Porps\Deco\ChurchRightDoor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Stair.h">
+      <Filter>02.GameObject\Object\Porps\Land\Stair</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

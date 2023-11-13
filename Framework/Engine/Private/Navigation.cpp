@@ -5,7 +5,8 @@
 #include "AsFileUtils.h"
 #include "Transform.h"
 
-_matrix CNavigation::m_NaviWorldMatrix = {};
+_matrix CNavigation::m_NaviWorldMatrix[3] = {};
+_uint	CNavigation::m_iIndex = 0;
 
 CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -16,6 +17,7 @@ CNavigation::CNavigation(CGameObject* pOwner, const CNavigation& rhs)
 	: CComponent(pOwner, rhs)
 	, m_iCurrentIndex(rhs.m_iCurrentIndex)
 	, m_Cells(rhs.m_Cells)
+	, m_iNaviIndex(rhs.m_iNaviIndex)
 #ifdef _DEBUG
 	, m_pShader(rhs.m_pShader)
 #endif // !NDEBUG
@@ -72,12 +74,15 @@ HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationDataFiles)
 		return E_FAIL;
 #endif // !NDEBUG
 
+	m_iNaviIndex = m_iIndex;
+	++m_iIndex;
+
 	return S_OK;
 }
 
 HRESULT CNavigation::Initialize_Alone(const _matrix& NaviMatrix)
 {
-	m_NaviWorldMatrix = NaviMatrix;
+	m_NaviWorldMatrix[m_iNaviIndex] = NaviMatrix;
 
 #ifdef _DEBUG
 	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cell.hlsl"), VTXPOS::tElements, VTXPOS::iNumElements);
@@ -103,7 +108,7 @@ HRESULT CNavigation::Initialize(void* pArg)
 
 void CNavigation::Update(_matrix WorldMatrix)
 {
-	m_NaviWorldMatrix = WorldMatrix;
+	m_NaviWorldMatrix[m_iNaviIndex] = WorldMatrix;
 
 	for (auto& pCell : m_Cells)
 	{
@@ -116,7 +121,7 @@ _int CNavigation::IsMove(_vector vPoint)
 {
 	_int iNeighborIndex = 0;
 
-	if (true == m_Cells[m_iCurrentIndex]->IsOut(vPoint, m_NaviWorldMatrix, iNeighborIndex))
+	if (true == m_Cells[m_iCurrentIndex]->IsOut(vPoint, m_NaviWorldMatrix[m_iNaviIndex], iNeighborIndex))
 	{
 		if (-2 == iNeighborIndex)
 		{
@@ -131,7 +136,7 @@ _int CNavigation::IsMove(_vector vPoint)
 				if (-1 == iNeighborIndex)
 					return -1;
 
-				if (false == m_Cells[iNeighborIndex]->IsOut(vPoint, m_NaviWorldMatrix, iNeighborIndex))
+				if (false == m_Cells[iNeighborIndex]->IsOut(vPoint, m_NaviWorldMatrix[m_iNaviIndex], iNeighborIndex))
 				{
 					m_iCurrentIndex = iNeighborIndex;
 					break;
@@ -154,7 +159,7 @@ _int CNavigation::IsIn(_vector vPoint)
 
 	for (auto& pCell : m_Cells)
 	{
-		if (true == pCell->IsIn(vPoint, m_NaviWorldMatrix, iCurIndex))
+		if (true == pCell->IsIn(vPoint, m_NaviWorldMatrix[m_iNaviIndex], iCurIndex))
 			return m_iCurrentIndex = iCurIndex;
 	}
 	return iCurIndex;
@@ -166,7 +171,7 @@ _int CNavigation::CheckIn(_vector vPoint)
 
 	for (auto& pCell : m_Cells)
 	{
-		if (true == pCell->IsIn(vPoint, m_NaviWorldMatrix, iCurIndex))
+		if (true == pCell->IsIn(vPoint, m_NaviWorldMatrix[m_iNaviIndex], iCurIndex))
 			return iCurIndex;
 	}
 	return iCurIndex;
@@ -232,12 +237,12 @@ _float3 CNavigation::Get_Closet_Cell_Point(_vector vPick)
 		pWorldPick = pCell->IsClose(vPick, 0.3f);
 		if (nullptr != pWorldPick)
 		{
-			vReturnPoint = XMVector3TransformCoord(*pWorldPick, m_NaviWorldMatrix.Invert());
+			vReturnPoint = XMVector3TransformCoord(*pWorldPick, m_NaviWorldMatrix[m_iNaviIndex].Invert());
 			return vReturnPoint;
 		}
 	}
 
-	vReturnPoint = XMVector3TransformCoord(vPick, m_NaviWorldMatrix.Invert());
+	vReturnPoint = XMVector3TransformCoord(vPick, m_NaviWorldMatrix[m_iNaviIndex].Invert());
 	return vReturnPoint;
 }
 
@@ -285,7 +290,7 @@ HRESULT CNavigation::Save_Navi(const wstring& Path)
 #ifdef _DEBUG
 HRESULT CNavigation::Render()
 {
-	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_NaviWorldMatrix)))
+	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_NaviWorldMatrix[m_iNaviIndex])))
 		return E_FAIL;
 
 	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);

@@ -17,14 +17,17 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_SkyDome(LAYER_SKY)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Props(LAYER_PROP)))
+	/*if (FAILED(Ready_Layer_Props(LAYER_PROP)))
+		return E_FAIL;*/
+
+	if (FAILED(Load_Level(LEVEL_1)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
@@ -49,6 +52,148 @@ HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
 	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_BOSS, fTimeDelta);
 
 	RELEASE_INSTANCE(CGameInstance)
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Load_Level(LEVELID eLevel)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	//wstring strFileTerrain = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel - 2) + TEXT("Terrain.dat");
+	wstring strFileObject = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel - 2) + TEXT("Object.dat");
+
+#pragma region Terrain
+	//CVIBuffer_Terrain::TERRAIN_DESC			TerrainDesc;
+	//ZeroMemory(&TerrainDesc, sizeof TerrainDesc);
+
+ //   shared_ptr<CAsFileUtils> LoadTerrain = make_shared<CAsFileUtils>();
+ //   LoadTerrain->Open(strFileTerrain, FileMode::Read);
+
+ //   LoadTerrain->Read<_int>(TerrainDesc.iNumVerticesX);
+ //   LoadTerrain->Read<_int>(TerrainDesc.iNumVerticesZ);
+ //   LoadTerrain->Read<_bool>(TerrainDesc.bIsWireFrame);
+	//TerrainDesc.bIsWireFrame = false;
+
+ //   if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, TEXT("Layer_Terrain"), TEXT("Prototype_GameObject_Edit_Terrain"), &TerrainDesc)))
+ //   {
+ //       RELEASE_INSTANCE(CGameInstance);
+ //       return E_FAIL;
+ //   }
+#pragma endregion
+
+
+#pragma region Object
+	_uint iObjCnt;
+
+	_uint iType;
+	OBJECT_TYPE eType;
+
+	string strTag;
+	wstring wstrTag;
+
+	_matrix matObject;
+
+	shared_ptr<CAsFileUtils> LoadObject = make_shared<CAsFileUtils>();
+	LoadObject->Open(strFileObject, FileMode::Read);
+
+	LoadObject->Read<_uint>(iObjCnt);
+
+	for (size_t i = 0; i < iObjCnt; i++)
+	{
+		LoadObject->Read<_uint>(iType);
+		LoadObject->Read(strTag);
+		LoadObject->Read<_matrix>(matObject);
+
+		eType = OBJECT_TYPE(iType);
+		wstrTag.assign(strTag.begin(), strTag.end());
+
+
+		switch (eType)
+		{
+		case OBJECT_TYPE::PLAYER:
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_PLAYER, wstrTag)))
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return E_FAIL;
+			}
+
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_PLAYER);
+			if (nullptr == pObject)
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return E_FAIL;
+			}
+
+			CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+			pTransform->Set_WorldMatrix(matObject);
+		}
+		break;
+		case OBJECT_TYPE::PORP:
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_PROP, wstrTag)))
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return E_FAIL;
+			}
+
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_PROP);
+			if (nullptr == pObject)
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return E_FAIL;
+			}
+
+			CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+			pTransform->Set_WorldMatrix(matObject);
+		}
+		break;
+		case OBJECT_TYPE::MONSTER:
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_MONSTER, wstrTag)))
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return E_FAIL;
+			}
+
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_MONSTER);
+			if (nullptr == pObject)
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return E_FAIL;
+			}
+
+			CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+			pTransform->Set_WorldMatrix(matObject);
+		}
+		break;
+		case OBJECT_TYPE::BOSS:
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_MONSTER, wstrTag)))
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return E_FAIL;
+			}
+
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_MONSTER);
+			if (nullptr == pObject)
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return E_FAIL;
+			}
+				
+
+			CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+			pTransform->Set_WorldMatrix(matObject);
+		}
+		break;
+		default:
+			break;
+		}
+	}
+#pragma endregion
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -145,28 +290,28 @@ HRESULT CLevel_GamePlay::Ready_Light()
 	LIGHT_DESC			LightDesc;
 
 	/* 방향성 광원을 추가하낟. */
-	/*ZeroMemory(&LightDesc, sizeof LightDesc);
+	ZeroMemory(&LightDesc, sizeof LightDesc);
 	LightDesc.eLightType = LIGHT_DESC::TYPE::DIRECTIONAL;
 	LightDesc.vLightDir = _vector(1.f, -1.f, 1.f, 0.f);
 
-	LightDesc.vDiffuse = _vector(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _vector(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDiffuse = _vector(0.8f, 0.8f, 0.8f, 1.f);
+	LightDesc.vAmbient = _vector(0.8f, 0.8f, 0.8f, 1.f);
 	LightDesc.vSpecular = _vector(0.f, 0.f, 0.f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	/* 점 광원을 추가한다. */
-	ZeroMemory(&LightDesc, sizeof LightDesc);
+	/*ZeroMemory(&LightDesc, sizeof LightDesc);
 	LightDesc.eLightType = LIGHT_DESC::TYPE::POINT;
 	LightDesc.vLightPos = _vector(50.f, 20.f, 10.f, 1.f);
 	LightDesc.fLightRange = 120.f;
-	LightDesc.vDiffuse = _vector(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _vector(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDiffuse = _vector(0.8f, 0.8f, 0.8f, 1.f);
+	LightDesc.vAmbient = _vector(0.8f, 0.8f, 0.8f, 1.f);
 	LightDesc.vSpecular = _vector(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	RELEASE_INSTANCE(CGameInstance);
 

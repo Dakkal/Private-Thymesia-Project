@@ -148,8 +148,7 @@ HRESULT CImgui_Manager::Menu(_float fTimeDelta)
         if (ImGui::MenuItem("Level 1"))
         {
             // "Level1" 메뉴 아이템이 클릭될 때 수행할 작업
-            if (m_iCurLevel == m_SelectLevel &&
-                m_bIsCreateTerrain[m_iCurLevel])
+            if (m_iCurLevel == m_SelectLevel)
             {
                 m_bShowMessage[_uint(DATA::SAVE)] = true;
                 Save_Data(LEVEL(m_SelectLevel));
@@ -159,8 +158,7 @@ HRESULT CImgui_Manager::Menu(_float fTimeDelta)
         if (ImGui::MenuItem("Level 2"))
         {
             // "Level2" 메뉴 아이템이 클릭될 때 수행할 작업
-            if (m_iCurLevel == m_SelectLevel &&
-                m_bIsCreateTerrain[m_iCurLevel])
+            if (m_iCurLevel == m_SelectLevel)
             {
                 m_bShowMessage[_uint(DATA::SAVE)] = true;
                 Save_Data(LEVEL(m_SelectLevel));
@@ -169,8 +167,7 @@ HRESULT CImgui_Manager::Menu(_float fTimeDelta)
         if (ImGui::MenuItem("Level 3"))
         {
             // "Level3" 메뉴 아이템이 클릭될 때 수행할 작업
-            if (m_iCurLevel == m_SelectLevel &&
-                m_bIsCreateTerrain[m_iCurLevel])
+            if (m_iCurLevel == m_SelectLevel)
             {
                 m_bShowMessage[_uint(DATA::SAVE)] = true;
                 Save_Data(LEVEL(m_SelectLevel));
@@ -180,8 +177,7 @@ HRESULT CImgui_Manager::Menu(_float fTimeDelta)
         if (ImGui::MenuItem("Level 4"))
         {
             // "Level4" 메뉴 아이템이 클릭될 때 수행할 작업
-            if (m_iCurLevel == m_SelectLevel &&
-                m_bIsCreateTerrain[m_iCurLevel])
+            if (m_iCurLevel == m_SelectLevel)
             {
                 m_bShowMessage[_uint(DATA::SAVE)] = true;
                 Save_Data(LEVEL(m_SelectLevel));
@@ -659,9 +655,7 @@ HRESULT CImgui_Manager::Setting_Object()
 
                         if (m_strCurPropProtoObject[m_iCurLevel] != wstring().assign(m_vecProps[i].begin(), m_vecProps[i].end()))
                         {
-                            m_vPropScale[m_iCurLevel] = XMVectorZero();
-                            m_vPropRot[m_iCurLevel] = XMVectorZero();
-                            m_vPropPos[m_iCurLevel] = XMVectorZero();
+                            
                         }
                         m_strCurPropProtoObject[m_iCurLevel].assign(m_vecProps[i].begin(), m_vecProps[i].end());
                         ImGui::SetItemDefaultFocus();
@@ -1124,7 +1118,7 @@ HRESULT CImgui_Manager::List_Object()
 
     CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-    if (true == m_bisObjectPick && false == Is_MouseClickedGUI() && pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON))
+    if (true == m_bisObjectPick && false == Is_MouseClickedGUI() && pGameInstance->Key_Down(VK_LBUTTON))
     {
         RECT rc = { 0, 0, g_iWinSizeX, g_iWinSizeY };
 
@@ -1162,7 +1156,6 @@ HRESULT CImgui_Manager::List_Object()
                             {
                                 vClosePick = vPick;
                                 m_vObjectPos[m_iCurLevel] = vClosePick;
-
                                 m_pSelectObject = pObject;
                                 ChangeListToSelectObj();
                             }
@@ -1180,6 +1173,13 @@ HRESULT CImgui_Manager::List_Object()
                         
                     }
                 }
+            }
+
+            if (true == m_bIsMakeNavi)
+            {
+                _vector vPick = m_vObjectPos[m_iCurLevel];
+                _float3 vRealPick = dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->Get_Closet_Cell_Point(vPick);
+                m_Points.push_back(vRealPick);
             }
         }
 
@@ -1258,6 +1258,22 @@ HRESULT CImgui_Manager::NaviMesh()
 
         dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->Save_Navi(strPath);
     }
+    if (ImGui::Button("Load NaviMesh"))
+    {
+        CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+        if (nullptr != m_pSelectObject)
+        {
+            wstring strPath = TEXT("../Bin/Data/Navigation/");
+            wstring ObjName = m_pSelectObject->Get_Name();
+            wstring ext = TEXT(".dat");
+            wstring finalpath = strPath + ObjName + ext;
+            CNavigation* pNavi = CNavigation::Create(m_pDevice, m_pContext, finalpath);
+
+            dynamic_cast<CLandObject*>(m_pSelectObject)->Set_CurNaviCom(pNavi);
+        }
+        RELEASE_INSTANCE(CGameInstance);
+    }
     if (ImGui::CollapsingHeader("Let's Make Navi"))
     {
         if (ImGui::Button("Start|Pause"))
@@ -1278,6 +1294,7 @@ HRESULT CImgui_Manager::NaviMesh()
         if (ImGui::Button("Delete"))
         {
             dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->Delete_Last_Cell();
+            m_Points.clear();
         }
         ImGui::Spacing();
         if (ImGui::Button("Get Index"))
@@ -1310,15 +1327,6 @@ HRESULT CImgui_Manager::NaviMesh()
         {
             CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-            _vector vPick = m_vObjectPos[m_iCurLevel];
-
-            if (false == Is_MouseClickedGUI() && pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON))
-            {
-                _float3 vRealPick = dynamic_cast<CLandObject*>(m_pSelectObject)->Get_CurNaviCom()->Get_Closet_Cell_Point(vPick);
-
-                m_Points.push_back(vRealPick);
-            }
-
             if (3 <= m_Points.size())
             {
                 _float3* pPoints = new _float3[3];
@@ -1333,7 +1341,6 @@ HRESULT CImgui_Manager::NaviMesh()
                 Safe_Delete_Array(pPoints);
                 m_Points.clear();
             }
-
 
             RELEASE_INSTANCE(CGameInstance);
         }
@@ -1690,6 +1697,8 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
         m_vecObjectList.push_back(strSelectNameIndex);
         m_iSelectObject[m_iCurLevel] = m_vecObjectList.size() - 1;
     }
+
+   m_pSelectObject = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT);
 #pragma endregion
     RELEASE_INSTANCE(CGameInstance);
 

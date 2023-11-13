@@ -1,30 +1,26 @@
 #include "pch.h"
-#include "..\Public\Boss_Urd.h"
+#include "..\Public\Enemy_GreatSword.h"
 
 #include "GameInstance.h"
 #include "PartObject.h"
 #include "StateMachine.h"
-#include "State_Idle_Urd.h"
-#include "State_Hit_Urd.h"
-#include "State_Avoid_Urd.h"
-#include "State_Attack_Urd.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
 
-CBoss_Urd::CBoss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEnemy_GreatSword::CEnemy_GreatSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLandObject(pDevice, pContext)
 {
 
 }
 
-CBoss_Urd::CBoss_Urd(const CBoss_Urd& rhs)
+CEnemy_GreatSword::CEnemy_GreatSword(const CEnemy_GreatSword& rhs)
 	: CLandObject(rhs)
 {
 
 }
 
-HRESULT CBoss_Urd::Initialize_Prototype(const wstring& strProtoTag)
+HRESULT CEnemy_GreatSword::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
@@ -34,7 +30,7 @@ HRESULT CBoss_Urd::Initialize_Prototype(const wstring& strProtoTag)
 	return S_OK;
 }
 
-HRESULT CBoss_Urd::Initialize(void* pArg)
+HRESULT CEnemy_GreatSword::Initialize(void* pArg)
 {
 	__super::Initialize(pArg);
 
@@ -50,18 +46,18 @@ HRESULT CBoss_Urd::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBoss_Urd::Tick(_float fTimeDelta)
+void CEnemy_GreatSword::Tick(_float fTimeDelta)
 {
 	if (true == m_bFirstDrop)
 	{
 		m_pCurNavigationCom->Set_toCell(6, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
-	
+
 
 	Out_Player(fTimeDelta);
 	Look_Player(fTimeDelta);
-	
+
 	m_pStateMachineCom->Tick(fTimeDelta);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -77,9 +73,9 @@ void CBoss_Urd::Tick(_float fTimeDelta)
 	RELEASE_INSTANCE(CGameInstance)
 }
 
-void CBoss_Urd::LateTick(_float fTimeDelta)
+void CEnemy_GreatSword::LateTick(_float fTimeDelta)
 {
-	if(true == m_IsHit) m_IsHit = false;
+	if (true == m_IsHit) m_IsHit = false;
 
 	m_pStateMachineCom->LateTick(fTimeDelta);
 
@@ -100,12 +96,12 @@ void CBoss_Urd::LateTick(_float fTimeDelta)
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 }
 
-HRESULT CBoss_Urd::Render()
+HRESULT CEnemy_GreatSword::Render()
 {
 	return S_OK;
 }
 
-void CBoss_Urd::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
+void CEnemy_GreatSword::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
@@ -126,7 +122,7 @@ void CBoss_Urd::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBoss_Urd::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
+void CEnemy_GreatSword::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
@@ -145,7 +141,7 @@ void CBoss_Urd::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBoss_Urd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
+void CEnemy_GreatSword::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
@@ -165,7 +161,7 @@ void CBoss_Urd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBoss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
+void CEnemy_GreatSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
@@ -226,7 +222,7 @@ void CBoss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBoss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
+void CEnemy_GreatSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
@@ -286,7 +282,7 @@ void CBoss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBoss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
+void CEnemy_GreatSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
@@ -346,7 +342,7 @@ void CBoss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBoss_Urd::Out_Player(_float fTimeDelta)
+void CEnemy_GreatSword::Out_Player(_float fTimeDelta)
 {
 	if (false == m_bIsOutPlayer)
 		return;
@@ -361,7 +357,7 @@ void CBoss_Urd::Out_Player(_float fTimeDelta)
 	}
 }
 
-void CBoss_Urd::Look_Player(_float fTimeDelta)
+void CEnemy_GreatSword::Look_Player(_float fTimeDelta)
 {
 	if (nullptr == m_pPlayerTransform || false == m_bIsLookPlayer)
 		return;
@@ -393,7 +389,7 @@ void CBoss_Urd::Look_Player(_float fTimeDelta)
 
 }
 
-void CBoss_Urd::Set_PlayerTransform()
+void CEnemy_GreatSword::Set_PlayerTransform()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -409,7 +405,7 @@ void CBoss_Urd::Set_PlayerTransform()
 	RELEASE_INSTANCE(CGameInstance)
 }
 
-HRESULT CBoss_Urd::Ready_Components()
+HRESULT CEnemy_GreatSword::Ready_Components()
 {
 	/* Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -452,7 +448,7 @@ HRESULT CBoss_Urd::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CBoss_Urd::Ready_Parts()
+HRESULT CEnemy_GreatSword::Ready_Parts()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -491,34 +487,16 @@ HRESULT CBoss_Urd::Ready_Parts()
 	if (nullptr == pParts)
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::HITBOX, pParts);
-	
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
 
-HRESULT CBoss_Urd::Ready_State()
+HRESULT CEnemy_GreatSword::Ready_State()
 {
-	CState* pState = CState_Idle_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::IDLE);
-	if (nullptr == pState)
-		return E_FAIL;
-	m_pStateMachineCom->Add_State(STATE::IDLE, pState);
-
-	pState = CState_Hit_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::HIT);
-	if (nullptr == pState)
-		return E_FAIL;
-	m_pStateMachineCom->Add_State(STATE::HIT, pState);
-
-	pState = CState_Avoid_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::AVOID);
-	if (nullptr == pState)
-		return E_FAIL;
-	m_pStateMachineCom->Add_State(STATE::AVOID, pState);
-
-	pState = CState_Attack_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::ATTACK);
-	if (nullptr == pState)
-		return E_FAIL;
-	m_pStateMachineCom->Add_State(STATE::ATTACK, pState);
+	CState* pState = nullptr;
 
 
 	m_pStateMachineCom->Set_State(STATE::IDLE);
@@ -526,35 +504,35 @@ HRESULT CBoss_Urd::Ready_State()
 	return S_OK;
 }
 
-CBoss_Urd* CBoss_Urd::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
+CEnemy_GreatSword* CEnemy_GreatSword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
-	CBoss_Urd* pInstance = new CBoss_Urd(pDevice, pContext);
+	CEnemy_GreatSword* pInstance = new CEnemy_GreatSword(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
-		MSG_BOX("Failed to Created : CBoss_Urd");
+		MSG_BOX("Failed to Created : CEnemy_GreatSword");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CBoss_Urd::Clone(void* pArg)
+CGameObject* CEnemy_GreatSword::Clone(void* pArg)
 {
 	__super::Clone(pArg);
 
-	CBoss_Urd* pInstance = new CBoss_Urd(*this);
+	CEnemy_GreatSword* pInstance = new CEnemy_GreatSword(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CBoss_Urd");
+		MSG_BOX("Failed to Cloned : CEnemy_GreatSword");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBoss_Urd::Free()
+void CEnemy_GreatSword::Free()
 {
 	__super::Free();
 

@@ -28,7 +28,7 @@ public:
 	_int    CheckIn(_vector vPoint);
 
 public:
-	const _matrix&	Get_Navi_Matrix() { return m_NaviWorldMatrix; }
+	const _matrix&	Get_Navi_Matrix() { return m_NaviWorldMatrix[m_iNaviIndex]; }
 	class CCell*	Get_CurCell() { return m_Cells[m_iCurrentIndex]; }
 	_float3			Get_Closet_Cell_Point(_vector vPick);
 
@@ -43,7 +43,7 @@ public:
 	HRESULT			Add_Cell(_float3* vPoints);
 	HRESULT			Delete_Last_Cell();
 	
-	HRESULT	Save_Navi(const wstring& Path);
+	HRESULT			Save_Navi(const wstring& Path);
 
 #ifdef _DEBUG
 public:
@@ -54,7 +54,11 @@ private:
 #endif // !NDEBUG
 
 private:
-	static	_matrix			m_NaviWorldMatrix;
+	static	_matrix			m_NaviWorldMatrix[];
+	static	_uint			m_iIndex;
+
+	_uint					m_iNaviIndex = { 0 };
+
 	_int					m_iCurrentIndex = { -1 };
 	vector<class CCell*>	m_Cells;
 	vector<_uint>			m_Passages;

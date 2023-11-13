@@ -1,28 +1,28 @@
 #include "pch.h"
-#include "..\Public\ChurchGrillesFloor.h"
+#include "..\Public\ChurchLeftDoor.h"
 #include "GameInstance.h"
 
-CChurchGrillesFloor::CChurchGrillesFloor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CChurchLeftDoor::CChurchLeftDoor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
 }
 
-CChurchGrillesFloor::CChurchGrillesFloor(const CChurchGrillesFloor& rhs)
+CChurchLeftDoor::CChurchLeftDoor(const CChurchLeftDoor& rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CChurchGrillesFloor::Initialize_Prototype(const wstring& strProtoTag)
+HRESULT CChurchLeftDoor::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
 	m_eObjType = OBJECT_TYPE::PORP;
-	m_strObjectName = TEXT("ChurchGrillesFloor");
+	m_strObjectName = TEXT("ChurchLeftDoor");
 
 	return S_OK;
 }
 
-HRESULT CChurchGrillesFloor::Initialize(void* pArg)
+HRESULT CChurchLeftDoor::Initialize(void* pArg)
 {
 	__super::Initialize(pArg);
 
@@ -32,18 +32,18 @@ HRESULT CChurchGrillesFloor::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CChurchGrillesFloor::Tick(_float fTimeDelta)
+void CChurchLeftDoor::Tick(_float fTimeDelta)
 {
-	
+
 }
 
-void CChurchGrillesFloor::LateTick(_float fTimeDelta)
+void CChurchLeftDoor::LateTick(_float fTimeDelta)
 {
 
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 }
 
-HRESULT CChurchGrillesFloor::Render()
+HRESULT CChurchLeftDoor::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -60,12 +60,12 @@ HRESULT CChurchGrillesFloor::Render()
 		m_pModelCom->Render(i);
 	}
 
-	
+
 
 	return S_OK;
 }
 
-HRESULT CChurchGrillesFloor::Ready_Components()
+HRESULT CChurchLeftDoor::Ready_Components()
 {
 	/* Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -78,32 +78,32 @@ HRESULT CChurchGrillesFloor::Ready_Components()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
-		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
-		return E_FAIL;
+	///* Com_Shader */
+	//if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
+	//	TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+	//	return E_FAIL;
 
-	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
-		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-		return E_FAIL;
+	///* Com_Model */
+	//if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchLeftDoor"),
+	//	TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+	//	return E_FAIL;
 #else
+#endif // !EDIT
 	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_1, TEXT("Prototype_Component_Shader_VtxMesh"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_1, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchLeftDoor"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
-#endif // !EDIT
 	
 
 	return S_OK;
 }
 
-HRESULT CChurchGrillesFloor::Bind_ShaderResources()
+HRESULT CChurchLeftDoor::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResources(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -112,43 +112,45 @@ HRESULT CChurchGrillesFloor::Bind_ShaderResources()
 
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)))
 		return E_FAIL;
+
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 		return E_FAIL;
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
 
-CChurchGrillesFloor* CChurchGrillesFloor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
+CChurchLeftDoor* CChurchLeftDoor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
-	CChurchGrillesFloor* pInstance = new CChurchGrillesFloor(pDevice, pContext);
+	CChurchLeftDoor* pInstance = new CChurchLeftDoor(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
-		MSG_BOX("Failed to Created : CChurchGrillesFloor");
+		MSG_BOX("Failed to Created : CChurchLeftDoor");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CChurchGrillesFloor::Clone(void* pArg)
+CGameObject* CChurchLeftDoor::Clone(void* pArg)
 {
 	__super::Clone(pArg);
 
-	CChurchGrillesFloor* pInstance = new CChurchGrillesFloor(*this);
+	CChurchLeftDoor* pInstance = new CChurchLeftDoor(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CChurchGrillesFloor");
+		MSG_BOX("Failed to Cloned : CChurchLeftDoor");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CChurchGrillesFloor::Free()
+void CChurchLeftDoor::Free()
 {
 	__super::Free();
 

@@ -12,11 +12,7 @@ CLevel_1::CLevel_1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_1::Initialize()
 {
-	//CFbxExporter FbxExport;
-	//FbxExport.Start_Static_Import(TEXT("../Bin/Resources/Models/Static/Props/ChurchGrillesFloor/ChurchGrillesFloor.dat"));
-
-	//SAVEMESH_STATIC modelmesh = FbxExport.Get_Static_Mesh();
-
+	
     m_eLevel = LEVELID::LEVEL_1;
 
 	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
@@ -47,7 +43,7 @@ HRESULT CLevel_1::Load_Level(LEVELID eLevel)
 {
     CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-    wstring strFileTerrain = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel - 2) + TEXT("Terrain.dat");
+    //wstring strFileTerrain = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel - 2) + TEXT("Terrain.dat");
     wstring strFileObject = TEXT("../Bin/Data/Level") + to_wstring((_uint)eLevel - 2) + TEXT("Object.dat");
 
 #pragma region Terrain
@@ -137,6 +133,19 @@ HRESULT CLevel_1::Load_Level(LEVELID eLevel)
 			pTransform->Set_WorldMatrix(matObject);
 		}
 			break;
+		case OBJECT_TYPE::BOSS:
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_1, LAYER_MONSTER, wstrTag)))
+				return E_FAIL;
+
+			CGameObject* pObject = pGameInstance->Last_GameObject(LEVEL_1, LAYER_MONSTER);
+			if (nullptr == pObject)
+				return E_FAIL;
+
+			CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
+			pTransform->Set_WorldMatrix(matObject);
+		}
+		break;
 		default:
 			break;
 		}

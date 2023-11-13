@@ -11,6 +11,12 @@
 
 #include "Church.h"
 #include "ChurchGrillesFloor.h"
+#include "ChurchWindowGriles.h"
+#include "ChurchLeftDoor.h"
+#include "ChurchRightDoor.h"
+#include "ChurchSideDoor.h"
+#include "Stair.h"
+#include "BossRoom.h"
 
 #include "Player.h"
 #include "Body_Player.h"
@@ -402,16 +408,37 @@ HRESULT CLoader::Loading_Mesh()
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Church/Church.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
-		break;
-	case Client::LEVEL_1:
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_1, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
-			CVIBuffer_Terrain::Create(m_pDevice, m_pContext))))
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_BossRoom"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/BossRoom/BossRoom.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
-		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_1, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
-			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchFloorGriles/ChurchFloorGriles.dat"), ModelInitMatrix))))
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchWindowGriles"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchWindowGriles/ChurchWindowGriles.dat"), ModelInitMatrix))))
 			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchLeftDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchLeftDoor/ChurchLeftDoor.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchRightDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchRightDoor/ChurchRightDoor.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ChurchSideDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchSideDoor/ChurchSideDoor.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Stair"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Stair/Stair.dat"), ModelInitMatrix))))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_1:
 		break;
 	case Client::LEVEL_2:
 		break;
@@ -427,10 +454,37 @@ HRESULT CLoader::Loading_Mesh()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Church"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Church/Church.dat"), ModelInitMatrix))))
 			return E_FAIL;
+
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchGrillesFloor"),
-			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchFloorGriles/ChurchFloorGriles.dat"), ModelInitMatrix))))
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_BossRoom"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/BossRoom/BossRoom.dat"), ModelInitMatrix))))
 			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchWindowGriles"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchWindowGriles/ChurchWindowGriles.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchLeftDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchLeftDoor/ChurchLeftDoor.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchRightDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchRightDoor/ChurchRightDoor.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_ChurchSideDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/ChurchSideDoor/ChurchSideDoor.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Stair"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Stair/Stair.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
 		break;
 	default:
 		break;
@@ -537,6 +591,17 @@ HRESULT CLoader::Loading_EtcComponent()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
 			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation/Church.dat")))))
 			return E_FAIL;
+
+		/* For.Prototype_Component_Navigation */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Stair_Navigation"),
+			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation/Stair.dat")))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Navigation */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BossRoom_Navigation"),
+			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation/BossRoom.dat")))))
+			return E_FAIL;
+
 		/* For.Prototype_Component_StateMachine*/
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
 			CStateMachine::Create(m_pDevice, m_pContext))))
@@ -616,6 +681,24 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyDome"), CSkyDome::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_SkyDome")))))
 			return E_FAIL;
 
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BossRoom"), CBossRoom::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_BossRoom")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchWindowGriles"), CChurchWindowGriles::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchWindowGriles")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchLeftDoor"), CChurchLeftDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchLeftDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchRightDoor"), CChurchRightDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchRightDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchSideDoor"), CChurchSideDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchSideDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Stair"), CStair::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Stair")))))
+			return E_FAIL;
+
 		break;
 	case Client::LEVEL_1:
 		/* For.Terrain*/
@@ -625,8 +708,7 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CToolCamera::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 		/* For.Porps_ChurchGrillesFloor */
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchGrillesFloor"), CChurchGrillesFloor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchGrillesFloor")))))
-			return E_FAIL;
+		
 		/* For.Porps_Church */
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Church"), CChurch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Church")))))
 			return E_FAIL;
@@ -644,11 +726,28 @@ HRESULT CLoader::Loading_Object()
 		/* For.Camera*/
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ToolCamera"), CToolCamera::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
-		/* For.Props_ChurchGrillesFloor */
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchGrillesFloor"), CChurchGrillesFloor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchGrillesFloor")))))
-			return E_FAIL;
+
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Church"), CChurch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Church")))))
 			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BossRoom"), CBossRoom::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_BossRoom")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchWindowGriles"), CChurchWindowGriles::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchWindowGriles")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchLeftDoor"), CChurchLeftDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchLeftDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchRightDoor"), CChurchRightDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchRightDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchSideDoor"), CChurchSideDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchSideDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Stair"), CStair::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Stair")))))
+			return E_FAIL;
+
 		break;
 	default:
 		break;

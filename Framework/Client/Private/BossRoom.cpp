@@ -1,29 +1,29 @@
 #include "pch.h"
-#include "..\Public\Church.h"
+#include "..\Public\BossRoom.h"
 #include "GameInstance.h"
 #include "Navigation.h"
 
-CChurch::CChurch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBossRoom::CBossRoom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLandObject(pDevice, pContext)
 {
 }
 
-CChurch::CChurch(const CChurch& rhs)
+CBossRoom::CBossRoom(const CBossRoom& rhs)
 	: CLandObject(rhs)
 {
 }
 
-HRESULT CChurch::Initialize_Prototype(const wstring& strProtoTag)
+HRESULT CBossRoom::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
 	m_eObjType = OBJECT_TYPE::PORP;
-	m_strObjectName = TEXT("Church");
+	m_strObjectName = TEXT("BossRoom");
 
 	return S_OK;
 }
 
-HRESULT CChurch::Initialize(void* pArg)
+HRESULT CBossRoom::Initialize(void* pArg)
 {
 	__super::Initialize(pArg);
 
@@ -33,17 +33,17 @@ HRESULT CChurch::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CChurch::PriorityTick(_float fTimeDelta)
+void CBossRoom::PriorityTick(_float fTimeDelta)
 {
-	if(nullptr != m_pCurNavigationCom)
+	if (nullptr != m_pCurNavigationCom)
 		m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
-void CChurch::Tick(_float fTimeDelta)
+void CBossRoom::Tick(_float fTimeDelta)
 {
 }
 
-void CChurch::LateTick(_float fTimeDelta)
+void CBossRoom::LateTick(_float fTimeDelta)
 {
 #ifdef _DEBUG
 	if (nullptr != m_pCurNavigationCom)
@@ -53,7 +53,7 @@ void CChurch::LateTick(_float fTimeDelta)
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 }
 
-HRESULT CChurch::Render()
+HRESULT CBossRoom::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -73,12 +73,10 @@ HRESULT CChurch::Render()
 		m_pModelCom->Render(i);
 	}
 
-
-
 	return S_OK;
 }
 
-HRESULT CChurch::Ready_Components()
+HRESULT CBossRoom::Ready_Components()
 {
 	/* Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -97,7 +95,7 @@ HRESULT CChurch::Ready_Components()
 	//	return E_FAIL;
 
 	///* Com_Model */
-	//if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_Church"),
+	//if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_BossRoom"),
 	//	TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 	//	return E_FAIL;
 #else
@@ -122,12 +120,12 @@ HRESULT CChurch::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Church"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_BossRoom"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* Com_Navigation */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BossRoom_Navigation"),
 		TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
 		return E_FAIL;
 
@@ -136,7 +134,7 @@ HRESULT CChurch::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CChurch::Bind_ShaderResources()
+HRESULT CBossRoom::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResources(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -155,37 +153,38 @@ HRESULT CChurch::Bind_ShaderResources()
 	return S_OK;
 }
 
-CChurch* CChurch::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
+CBossRoom* CBossRoom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
-	CChurch* pInstance = new CChurch(pDevice, pContext);
+	CBossRoom* pInstance = new CBossRoom(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
-		MSG_BOX("Failed to Created : CChurch");
+		MSG_BOX("Failed to Created : CBossRoom");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CChurch::Clone(void* pArg)
+CGameObject* CBossRoom::Clone(void* pArg)
 {
 	__super::Clone(pArg);
 
-	CChurch* pInstance = new CChurch(*this);
+	CBossRoom* pInstance = new CBossRoom(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CChurch");
+		MSG_BOX("Failed to Cloned : CBossRoom");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CChurch::Free()
+void CBossRoom::Free()
 {
 	__super::Free();
+
 
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);

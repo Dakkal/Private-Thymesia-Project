@@ -52,7 +52,7 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 	}
 	else if (true == m_bParryRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 3.f, 10);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 3.f, false, 10);
 		m_IsKeepParry = false;
 	}
 	else
@@ -132,6 +132,8 @@ STATE CState_Parry::LateTick(const _float& fTimeDelta)
 
 void CState_Parry::Enter_State()
 {
+	m_pRealOwner->Set_Move(false);
+
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 3.f);
 	m_bParry1 = true;
 }

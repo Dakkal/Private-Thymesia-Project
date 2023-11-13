@@ -47,9 +47,11 @@ void CState_Attack_Urd::Reset_State()
 
 void CState_Attack_Urd::Enter_State()
 {
+	m_pRealOwner->Set_Move(true);
+
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 
-	m_pOwnerBodyPart->Set_AnimationIndex(true, 0, 1.2f);
+	m_pOwnerBodyPart->Set_AnimationIndex(false, 0, 2.f);
 }
 
 STATE CState_Attack_Urd::Key_Input(const _float& fTimeDelta)

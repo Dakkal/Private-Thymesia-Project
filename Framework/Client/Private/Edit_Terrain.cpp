@@ -42,7 +42,7 @@ void CEdit_Terrain::Tick(_float fTimeDelta)
 void CEdit_Terrain::LateTick(_float fTimeDelta)
 {
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONLIGHT, this);
 }
 
 HRESULT CEdit_Terrain::Render()

@@ -103,6 +103,8 @@ STATE CState_Lockon_Avoid::LateTick(const _float& fTimeDelta)
 
 void CState_Lockon_Avoid::Enter_State()
 {
+	m_pRealOwner->Set_Move(true);
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)

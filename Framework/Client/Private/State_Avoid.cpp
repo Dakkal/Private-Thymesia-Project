@@ -78,6 +78,8 @@ STATE CState_Avoid::LateTick(const _float& fTimeDelta)
 
 void CState_Avoid::Enter_State()
 {
+	m_pRealOwner->Set_Move(true);
+
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 51, 2.f);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

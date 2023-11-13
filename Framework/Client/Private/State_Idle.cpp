@@ -41,6 +41,8 @@ void CState_Idle::Reset_State()
 
 void CState_Idle::Enter_State()
 {
+	m_pRealOwner->Set_Move(false);
+
 	dynamic_cast<CPlayer*>(m_pRealOwner)->Reset_TargetEnemy();
 
 	m_pOwnerBodyPart->Set_AnimationIndex(true, 90, 1.2f);

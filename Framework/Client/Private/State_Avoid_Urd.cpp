@@ -27,8 +27,13 @@ STATE CState_Avoid_Urd::Tick(const _float& fTimeDelta)
 
 	cout << "È¸ÇÇ" << endl;
 
-	if (m_pOwnerBodyPart->Is_AnimCurKeyFrame(32))
+	if (TYPE::FRONT == m_eAvoidType && m_pOwnerBodyPart->Is_AnimCurKeyFrame(32))
+	{
+		return STATE::ATTACK;
+	}
+	else if (m_pOwnerBodyPart->Is_AnimCurKeyFrame(32))
 		return STATE::IDLE;
+		
 
 	return eState;
 }
@@ -49,6 +54,8 @@ void CState_Avoid_Urd::Reset_State()
 
 void CState_Avoid_Urd::Enter_State()
 {
+	m_pRealOwner->Set_Move(true);
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
@@ -63,15 +70,21 @@ void CState_Avoid_Urd::Enter_State()
 	if (5 >= fDist)
 	{
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 31, 1.2f, true);
+		m_eAvoidType = TYPE::BEHIND;
 	}
 	else if (5 < fDist && 10 >= fDist)
 	{
 		if (pGameInstance->Random_Coin(0.5))
 		{
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.2f, true);
+			m_eAvoidType = TYPE::SIDE;
 		}
 		else
+		{
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.2f, true);
+			m_eAvoidType = TYPE::SIDE;
+		}
+			
 	}
 	else if (10 < fDist)
 	{
@@ -83,6 +96,8 @@ void CState_Avoid_Urd::Enter_State()
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 32, 1.2f, true);
 		else
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 33, 1.2f, true);
+
+		m_eAvoidType = TYPE::FRONT;
 	}
 	
 	RELEASE_INSTANCE(CGameInstance);

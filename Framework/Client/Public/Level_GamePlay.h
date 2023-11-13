@@ -17,6 +17,7 @@ public:
 	virtual HRESULT LateTick(_float fTimeDelta) override;
 
 private:
+	HRESULT Load_Level(LEVELID eLevel);
 	HRESULT Ready_Layer_BackGround(const _uint& iLayerIndex);
 	HRESULT Ready_Layer_SkyDome(const _uint& iLayerIndex);
 	HRESULT Ready_Layer_Camera(const _uint& iLayerIndex);

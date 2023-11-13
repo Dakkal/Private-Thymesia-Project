@@ -9,6 +9,7 @@
 #include "Transform.h"
 #include "Navigation.h"
 #include "LandObject.h"
+#include "PartObject.h"
 
 CBinModel::CBinModel(ID3D11Device* pDeivce, ID3D11DeviceContext* pContext)
 	: CComponent(pDeivce, pContext)
@@ -305,6 +306,9 @@ _bool CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
 
 _bool CBinModel::Is_CurAnimFinished()
 {
+	if (true == m_bIsAnimChange)
+		return false;
+
 	return m_Animations[m_iCurAnimIndex]->IsFinished(); 
 }
 
@@ -354,7 +358,19 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 			pTransform->Set_State(CTransform::STATE_POS, vPos);
 		else if (-2 == iMove)
 		{
-			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPos))
+			_bool bFind;
+			if (OBJECT_TYPE::PART == m_pOwner->Get_ObjectType())
+			{
+				CGameObject* pPartOwner = dynamic_cast<CPartObject*>(m_pOwner)->Get_PartOwner();
+				bFind = dynamic_cast<CLandObject*>(pPartOwner)->Find_NaviMesh(vPos);
+			}
+			else
+			{
+				bFind = dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPos);
+			}
+			
+
+			if (true == bFind)
 				pTransform->Set_State(CTransform::STATE_POS, vPos);
 		}
 	}

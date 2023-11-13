@@ -69,6 +69,8 @@ void CState_Lockon_Idle::Reset_State()
 
 void CState_Lockon_Idle::Enter_State()
 {
+	m_pRealOwner->Set_Move(false);
+
 	dynamic_cast<CPlayer*>(m_pRealOwner)->Search_TargetEnemy();
 
 	m_pOwnerBodyPart->Set_AnimationIndex(true, 90, 1.2f);

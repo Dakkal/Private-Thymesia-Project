@@ -71,6 +71,8 @@ void CState_Idle_Urd::Reset_State()
 
 void CState_Idle_Urd::Enter_State()
 {
+	m_pRealOwner->Set_Move(false);
+
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 
 	m_pOwnerBodyPart->Set_AnimationIndex(true, 19, 1.2f);

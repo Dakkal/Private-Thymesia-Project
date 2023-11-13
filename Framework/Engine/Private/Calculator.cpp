@@ -146,6 +146,7 @@ HRESULT CCalculator::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, C
         return E_FAIL;
 
     CCollider* pCollider = dynamic_cast<CCollider*>(pColObj->Get_Component(TEXT("Com_Collider")));
+    CTransform* pTargetTransform = dynamic_cast<CTransform*>(pColObj->Get_Component(TEXT("Com_Transform")));
 
     _float3 vTargetCenter = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Center;
     _float3 vPlayerCenter = dynamic_cast<CBounding_AABB*>(pObjCol->Get_ParentBouning())->Get_Bouding()->Center;

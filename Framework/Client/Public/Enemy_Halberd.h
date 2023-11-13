@@ -5,21 +5,20 @@
 
 BEGIN(Engine)
 class CTransform;
-class CStateMachine;
-class CNavigation;
 class CRenderer;
+class CStateMachine;
 class CCollider;
 END
 
 BEGIN(Client)
 
-class CPlayer final : public CLandObject
+class CEnemy_Halberd final : public CLandObject
 {
 protected:
-	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CPlayer(const CPlayer& rhs);
+	CEnemy_Halberd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEnemy_Halberd(const CEnemy_Halberd& rhs);
 
-	virtual ~CPlayer() = default;
+	virtual ~CEnemy_Halberd() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
@@ -37,28 +36,37 @@ public:
 	virtual void OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
 public:
-	void			Reset_TargetEnemy();
-	HRESULT			Search_TargetEnemy();
-	CGameObject*	Get_TargetEnemy() const { return m_pTargetEnemy; }
+	CTransform* Get_PlayerTransform() const { return m_pPlayerTransform; }
+	void		Set_LookPlayer(_bool bIsLook) { m_bIsLookPlayer = bIsLook; }
+
+public:
+	void	Out_Player(_float fTimeDelta);
+	void	Look_Player(_float fTimeDelta);
+	void	Set_PlayerTransform();
 
 private:
-	vector<CGameObject*>	m_vecTargetEnemy;	
-	CGameObject*			m_pTargetEnemy = { nullptr };
-	CRenderer*				m_pRendererCom = { nullptr };
-	CTransform*				m_pTransformCom = { nullptr };
-	CStateMachine*			m_pStateMachineCom = { nullptr };
-	CCollider*				m_pColliderCom = { nullptr };
+	CTransform* m_pPlayerTransform = { nullptr };
+	CRenderer* m_pRendererCom = { nullptr };
+	CTransform* m_pTransformCom = { nullptr };
+	CStateMachine* m_pStateMachineCom = { nullptr };
+	CCollider* m_pColliderCom = { nullptr };
+
+	_int					iIndex = 0;
+
+	_float					m_fReleaseTimeAcc = { 0.f };
+	_bool					m_bIsOutPlayer = { false };
+	_bool					m_bIsLookPlayer = { false };
 
 	_bool					m_bFirstDrop = { true };
 
 private:
 	HRESULT Ready_Components();
-	HRESULT Ready_PlayerParts();
+	HRESULT Ready_Parts();
 	HRESULT Ready_State();
 
 public:
-	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
-	virtual CGameObject* Clone(void* pArg) override; 
+	static CEnemy_Halberd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
 

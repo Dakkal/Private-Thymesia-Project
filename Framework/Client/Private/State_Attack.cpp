@@ -57,7 +57,7 @@ STATE CState_Attack::Tick(const _float& fTimeDelta)
 	}
 	else if (true == m_bAttackRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f, 10);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f, false, 10);
 		m_IsKeepAttack = false;
 	}
 	else
@@ -144,6 +144,8 @@ STATE CState_Attack::LateTick(const _float& fTimeDelta)
 
 void CState_Attack::Enter_State()
 {
+	m_pRealOwner->Set_Move(true);
+
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f);
 	m_bAttack1 = true;
 }

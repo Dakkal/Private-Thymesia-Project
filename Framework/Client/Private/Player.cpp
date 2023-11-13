@@ -61,6 +61,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
+	if (true == m_bFirstDrop)
+	{
+		m_pCurNavigationCom->Set_toCell(15, m_pTransformCom);
+		m_bFirstDrop = false;
+	}
+
 	m_pStateMachineCom->Tick(fTimeDelta);
 
 	for (auto& iter : m_Parts)
@@ -436,13 +442,22 @@ HRESULT CPlayer::Ready_Components()
 
 	/* Com_Navigation */
 	CNavigation* pNavigation = { nullptr };
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BossRoom_Navigation"),
 		TEXT("Com_Navigation1"), (CComponent**)&pNavigation)))
 		return E_FAIL;
 	m_NavigationComs.push_back(pNavigation);
 
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Stair_Navigation"),
+		TEXT("Com_Navigation2"), (CComponent**)&pNavigation)))
+		return E_FAIL;
+	m_NavigationComs.push_back(pNavigation);
+
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
+		TEXT("Com_Navigation3"), (CComponent**)&pNavigation)))
+		return E_FAIL;
+	m_NavigationComs.push_back(pNavigation);
+
 	m_pCurNavigationCom = pNavigation;
-	m_pCurNavigationCom->Set_toCell(3, m_pTransformCom);
 
 	/* Com_Collider_Sphere */
 	CBounding_Frustrum::BOUNDING_FRUSTRUM_DESC	FrustrumDesc = {};

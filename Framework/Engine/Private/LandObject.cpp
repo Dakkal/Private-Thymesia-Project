@@ -56,10 +56,13 @@ HRESULT CLandObject::Set_CurNaviCom(CNavigation* pNavi)
 
 _bool CLandObject::Find_NaviMesh(_vector vPos)
 {
-	_int iIndex = -1;
+ 	_int iIndex = -1;
 
 	for (auto& pNavi : m_NavigationComs)
 	{
+		if (m_pCurNavigationCom == pNavi)
+			continue;
+
 		iIndex = pNavi->IsIn(vPos);
 		if (-1 != iIndex)
 		{
@@ -106,14 +109,16 @@ void CLandObject::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pCurNavigationCom);
-
 	if (1 < m_NavigationComs.size())
 	{
 		for (auto& pNavi : m_NavigationComs)
 		{
 			Safe_Release(pNavi);
 		}
+	}
+	else
+	{
+		Safe_Release(m_pCurNavigationCom);
 	}
 	m_NavigationComs.clear();
 

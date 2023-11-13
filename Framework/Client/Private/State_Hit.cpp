@@ -3,17 +3,17 @@
 #include "PartObject.h"
 #include "Player.h"
 #include "StateMachine.h"
-#include "State_Hit_Urd.h"
+#include "State_Hit.h"
 #include "Transform.h"
 
 #include "Boss_Urd.h"
 
-CState_Hit_Urd::CState_Hit_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
+CState_Hit::CState_Hit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
 {
 }
 
-HRESULT CState_Hit_Urd::Initialize()
+HRESULT CState_Hit::Initialize()
 {
 	__super::Initialize();
 
@@ -22,7 +22,7 @@ HRESULT CState_Hit_Urd::Initialize()
 	return S_OK;
 }
 
-STATE CState_Hit_Urd::Tick(const _float& fTimeDelta)
+STATE CState_Hit::Tick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
@@ -48,7 +48,7 @@ STATE CState_Hit_Urd::Tick(const _float& fTimeDelta)
 	return eState;
 }
 
-STATE CState_Hit_Urd::LateTick(const _float& fTimeDelta)
+STATE CState_Hit::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
@@ -57,12 +57,12 @@ STATE CState_Hit_Urd::LateTick(const _float& fTimeDelta)
 	return eState;
 }
 
-void CState_Hit_Urd::Reset_State()
+void CState_Hit::Reset_State()
 {
 	m_bRight_Hit = true;
 }
 
-void CState_Hit_Urd::Enter_State()
+void CState_Hit::Enter_State()
 {
 	m_pRealOwner->Set_Move(false);
 
@@ -82,25 +82,25 @@ void CState_Hit_Urd::Enter_State()
 	}
 }
 
-STATE CState_Hit_Urd::Key_Input(const _float& fTimeDelta)
+STATE CState_Hit::Key_Input(const _float& fTimeDelta)
 {
 	return m_eState;
 }
 
-CState_Hit_Urd* CState_Hit_Urd::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
+CState_Hit* CState_Hit::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 {
-	CState_Hit_Urd* pInstance = new CState_Hit_Urd(pDevice, pContext, pOwner, eState);
+	CState_Hit* pInstance = new CState_Hit(pDevice, pContext, pOwner, eState);
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created : CState_Hit_Urd");
+		MSG_BOX("Failed to Created : CState_Hit");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CState_Hit_Urd::Free()
+void CState_Hit::Free()
 {
 	__super::Free();
 }
