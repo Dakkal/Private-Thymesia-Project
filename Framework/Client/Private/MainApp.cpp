@@ -35,6 +35,10 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Components()))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Font_Default"), TEXT("../Bin/Resources/Fonts/137ex.spriteFont"))))
+		return E_FAIL;
+
+
 	/* 1-4. 게임내에서 사용할 레벨(씬)을 생성한다.   */
 	if (FAILED(Open_Level(LEVEL_LOGO)))
 		return E_FAIL;
@@ -55,6 +59,10 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Tick(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	m_fTimeAcc += fTimeDelta;
+#endif
+
 	m_pGameInstance->Tick(fTimeDelta);
 }
 
@@ -64,6 +72,22 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Clear_DepthStencil_View();
 	
 	m_pRenderer->Draw_RenderObject();
+
+#ifdef _DEBUG
+	++m_iRenderCount;
+
+	if (1.f <= m_fTimeAcc)
+	{
+		m_fTimeAcc = 0;
+		wsprintf(m_szFPS, TEXT("해줘 : %d"), m_iRenderCount);
+
+		m_iRenderCount = 0;
+	}
+
+
+	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(0.f, 0.f), _vector(1.f, 0.f, 0.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
+#endif
+
 
 	if (LEVEL_EDIT == m_pGameInstance->Get_CurLevel())
 	{

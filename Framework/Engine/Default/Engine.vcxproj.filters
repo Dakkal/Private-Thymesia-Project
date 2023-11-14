@@ -196,6 +196,15 @@
     <Filter Include="01.Utility\10.RenderTarget\Manager">
       <UniqueIdentifier>{5a6b83ce-66b4-4031-9bb6-b35c2cc500bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\12.Font">
+      <UniqueIdentifier>{7922c190-c522-49a2-bbc3-e0383166d025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\13.FrustrumCull">
+      <UniqueIdentifier>{0d8b9c03-6ae1-4f82-a49e-31ebb2597ef4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\12.Font\Manager">
+      <UniqueIdentifier>{c0e688f3-40aa-4aee-a96e-f434a555924e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -387,6 +396,15 @@
     <ClInclude Include="..\Public\TargetManager.h">
       <Filter>01.Utility\10.RenderTarget\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Font.h">
+      <Filter>01.Utility\12.Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Frustrum_Cull.h">
+      <Filter>01.Utility\13.FrustrumCull</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Font_Manager.h">
+      <Filter>01.Utility\12.Font\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -559,6 +577,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\TargetManager.cpp">
       <Filter>01.Utility\10.RenderTarget\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Font.cpp">
+      <Filter>01.Utility\12.Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Frustrum_Cull.cpp">
+      <Filter>01.Utility\13.FrustrumCull</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Font_Manager.cpp">
+      <Filter>01.Utility\12.Font\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

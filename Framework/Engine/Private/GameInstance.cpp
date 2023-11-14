@@ -17,7 +17,11 @@ CGameInstance::CGameInstance()
 	, m_pCollider_Manager(CCollideManager::GetInstance())
 	, m_pRandom_Manager(CRandomManager::GetInstance())
 	, m_pTarget_Manager(CTargetManager::GetInstance())
+	, m_pFont_Manager(CFont_Manager::GetInstance())
+	, m_pFrustrum_Cull(CFrustrum_Cull::GetInstance())
 {
+	Safe_AddRef(m_pFrustrum_Cull);
+	Safe_AddRef(m_pFont_Manager);
 	Safe_AddRef(m_pTarget_Manager);
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pTimer_Manager);
@@ -74,6 +78,7 @@ void CGameInstance::Tick(_float fTimeDelta)
 	m_pLevel_Manager->Tick(fTimeDelta);
 
 	m_pPipeLine->Tick();
+	m_pFrustrum_Cull->Tick();
 
 	m_pObject_Manager->LateTick(fTimeDelta);
 	m_pLevel_Manager->LateTick(fTimeDelta);
@@ -463,16 +468,42 @@ const _bool& CGameInstance::Random_Coin(_float fProbality)
 	return m_pRandom_Manager->Random_Coin(fProbality);
 }
 
+HRESULT CGameInstance::Add_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strFontTag, const wstring& strFontFilePath)
+{
+	if (nullptr == m_pFont_Manager)
+		return E_FAIL;
+
+	return m_pFont_Manager->Add_Font(pDevice, pContext, strFontTag, strFontFilePath);
+}
+
+HRESULT CGameInstance::Render_Font(const wstring& strFontTag, const wstring& strText, const _float2& vPos, FXMVECTOR color, float rotation, XMFLOAT2 const& origin, float scale)
+{
+	if (nullptr == m_pFont_Manager)
+		return E_FAIL;
+
+	return m_pFont_Manager->Render(strFontTag, strText, vPos, color, rotation, origin, scale);
+}
+
+_bool CGameInstance::IsIn_Frustum_World(_vector vWorldPos, _float fRadius)
+{
+	if (nullptr == m_pFrustrum_Cull)
+		return false;
+
+	return m_pFrustrum_Cull->IsIn_Frustum_World(vWorldPos, fRadius);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
 
+	CFont_Manager::GetInstance()->DestroyInstance();
 	CTargetManager::GetInstance()->DestroyInstance();
 	CLevel_Manager::GetInstance()->DestroyInstance();
 	CObject_Manager::GetInstance()->DestroyInstance();
 	CComponent_Manager::GetInstance()->DestroyInstance();
 	CTimer_Manager::GetInstance()->DestroyInstance();
 	CSound_Manager::GetInstance()->DestroyInstance();
+	CFrustrum_Cull::GetInstance()->DestroyInstance();
 	CPipeLine::GetInstance()->DestroyInstance();
 	CRandomManager::GetInstance()->DestroyInstance();
 	CCalculator::GetInstance()->DestroyInstance();
@@ -486,6 +517,8 @@ void CGameInstance::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pFrustrum_Cull);
+	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pComponent_Manager);

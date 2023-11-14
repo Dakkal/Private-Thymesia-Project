@@ -61,10 +61,13 @@ void CBody_Boss_Urd::LateTick(_float fTimeDelta)
 {
 	m_pColliderCom->LateUpdate();
 
+	if (true == m_pOwner->Is_Cull())
+	{
 #ifdef _DEBUG
-	m_pRendererCom->Add_Debug(m_pColliderCom);
+		m_pRendererCom->Add_Debug(m_pColliderCom);
 #endif
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+	}
 }
 
 HRESULT CBody_Boss_Urd::Render()

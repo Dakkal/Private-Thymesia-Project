@@ -39,8 +39,12 @@ void CChurchLeftDoor::Tick(_float fTimeDelta)
 
 void CChurchLeftDoor::LateTick(_float fTimeDelta)
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+	if(true == pGameInstance->IsIn_Frustum_World(m_pTransformCom->Get_State(CTransform::STATE_POS), 3.f))
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CChurchLeftDoor::Render()

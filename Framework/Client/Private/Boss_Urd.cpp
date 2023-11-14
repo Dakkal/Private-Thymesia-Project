@@ -91,13 +91,24 @@ void CBoss_Urd::LateTick(_float fTimeDelta)
 
 	m_pColliderCom->LateUpdate();
 
-#ifdef _DEBUG
-	m_pRendererCom->Add_Debug(m_pColliderCom);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (nullptr != m_pCurNavigationCom)
-		m_pRendererCom->Add_Debug(m_pCurNavigationCom);
+	if (true == pGameInstance->IsIn_Frustum_World(m_pTransformCom->Get_State(CTransform::STATE_POS), 2.f))
+	{
+#ifdef _DEBUG
+		m_pRendererCom->Add_Debug(m_pColliderCom);
+
+		if (nullptr != m_pCurNavigationCom)
+			m_pRendererCom->Add_Debug(m_pCurNavigationCom);
 #endif
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+
+		m_IsCull = true;
+	}
+	else
+		m_IsCull = false;
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CBoss_Urd::Render()

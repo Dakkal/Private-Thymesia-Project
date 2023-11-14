@@ -40,6 +40,7 @@ public:
     _bool           Is_Attack()  { return m_IsAttack; }
     _bool           Is_OktoHit() { return m_bOktoHit; }
     _bool           Is_Move()    { return m_IsMove; }
+    _bool           Is_Cull()    { return m_IsCull; }
 
 public:
     void            Set_Index(_uint iIndex)     { m_iIndex = iIndex; }
@@ -58,6 +59,7 @@ public:
 
     auto&           Get_Parts() const { return m_Parts; }
     _uint           Get_Parts_Size()  { return m_Parts.size(); }
+
 
 
 
@@ -88,6 +90,8 @@ protected:
 
     _uint       m_iIndex = { 0 };
     _uint       m_iCloneIndex = { 0 };
+
+    _bool       m_IsCull = { false };
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);

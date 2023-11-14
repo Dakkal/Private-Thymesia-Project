@@ -54,9 +54,12 @@ void CHitBox_Boss_Urd::LateTick(_float fTimeDelta)
 {
 	m_pColliderCom->LateUpdate();
 
+	if (true == m_pOwner->Is_Cull())
+	{
 #ifdef _DEBUG
-	m_pRendererCom->Add_Debug(m_pColliderCom);
+		m_pRendererCom->Add_Debug(m_pColliderCom);
 #endif
+	}
 }
 
 HRESULT CHitBox_Boss_Urd::Render()

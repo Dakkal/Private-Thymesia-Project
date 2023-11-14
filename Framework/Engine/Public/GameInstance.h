@@ -12,6 +12,8 @@
 #include "Input_Device.h"
 #include "Calculator.h"
 #include "RandomManager.h"
+#include "Font_Manager.h"
+#include "Frustrum_Cull.h"
 
 BEGIN(Engine)
 
@@ -92,12 +94,24 @@ public: /* For.Calculaotr */
 	_float		Clamp(float value, float min, float max);
 
 public: /* For.Collider_Manager */
-	void	Check_Collision(const _uint iLevel, const LAYER_TAG & _eType1, const LAYER_TAG & _eType2, _float fTimedelta);
+	void		Check_Collision(const _uint iLevel, const LAYER_TAG & _eType1, const LAYER_TAG & _eType2, _float fTimedelta);
 
-public:
+public: /* For.Random_Manager */
 	const _float&	Random_Float(_float fMin, _float fMax);
 	const _int&		Random_Int(_int iMin, _int iMax);
 	const _bool&	Random_Coin(_float fProbality);
+
+public: /* Font_Manager */
+	HRESULT Add_Font(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strFontTag, const wstring & strFontFilePath);
+	HRESULT Render_Font(const wstring & strFontTag, const wstring & strText,
+		const _float2 & vPos,
+		FXMVECTOR color = XMVectorZero(),
+		float rotation = 0.f,
+		XMFLOAT2 const& origin = _float2(0.f, 0.f),
+		float scale = 1.f);
+
+public: /* For. Frustrum_Cull */
+	_bool		IsIn_Frustum_World(_vector vWorldPos, _float fRadius);
 
 private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -113,6 +127,8 @@ private:
 	class CCollideManager*		m_pCollider_Manager = { nullptr };
 	class CRandomManager*		m_pRandom_Manager = { nullptr };
 	class CTargetManager*		m_pTarget_Manager = { nullptr };
+	class CFont_Manager*		m_pFont_Manager = { nullptr };
+	class CFrustrum_Cull*		m_pFrustrum_Cull = { nullptr };
 
 public:
 	static void Release_Engine();

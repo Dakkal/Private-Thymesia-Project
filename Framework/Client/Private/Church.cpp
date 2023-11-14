@@ -45,12 +45,20 @@ void CChurch::Tick(_float fTimeDelta)
 
 void CChurch::LateTick(_float fTimeDelta)
 {
-#ifdef _DEBUG
-	if (nullptr != m_pCurNavigationCom)
-		m_pRendererCom->Add_Debug(m_pCurNavigationCom);
-#endif
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+	if (true == pGameInstance->IsIn_Frustum_World(m_pTransformCom->Get_State(CTransform::STATE_POS), 50.f))
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+
+#ifdef _DEBUG
+		if (nullptr != m_pCurNavigationCom)
+			m_pRendererCom->Add_Debug(m_pCurNavigationCom);
+#endif
+	}
+
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CChurch::Render()
