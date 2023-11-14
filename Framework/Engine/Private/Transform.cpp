@@ -52,7 +52,7 @@ void CTransform::Set_Look(_vector vChangeLook)
 	Set_State(STATE_LOOK, vLook);
 }
 
-void CTransform::Set_Scale(const _float3& vScale)
+void CTransform::Set_Scale(_float3 vScale)
 {
 	_vector		vRight = Get_State(STATE_RIGHT);
 	_vector		vUp  = Get_State(STATE_UP);

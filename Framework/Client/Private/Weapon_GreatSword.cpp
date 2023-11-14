@@ -1,38 +1,34 @@
 #include "pch.h"
-#include "..\Public\Body_Player.h"
+#include "Weapon_GreatSword.h"
 
 #include "GameInstance.h"
-#include "BinMesh.h"
-#include "LandObject.h"
+#include "BinBone.h"
+#include "Bounding_OBB.h"
 #include "Collider.h"
-#include "Bounding_AABB.h"
-#include "PartObject.h"
-#include "PipeLine.h"
-#include "Bounding.h"
 
-CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CWeapon_GreatSword::CWeapon_GreatSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
 {
 
 }
 
-CBody_Player::CBody_Player(const CBody_Player& rhs)
+CWeapon_GreatSword::CWeapon_GreatSword(const CWeapon_GreatSword& rhs)
 	: CPartObject(rhs)
 {
 
 }
 
-HRESULT CBody_Player::Initialize_Prototype(const wstring& strProtoTag)
+HRESULT CWeapon_GreatSword::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
 	m_eObjType = OBJECT_TYPE::PART;
-	m_strObjectName = TEXT("Player_Body");
+	m_strObjectName = TEXT("Enemy_GreatSword_Weapon");
 
 	return S_OK;
 }
 
-HRESULT CBody_Player::Initialize(void* pArg)
+HRESULT CWeapon_GreatSword::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -40,44 +36,43 @@ HRESULT CBody_Player::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	/* 부모 소켓행렬을 기준으로 자식의 상태를 제어한다.  */
+	m_pTransformCom->Rotation(_vector(1.f, 0.f, 0.f, 0.f), XMConvertToRadians(180.f));
+	m_pTransformCom->Rotation(_vector(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(30.f));
+	m_pTransformCom->Rotation(_vector(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(-75.f));
+
 	return S_OK;
 }
 
-void CBody_Player::Tick(_float fTimeDelta)
+void CWeapon_GreatSword::Tick(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta);
+	XMMATRIX	WorldMatrix = m_pSocketBone->Get_CombinedTransform() * m_SocketPivotMatrix;
 
-	m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta, dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom());
-	dynamic_cast<CLandObject*>(m_pOwner)->Set_On_NaviMesh(m_pParentTransform);
+	WorldMatrix.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
+	WorldMatrix.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
+	WorldMatrix.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
 
-	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix());
+	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix() * WorldMatrix);
 
 	/* 계산한뒤에 월드를 업데이트 */
 	m_pColliderCom->Update(m_WorldMatrix);
 }
 
-void CBody_Player::LateTick(_float fTimeDelta)
+void CWeapon_GreatSword::LateTick(_float fTimeDelta)
 {
-	for (auto& pMesh : m_pModelCom->Get_Meshes())
-	{
-		string Name = pMesh->Get_MeshName();
-
-		if (Name == "Player_Corvus.Raven")
-			pMesh->Set_RenderState(false);
-		if (Name == "Player_Corvus.Cloak")
-			pMesh->Set_RenderState(false);
-	}
-
 	m_pColliderCom->LateUpdate();
 
 
+	if (true == m_pOwner->Is_Cull())
+	{
 #ifdef _DEBUG
-	m_pRendererCom->Add_Debug(m_pColliderCom);
+		m_pRendererCom->Add_Debug(m_pColliderCom);
 #endif
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+	}
 }
 
-HRESULT CBody_Player::Render()
+HRESULT CWeapon_GreatSword::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -86,9 +81,6 @@ HRESULT CBody_Player::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
-			return E_FAIL;
-
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
@@ -105,13 +97,13 @@ HRESULT CBody_Player::Render()
 	return S_OK;
 }
 
-void CBody_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
+void CWeapon_GreatSword::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
 	switch (eObject)
 	{
-	case OBJECT_TYPE::BOSS:
+	case OBJECT_TYPE::PLAYER:
 		break;
 	case OBJECT_TYPE::PORP:
 		break;
@@ -123,13 +115,13 @@ void CBody_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBody_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
+void CWeapon_GreatSword::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
 	switch (eObject)
 	{
-	case OBJECT_TYPE::BOSS:
+	case OBJECT_TYPE::PLAYER:
 		break;
 	case OBJECT_TYPE::PORP:
 		break;
@@ -141,13 +133,13 @@ void CBody_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBody_Player::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
+void CWeapon_GreatSword::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
 	switch (eObject)
 	{
-	case OBJECT_TYPE::BOSS:
+	case OBJECT_TYPE::PLAYER:
 		break;
 	case OBJECT_TYPE::PORP:
 		break;
@@ -159,119 +151,15 @@ void CBody_Player::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
+void CWeapon_GreatSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
 
 	switch (eOwnerType)
 	{
-	case OBJECT_TYPE::BOSS:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		}
-	}
-		break;
-	case OBJECT_TYPE::MONSTER:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		default:
-			break;
-		}
-	}
-		break;
-	}
-
-	RELEASE_INSTANCE(CGameInstance);
-}
-
-void CBody_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
-{
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
-	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
-	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
-
-	switch (eOwnerType)
-	{
-	case OBJECT_TYPE::BOSS:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		}
-	}
-		break;
-	case OBJECT_TYPE::MONSTER:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		default:
-			break;
-		}
-	}
-		break;
-	}
-
-	RELEASE_INSTANCE(CGameInstance);
-}
-
-void CBody_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
-{
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
-	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
-	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
-
-	switch (eOwnerType)
-	{
-	case OBJECT_TYPE::BOSS:
+	case OBJECT_TYPE::PLAYER:
 	{
 		switch (ePart)
 		{
@@ -285,7 +173,7 @@ void CBody_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelt
 			break;
 		}
 	}
-		break;
+	break;
 	case OBJECT_TYPE::PORP:
 	{
 		switch (ePart)
@@ -302,7 +190,7 @@ void CBody_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelt
 			break;
 		}
 	}
-		break;
+	break;
 	case OBJECT_TYPE::MONSTER:
 	{
 		switch (ePart)
@@ -319,50 +207,166 @@ void CBody_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelt
 			break;
 		}
 	}
-		break;
+	break;
 	}
-
-	RELEASE_INSTANCE(CGameInstance);
 }
 
-HRESULT CBody_Player::Ready_Components()
+void CWeapon_GreatSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+}
+
+void CWeapon_GreatSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+}
+
+HRESULT CWeapon_GreatSword::Ready_Components()
+{
+	/* Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player_Body"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_GreatSword_Weapon"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* Com_Transform */
-	CTransform::TRANSFORM_DESC		TransformDesc;
-	TransformDesc = m_pParentTransform->Get_TransformDesc();
-
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
 		return E_FAIL;
 
-	/* For.Com_Collider_AABB */
-	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
-	AABBDesc.vExtents = _float3(0.45f, 0.85f, 0.45f);
-	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
-	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
-	AABBDesc.vColor = _vector( 0.33f, 0.63f, 0.93f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &AABBDesc)))
+	CBounding_OBB::BOUNDING_OBB_DESC		OBBDesc = {};
+	OBBDesc.vExtents = _float3(0.8f, 0.04f, 0.02f);
+	OBBDesc.vCenter = _float3(1.f, 0.f, 0.f);
+	OBBDesc.vDegree = _float3(0.0f, 0.f, 0.f);
+	OBBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	OBBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &OBBDesc)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CBody_Player::Bind_ShaderResources()
+HRESULT CWeapon_GreatSword::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
@@ -379,35 +383,35 @@ HRESULT CBody_Player::Bind_ShaderResources()
 	return S_OK;
 }
 
-CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
+CWeapon_GreatSword* CWeapon_GreatSword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
-	CBody_Player* pInstance = new CBody_Player(pDevice, pContext);
+	CWeapon_GreatSword* pInstance = new CWeapon_GreatSword(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
-		MSG_BOX("Failed to Created : CBody_Player");
+		MSG_BOX("Failed to Created : CWeapon_GreatSword");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CBody_Player::Clone(void* pArg)
+CGameObject* CWeapon_GreatSword::Clone(void* pArg)
 {
 	__super::Clone(pArg);
 
-	CBody_Player* pInstance = new CBody_Player(*this);
+	CWeapon_GreatSword* pInstance = new CWeapon_GreatSword(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CBody_Player");
+		MSG_BOX("Failed to Cloned : CWeapon_GreatSword");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBody_Player::Free()
+void CWeapon_GreatSword::Free()
 {
 	__super::Free();
 

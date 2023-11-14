@@ -49,6 +49,11 @@ _bool CPartObject::IsAnimationEnd()
 	return m_pModelCom->Is_CurAnimFinished();
 }
 
+_bool CPartObject::IsAnimChange()
+{
+	return m_pModelCom->Is_AnimChange();
+}
+
 void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset, _uint iStartKeyFrame, _float fChangeDuration)
 {
 	m_pModelCom->Set_Animation(isLoop, iAnimIndex, fAnimSpeed, bWantReset, iStartKeyFrame, fChangeDuration);

@@ -21,10 +21,12 @@ void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eTyp
 	CGameInstance* pGameInstace = GET_INSTANCE(CGameInstance);
 
 	auto Obj1 = pGameInstace->Get_LayerList(iLevel, _eType1);
-	auto Obj2 = pGameInstace->Get_LayerList(iLevel, _eType2);;
-	if (nullptr == Obj1 || nullptr == Obj2) return;
-
-	if (Obj1->empty() || Obj2->empty()) return;	
+	auto Obj2 = pGameInstace->Get_LayerList(iLevel, _eType2);
+	if (nullptr == Obj1 || nullptr == Obj2 || Obj1->empty() || Obj2->empty())
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return;
+	}
 	
 	for (auto iter1 = Obj1->begin(); iter1 != Obj1->end(); ++iter1)
 	{

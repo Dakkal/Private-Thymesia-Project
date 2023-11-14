@@ -442,13 +442,10 @@ HRESULT CBoss_Urd::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Navigation */
-	CNavigation* pNavigation = { nullptr };
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
-		TEXT("Com_Navigation1"), (CComponent**)&pNavigation)))
+		TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
 		return E_FAIL;
-	m_NavigationComs.push_back(pNavigation);
 
-	m_pCurNavigationCom = pNavigation;
 
 	/* Com_Collider_Sphere */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};

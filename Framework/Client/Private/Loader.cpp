@@ -29,6 +29,17 @@
 #include "Weapon_Boss_Urd.h"
 #include "HitBox_Boss_Urd.h"
 
+#include "Enemy_GreatSword.h"
+#include "Body_GreatSword.h"
+#include "HitBox_GreatSword.h"
+#include "Weapon_GreatSword.h"
+
+#include "Enemy_Halberd.h"
+#include "Body_Halberd.h"
+#include "Weapon_Halberd.h"
+#include "HitBox_Halberd.h"
+
+
 #include "BinModel.h"
 
 #include "Navigation.h"
@@ -378,6 +389,7 @@ HRESULT CLoader::Loading_Mesh()
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/SkyDome/Sky.dat")))))
 			return E_FAIL;
 
+		/* For.PlayerMesh */
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player_Body"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Player/Body/Player.dat"), ModelInitMatrix))))
@@ -393,6 +405,7 @@ HRESULT CLoader::Loading_Mesh()
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Player/Weapon/Weapon_Dagger/Weapon_Player_Dagger.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
+		/* For.UrdMesh */
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Boss_Urd_Body"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Boss/Body/Boss_Urd.dat"), ModelInitMatrix))))
@@ -403,6 +416,30 @@ HRESULT CLoader::Loading_Mesh()
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Boss/Weapon/Boss_Weapon.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
+		/* For.GreatSwordMesh */
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_GreatSword_Body"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Enemy_GreatSword/Body/Enemy_GreatSword.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_GreatSword_Weapon"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Enemy_GreatSword/Weapon/GreatSword.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		/* For.Halberd */
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Halberd_Body"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Enemy_Halberd/Body/Enemy_Halberd.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Halberd_Weapon"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Enemy_Halberd/Weapon/Halberd.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+
+		/* For.PropMesh */
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Church"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Church/Church.dat"), ModelInitMatrix))))
@@ -648,6 +685,11 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_PlayerCamera"), CPlayerCamera::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 
+		/* For.Sky */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyDome"), CSkyDome::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_SkyDome")))))
+			return E_FAIL;
+
+		/* For.LandingObject */
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"), CPlayer::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player")))))
 			return E_FAIL;
 
@@ -675,15 +717,41 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_HitBox"), CHitBox_Boss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_HitBox")))))
 			return E_FAIL;
 
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Church"), CChurch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Church")))))
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword"), CEnemy_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword")))))
 			return E_FAIL;
 
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyDome"), CSkyDome::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_SkyDome")))))
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword_Body"), CBody_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword_Body")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword_Weapon"), CWeapon_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword_Weapon")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword_HitBox"), CHitBox_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword_HitBox")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Halberd"), CEnemy_Halberd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_Halberd")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Halberd_Body"), CBody_Halberd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_Halberd_Body")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Halberd_Weapon"), CWeapon_Halberd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_Halberd_Weapon")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Halberd_HitBox"), CHitBox_Halberd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_Halberd_HitBox")))))
+			return E_FAIL;
+
+		/* For.LandObject */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Church"), CChurch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Church")))))
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BossRoom"), CBossRoom::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_BossRoom")))))
 			return E_FAIL;
 
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Stair"), CStair::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Stair")))))
+			return E_FAIL;
+
+		/* For.DecoObject */
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchWindowGriles"), CChurchWindowGriles::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchWindowGriles")))))
 			return E_FAIL;
 
@@ -696,8 +764,7 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchSideDoor"), CChurchSideDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchSideDoor")))))
 			return E_FAIL;
 
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Stair"), CStair::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Stair")))))
-			return E_FAIL;
+		
 
 		break;
 	case Client::LEVEL_1:

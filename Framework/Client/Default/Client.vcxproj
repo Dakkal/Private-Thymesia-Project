@@ -52,6 +52,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\Body_Boss_Urd.cpp" />
+    <ClCompile Include="..\Private\Body_Halberd.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\BossRoom.cpp" />
     <ClCompile Include="..\Private\Boss_Urd.cpp" />
@@ -63,6 +64,11 @@
     <ClCompile Include="..\Private\ChurchWindowGriles.cpp" />
     <ClCompile Include="..\Private\Edit_Terrain.cpp" />
     <ClCompile Include="..\Private\Enemy_GreatSword.cpp" />
+    <ClCompile Include="..\Private\Body_GreatSword.cpp" />
+    <ClCompile Include="..\Private\HitBox_GreatSword.cpp" />
+    <ClCompile Include="..\Private\HitBox_Halberd.cpp" />
+    <ClCompile Include="..\Private\State_Idle_Halberd.cpp" />
+    <ClCompile Include="..\Private\Weapon_GreatSword.cpp" />
     <ClCompile Include="..\Private\Enemy_Halberd.cpp" />
     <ClCompile Include="..\Private\HitBox_Boss_Urd.cpp" />
     <ClCompile Include="..\Private\HitBox_Player.cpp" />
@@ -78,6 +84,7 @@
     <ClCompile Include="..\Private\State_Hit.cpp" />
     <ClCompile Include="..\Private\State_Hit_Urd.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
+    <ClCompile Include="..\Private\State_Idle_GreatSword.cpp" />
     <ClCompile Include="..\Private\State_Idle_Urd.cpp" />
     <ClCompile Include="..\Private\State_Lockon_Attack.cpp" />
     <ClCompile Include="..\Private\State_Lockon_Avoid.cpp" />
@@ -101,6 +108,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Weapon_Boss_Urd.cpp" />
+    <ClCompile Include="..\Private\Weapon_Halberd.cpp" />
     <ClCompile Include="..\Private\Weapon_Player_Dagger.cpp" />
     <ClCompile Include="..\Private\Weapon_Player_Saber.cpp" />
     <ClCompile Include="Client.cpp">
@@ -124,6 +132,7 @@
     <ClInclude Include="..\..\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\Public\Body_Boss_Urd.h" />
+    <ClInclude Include="..\Public\Body_Halberd.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\PUblic\BossRoom.h" />
     <ClInclude Include="..\Public\Boss_Urd.h" />
@@ -136,6 +145,11 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Edit_Terrain.h" />
     <ClInclude Include="..\Public\Enemy_GreatSword.h" />
+    <ClInclude Include="..\Public\Body_GreatSword.h" />
+    <ClInclude Include="..\Public\HitBox_GreatSword.h" />
+    <ClInclude Include="..\Public\HitBox_Halberd.h" />
+    <ClInclude Include="..\Public\State_Idle_Halberd.h" />
+    <ClInclude Include="..\Public\Weapon_GreatSword.h" />
     <ClInclude Include="..\Public\Enemy_Halberd.h" />
     <ClInclude Include="..\Public\HitBox_Boss_Urd.h" />
     <ClInclude Include="..\Public\HitBox_Player.h" />
@@ -151,6 +165,7 @@
     <ClInclude Include="..\Public\State_Hit.h" />
     <ClInclude Include="..\Public\State_Hit_Urd.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
+    <ClInclude Include="..\Public\State_Idle_GreatSword.h" />
     <ClInclude Include="..\Public\State_Idle_Urd.h" />
     <ClInclude Include="..\Public\State_Lockon_Attack.h" />
     <ClInclude Include="..\Public\State_Lockon_Avoid.h" />
@@ -169,6 +184,7 @@
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Weapon_Boss_Urd.h" />
+    <ClInclude Include="..\Public\Weapon_Halberd.h" />
     <ClInclude Include="..\Public\Weapon_Player_Dagger.h" />
     <ClInclude Include="..\Public\Weapon_Player_Saber.h" />
     <ClInclude Include="Client.h" />

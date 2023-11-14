@@ -26,7 +26,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
+	/*if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
+		return E_FAIL;*/
+
+	if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
@@ -50,6 +53,7 @@ HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_BOSS, fTimeDelta);
+	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_MONSTER, fTimeDelta);
 
 	RELEASE_INSTANCE(CGameInstance)
 
@@ -276,6 +280,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Boss(const _uint& iLayerIndex)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Boss_Urd"))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _uint& iLayerIndex)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_GreatSword"))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);

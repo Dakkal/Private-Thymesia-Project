@@ -36,6 +36,7 @@ public:
 public:
 	_bool			Is_AnimCurKeyFrame(_uint iIndex);
 	_bool			IsAnimationEnd();
+	_bool			IsAnimChange();
 	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset = false, _uint iStartKeyFrame = 0, _float fChangeDuration = 0.2f);
 	void			Set_First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
 

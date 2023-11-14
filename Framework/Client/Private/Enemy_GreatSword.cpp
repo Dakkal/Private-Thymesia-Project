@@ -4,9 +4,11 @@
 #include "GameInstance.h"
 #include "PartObject.h"
 #include "StateMachine.h"
+#include "State_Idle_GreatSword.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
+
 
 CEnemy_GreatSword::CEnemy_GreatSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLandObject(pDevice, pContext)
@@ -24,8 +26,8 @@ HRESULT CEnemy_GreatSword::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::BOSS;
-	m_strObjectName = TEXT("Boss_Urd");
+	m_eObjType = OBJECT_TYPE::MONSTER;
+	m_strObjectName = TEXT("Enemy_GreatSword");
 
 	return S_OK;
 }
@@ -87,13 +89,24 @@ void CEnemy_GreatSword::LateTick(_float fTimeDelta)
 
 	m_pColliderCom->LateUpdate();
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	
+	if (true == pGameInstance->IsIn_Frustum_World(m_pTransformCom->Get_State(CTransform::STATE_POS), 2.f))
+	{
 #ifdef _DEBUG
-	m_pRendererCom->Add_Debug(m_pColliderCom);
+		m_pRendererCom->Add_Debug(m_pColliderCom);
 
-	if (nullptr != m_pCurNavigationCom)
-		m_pRendererCom->Add_Debug(m_pCurNavigationCom);
+		if (nullptr != m_pCurNavigationCom)
+			m_pRendererCom->Add_Debug(m_pCurNavigationCom);
 #endif
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+
+		m_IsCull = true;
+	}
+	else
+		m_IsCull = false;
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CEnemy_GreatSword::Render()
@@ -460,7 +473,7 @@ HRESULT CEnemy_GreatSword::Ready_Parts()
 	PartDesc_Body.ePart = PARTS::BODY;
 	PartDesc_Body.pParentTransform = m_pTransformCom;
 
-	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_Body"), &PartDesc_Body);
+	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_GreatSword_Body"), &PartDesc_Body);
 	if (nullptr == pParts)
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::BODY, pParts);
@@ -473,7 +486,7 @@ HRESULT CEnemy_GreatSword::Ready_Parts()
 	PartDesc_Weapon.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_r");
 	PartDesc_Weapon.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
 
-	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_Weapon"), &PartDesc_Weapon);
+	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_GreatSword_Weapon"), &PartDesc_Weapon);
 	if (nullptr == pParts)
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::WEAPON_R, pParts);
@@ -483,7 +496,7 @@ HRESULT CEnemy_GreatSword::Ready_Parts()
 	PartDesc_HitBox.ePart = PARTS::HITBOX;
 	PartDesc_HitBox.pParentTransform = m_pTransformCom;
 
-	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_HitBox"), &PartDesc_HitBox);
+	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_GreatSword_HitBox"), &PartDesc_HitBox);
 	if (nullptr == pParts)
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::HITBOX, pParts);
@@ -496,7 +509,10 @@ HRESULT CEnemy_GreatSword::Ready_Parts()
 
 HRESULT CEnemy_GreatSword::Ready_State()
 {
-	CState* pState = nullptr;
+	CState* pState = CState_Idle_GreatSword::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::IDLE);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::IDLE, pState);
 
 
 	m_pStateMachineCom->Set_State(STATE::IDLE);

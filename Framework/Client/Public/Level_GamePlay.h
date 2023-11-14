@@ -24,6 +24,7 @@ private:
 	HRESULT Ready_Layer_Props(const _uint& iLayerIndex);
 	HRESULT Ready_Layer_Player(const _uint& iLayerIndex);
 	HRESULT Ready_Layer_Boss(const _uint& iLayerIndex);
+	HRESULT Ready_Layer_Monster(const _uint& iLayerIndex);
 	HRESULT Ready_Light();
 
 public:

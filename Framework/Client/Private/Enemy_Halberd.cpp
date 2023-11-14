@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "PartObject.h"
 #include "StateMachine.h"
+#include "State_Idle_Halberd.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -24,8 +25,8 @@ HRESULT CEnemy_Halberd::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
-	m_eObjType = OBJECT_TYPE::BOSS;
-	m_strObjectName = TEXT("Boss_Urd");
+	m_eObjType = OBJECT_TYPE::MONSTER;
+	m_strObjectName = TEXT("Enemy_Halberd");
 
 	return S_OK;
 }
@@ -53,7 +54,6 @@ void CEnemy_Halberd::Tick(_float fTimeDelta)
 		m_pCurNavigationCom->Set_toCell(6, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
-
 
 	Out_Player(fTimeDelta);
 	Look_Player(fTimeDelta);
@@ -87,13 +87,24 @@ void CEnemy_Halberd::LateTick(_float fTimeDelta)
 
 	m_pColliderCom->LateUpdate();
 
-#ifdef _DEBUG
-	m_pRendererCom->Add_Debug(m_pColliderCom);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (nullptr != m_pCurNavigationCom)
-		m_pRendererCom->Add_Debug(m_pCurNavigationCom);
+	if (true == pGameInstance->IsIn_Frustum_World(m_pTransformCom->Get_State(CTransform::STATE_POS), 2.f))
+	{
+#ifdef _DEBUG
+		m_pRendererCom->Add_Debug(m_pColliderCom);
+
+		if (nullptr != m_pCurNavigationCom)
+			m_pRendererCom->Add_Debug(m_pCurNavigationCom);
 #endif
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+
+		m_IsCull = true;
+	}
+	else
+		m_IsCull = false;
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CEnemy_Halberd::Render()
@@ -460,7 +471,7 @@ HRESULT CEnemy_Halberd::Ready_Parts()
 	PartDesc_Body.ePart = PARTS::BODY;
 	PartDesc_Body.pParentTransform = m_pTransformCom;
 
-	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_Body"), &PartDesc_Body);
+	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_Halberd_Body"), &PartDesc_Body);
 	if (nullptr == pParts)
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::BODY, pParts);
@@ -470,10 +481,10 @@ HRESULT CEnemy_Halberd::Ready_Parts()
 	PartDesc_Weapon.pOwner = this;
 	PartDesc_Weapon.ePart = PARTS::WEAPON_R;
 	PartDesc_Weapon.pParentTransform = m_pTransformCom;
-	PartDesc_Weapon.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_r");
+	PartDesc_Weapon.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_l");
 	PartDesc_Weapon.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
 
-	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_Weapon"), &PartDesc_Weapon);
+	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_Halberd_Weapon"), &PartDesc_Weapon);
 	if (nullptr == pParts)
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::WEAPON_R, pParts);
@@ -483,7 +494,7 @@ HRESULT CEnemy_Halberd::Ready_Parts()
 	PartDesc_HitBox.ePart = PARTS::HITBOX;
 	PartDesc_HitBox.pParentTransform = m_pTransformCom;
 
-	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_HitBox"), &PartDesc_HitBox);
+	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_Halberd_HitBox"), &PartDesc_HitBox);
 	if (nullptr == pParts)
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::HITBOX, pParts);
@@ -496,7 +507,10 @@ HRESULT CEnemy_Halberd::Ready_Parts()
 
 HRESULT CEnemy_Halberd::Ready_State()
 {
-	CState* pState = nullptr;
+	CState* pState = CState_Idle_Halberd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::IDLE);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::IDLE, pState);
 
 
 	m_pStateMachineCom->Set_State(STATE::IDLE);

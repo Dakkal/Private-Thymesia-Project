@@ -160,6 +160,36 @@
     <Filter Include="02.GameObject\Object\Monster\Enemy_GreatSword">
       <UniqueIdentifier>{b485e113-b842-4023-99da-0ceaea92e73a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_GreatSword\Part">
+      <UniqueIdentifier>{57be666f-c74e-4c90-b7a4-c777e619bbe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_GreatSword\State">
+      <UniqueIdentifier>{43f79daa-ce97-442e-a5a0-e8f5a2cc44a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_GreatSword\Part\Body">
+      <UniqueIdentifier>{43c91b57-7909-4b89-a9d8-6315a07e61ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_GreatSword\Part\Weapon">
+      <UniqueIdentifier>{60906c56-1d26-482d-8d52-b03c7afdbb46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_GreatSword\Part\HitBox">
+      <UniqueIdentifier>{84b08246-2260-47f5-b275-6facc7fe3fcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Halberd\Part">
+      <UniqueIdentifier>{cbe73d36-6095-4945-b53b-8fa9353f1522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Halberd\Part\Body">
+      <UniqueIdentifier>{927a2741-9aca-49b5-ab1b-84e99ea71969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Halberd\Part\Weapon">
+      <UniqueIdentifier>{1b142ea1-b442-402f-942e-555146a25a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Halberd\Part\HitBox">
+      <UniqueIdentifier>{3cf0f84f-1d85-4408-abf2-6bc6c70681dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Halberd\State">
+      <UniqueIdentifier>{b30ddcad-7fee-4019-b3ec-98b2758fab8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -335,6 +365,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Enemy_GreatSword.cpp">
       <Filter>02.GameObject\Object\Monster\Enemy_GreatSword</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\Part\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitBox_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\Part\HitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\Part\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\Part\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitBox_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\Part\HitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\Part\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -526,6 +580,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\Enemy_GreatSword.h">
       <Filter>02.GameObject\Object\Monster\Enemy_GreatSword</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\Part\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitBox_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\Part\HitBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\Part\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\Part\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitBox_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\Part\HitBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\Part\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

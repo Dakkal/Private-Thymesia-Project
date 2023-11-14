@@ -39,8 +39,6 @@ HRESULT CBody_Boss_Urd::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(true, 19, 1.2f);
-
 	return S_OK;
 }
 

@@ -44,6 +44,7 @@ public:
 
 	_bool									Is_CurAnimKeyFrame(_uint iIndex);
 	_bool									Is_CurAnimFinished();
+	_bool									Is_AnimChange() { return m_bIsAnimChange; }
 	
 
 	_uint									Get_NumMeshes() const { return m_iNumMeshes; }

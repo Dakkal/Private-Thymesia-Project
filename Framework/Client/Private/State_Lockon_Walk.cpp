@@ -167,6 +167,8 @@ void CState_Lockon_Walk::Enter_State()
 
 STATE CState_Lockon_Walk::Key_Input(const _float& fTimeDelta)
 {
+	
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	CNavigation* pNavi = dynamic_cast<CLandObject*>(m_pRealOwner)->Get_CurNaviCom();
@@ -205,7 +207,7 @@ STATE CState_Lockon_Walk::Key_Input(const _float& fTimeDelta)
 		if (0 > fChangeKeyFrame)
 			fChangeKeyFrame = abs(fChangeKeyFrame);
 
-		if (m_iAnimIndex != m_iCalculeIndex)
+		if (false == m_pOwnerBodyPart->IsAnimChange() && m_iAnimIndex != m_iCalculeIndex)
 		{
 			if (KEY::W == m_iCalculeIndex)
 			{

@@ -30,7 +30,7 @@ public:
 
 	void		Set_State(STATE eState, _vector vState);
 	void		Set_Look(_vector vChangeLook);
-	void		Set_Scale(const _float3& vScale);
+	void		Set_Scale(_float3 vScale);
 	void		Set_WorldMatrix(_matrix matWorld);
 
 

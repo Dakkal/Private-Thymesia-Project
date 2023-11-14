@@ -1,38 +1,37 @@
 #include "pch.h"
-#include "..\Public\Body_Player.h"
+#include "..\Public\Body_Halberd.h"
 
 #include "GameInstance.h"
-#include "BinMesh.h"
 #include "LandObject.h"
-#include "Collider.h"
-#include "Bounding_AABB.h"
-#include "PartObject.h"
-#include "PipeLine.h"
-#include "Bounding.h"
+#include "BinMesh.h"
 
-CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+#include "StateMachine.h"
+#include "Bounding_AABB.h"
+#include "Collider.h"
+
+CBody_Halberd::CBody_Halberd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
 {
 
 }
 
-CBody_Player::CBody_Player(const CBody_Player& rhs)
+CBody_Halberd::CBody_Halberd(const CBody_Halberd& rhs)
 	: CPartObject(rhs)
 {
 
 }
 
-HRESULT CBody_Player::Initialize_Prototype(const wstring& strProtoTag)
+HRESULT CBody_Halberd::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);
 
 	m_eObjType = OBJECT_TYPE::PART;
-	m_strObjectName = TEXT("Player_Body");
+	m_strObjectName = TEXT("Enemy_Halberd_Body");
 
 	return S_OK;
 }
 
-HRESULT CBody_Player::Initialize(void* pArg)
+HRESULT CBody_Halberd::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -43,7 +42,7 @@ HRESULT CBody_Player::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBody_Player::Tick(_float fTimeDelta)
+void CBody_Halberd::Tick(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta);
 
@@ -56,28 +55,20 @@ void CBody_Player::Tick(_float fTimeDelta)
 	m_pColliderCom->Update(m_WorldMatrix);
 }
 
-void CBody_Player::LateTick(_float fTimeDelta)
+void CBody_Halberd::LateTick(_float fTimeDelta)
 {
-	for (auto& pMesh : m_pModelCom->Get_Meshes())
-	{
-		string Name = pMesh->Get_MeshName();
-
-		if (Name == "Player_Corvus.Raven")
-			pMesh->Set_RenderState(false);
-		if (Name == "Player_Corvus.Cloak")
-			pMesh->Set_RenderState(false);
-	}
-
 	m_pColliderCom->LateUpdate();
 
-
+	if (true == m_pOwner->Is_Cull())
+	{
 #ifdef _DEBUG
-	m_pRendererCom->Add_Debug(m_pColliderCom);
+		m_pRendererCom->Add_Debug(m_pColliderCom);
 #endif
-	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+	}
 }
 
-HRESULT CBody_Player::Render()
+HRESULT CBody_Halberd::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -105,13 +96,13 @@ HRESULT CBody_Player::Render()
 	return S_OK;
 }
 
-void CBody_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
+void CBody_Halberd::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
 	switch (eObject)
 	{
-	case OBJECT_TYPE::BOSS:
+	case OBJECT_TYPE::PLAYER:
 		break;
 	case OBJECT_TYPE::PORP:
 		break;
@@ -123,13 +114,13 @@ void CBody_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBody_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
+void CBody_Halberd::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
 	switch (eObject)
 	{
-	case OBJECT_TYPE::BOSS:
+	case OBJECT_TYPE::PLAYER:
 		break;
 	case OBJECT_TYPE::PORP:
 		break;
@@ -141,13 +132,13 @@ void CBody_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBody_Player::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
+void CBody_Halberd::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 {
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
 	switch (eObject)
 	{
-	case OBJECT_TYPE::BOSS:
+	case OBJECT_TYPE::PLAYER:
 		break;
 	case OBJECT_TYPE::PORP:
 		break;
@@ -159,7 +150,7 @@ void CBody_Player::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)
 	}
 }
 
-void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
+void CBody_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -169,7 +160,7 @@ void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDel
 
 	switch (eOwnerType)
 	{
-	case OBJECT_TYPE::BOSS:
+	case OBJECT_TYPE::PLAYER:
 	{
 		switch (ePart)
 		{
@@ -185,107 +176,7 @@ void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDel
 			break;
 		}
 	}
-		break;
-	case OBJECT_TYPE::MONSTER:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		default:
-			break;
-		}
-	}
-		break;
-	}
-
-	RELEASE_INSTANCE(CGameInstance);
-}
-
-void CBody_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
-{
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
-	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
-	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
-
-	switch (eOwnerType)
-	{
-	case OBJECT_TYPE::BOSS:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		}
-	}
-		break;
-	case OBJECT_TYPE::MONSTER:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		default:
-			break;
-		}
-	}
-		break;
-	}
-
-	RELEASE_INSTANCE(CGameInstance);
-}
-
-void CBody_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
-{
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
-	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
-	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
-
-	switch (eOwnerType)
-	{
-	case OBJECT_TYPE::BOSS:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		}
-	}
-		break;
+	break;
 	case OBJECT_TYPE::PORP:
 	{
 		switch (ePart)
@@ -302,7 +193,7 @@ void CBody_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelt
 			break;
 		}
 	}
-		break;
+	break;
 	case OBJECT_TYPE::MONSTER:
 	{
 		switch (ePart)
@@ -319,13 +210,140 @@ void CBody_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelt
 			break;
 		}
 	}
-		break;
+	break;
+	}
+
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CBody_Halberd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			if (true == m_pOwner->Is_Move())
+				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
 	}
 
 	RELEASE_INSTANCE(CGameInstance);
 }
 
-HRESULT CBody_Player::Ready_Components()
+void CBody_Halberd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
+{
+	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
+	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+
+	switch (eOwnerType)
+	{
+	case OBJECT_TYPE::PLAYER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::PORP:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	case OBJECT_TYPE::MONSTER:
+	{
+		switch (ePart)
+		{
+		case Engine::CGameObject::BODY:
+			break;
+		case Engine::CGameObject::WEAPON_R:
+			break;
+		case Engine::CGameObject::WEAPON_L:
+			break;
+		case Engine::CGameObject::SIGHT:
+			break;
+		default:
+			break;
+		}
+	}
+	break;
+	}
+}
+
+HRESULT CBody_Halberd::Ready_Components()
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -337,7 +355,7 @@ HRESULT CBody_Player::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player_Body"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Halberd_Body"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
@@ -354,7 +372,7 @@ HRESULT CBody_Player::Ready_Components()
 	AABBDesc.vExtents = _float3(0.45f, 0.85f, 0.45f);
 	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
 	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
-	AABBDesc.vColor = _vector( 0.33f, 0.63f, 0.93f, 1.f);
+	AABBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &AABBDesc)))
 		return E_FAIL;
@@ -362,7 +380,7 @@ HRESULT CBody_Player::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CBody_Player::Bind_ShaderResources()
+HRESULT CBody_Halberd::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
@@ -379,35 +397,35 @@ HRESULT CBody_Player::Bind_ShaderResources()
 	return S_OK;
 }
 
-CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
+CBody_Halberd* CBody_Halberd::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
-	CBody_Player* pInstance = new CBody_Player(pDevice, pContext);
+	CBody_Halberd* pInstance = new CBody_Halberd(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
 	{
-		MSG_BOX("Failed to Created : CBody_Player");
+		MSG_BOX("Failed to Created : CBody_Halberd");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CBody_Player::Clone(void* pArg)
+CGameObject* CBody_Halberd::Clone(void* pArg)
 {
 	__super::Clone(pArg);
 
-	CBody_Player* pInstance = new CBody_Player(*this);
+	CBody_Halberd* pInstance = new CBody_Halberd(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CBody_Player");
+		MSG_BOX("Failed to Cloned : CBody_Halberd");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBody_Player::Free()
+void CBody_Halberd::Free()
 {
 	__super::Free();
 
