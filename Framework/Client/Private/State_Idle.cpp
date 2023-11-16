@@ -20,6 +20,10 @@ HRESULT CState_Idle::Initialize()
 
 STATE CState_Idle::Tick(const _float& fTimeDelta)
 {
+	if (true == m_pRealOwner->Is_Hit())
+		return STATE::HIT;
+
+
 	STATE eState = Key_Input(fTimeDelta);
 
 	return eState;
@@ -58,15 +62,15 @@ STATE CState_Idle::Key_Input(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
-	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::ATTACK;
-	}
 	if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::PARRY;
+	}
+	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::ATTACK;
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
 		pGameInstance->Get_DIKeyState(DIK_D) & 0x80 ||

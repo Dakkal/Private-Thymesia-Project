@@ -60,6 +60,11 @@ HRESULT CStateMachine::Set_State(STATE eState)
 	if (iter == m_StateMap.end())
 		return E_FAIL;
 
+	if (STATE::_END == m_eCurState)
+		m_ePreState = eState;
+	else
+		m_ePreState = m_eCurState;
+
 	m_pCurState = iter->second;
 	m_eCurState = eState;
 	m_pCurState->Enter_State();

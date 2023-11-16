@@ -65,6 +65,10 @@ HRESULT CGameInstance::Initialize_Engine(const GRAPHIC_DESC& GraphicDesc, HINSTA
 	if (FAILED(m_pPipeLine->Initialize()))
 		return E_FAIL;
 
+	/* 절두체 생성 */
+	if (FAILED(m_pFrustrum_Cull->Initialize()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -73,6 +77,7 @@ void CGameInstance::Tick(_float fTimeDelta)
 	m_pInput_Device->Tick();
 
 	m_pObject_Manager->PriorityTick(fTimeDelta);
+	m_pLevel_Manager->PriorityTick(fTimeDelta);
 
 	m_pObject_Manager->Tick(fTimeDelta);
 	m_pLevel_Manager->Tick(fTimeDelta);
@@ -274,6 +279,14 @@ HRESULT CGameInstance::Delete_Layer(_uint iLevelIndex, const _uint& iLayerIndex)
 	return m_pObject_Manager->Delete_Layer(iLevelIndex, iLayerIndex);
 }
 
+HRESULT CGameInstance::Delete_NonActive_Objects(_uint iLevelIndex, const _uint& iLayerIndex)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Delete_NonActive_Objects(iLevelIndex, iLayerIndex);
+}
+
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, CComponent* pPrototype)
 {
 	if (nullptr == m_pComponent_Manager)
@@ -412,12 +425,20 @@ _vector CGameInstance::Picking_Object(RECT rc, POINT pt, CTransform* pTransform,
 	return m_pCalculator->Picking_Object(rc, pt, pTransform, pBuffer);
 }
 
-HRESULT CGameInstance::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform)
+HRESULT CGameInstance::Detrude_AABB_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform)
 {
 	if (nullptr == m_pCalculator)
 		return E_FAIL;
 
 	return m_pCalculator->Detrude_Collide(pColObj, pObjCol, pObjTransform);
+}
+
+HRESULT CGameInstance::Detrude_Sphere_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform, CNavigation* pNavigation)
+{
+	if (nullptr == m_pCalculator)
+		return E_FAIL;
+
+	return m_pCalculator->Detrude_Sphere_Collide(pColObj, pObjCol, pObjTransform, pNavigation);
 }
 
 _float3 CGameInstance::QuaternionToEuler(_vector vQuaternion)
@@ -457,7 +478,7 @@ const _int& CGameInstance::Random_Int(_int iMin, _int iMax)
 	if (nullptr == m_pRandom_Manager)
 		return _int();
 
-	return m_pRandom_Manager->Random_Float(iMin, iMax);
+	return m_pRandom_Manager->Random_Int(iMin, iMax);
 }
 
 const _bool& CGameInstance::Random_Coin(_float fProbality)

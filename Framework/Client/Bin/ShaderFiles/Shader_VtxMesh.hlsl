@@ -6,6 +6,10 @@ matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D		g_DiffuseTexture;
 Texture2D		g_NormalTexture;
 
+texture2D       g_DissolveTexture;
+float           g_Time;
+float           g_DissolveDuration;
+
 /* 버텍스 쉐이더 */
 struct VS_IN
 {
@@ -89,6 +93,25 @@ PS_OUT PS_MAIN_SKY(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vMtrlDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    float fDissolveAlpha = saturate(-g_Time / g_DissolveDuration + vMtrlDissolve.r);
+ 
+    if (fDissolveAlpha < 0.1f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
+
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Mesh
@@ -115,6 +138,19 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SKY();
+    }
+
+    pass Mesh_Alpha_Dissolve
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISSOLVE();
     }
 }
 

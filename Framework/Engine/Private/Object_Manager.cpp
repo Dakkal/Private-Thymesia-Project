@@ -155,6 +155,15 @@ HRESULT CObject_Manager::Delete_Layer(_uint iLevelIndex, const _uint& iLayerInde
 	return iter->Delete_Layer();
 }
 
+HRESULT CObject_Manager::Delete_NonActive_Objects(_uint iLevelIndex, const _uint& iLayerIndex)
+{
+	auto iter = Find_Layer(iLevelIndex, iLayerIndex);
+	if (nullptr == iter)
+		return E_FAIL;
+
+	return iter->Delete_NonActive_Objects();
+}
+
 list<class CGameObject*>* CObject_Manager::Get_LayerList(_uint iLevelIndex, const _uint& iLayerIndex)
 {
 	auto iter = Find_Layer(iLevelIndex, iLayerIndex);

@@ -31,7 +31,7 @@ public:
 	HRESULT	Bind_MaterialTexture(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType eType);
 	HRESULT	Render(_uint iMeshIndex);
 	
-	HRESULT	Set_OwnerPosToRootPos(class CTransform* pTransform, _float fTimeDelta, class CNavigation* pNavi = nullptr);
+	HRESULT	Set_OwnerPosToRootPos(class CTransform* pTransform, _float fTimeDelta, class CNavigation* pNavi = nullptr, _vector TargetPos = XMVectorZero());
 
 public:
 	const vector<class CBinMesh*>&			Get_Meshes()		{ return m_Meshes; }
@@ -43,8 +43,9 @@ public:
 	_uint									Get_CurKeyFrameNumb();
 
 	_bool									Is_CurAnimKeyFrame(_uint iIndex);
+	_bool									Is_OverAnimKeyFrame(_uint iIndex);
 	_bool									Is_CurAnimFinished();
-	_bool									Is_AnimChange() { return m_bIsAnimChange; }
+	const _bool&							Is_AnimChange() { return m_bIsAnimChange; }
 	
 
 	_uint									Get_NumMeshes() const { return m_iNumMeshes; }

@@ -23,8 +23,8 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
 	virtual HRESULT Initialize(void* pArg);
-	virtual void Tick(_float fTimeDelta);
-	virtual void LateTick(_float fTimeDelta);
+	virtual void	Tick(_float fTimeDelta);
+	virtual void	LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
 public:
@@ -36,8 +36,10 @@ public:
 	virtual void OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
 public:
-	CTransform* Get_PlayerTransform() const { return m_pPlayerTransform; }
-	void		Set_LookPlayer(_bool bIsLook) { m_bIsLookPlayer = bIsLook; }
+	CTransform*				Get_PlayerTransform()			const { return m_pPlayerTransform; }
+	const _bool&			Is_LookPlayer()			const { return m_bIsLookPlayer; }
+	void					Set_LookPlayer(_bool bIsLook) { m_bIsLookPlayer = bIsLook; }
+	_float					Get_PlayerDistance();
 
 public:
 	void	Out_Player(_float fTimeDelta);

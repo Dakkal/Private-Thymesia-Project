@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "BinBone.h"
-#include "Bounding_Sphere.h"
+#include "Bounding_AABB.h"
 #include "Collider.h"
 
 CHitBox_Player::CHitBox_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -170,6 +170,8 @@ void CHitBox_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 		case Engine::CGameObject::BODY:
 			break;
 		case Engine::CGameObject::WEAPON_R:
+			if (true == pPartOwner->Is_Attack())
+				m_pOwner->Set_Hit(true);
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
@@ -315,13 +317,13 @@ HRESULT CHitBox_Player::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
 		return E_FAIL;
 
-	CBounding_Sphere::BOUNDING_SPHERE_DESC		SphereDesc = {};
-	SphereDesc.vCenter = _float3(0.f, 1.f, 0.f);
-	SphereDesc.fRadius = 0.5f;
-	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
-	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
+	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
+	AABBDesc.vExtents = _float3(0.4f, 0.85f, 0.4f);
+	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
+	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	AABBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &AABBDesc)))
 		return E_FAIL;
 
 	return S_OK;

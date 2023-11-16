@@ -26,13 +26,15 @@ public:
 
     CState*				Get_State(STATE eState) const;
 	const STATE&		Get_CurState()	{ return m_eCurState; }
+	const STATE&		Get_PreState()	{ return m_ePreState; }
 	const CBinModel*	Get_OwnerModel(){ return m_pOwnerModel; }
 
 protected:
 	map<STATE, CState*>		m_StateMap;
 	class CState*			m_pCurState = { nullptr };
 	class CBinModel*		m_pOwnerModel = { nullptr };
-	STATE					m_eCurState = { STATE::_END};
+	STATE					m_eCurState = { STATE::_END };
+	STATE					m_ePreState = { STATE::_END };
 
 public:
 	static CStateMachine* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

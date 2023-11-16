@@ -29,7 +29,7 @@ public:
 
 private:
 	_float			m_fOffsetDis = 5.5f;
-	_float			m_fTargetOffsetDis = 5.5f;
+	_float			m_fTargetOffsetDis = 6.f;
 	_vector			m_vOffset;
 	_vector			m_vAngle;
 

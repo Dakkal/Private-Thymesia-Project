@@ -34,6 +34,11 @@ _bool CPartObject::Is_AnimCurKeyFrame(_uint iIndex)
 	return m_pModelCom->Is_CurAnimKeyFrame(iIndex);
 }
 
+_bool CPartObject::Is_AnimOverKeyFrame(_uint iIndex)
+{
+	return m_pModelCom->Is_OverAnimKeyFrame(iIndex);
+}
+
 const _int& CPartObject::Get_AnimationIndex()
 {
 	return m_pModelCom->Get_CurAnimIndex();
@@ -49,7 +54,7 @@ _bool CPartObject::IsAnimationEnd()
 	return m_pModelCom->Is_CurAnimFinished();
 }
 
-_bool CPartObject::IsAnimChange()
+const _bool& CPartObject::IsAnimChange()
 {
 	return m_pModelCom->Is_AnimChange();
 }

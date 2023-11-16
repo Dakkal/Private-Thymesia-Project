@@ -2,6 +2,9 @@
 #include "GameInstance.h"
 #include "Collider.h"
 #include "Bounding_AABB.h"
+#include "Bounding_Sphere.h"
+#include "Navigation.h"
+#include "LandObject.h"
 
 IMPLEMENT_SINGLETON(CCalculator)
 
@@ -200,6 +203,50 @@ HRESULT CCalculator::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, C
             pObjTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
         }
     }
+
+    return S_OK;
+}
+
+HRESULT CCalculator::Detrude_Sphere_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform, CNavigation* pNavigation)
+{
+    if (nullptr == pColObj || nullptr == pObjCol || nullptr == pObjTransform)
+        return E_FAIL;
+
+    CCollider* pCollider = dynamic_cast<CCollider*>(pColObj->Get_Component(TEXT("Com_Collider")));
+
+    _float3 vTargetCenter = dynamic_cast<CBounding_Sphere*>(pCollider->Get_ParentBouning())->Get_Bouding()->Center;
+    _float3 vPlayerCenter = dynamic_cast<CBounding_Sphere*>(pObjCol->Get_ParentBouning())->Get_Bouding()->Center;
+
+    _float vTargetRadius = dynamic_cast<CBounding_Sphere*>(pCollider->Get_ParentBouning())->Get_Bouding()->Radius;
+    _float vPlayerRadius = dynamic_cast<CBounding_Sphere*>(pObjCol->Get_ParentBouning())->Get_Bouding()->Radius;
+
+    _float3 collisionVector = vTargetCenter - vPlayerCenter;
+    _float distance = collisionVector.Length();
+
+    // 중심 간의 거리만큼 이동.
+    _float overlapDistance = vTargetRadius + vPlayerRadius - distance;
+    _float3 collisionNormal = XMVector3Normalize(collisionVector);
+
+    // 이동할 벡터를 계산.
+    _float3 translation = collisionNormal * overlapDistance;
+
+    _vector vPos = pObjTransform->Get_State(CTransform::STATE_POS);
+
+    vPos -= _vector(translation) * 0.5f;  // 두 객체를 반씩 밀어냅니다.
+    vPos.w = 1;
+
+    if (nullptr != pNavigation)
+    {
+        _int iMove = pNavigation->IsMove(vPos);
+
+        if (0 == iMove)
+        {
+            pObjTransform->Set_State(CTransform::STATE_POS, vPos);
+        }
+    }
+    else
+        pObjTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
+    
 
     return S_OK;
 }

@@ -8,6 +8,10 @@ matrix			g_BoneMatrices[256];
 Texture2D		g_DiffuseTexture;
 Texture2D		g_NormalTexture;
 
+texture2D       g_DissolveTexture;
+float           g_Time;
+float           g_DissolveDuration;
+
 
 /* 버텍스 쉐이더 */
 struct VS_IN
@@ -15,7 +19,7 @@ struct VS_IN
 	float3		vPosition : POSITION;
     float3		vNormal	  : NORMAL;
 	float2		vTexcoord : TEXCOORD0;
-    float3      vTangent : TANGENT;
+    float3      vTangent :  TANGENT;
 	
     uint4		vBlendIndices : BLENDINDEX;
     float4		vBlendWeights : BLENDWEIGHT;
@@ -25,11 +29,11 @@ struct VS_IN
 struct VS_OUT
 {
     float4		vPosition : SV_POSITION;
-    float4		vNormal : NORMAL;
-    float3      vTangent : TANGENT;
+    float4		vNormal   : NORMAL;
+    float3      vTangent  : TANGENT;
 	float2		vTexcoord : TEXCOORD0;
     float4		vWorldPos : TEXCOORD1;
-    float4      vProjPos : TEXCOORD2;
+    float4      vProjPos  : TEXCOORD2;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -108,6 +112,25 @@ PS_OUT PS_MAIN_NONALPHA(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vMtrlDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    float fDissolveAlpha = saturate(-g_Time / g_DissolveDuration + vMtrlDissolve.r);
+ 
+    if (fDissolveAlpha < 0.1f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
+
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass Mesh_Alpha
@@ -148,6 +171,20 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ALPHA();
     }
+
+    pass Mesh_Alpha_NonCull_Dissolve
+    {
+        SetRasterizerState(RS_Sky);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISSOLVE();
+    }
+
 }
 
 

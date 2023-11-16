@@ -26,6 +26,9 @@ STATE CState_Lockon_Walk::Tick(const _float& fTimeDelta)
 	if (nullptr == pTarget)
 		return STATE::IDLE;
 
+	if (true == m_pRealOwner->Is_Hit())
+		return STATE::HIT;
+
 	CComponent* pCom = pTarget->Get_Component(TEXT("Com_Transform"));
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pCom);
 

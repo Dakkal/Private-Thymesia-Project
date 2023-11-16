@@ -13,6 +13,7 @@ private:
 
 public:
 	virtual HRESULT Initialize() override;
+	virtual HRESULT PriorityTick(_float fTimeDelta) override;
 	virtual HRESULT Tick(_float fTimeDelta) override;
 	virtual HRESULT LateTick(_float fTimeDelta) override;
 

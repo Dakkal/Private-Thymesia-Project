@@ -349,6 +349,11 @@ HRESULT CLoader::Loading_Texture()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Brush"),
 			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Brush.png"), 1))))
 			return E_FAIL;
+
+		/* For.Prototype_Component_Texture_Dissolve */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Dissolve/Dissolve.png"), 1))))
+			return E_FAIL;
 		break;
 	case Client::LEVEL_1:
 		break;

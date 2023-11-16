@@ -390,6 +390,30 @@
     <ClCompile Include="..\Private\State_Idle_Halberd.cpp">
       <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\State_Walk_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Hit_Great_Sword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Attack_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Avoid_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dead_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Parry_GreatSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Lockon_ParrySuccess.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_ParrySuccess.cpp">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -604,6 +628,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Idle_Halberd.h">
       <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Walk_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Hit_Great_Sword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Attack_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Avoid_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dead_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Parry_GreatSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_GreatSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Lockon_ParrySuccess.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_ParrySuccess.h">
+      <Filter>02.GameObject\Object\Player\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

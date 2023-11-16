@@ -33,7 +33,7 @@ void CLayer::Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_listGameObject)
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Is_Active())
 			pGameObject->Tick(fTimeDelta);
 	}
 
@@ -43,7 +43,7 @@ void CLayer::LateTick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_listGameObject)
 	{
-		if (nullptr != pGameObject)
+		if (nullptr != pGameObject && true == pGameObject->Is_Active())
 			pGameObject->LateTick(fTimeDelta);
 	}
 
@@ -96,6 +96,25 @@ HRESULT CLayer::Delete_Layer()
 		Safe_Release(pGameObject);
 	}
 	m_listGameObject.clear();
+
+	return S_OK;
+}
+
+HRESULT CLayer::Delete_NonActive_Objects()
+{
+	auto iter = m_listGameObject.begin();
+	while (iter != m_listGameObject.end())
+	{
+		if (false == (*iter)->Is_Active())
+		{
+			Safe_Release(*iter);
+			iter = m_listGameObject.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
 
 	return S_OK;
 }

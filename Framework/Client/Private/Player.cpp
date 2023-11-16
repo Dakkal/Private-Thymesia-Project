@@ -17,6 +17,9 @@
 #include "State_Lockon_Avoid.h"
 #include "State_Lockon_Parry.h"
 #include "State_Lockon_Attack.h"
+#include "State_Hit.h"
+#include "State_ParrySuccess.h"
+#include "State_Lockon_ParrySuccess.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -67,6 +70,11 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_bFirstDrop = false;
 	}
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (true == pGameInstance->Key_Down('Q'))
+		ReSearch_TargetEnemy();
+	RELEASE_INSTANCE(CGameInstance);
+
 	m_pStateMachineCom->Tick(fTimeDelta);
 
 	for (auto& iter : m_Parts)
@@ -80,6 +88,10 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
+	if (true == m_IsHit) m_IsHit = false;
+
+	Check_TargetEnemy();
+
 	m_pStateMachineCom->LateTick(fTimeDelta);
 
 	for (auto& iter : m_Parts)
@@ -114,10 +126,28 @@ void CPlayer::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	case OBJECT_TYPE::PORP:
 		break;
 	case OBJECT_TYPE::MONSTER:
-		m_vecTargetEnemy.push_back(_pColObj);
+	{
+		CGameObject* pSearchTarget = nullptr;
+		for (auto& pTarget : m_vecTargetEnemy)
+		{
+			if (_pColObj == pTarget)
+				pSearchTarget = pTarget;
+		}
+		if(nullptr == pSearchTarget)
+			m_vecTargetEnemy.push_back(_pColObj);
+	}
 		break;
 	case OBJECT_TYPE::BOSS:
-		m_vecTargetEnemy.push_back(_pColObj);
+	{
+		CGameObject* pSearchTarget = nullptr;
+		for (auto& pTarget : m_vecTargetEnemy)
+		{
+			if (_pColObj == pTarget)
+				pSearchTarget = pTarget;
+		}
+		if (nullptr == pSearchTarget)
+			m_vecTargetEnemy.push_back(_pColObj);
+	}
 		break;
 	case OBJECT_TYPE::PART:
 		OnCollision_Part_Enter(_pColObj, fTimeDelta);
@@ -386,6 +416,9 @@ void CPlayer::Reset_TargetEnemy()
 
 HRESULT CPlayer::Search_TargetEnemy()
 {
+	if (nullptr != m_pTargetEnemy)
+		return S_OK;
+
 	if (0 >= m_vecTargetEnemy.size())
 	{
 		m_pTargetEnemy = nullptr;
@@ -416,6 +449,66 @@ HRESULT CPlayer::Search_TargetEnemy()
 	pPlayerCamera->Set_TargetTransform(pTargetTransform);
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CPlayer::ReSearch_TargetEnemy()
+{
+	if (nullptr == m_pTargetEnemy || 1 >= m_vecTargetEnemy.size())
+		return S_OK;
+
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	_float fCloseDist = 30.f;
+	for (auto& pTarget : m_vecTargetEnemy)
+	{
+		if (m_pTargetEnemy == pTarget)
+			continue;
+
+		CTransform* pTargetTransform = dynamic_cast<CTransform*>(pTarget->Get_Component(TEXT("Com_Transform")));
+		_vector TargetPos = pTargetTransform->Get_State(CTransform::STATE_POS);
+		_vector PlayerPos = pTargetTransform->Get_State(CTransform::STATE_POS);
+		_float fDist = _vector(TargetPos - PlayerPos).Length();
+
+		if (fCloseDist > fDist)
+		{
+			fCloseDist = fDist;
+			m_pTargetEnemy = pTarget;
+		}
+
+	}
+
+	CPlayerCamera* pPlayerCamera = dynamic_cast<CPlayerCamera*>(pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_CAMERA));
+	CTransform* pTargetTransform = dynamic_cast<CTransform*>(m_pTargetEnemy->Get_Component(TEXT("Com_Transform")));
+	pPlayerCamera->Set_TargetTransform(pTargetTransform);
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Check_TargetEnemy()
+{
+	if (nullptr != m_pTargetEnemy && true == m_pTargetEnemy->Is_Dead())
+		m_pTargetEnemy = nullptr;
+	
+	if (0 < m_vecTargetEnemy.size())
+	{
+		auto iter = m_vecTargetEnemy.begin();
+		while (iter != m_vecTargetEnemy.end())
+		{
+			if (true == (*iter)->Is_Dead())
+			{
+				iter = m_vecTargetEnemy.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+	}
 
 	return S_OK;
 }
@@ -463,10 +556,10 @@ HRESULT CPlayer::Ready_Components()
 	CBounding_Frustrum::BOUNDING_FRUSTRUM_DESC	FrustrumDesc = {};
 	FrustrumDesc.vCenter = _float3(0.f, 1.f, 0.f);
 	FrustrumDesc.vDegree = _float3(0.f, 0.f, 0.f);
-	FrustrumDesc.fLeftSlope = -1.f;
-	FrustrumDesc.fRightSlope = 1.f;
-	FrustrumDesc.fTopSlope = 1.f;
-	FrustrumDesc.fBottomSlope = -1.f;
+	FrustrumDesc.fLeftSlope = -0.8f;
+	FrustrumDesc.fRightSlope = 0.8f;
+	FrustrumDesc.fTopSlope = 0.8f;
+	FrustrumDesc.fBottomSlope = -0.8f;
 	FrustrumDesc.fNear = 0.1f;
 	FrustrumDesc.fFar = 30.f;
 	FrustrumDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
@@ -583,6 +676,21 @@ HRESULT CPlayer::Ready_State()
 	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
 
 	pState = CState_Lockon_Attack::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_ATTACK);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_Hit::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::HIT);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_Lockon_ParrySuccess::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_PARRY_SUCCESS);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_ParrySuccess::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::PARRY_SUCCESS);
 	if (nullptr == pState)
 		return E_FAIL;
 	m_pStateMachineCom->Add_State(pState->Get_State(), pState);

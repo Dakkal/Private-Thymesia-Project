@@ -8,6 +8,14 @@ CLevel_Manager::CLevel_Manager()
 {
 }
 
+void CLevel_Manager::PriorityTick(_float fTimeDelta)
+{
+	if (nullptr == m_pCurLevel)
+		return;
+
+	m_pCurLevel->PriorityTick(fTimeDelta);
+}
+
 void CLevel_Manager::Tick(_float fTimeDelta)
 {
 	if (nullptr == m_pCurLevel)

@@ -54,7 +54,7 @@ public:
 	void Rotation(_vector vAxis, _float fRadian);
 	void Turn(_vector vAxis, _float fTimeDelta);
 	void LookAt(_vector vPoint);
-	void Chase(_vector vPoint, _float fTimeDelta, _float fDis = 0.1f);
+	_bool Chase(_vector vPoint, _float fTimeDelta, _float fDis = 0.1f, class CNavigation* pNavi = nullptr);
 
 private:
 	_matrix				m_WorldMatrix;

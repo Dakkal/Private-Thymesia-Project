@@ -41,6 +41,11 @@ HRESULT CLevel_GamePlay::Initialize()
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::PriorityTick(_float fTimeDelta)
+{
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	return S_OK;
@@ -54,6 +59,8 @@ HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
 
 	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_BOSS, fTimeDelta);
 	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_MONSTER, fTimeDelta);
+
+	pGameInstance->Delete_NonActive_Objects(LEVEL_GAMEPLAY, LAYER_MONSTER);
 
 	RELEASE_INSTANCE(CGameInstance)
 
@@ -293,6 +300,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _uint& iLayerIndex)
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_GreatSword"))))
 		return E_FAIL;
+
+	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Halberd"))))
+		return E_FAIL;*/
 
 	RELEASE_INSTANCE(CGameInstance);
 

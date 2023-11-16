@@ -37,9 +37,15 @@ public:
 	virtual void OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
 public:
-	void			Reset_TargetEnemy();
-	HRESULT			Search_TargetEnemy();
-	CGameObject*	Get_TargetEnemy() const { return m_pTargetEnemy; }
+	void					Reset_TargetEnemy();
+	HRESULT					Search_TargetEnemy();
+	HRESULT					ReSearch_TargetEnemy();
+	HRESULT					Check_TargetEnemy();
+	CGameObject*			Get_TargetEnemy() const { return m_pTargetEnemy; }
+	vector<CGameObject*>	Get_TargetEnemies() const { return m_vecTargetEnemy; }
+
+	void					Set_Parry(_bool IsParry) { m_IsParry = IsParry; }
+	const _bool&			Is_Parry() const		 { return m_IsParry; }
 
 private:
 	vector<CGameObject*>	m_vecTargetEnemy;	
@@ -50,6 +56,7 @@ private:
 	CCollider*				m_pColliderCom = { nullptr };
 
 	_bool					m_bFirstDrop = { true };
+	_bool					m_IsParry = { false };
 
 private:
 	HRESULT Ready_Components();

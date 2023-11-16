@@ -5,7 +5,7 @@
 #include "AsFileUtils.h"
 #include "Transform.h"
 
-_matrix CNavigation::m_NaviWorldMatrix[3] = {};
+_matrix CNavigation::m_NaviWorldMatrix[30] = {};
 _uint	CNavigation::m_iIndex = 0;
 
 CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

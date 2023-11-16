@@ -13,6 +13,11 @@ HRESULT CLevel::Initialize()
 	return S_OK;
 }
 
+HRESULT CLevel::PriorityTick(_float fTimeDelta)
+{
+	return S_OK;
+}
+
 HRESULT CLevel::Tick(_float fTimeDelta)
 {
 	return S_OK;

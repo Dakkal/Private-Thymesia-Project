@@ -346,16 +346,49 @@ void CTransform::LookAt(_vector vPoint)
 	Set_State(STATE_LOOK, vLook);
 }
 
-void CTransform::Chase(_vector vPoint, _float fTimeDelta, _float fDis)
+_bool CTransform::Chase(_vector vPoint, _float fTimeDelta, _float fDis, CNavigation* pNavi)
 {
 	_vector		vPosition = Get_State(STATE_POS);
 
 	_vector		vDir = vPoint - vPosition;
 
 	if (vDir.Length() > fDis)
+	{
+		_vector		vLook = Get_State(STATE_LOOK);
 		vPosition += XMVector3Normalize(vDir) * m_TrasformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE_POS, vPosition);
+		if (nullptr != pNavi)
+		{
+			_int iMove = pNavi->IsMove(vPosition);
+
+			if (0 == iMove)
+			{
+				Set_State(STATE_POS, vPosition);
+			}
+			else if (-2 == iMove)
+			{
+				if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
+				{
+					Set_State(STATE_POS, vPosition);
+				}
+			}
+			else if (-1 == iMove)
+			{
+				_vector vSlider = pNavi->Get_Cell_SliderVec(vLook);
+
+				if (-1 != vSlider.w)
+					m_vSlide = vSlider;
+				Go_Dir(m_vSlide, fTimeDelta, pNavi);
+			}
+
+		}
+		else
+			Set_State(STATE_POS, vPosition);
+
+		return true;
+	}
+	else
+		return false;
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -84,17 +84,18 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
     {
         _vector vPlayer_Pos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
         _vector vTarget_Pos = m_pTargetTransform->Get_State(CTransform::STATE_POS);
-        vPlayer_Pos.y = 0; vTarget_Pos.y = 0;
 
         _vector vCamDir = vTarget_Pos - vPlayer_Pos;
         vCamDir.Normalize();
-        vCamDir.x *= -1.f; vCamDir.y = 1.f; vCamDir.z *= -1.f;
+        vCamDir.x *= -1.f; vCamDir.y = 1;  vCamDir.z *= -1.f;
         vCamOffset = vCamDir * m_fTargetOffsetDis;
-        vCamOffset.y -= 2.f;
+        vCamOffset.y -= 3.f;
 
         _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
         _vector vOffsetPos = vPlayerPos + vCamOffset;
-        
+        if (vOffsetPos.y >= vPlayerPos.y + 3.f)
+            vOffsetPos.y = vPlayerPos.y + 3.f;
+
         _vector vCamPos = _vector::Lerp(m_pTransform->Get_State(CTransform::STATE_POS), vOffsetPos, 4.f * fTimeDelta);
         if (vPlayer_Pos.y + 0.3f >= vCamPos.y)
             vCamPos.y = vPlayer_Pos.y + 0.3f;

@@ -24,6 +24,16 @@ STATE CState_Lockon_Parry::Tick(const _float& fTimeDelta)
 	if (nullptr == pTarget)
 		return STATE::IDLE;
 
+	if (true == m_pRealOwner->Is_Hit())
+	{
+		if (true == dynamic_cast<CPlayer*>(m_pRealOwner)->Is_Parry())
+		{
+			return STATE::LOCK_PARRY_SUCCESS;
+		}
+		else
+			return STATE::HIT;
+	}
+
 	CComponent* pCom = pTarget->Get_Component(TEXT("Com_Transform"));
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pCom);
 
@@ -57,17 +67,17 @@ STATE CState_Lockon_Parry::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::LOCK_IDLE;
 	}
-	else if (true == m_bAttack && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	else if (true == m_bAttack && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::LOCK_ATTACK;
 	}
-	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::LOCK_AVOID;
 	}
-	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::LOCK_WALK;
@@ -84,6 +94,17 @@ STATE CState_Lockon_Parry::Tick(const _float& fTimeDelta)
 	}
 	else
 		eState = m_eState;
+
+	if (5 <= m_pOwnerBodyPart->Get_CurKeyFrameNumb() &&
+		25 >= m_pOwnerBodyPart->Get_CurKeyFrameNumb())
+	{
+		dynamic_cast<CPlayer*>(m_pRealOwner)->Set_Parry(true);
+	}
+	else
+	{
+		dynamic_cast<CPlayer*>(m_pRealOwner)->Set_Parry(false);
+	}
+
 
 	RELEASE_INSTANCE(CGameInstance);
 

@@ -295,13 +295,44 @@ _bool CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
 
 	auto& KeyFrames = m_Animations[m_iCurAnimIndex]->Get_CurKeyFrames();
 
+	_uint iMax = 0;
+
 	for (auto& KeyFrame : KeyFrames)
 	{
-		if (iIndex == KeyFrame)
-			return true;
+		if (iMax < KeyFrame)
+		{
+			iMax = KeyFrame;
+		}
 	}
 
-	return false;
+	if (iMax == iIndex)
+		return true;
+	else
+		return false;
+}
+
+_bool CBinModel::Is_OverAnimKeyFrame(_uint iIndex)
+{
+	/* 애니메이션 전환중에는 확인할 필요X */
+	if (true == m_bIsAnimChange)
+		return false;
+
+	auto& KeyFrames = m_Animations[m_iCurAnimIndex]->Get_CurKeyFrames();
+
+	_uint iMax = 0;
+
+	for (auto& KeyFrame : KeyFrames)
+	{
+		if (iMax < KeyFrame)
+		{
+			iMax = KeyFrame;
+		}
+	}
+
+	if (iMax < iIndex)
+		return false;
+	else
+		return true;
 }
 
 _bool CBinModel::Is_CurAnimFinished()
@@ -332,7 +363,7 @@ _int CBinModel::Get_BoneIndex(const string& strBoneName) const
 	return iBoneIndex;
 }
 
-HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDelta, class CNavigation* pNavi)
+HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDelta, class CNavigation* pNavi, _vector TargetPos)
 {
 	if (nullptr == pTransform)
 		return E_FAIL;
@@ -349,6 +380,18 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 	_float fDist = vDir.Length() * 0.55f;
 
 	vPos += vWorldDir * fDist * fTimeDelta;
+
+	if (1 == TargetPos.w)
+	{
+		_float fTargetDist = _vector(TargetPos - vPos).Length();
+		if (fTargetDist <= FLT_EPSILON)
+		{
+			vPos = pTransform->Get_State(CTransform::STATE_POS);
+
+			vWorldDir.z = 0;
+			vPos += vWorldDir * fDist * fTimeDelta;
+		}
+	}
 
 	if (nullptr != pNavi)
 	{

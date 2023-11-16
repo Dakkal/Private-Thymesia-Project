@@ -7,6 +7,8 @@
 #include "Input_Device.h"
 #include "State_Walk.h"
 
+#include "Player.h"
+
 CState_Parry::CState_Parry(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
 {
@@ -23,6 +25,17 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	if (true == m_pRealOwner->Is_Hit())
+	{
+		if (true == dynamic_cast<CPlayer*>(m_pRealOwner)->Is_Parry())
+		{
+			return STATE::PARRY_SUCCESS;
+		}
+		else
+			return STATE::HIT;
+	}
+		
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (true == m_bIdle && m_pOwnerBodyPart->Is_AnimCurKeyFrame(120))
@@ -30,17 +43,17 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
-	else if (true == m_bAttack && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	else if (true == m_bAttack && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::ATTACK;
 	}
-	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
-	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::WALK;
@@ -57,6 +70,18 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 	}
 	else
 		eState = m_eState;
+
+
+	if (10 <= m_pOwnerBodyPart->Get_CurKeyFrameNumb() &&
+		20 >= m_pOwnerBodyPart->Get_CurKeyFrameNumb())
+	{
+		dynamic_cast<CPlayer*>(m_pRealOwner)->Set_Parry(true);
+	}
+	else
+	{
+		dynamic_cast<CPlayer*>(m_pRealOwner)->Set_Parry(false);
+	}
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -140,6 +165,9 @@ void CState_Parry::Enter_State()
 
 void CState_Parry::Reset_State()
 {
+	dynamic_cast<CPlayer*>(m_pRealOwner)->Set_Parry(false);
+
+
 	m_bAttack = false;
 	m_bAvoid = false;
 	m_bWalk = false;

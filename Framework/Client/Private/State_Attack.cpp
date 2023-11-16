@@ -30,17 +30,17 @@ STATE CState_Attack::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
-	else if (true == m_bParry && false == m_bIdle && false == m_IsKeepAttack && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
+	else if (true == m_bParry && false == m_bIdle && false == m_IsKeepAttack && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(25))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::PARRY;
 	}
-	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepAttack && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
+	else if (true == m_bAvoid && false == m_bIdle && false == m_IsKeepAttack && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(25))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
-	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepAttack &&  true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	else if (true == m_bWalk && false == m_bIdle && false == m_IsKeepAttack &&  true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(35))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::WALK;

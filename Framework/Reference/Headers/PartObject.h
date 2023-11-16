@@ -35,10 +35,12 @@ public:
 
 public:
 	_bool			Is_AnimCurKeyFrame(_uint iIndex);
+	_bool			Is_AnimOverKeyFrame(_uint iIndex);
 	_bool			IsAnimationEnd();
-	_bool			IsAnimChange();
+	const _bool&	IsAnimChange();
 	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset = false, _uint iStartKeyFrame = 0, _float fChangeDuration = 0.2f);
 	void			Set_First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
+	void			Set_Anim_TargetPos(_vector vTargetPos) { m_vTargetPos = vTargetPos; }
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring & strProtoTag);
@@ -54,7 +56,7 @@ protected:
 	class CBinBone*			m_pSocketBone = { nullptr };
 	_matrix					m_SocketPivotMatrix;
 	_matrix					m_WorldMatrix;
-
+	_vector					m_vTargetPos = { XMVectorZero() };
 
 protected:
 	class CRenderer*	m_pRendererCom = { nullptr };

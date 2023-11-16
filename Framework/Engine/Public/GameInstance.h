@@ -60,8 +60,10 @@ public: /* For.Object_Manager */
 	CGameObject*	Clone_GameObject(const wstring & strPrototypeTag, void* pArg = nullptr);
 	HRESULT			Delete_GameObject(_uint iLevelIndex, const _uint & iLayerIndex, const wstring & ObjName, _uint iCloneIndex = 1);
 	HRESULT			Delete_Layer(_uint iLevelIndex, const _uint & iLayerIndex);
+	HRESULT			Delete_NonActive_Objects(_uint iLevelIndex, const _uint & iLayerIndex);
+
 	const map<const wstring, class CGameObject*>*	Get_Prototypes();
-	list<class CGameObject*>*					Get_LayerList(_uint iLevelIndex, const _uint & iLayerIndex);
+	list<class CGameObject*>*						Get_LayerList(_uint iLevelIndex, const _uint & iLayerIndex);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, class CComponent* pPrototype);
@@ -89,7 +91,8 @@ public: /* For.Light_Manager */
 public: /* For.Calculaotr */
 	_vector		Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
 	_vector		Picking_Object(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
-	HRESULT		Detrude_Collide(class CGameObject* pColObj, class CCollider* pObjCol, class CTransform* pObjTransform);
+	HRESULT		Detrude_AABB_Collide(class CGameObject* pColObj, class CCollider* pObjCol, class CTransform* pObjTransform);
+	HRESULT		Detrude_Sphere_Collide(class CGameObject* pColObj, class CCollider* pObjCol, class CTransform* pObjTransform, class CNavigation* pNavigation = nullptr);
 	_float3		QuaternionToEuler(_vector vQuaternion);
 	_float		Clamp(float value, float min, float max);
 

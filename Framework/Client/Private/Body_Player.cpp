@@ -1,14 +1,19 @@
 #include "pch.h"
 #include "..\Public\Body_Player.h"
 
+#include "Player.h"
+
 #include "GameInstance.h"
 #include "BinMesh.h"
 #include "LandObject.h"
+#include "Navigation.h"
 #include "Collider.h"
 #include "Bounding_AABB.h"
+#include "Bounding_Sphere.h"
 #include "PartObject.h"
 #include "PipeLine.h"
 #include "Bounding.h"
+#include "Texture.h"
 
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -112,10 +117,34 @@ void CBody_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	switch (eObject)
 	{
 	case OBJECT_TYPE::BOSS:
+	{
+		auto vec = dynamic_cast<CPlayer*>(m_pOwner)->Get_TargetEnemies();
+
+		CGameObject* pSearchTarget = nullptr;
+		for (auto& pTarget : vec)
+		{
+			if (_pColObj == pTarget)
+				pSearchTarget = pTarget;
+		}
+		if (nullptr == pSearchTarget)
+			vec.push_back(_pColObj);
+	}
 		break;
 	case OBJECT_TYPE::PORP:
 		break;
 	case OBJECT_TYPE::MONSTER:
+	{
+		auto vec = dynamic_cast<CPlayer*>(m_pOwner)->Get_TargetEnemies();
+
+		CGameObject* pSearchTarget = nullptr;
+		for (auto& pTarget : vec)
+		{
+			if (_pColObj == pTarget)
+				pSearchTarget = pTarget;
+		}
+		if (nullptr == pSearchTarget)
+			vec.push_back(_pColObj);
+	}
 		break;
 	case OBJECT_TYPE::PART:
 		OnCollision_Part_Enter(_pColObj, fTimeDelta);
@@ -164,6 +193,8 @@ void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDel
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pPartOwner->Get_Component(TEXT("Com_Transform")));
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(pPartOwner)->Get_CurNaviCom();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
 
@@ -175,7 +206,7 @@ void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDel
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -192,7 +223,7 @@ void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDel
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -215,6 +246,8 @@ void CBody_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelt
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pPartOwner->Get_Component(TEXT("Com_Transform")));
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(pPartOwner)->Get_CurNaviCom();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
 
@@ -226,7 +259,7 @@ void CBody_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelt
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -243,7 +276,7 @@ void CBody_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelt
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -350,13 +383,22 @@ HRESULT CBody_Player::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Collider_AABB */
-	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
+	/*CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
 	AABBDesc.vExtents = _float3(0.45f, 0.85f, 0.45f);
 	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
 	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	AABBDesc.vColor = _vector( 0.33f, 0.63f, 0.93f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &AABBDesc)))
+		return E_FAIL;*/
+
+	CBounding_Sphere::BOUNDING_SPHERE_DESC		SphereDesc = {};
+	SphereDesc.vCenter = _float3(0.f, 1.f, 0.f);
+	SphereDesc.fRadius = 0.7f;
+	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -375,7 +417,7 @@ HRESULT CBody_Player::Bind_ShaderResources()
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
-
+		
 	return S_OK;
 }
 

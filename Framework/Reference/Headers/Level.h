@@ -11,6 +11,7 @@ protected:
 
 public:
 	virtual HRESULT Initialize();
+	virtual HRESULT PriorityTick(_float fTimeDelta);
 	virtual HRESULT Tick(_float fTimeDelta);
 	virtual HRESULT LateTick(_float fTimeDelta);
 

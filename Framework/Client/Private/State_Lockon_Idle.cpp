@@ -25,6 +25,9 @@ STATE CState_Lockon_Idle::Tick(const _float& fTimeDelta)
 	if(nullptr == pTarget)
 		return STATE::IDLE;
 
+	if (true == m_pRealOwner->Is_Hit())
+		return STATE::HIT;
+
 	CComponent* pCom = pTarget->Get_Component(TEXT("Com_Transform"));
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pCom);
 
@@ -85,15 +88,15 @@ STATE CState_Lockon_Idle::Key_Input(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::LOCK_AVOID;
 	}
-	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::LOCK_ATTACK;
-	}
 	if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::LOCK_PARRY;
+	}
+	if (pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return STATE::LOCK_ATTACK;
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80 ||
 		pGameInstance->Get_DIKeyState(DIK_D) & 0x80 ||

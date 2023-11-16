@@ -31,18 +31,25 @@ STATE CState_Hit::Tick(const _float& fTimeDelta)
 		if (true == m_bRight_Hit)
 		{
 			m_bRight_Hit = false;
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 15, 1.2f);
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 84, 2.f);
 			m_bLeft_Hit = true;
 		}
 		else if (true == m_bLeft_Hit)
 		{
 			m_bLeft_Hit = false;
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 16, 1.2f);
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 83, 2.f);
 			m_bRight_Hit = true;
 		}
 	}
 	else if (m_pOwnerBodyPart->IsAnimationEnd())
-		return STATE::IDLE;
+	{
+		CGameObject* pTarget = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy();
+		if (nullptr == pTarget)
+			return STATE::IDLE;
+		else
+			return STATE::LOCK_IDLE;
+	}
+		
 
 
 	return eState;
@@ -66,18 +73,16 @@ void CState_Hit::Enter_State()
 {
 	m_pRealOwner->Set_Move(false);
 
-	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
-
 	if (true == m_bRight_Hit)
 	{
 		m_bRight_Hit = false;
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 15, 1.2f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 84, 2.f);
 		m_bLeft_Hit = true;
 	}
 	else if (true == m_bLeft_Hit)
 	{
 		m_bLeft_Hit = false;
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 16, 1.2f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 83, 2.f);
 		m_bRight_Hit = true;
 	}
 }

@@ -24,6 +24,9 @@ STATE CState_Walk::Tick(const _float& fTimeDelta)
 {
 	STATE eState;
 
+	if (true == m_pRealOwner->Is_Hit())
+		return STATE::HIT;
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)

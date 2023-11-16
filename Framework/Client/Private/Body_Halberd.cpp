@@ -166,7 +166,7 @@ void CBody_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDe
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -233,7 +233,7 @@ void CBody_Halberd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDel
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;

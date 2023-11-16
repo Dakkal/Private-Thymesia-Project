@@ -21,6 +21,7 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
+	_float					m_fIdleTime = { 0.f };
 
 public:
 	static CState_Idle_GreatSword* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);

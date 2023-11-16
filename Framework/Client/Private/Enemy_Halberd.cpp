@@ -44,6 +44,8 @@ HRESULT CEnemy_Halberd::Initialize(void* pArg)
 	if (FAILED(Ready_State()))
 		return E_FAIL;
 
+	//m_fDissolveDuraton = 3.f;
+
 	return S_OK;
 }
 
@@ -51,7 +53,7 @@ void CEnemy_Halberd::Tick(_float fTimeDelta)
 {
 	if (true == m_bFirstDrop)
 	{
-		m_pCurNavigationCom->Set_toCell(6, m_pTransformCom);
+		m_pCurNavigationCom->Set_toCell(5, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
 

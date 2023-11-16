@@ -13,6 +13,7 @@ union COLLIDER_ID
 		_uint iLeft_id;
 		_uint iRight_id;
 	};
+
 	_ulonglong ID;
 };
 

@@ -23,6 +23,8 @@ public:
 	HRESULT		 Delete_GameObject(const wstring& ObjName, _uint iCloneIndex);
 	HRESULT		 Delete_Layer();
 
+	HRESULT		 Delete_NonActive_Objects();
+
 private:
 	list<class CGameObject*>		m_listGameObject;
 

@@ -5,6 +5,12 @@
 #include "PartObject.h"
 #include "StateMachine.h"
 #include "State_Idle_GreatSword.h"
+#include "State_Walk_GreatSword.h"
+#include "State_Hit_Great_Sword.h"
+#include "State_Attack_GreatSword.h"
+#include "State_Avoid_GreatSword.h"
+#include "State_Dead_GreatSword.h"
+#include "State_Parry_GreatSword.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -45,6 +51,8 @@ HRESULT CEnemy_GreatSword::Initialize(void* pArg)
 	if (FAILED(Ready_State()))
 		return E_FAIL;
 
+	m_fDissolveDuraton = 4.f;
+
 	return S_OK;
 }
 
@@ -55,12 +63,24 @@ void CEnemy_GreatSword::Tick(_float fTimeDelta)
 		m_pCurNavigationCom->Set_toCell(6, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
-
-
+	
 	Out_Player(fTimeDelta);
 	Look_Player(fTimeDelta);
 
 	m_pStateMachineCom->Tick(fTimeDelta);
+
+	if (true == m_IsDead)
+	{
+		m_fDissolveTime += fTimeDelta;
+
+		if (m_fDissolveDuraton < m_fDissolveTime)
+			m_IsActive = false;
+	}
+		
+
+	/* 작동이 멈추면 리턴, 데드 스테이트 틱에서 꺼지니까 여기가 맞을거다 */
+	if (false == m_IsActive)
+		return;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -187,7 +207,6 @@ void CEnemy_GreatSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTi
 		switch (ePart)
 		{
 		case Engine::CGameObject::BODY:
-			m_bIsLookPlayer = true;
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -355,6 +374,19 @@ void CEnemy_GreatSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTim
 	}
 }
 
+_float CEnemy_GreatSword::Get_PlayerDistance()
+{
+	if (nullptr == m_pPlayerTransform)
+		return -1.f;
+
+	_vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
+
+	_float fLength = _vector(vPlayerPos - vPos).Length();
+
+	return fLength;
+}
+
 void CEnemy_GreatSword::Out_Player(_float fTimeDelta)
 {
 	if (false == m_bIsOutPlayer)
@@ -427,7 +459,7 @@ HRESULT CEnemy_GreatSword::Ready_Components()
 
 	/* Com_Transform */
 	CTransform::TRANSFORM_DESC		TransformDesc;
-	TransformDesc.fSpeedPerSec = 10.f;
+	TransformDesc.fSpeedPerSec = 1.f;
 	TransformDesc.fRotRadianPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
@@ -513,6 +545,36 @@ HRESULT CEnemy_GreatSword::Ready_State()
 	if (nullptr == pState)
 		return E_FAIL;
 	m_pStateMachineCom->Add_State(STATE::IDLE, pState);
+
+	pState = CState_Walk_GreatSword::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::WALK);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::WALK, pState);
+
+	pState = CState_Hit_Great_Sword::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::HIT);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::HIT, pState);
+
+	pState = CState_Attack_GreatSword::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::ATTACK);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::ATTACK, pState);
+
+	pState = CState_Avoid_GreatSword::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::AVOID);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::AVOID, pState);
+
+	pState = CState_Dead_GreatSword::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::DEAD);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::DEAD, pState);
+
+	pState = CState_Parry_GreatSword::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::PARRY);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::PARRY, pState);
 
 
 	m_pStateMachineCom->Set_State(STATE::IDLE);
