@@ -414,6 +414,27 @@
     <ClCompile Include="..\Private\State_ParrySuccess.cpp">
       <Filter>02.GameObject\Object\Player\State</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\State_Attack_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Parry_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Avoid_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Hit_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Walk_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dead_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Run_Halberd.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -652,6 +673,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_ParrySuccess.h">
       <Filter>02.GameObject\Object\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Walk_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Attack_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Hit_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Parry_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dead_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Avoid_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Run_Halberd.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

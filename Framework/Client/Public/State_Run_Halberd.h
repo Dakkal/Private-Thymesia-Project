@@ -4,11 +4,11 @@
 
 BEGIN(Client)
 
-class CState_Idle_Halberd final : public CState
+class CState_Run_Halberd final : public CState
 {
 private:
-	CState_Idle_Halberd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
-	virtual ~CState_Idle_Halberd() = default;
+	CState_Run_Halberd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
+	virtual ~CState_Run_Halberd() = default;
 
 public:
 	virtual HRESULT			Initialize();
@@ -20,11 +20,9 @@ public:
 
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
-private:
-	_float					m_fIdleTime = { 0.f };
 
 public:
-	static CState_Idle_Halberd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
+	static CState_Run_Halberd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
 	virtual void	Free() override;
 };
 

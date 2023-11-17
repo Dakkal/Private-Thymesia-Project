@@ -33,6 +33,9 @@ public:
 	void		Set_Scale(_float3 vScale);
 	void		Set_WorldMatrix(_matrix matWorld);
 
+	void		Set_Modulate_Speed(_float fModulate) { m_fModulate_Speed = fModulate; }
+	void		Reset_Modulate_Speed() { m_fModulate_Speed = 1.f; }
+
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -62,6 +65,8 @@ private:
 	TRANSFORM_DESC		m_TrasformDesc;
 
 	_vector				m_vSlide;
+
+	_float				m_fModulate_Speed = { 1.f };
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

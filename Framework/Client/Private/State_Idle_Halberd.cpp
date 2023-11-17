@@ -22,8 +22,41 @@ HRESULT CState_Idle_Halberd::Initialize()
 
 STATE CState_Idle_Halberd::Tick(const _float& fTimeDelta)
 {
+	if (true == m_pOwnerBodyPart->IsAnimChange())
+		return m_eState;
+
 	STATE eState = m_eState;
 
+	if (true == m_pRealOwner->Is_Hit())
+		return STATE::HIT;
+
+	m_fIdleTime += fTimeDelta;
+
+	if (0.1f <= m_fIdleTime)
+	{
+		_float fDist = 6.f;
+		if (fDist <= dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Get_PlayerDistance())
+			return STATE::RUN;
+
+		_float fWalkDist = 4.f;
+		if (fWalkDist < dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Get_PlayerDistance())
+			return STATE::WALK;
+		else
+		{
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			if (true == pGameInstance->Random_Coin(0.8f))
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return STATE::WALK;
+			}
+			else
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return STATE::AVOID;
+			}
+		}
+	}
 
 	return eState;
 }
@@ -32,21 +65,25 @@ STATE CState_Idle_Halberd::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
-
-
 	return eState;
 }
 
 void CState_Idle_Halberd::Reset_State()
 {
-	m_bEnter = false;
+	m_fIdleTime = 0.f;
 }
 
 void CState_Idle_Halberd::Enter_State()
 {
 	m_pRealOwner->Set_Move(false);
 
-	dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(true);
+	_float fDist = 20.f;
+
+	if (fDist >= dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Get_PlayerDistance())
+		dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(true);
+	else
+		dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
+
 
 	m_pOwnerBodyPart->Set_AnimationIndex(true, 51, 1.2f);
 }

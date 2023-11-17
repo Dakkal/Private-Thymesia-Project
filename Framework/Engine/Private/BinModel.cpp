@@ -240,6 +240,8 @@ HRESULT CBinModel::Play_Animation(_float fTimeDelta)
 
 	m_PrevRootPos = m_CurRootPos;
 	m_CurRootPos = rootBone->Get_RootPos();
+	if (0 == m_PrevRootPos.z)
+		m_PrevRootPos = m_CurRootPos;
 	
 	return S_OK;
 }

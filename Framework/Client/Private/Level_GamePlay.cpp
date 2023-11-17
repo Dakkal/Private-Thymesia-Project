@@ -301,8 +301,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _uint& iLayerIndex)
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_GreatSword"))))
 		return E_FAIL;
 
-	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Halberd"))))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Halberd"))))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 

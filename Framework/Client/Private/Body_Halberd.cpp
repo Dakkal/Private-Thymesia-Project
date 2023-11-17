@@ -6,7 +6,7 @@
 #include "BinMesh.h"
 
 #include "StateMachine.h"
-#include "Bounding_AABB.h"
+#include "Bounding_Sphere.h"
 #include "Collider.h"
 
 CBody_Halberd::CBody_Halberd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -86,8 +86,16 @@ HRESULT CBody_Halberd::Render()
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
+		if (true == m_pOwner->Is_Dead())
+		{
+			if (FAILED(m_pShaderCom->Begin(3)))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(0)))
+				return E_FAIL;
+		}
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
@@ -199,6 +207,8 @@ void CBody_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDe
 		switch (ePart)
 		{
 		case Engine::CGameObject::BODY:
+			if (true == m_pOwner->Is_Move())
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -266,6 +276,8 @@ void CBody_Halberd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDel
 		switch (ePart)
 		{
 		case Engine::CGameObject::BODY:
+			if (true == m_pOwner->Is_Move())
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -349,6 +361,11 @@ HRESULT CBody_Halberd::Ready_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
+	/* Com_Texture*/
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
+		TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
 	/* Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
@@ -367,14 +384,13 @@ HRESULT CBody_Halberd::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
-	/* For.Com_Collider_AABB */
-	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
-	AABBDesc.vExtents = _float3(0.45f, 0.85f, 0.45f);
-	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
-	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
-	AABBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &AABBDesc)))
+	CBounding_Sphere::BOUNDING_SPHERE_DESC		SphereDesc = {};
+	SphereDesc.vCenter = _float3(0.f, 1.f, 0.f);
+	SphereDesc.fRadius = 0.7f;
+	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -393,6 +409,18 @@ HRESULT CBody_Halberd::Bind_ShaderResources()
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	if (true == m_pOwner->Is_Dead())
+	{
+		if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_Time", &m_pOwner->Get_DissolveTime(), sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_DissolveDuration", &m_pOwner->Get_DissolveDuration(), sizeof(_float))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -428,6 +456,8 @@ CGameObject* CBody_Halberd::Clone(void* pArg)
 void CBody_Halberd::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTextureCom);
 
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);

@@ -43,6 +43,7 @@ public:
 	void	Out_Player(_float fTimeDelta);
 	void	Look_Player(_float fTimeDelta);
 	void	Set_PlayerTransform();
+	_float	Get_PlayerDistance();
 
 private:
 	CTransform* m_pPlayerTransform = { nullptr };

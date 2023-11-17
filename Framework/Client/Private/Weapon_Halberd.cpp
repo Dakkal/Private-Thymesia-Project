@@ -86,8 +86,16 @@ HRESULT CWeapon_Halberd::Render()
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
+		if (true == m_pOwner->Is_Dead())
+		{
+			if (FAILED(m_pShaderCom->Begin(2)))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(0)))
+				return E_FAIL;
+		}
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
@@ -337,6 +345,11 @@ HRESULT CWeapon_Halberd::Ready_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
+	/* Com_Texture*/
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
+		TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
 	/* Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
@@ -353,8 +366,8 @@ HRESULT CWeapon_Halberd::Ready_Components()
 		return E_FAIL;
 
 	CBounding_OBB::BOUNDING_OBB_DESC		OBBDesc = {};
-	OBBDesc.vExtents = _float3(0.6f, 0.08f, 0.02f);
-	OBBDesc.vCenter = _float3(1.5f, -0.04f, 0.f);
+	OBBDesc.vExtents = _float3(0.9f, 0.08f, 0.02f);
+	OBBDesc.vCenter = _float3(1.1f, -0.04f, 0.f);
 	OBBDesc.vDegree = _float3(0.f, 0.f, 0.f);
 	OBBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
 	OBBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
@@ -378,6 +391,18 @@ HRESULT CWeapon_Halberd::Bind_ShaderResources()
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	if (true == m_pOwner->Is_Dead())
+	{
+		if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_Time", &m_pOwner->Get_DissolveTime(), sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_DissolveDuration", &m_pOwner->Get_DissolveDuration(), sizeof(_float))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -413,6 +438,8 @@ CGameObject* CWeapon_Halberd::Clone(void* pArg)
 void CWeapon_Halberd::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTextureCom);
 
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);

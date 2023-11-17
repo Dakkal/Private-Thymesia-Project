@@ -355,7 +355,7 @@ _bool CTransform::Chase(_vector vPoint, _float fTimeDelta, _float fDis, CNavigat
 	if (vDir.Length() > fDis)
 	{
 		_vector		vLook = Get_State(STATE_LOOK);
-		vPosition += XMVector3Normalize(vDir) * m_TrasformDesc.fSpeedPerSec * fTimeDelta;
+		vPosition += XMVector3Normalize(vDir) * m_TrasformDesc.fSpeedPerSec * fTimeDelta * m_fModulate_Speed;
 
 		if (nullptr != pNavi)
 		{

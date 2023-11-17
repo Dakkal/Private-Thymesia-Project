@@ -4,11 +4,11 @@
 
 BEGIN(Client)
 
-class CState_ParrySuccess final : public CState
+class CState_Avoid_Halberd final : public CState
 {
 private:
-	CState_ParrySuccess(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
-	virtual ~CState_ParrySuccess() = default;
+	CState_Avoid_Halberd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
+	virtual ~CState_Avoid_Halberd() = default;
 
 public:
 	virtual HRESULT			Initialize();
@@ -21,11 +21,9 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
-	_bool					m_bParryLeft = { false };
-	_bool					m_bParryRight = { false };
 
 public:
-	static CState_ParrySuccess* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
+	static CState_Avoid_Halberd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
 	virtual void	Free() override;
 };
 

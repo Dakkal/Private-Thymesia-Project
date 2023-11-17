@@ -436,7 +436,7 @@ HRESULT CPlayer::Search_TargetEnemy()
 		_vector PlayerPos = pTargetTransform->Get_State(CTransform::STATE_POS);
 		_float fDist = _vector(TargetPos - PlayerPos).Length();
 
-		if (fCloseDist > fDist)
+		if (fCloseDist >= fDist)
 		{
 			fCloseDist = fDist;
 			m_pTargetEnemy = pTarget;

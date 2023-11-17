@@ -4,7 +4,15 @@
 #include "GameInstance.h"
 #include "PartObject.h"
 #include "StateMachine.h"
+
 #include "State_Idle_Halberd.h"
+#include "State_Walk_Halberd.h"
+#include "State_Hit_Halberd.h"
+#include "State_Attack_Halberd.h"
+#include "State_Avoid_Halberd.h"
+#include "State_Dead_Halberd.h"
+#include "State_Parry_Halberd.h"
+#include "State_Run_Halberd.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -44,7 +52,7 @@ HRESULT CEnemy_Halberd::Initialize(void* pArg)
 	if (FAILED(Ready_State()))
 		return E_FAIL;
 
-	//m_fDissolveDuraton = 3.f;
+	m_fDissolveDuraton = 4.f;
 
 	return S_OK;
 }
@@ -53,7 +61,7 @@ void CEnemy_Halberd::Tick(_float fTimeDelta)
 {
 	if (true == m_bFirstDrop)
 	{
-		m_pCurNavigationCom->Set_toCell(5, m_pTransformCom);
+		m_pCurNavigationCom->Set_toCell(41, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
 
@@ -61,6 +69,17 @@ void CEnemy_Halberd::Tick(_float fTimeDelta)
 	Look_Player(fTimeDelta);
 
 	m_pStateMachineCom->Tick(fTimeDelta);
+
+	if (true == m_IsDead)
+	{
+		m_fDissolveTime += fTimeDelta;
+
+		if (m_fDissolveDuraton < m_fDissolveTime)
+			m_IsActive = false;
+	}
+	/* 작동이 멈추면 리턴, 데드 스테이트 틱에서 꺼지니까 여기가 맞을거다 */
+	if (false == m_IsActive)
+		return;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -187,7 +206,6 @@ void CEnemy_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 		switch (ePart)
 		{
 		case Engine::CGameObject::BODY:
-			m_bIsLookPlayer = true;
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -418,6 +436,19 @@ void CEnemy_Halberd::Set_PlayerTransform()
 	RELEASE_INSTANCE(CGameInstance)
 }
 
+_float CEnemy_Halberd::Get_PlayerDistance()
+{
+	if (nullptr == m_pPlayerTransform)
+		return -1.f;
+
+	_vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
+
+	_float fLength = _vector(vPlayerPos - vPos).Length();
+
+	return fLength;
+}
+
 HRESULT CEnemy_Halberd::Ready_Components()
 {
 	/* Com_Renderer */
@@ -427,7 +458,7 @@ HRESULT CEnemy_Halberd::Ready_Components()
 
 	/* Com_Transform */
 	CTransform::TRANSFORM_DESC		TransformDesc;
-	TransformDesc.fSpeedPerSec = 10.f;
+	TransformDesc.fSpeedPerSec = 1.f;
 	TransformDesc.fRotRadianPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
@@ -513,6 +544,41 @@ HRESULT CEnemy_Halberd::Ready_State()
 	if (nullptr == pState)
 		return E_FAIL;
 	m_pStateMachineCom->Add_State(STATE::IDLE, pState);
+
+	pState = CState_Attack_Halberd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::ATTACK);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::ATTACK, pState);
+
+	pState = CState_Avoid_Halberd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::AVOID);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::AVOID, pState);
+
+	pState = CState_Dead_Halberd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::DEAD);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::DEAD, pState);
+
+	pState = CState_Hit_Halberd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::HIT);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::HIT, pState);
+
+	pState = CState_Parry_Halberd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::PARRY);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::PARRY, pState);
+
+	pState = CState_Run_Halberd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::RUN);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::RUN, pState);
+
+	pState = CState_Walk_Halberd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::WALK);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::WALK, pState);
 
 
 	m_pStateMachineCom->Set_State(STATE::IDLE);

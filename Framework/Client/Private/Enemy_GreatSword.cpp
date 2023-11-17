@@ -60,7 +60,7 @@ void CEnemy_GreatSword::Tick(_float fTimeDelta)
 {
 	if (true == m_bFirstDrop)
 	{
-		m_pCurNavigationCom->Set_toCell(6, m_pTransformCom);
+		m_pCurNavigationCom->Set_toCell(38, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
 	
@@ -76,8 +76,6 @@ void CEnemy_GreatSword::Tick(_float fTimeDelta)
 		if (m_fDissolveDuraton < m_fDissolveTime)
 			m_IsActive = false;
 	}
-		
-
 	/* 작동이 멈추면 리턴, 데드 스테이트 틱에서 꺼지니까 여기가 맞을거다 */
 	if (false == m_IsActive)
 		return;
