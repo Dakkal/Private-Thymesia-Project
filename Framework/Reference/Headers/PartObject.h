@@ -13,6 +13,7 @@ public:
 		PARTS				ePart = { PARTS::_END };
 		class CTransform*	pParentTransform = { nullptr };
 		class CBinBone*		pSocketBone = { nullptr };
+		class CBinBone*		pWeaponSocketPivot = { nullptr };
 		_matrix				SocketPivot;
 
 		CBounding_Frustrum::BOUNDING_FRUSTRUM_DESC FrustrumDesc;
@@ -38,7 +39,7 @@ public:
 	_bool			Is_AnimOverKeyFrame(_uint iIndex);
 	_bool			IsAnimationEnd();
 	const _bool&	IsAnimChange();
-	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset = false, _uint iStartKeyFrame = 0, _float fChangeDuration = 0.2f);
+	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset = false, _uint iStartKeyFrame = 0, _float fRootAnimDist = 0.55f,_float fChangeDuration = 0.2f);
 	void			Set_First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
 	void			Set_Anim_TargetPos(_vector vTargetPos) { m_vTargetPos = vTargetPos; }
 
@@ -54,6 +55,7 @@ protected:
 	PARTS					m_ePart = { PARTS::_END };
 	class CTransform*		m_pParentTransform = { nullptr };
 	class CBinBone*			m_pSocketBone = { nullptr };
+	class CBinBone*			m_pWeaponSocketPivot = { nullptr };
 	_matrix					m_SocketPivotMatrix;
 	_matrix					m_WorldMatrix;
 	_vector					m_vTargetPos = { XMVectorZero() };

@@ -95,7 +95,7 @@ STATE CState_Lockon_Parry::Tick(const _float& fTimeDelta)
 	else
 		eState = m_eState;
 
-	if (5 <= m_pOwnerBodyPart->Get_CurKeyFrameNumb() &&
+	if (2 <= m_pOwnerBodyPart->Get_CurKeyFrameNumb() &&
 		25 >= m_pOwnerBodyPart->Get_CurKeyFrameNumb())
 	{
 		dynamic_cast<CPlayer*>(m_pRealOwner)->Set_Parry(true);

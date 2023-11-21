@@ -36,8 +36,9 @@ public:
 	virtual void OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
 public:
-	CTransform* Get_PlayerTransform() const { return m_pPlayerTransform; }
-	void		Set_LookPlayer(_bool bIsLook) { m_bIsLookPlayer = bIsLook; }
+	CTransform*		Get_PlayerTransform() const { return m_pPlayerTransform; }
+	void			Set_LookPlayer(_bool bIsLook) { m_bIsLookPlayer = bIsLook; }
+	const _bool&	Is_LookPlayer()			const { return m_bIsLookPlayer; }
 
 public:
 	void	Out_Player(_float fTimeDelta);

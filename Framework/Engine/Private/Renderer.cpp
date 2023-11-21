@@ -224,6 +224,8 @@ HRESULT CRenderer::Render_LightAcc()
 	/* 다시 장치의 0번째 소켓에 백 버퍼를 올린다. */
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_Deferred()

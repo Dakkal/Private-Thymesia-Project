@@ -25,7 +25,7 @@ STATE CState_Lockon_Attack::Tick(const _float& fTimeDelta)
 	if (nullptr == pTarget)
 		return STATE::IDLE;
 
-	if (true == m_pRealOwner->Is_Hit())
+	if (true == m_pRealOwner->Is_Hit() || true == m_pRealOwner->Is_Parried())
 		return STATE::HIT;
 
 	CComponent* pCom = pTarget->Get_Component(TEXT("Com_Transform"));
@@ -87,7 +87,7 @@ STATE CState_Lockon_Attack::Tick(const _float& fTimeDelta)
 	}
 	else if (true == m_bAttackRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f, false, 10);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f, false, 8);
 		m_IsKeepAttack = false;
 	}
 	else

@@ -20,6 +20,7 @@ public:
 	void			Set_RootPos(const _vector RootPos) { m_RootPos = RootPos;}
 
 	string			Get_BoneName() const { return m_strName; }
+	_matrix			Get_Transform() const { return m_TransformationMatrix; }
 	_matrix			Get_CombinedTransform() const { return m_ComBinedTransformationMatrix; }
 	_matrix			Get_RootCombinedTransform() const { return m_RootCombinedMatrix; }
 	_vector			Get_RootPos() { return m_RootPos; }

@@ -51,7 +51,7 @@ STATE CState_Hit_Halberd::Tick(const _float& fTimeDelta)
 	if (m_pRealOwner->Is_Hit())
 	{
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		if (true == pGameInstance->Random_Coin(0.2f))
+		if (true == pGameInstance->Random_Coin(0.1f))
 		{
 			RELEASE_INSTANCE(CGameInstance);
 			return STATE::PARRY;
@@ -109,7 +109,7 @@ void CState_Hit_Halberd::Enter_State()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == pGameInstance->Random_Coin(0.2f))
+	if (true == pGameInstance->Random_Coin(0.1f))
 	{
 		m_bParry = true;
 	}

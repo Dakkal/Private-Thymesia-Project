@@ -74,16 +74,29 @@ HRESULT CWeapon_Player_Dagger::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	_bool	Is_Normal, Is_ORM;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		Is_Normal = Is_ORM = true;
+
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
+			Is_Normal = false;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
+		if (true == Is_Normal)
+		{
+			if (FAILED(m_pShaderCom->Begin(1)))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(0)))
+				return E_FAIL;
+		}
+		
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;

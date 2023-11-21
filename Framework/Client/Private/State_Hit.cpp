@@ -41,14 +41,61 @@ STATE CState_Hit::Tick(const _float& fTimeDelta)
 			m_bRight_Hit = true;
 		}
 	}
-	else if (m_pOwnerBodyPart->IsAnimationEnd())
+	else
 	{
-		CGameObject* pTarget = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy();
-		if (nullptr == pTarget)
-			return STATE::IDLE;
-		else
-			return STATE::LOCK_IDLE;
+		if (m_pOwnerBodyPart->IsAnimationEnd())
+		{
+			CGameObject* pTarget = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy();
+			if (nullptr == pTarget)
+				return STATE::IDLE;
+			else
+				return STATE::LOCK_IDLE;
+		}
+		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(15))
+		{
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
+			{
+				CGameObject* pTarget = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy();
+				if (nullptr == pTarget)
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return STATE::PARRY;
+				}
+				else
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return STATE::LOCK_PARRY;
+				}
+			}
+			
+			RELEASE_INSTANCE(CGameInstance);
+		}
+		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(20))
+		{
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
+			{
+				CGameObject* pTarget = dynamic_cast<CPlayer*>(m_pRealOwner)->Get_TargetEnemy();
+				if (nullptr == pTarget)
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return STATE::AVOID;
+				}
+				else
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return STATE::LOCK_AVOID;
+				}
+			}
+
+			RELEASE_INSTANCE(CGameInstance);
+		}
+		
 	}
+	
 		
 
 
@@ -72,6 +119,14 @@ void CState_Hit::Reset_State()
 void CState_Hit::Enter_State()
 {
 	m_pRealOwner->Set_Move(false);
+
+	if (true == m_pRealOwner->Is_Parried())
+	{
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 85, 2.f);
+		m_pRealOwner->Set_Parried(false);
+		return;
+	}
+
 
 	if (true == m_bRight_Hit)
 	{

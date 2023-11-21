@@ -105,7 +105,7 @@ HRESULT CBinModel::First_Set_Animation(_bool isLoop, _uint iAnimationIndex, _flo
 	return S_OK;
 }
 
-HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _bool bWantReset, _uint iStartNumKeyFrames, _float fChangeDuration)
+HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAnimSpeed, _bool bWantReset, _uint iStartNumKeyFrames, _float fRooAnimDist, _float fChangeDuration)
 {
 	if (false == m_bIsFirstAnim)
 	{
@@ -118,19 +118,33 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAn
 
 		return S_OK;
 	}
+
 	if (true == bWantReset && iAnimationIndex == m_iCurAnimIndex)
 	{
-		m_bIsAnimChange = false;
+		m_bWanttoReset = bWantReset;
 
-		m_Animations[m_iCurAnimIndex]->Reset();
-		m_Animations[m_iCurAnimIndex]->Set_Loop(isLoop);
+		m_bIsAnimChange = true;;
+		
+		m_bIsNextAnimLoop = isLoop;
+		m_iNextStartNumKeyFrames = iStartNumKeyFrames;
+
+		m_fChangeTrackPosition = 0.f;
+		m_fChangeDuration = fChangeDuration;
+
 		m_Animations[m_iCurAnimIndex]->Set_AnimSpeed(fAnimSpeed);
+
+		CurChannels = m_Animations[m_iCurAnimIndex]->Get_Channels();
 
 		m_PrevRootPos = { 0.f, 0.f, 0.f, 1.f };
 		m_CurRootPos = { 0.f, 0.f, 0.f, 1.f };
 
 		return S_OK;
 	}
+	else
+	{
+		m_bWanttoReset = false;
+	}
+
 	if (true == m_bIsAnimChange && iAnimationIndex == m_iCurAnimIndex)
 	{
 		m_bIsAnimChange = false;
@@ -156,12 +170,14 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAn
 	m_Animations[m_iNextAnimIndex]->Reset();
 	m_Animations[m_iNextAnimIndex]->Set_AnimSpeed(fAnimSpeed);
 
+	m_fRooAnimDist = fRooAnimDist;
+
 	return S_OK;
 }
 
 HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 {
-	if (0.f == m_fChangeTrackPosition)
+	if (0.f == m_fChangeTrackPosition && false == m_bWanttoReset)
 	{
 		m_Animations[m_iNextAnimIndex]->Set_StartKeyFrames(m_iNextStartNumKeyFrames, fTimeDelta);
 	}
@@ -175,12 +191,24 @@ HRESULT CBinModel::Change_Animation(_float fDuration, _float fTimeDelta)
 	for (size_t i = 0; i < CurChannels.size(); i++)
 	{
 		KEYFRAME CurKeyframe = CurChannels[i]->Get_CurKeyFrame();
-		KEYFRAME NextKeyframe = NextChannels[i]->Get_CurKeyFrame();
+		KEYFRAME NextKeyframe;
+		if (true == m_bWanttoReset)
+		{
+			NextKeyframe = CurChannels[i]->Get_KeyFrames().front();
+		}
+		else
+		{
+			NextKeyframe = NextChannels[i]->Get_CurKeyFrame();
+		}
+		
 
 		while (m_fChangeTrackPosition >= fDuration)
 		{
 			m_bIsAnimChange = false;
-			m_iCurAnimIndex = m_iNextAnimIndex;
+
+			if(false == m_bWanttoReset)
+				m_iCurAnimIndex = m_iNextAnimIndex;
+
 			m_Animations[m_iCurAnimIndex]->Reset();
 			m_Animations[m_iCurAnimIndex]->Set_Loop(m_bIsNextAnimLoop);
 			m_Animations[m_iCurAnimIndex]->Set_StartKeyFrames(m_iNextStartNumKeyFrames, fTimeDelta);
@@ -261,9 +289,21 @@ HRESULT CBinModel::Bind_MaterialTexture(CShader* pShader, const char* pConstantN
 		return E_FAIL;
 
 	if (nullptr == m_Materials[iMaterialIndex].pTextures[eType])
-		return S_OK;
+		return E_FAIL;
 
 	return m_Materials[iMaterialIndex].pTextures[eType]->Bind_ShaderResource(pShader, pConstantName, 0);
+}
+
+const string& CBinModel::Get_MaterialName(_uint iMeshIndex)
+{
+	if (iMeshIndex >= m_iNumMeshes)
+		return string();
+
+	_uint iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
+	if (iMaterialIndex >= m_iNumMaterials)
+		return string();
+
+	return m_Materials[iMaterialIndex].strMaterialName;
 }
 
 HRESULT CBinModel::Render(_uint iMeshIndex)
@@ -379,7 +419,7 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 	vWorldDir.y *= -1;
 	vWorldDir.Normalize();
 
-	_float fDist = vDir.Length() * 0.55f;
+	_float fDist = vDir.Length() * m_fRooAnimDist;
 
 	vPos += vWorldDir * fDist * fTimeDelta;
 
@@ -477,9 +517,10 @@ HRESULT CBinModel::Ready_Materials(const SAVE_MATERIAL strTexture, const wstring
 	for (size_t i = 0; i < m_iNumMaterials; i++)
 	{
 		MESH_MATERIAL	MeshMaterial;
-		ZeroMemory(&MeshMaterial, sizeof MeshMaterial);
 
 		SAVE_MATERIAL_INFO tMaterialInfo = strTexture.vecMaterialPaths[i];
+
+		MeshMaterial.strMaterialName = tMaterialInfo.strMaterialName;
 
 		for (size_t j = 0; j < AI_TEXTURE_TYPE_MAX; j++)
 		{

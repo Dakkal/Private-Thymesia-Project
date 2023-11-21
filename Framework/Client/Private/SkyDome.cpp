@@ -59,7 +59,7 @@ HRESULT CSkyDome::Render()
 	{
 		m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
 
-		m_pShaderCom->Begin(1);
+		m_pShaderCom->Begin(6);
 
 		m_pModelCom->Render(i);
 	}

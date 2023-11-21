@@ -101,6 +101,10 @@ _bool CCell::IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex)
 			{
 				m_vSlideNormal = vDest;
 			}
+			else
+			{
+				m_vSlideNormal = { -1.f, -1.f, -1.f, -1.f };
+			}
 
 			pNeighborIndex = m_iNeighborIndicies[i];
 			return true;

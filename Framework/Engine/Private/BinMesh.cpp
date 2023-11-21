@@ -43,11 +43,14 @@ HRESULT CBinMesh::Initialize_Prototype(CBinModel::TYPE eModelType, SAVE_MESHINFO
 	{
 		pVertices[i].vPosition = tStaticMesh.vecVtxMeshes[i].vPosition;
 		pVertices[i].vPosition = XMVector3TransformCoord(pVertices[i].vPosition, PivotMatrix);
+
 		pVertices[i].vNormal = tStaticMesh.vecVtxMeshes[i].vNormal;
 		pVertices[i].vNormal = XMVector3TransformNormal(pVertices[i].vNormal, PivotMatrix);
-		pVertices[i].vTexcoord = tStaticMesh.vecVtxMeshes[i].vTexcoord;
-		pVertices[i].vTangent = tStaticMesh.vecVtxMeshes[i].vTangent;
 
+		pVertices[i].vTexcoord = tStaticMesh.vecVtxMeshes[i].vTexcoord;
+
+		pVertices[i].vTangent = tStaticMesh.vecVtxMeshes[i].vTangent;
+		pVertices[i].vTangent = XMVector3TransformNormal(pVertices[i].vTangent, PivotMatrix);
 		m_BufferPoses.push_back(pVertices[i].vPosition);
 	}
 

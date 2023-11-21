@@ -63,6 +63,7 @@ typedef struct tagSave_Mesh
 // 머테리얼
 typedef struct  tagSave_Material_Info
 {
+	string		   strMaterialName;
 	vector<string> FilePaths;
 
 }SAVE_MATERIAL_INFO;

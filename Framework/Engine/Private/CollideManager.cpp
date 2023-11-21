@@ -1,6 +1,7 @@
 #include "CollideManager.h"
 #include "Collider.h"
 #include "GameObject.h"
+#include "PartObject.h"
 #include "GameInstance.h"
 
 IMPLEMENT_SINGLETON(CCollideManager);
@@ -48,7 +49,7 @@ void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eTyp
 			{
 				if (iter->second) // 이전에도 충돌
 				{
-					if (nullptr == pObj1 || nullptr == pObj2) // 둘 중 하나 삭제 예정
+					if (false == pObj1->Is_Active() || false == pObj2->Is_Active()) // 둘 중 하나 삭제 예정
 					{
 						pCol1->OnCollision_Exit(pObj2, fTimedelta);
 						pCol2->OnCollision_Exit(pObj1, fTimedelta);
@@ -62,7 +63,7 @@ void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eTyp
 				}
 				else // 이번에 충돌
 				{
-					if (nullptr != pObj1 && nullptr != pObj2) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
+					if (true == pObj1->Is_Active() && true == pObj2->Is_Active()) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
 					{
 						pCol1->OnCollision_Enter(pObj2, fTimedelta);
 						pCol2->OnCollision_Enter(pObj1, fTimedelta);
@@ -113,7 +114,7 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 		{
 			if (iter->second) // 이전에도 충돌
 			{
-				if (nullptr == _pObj1 || nullptr == pPart2.second) // 둘 중 하나 삭제 예정
+				if (false == _pObj1->Is_Active() || false == dynamic_cast<CPartObject*>(pPart2.second)->Get_PartOwner()->Is_Active()) // 둘 중 하나 삭제 예정
 				{
 					_pObj1Col->OnCollision_Exit(pPart2.second, fTimedelta);
 					pCol2->OnCollision_Exit(_pObj1, fTimedelta);
@@ -127,7 +128,7 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 			}
 			else // 이번에 충돌
 			{
-				if (nullptr != _pObj1 && nullptr != pPart2.second) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
+				if (true == _pObj1->Is_Active() && true == dynamic_cast<CPartObject*>(pPart2.second)->Get_PartOwner()->Is_Active()) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
 				{
 					_pObj1Col->OnCollision_Enter(pPart2.second, fTimedelta);
 					pCol2->OnCollision_Enter(_pObj1, fTimedelta);
@@ -161,7 +162,7 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 		{
 			if (iter->second) // 이전에도 충돌
 			{
-				if (nullptr == _pObj2 || nullptr == pPart1.second) // 둘 중 하나 삭제 예정
+				if (false == _pObj2->Is_Active() || false == dynamic_cast<CPartObject*>(pPart1.second)->Get_PartOwner()->Is_Active()) // 둘 중 하나 삭제 예정
 				{
 					_pObj2Col->OnCollision_Exit(pPart1.second, fTimedelta);
 					pCol1->OnCollision_Exit(_pObj2, fTimedelta);
@@ -175,7 +176,7 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 			}
 			else // 이번에 충돌
 			{
-				if (nullptr != _pObj2 && nullptr != pPart1.second) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
+				if (true == _pObj2->Is_Active() && true == dynamic_cast<CPartObject*>(pPart1.second)->Get_PartOwner()->Is_Active()) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
 				{
 					_pObj2Col->OnCollision_Enter(pPart1.second, fTimedelta);
 					pCol1->OnCollision_Enter(_pObj2, fTimedelta);
@@ -213,7 +214,8 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 			{
 				if (iter->second) // 이전에도 충돌
 				{
-					if (nullptr == pPart1.second || nullptr == pPart2.second) // 둘 중 하나 삭제 예정
+					if (false == dynamic_cast<CPartObject*>(pPart1.second)->Get_PartOwner()->Is_Active() || 
+						false == dynamic_cast<CPartObject*>(pPart2.second)->Get_PartOwner()->Is_Active()) // 둘 중 하나 삭제 예정
 					{
 						pCol1->OnCollision_Exit(pPart2.second, fTimedelta);
 						pCol2->OnCollision_Exit(pPart1.second, fTimedelta);
@@ -227,7 +229,8 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 				}
 				else // 이번에 충돌
 				{
-					if (nullptr != pPart1.second && nullptr != pPart2.second) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
+					if (true == dynamic_cast<CPartObject*>(pPart1.second)->Get_PartOwner()->Is_Active() && 
+						true == dynamic_cast<CPartObject*>(pPart2.second)->Get_PartOwner()->Is_Active()) // 둘다 삭제될 예정이 아닐 때만 충돌 처리
 					{
 						pCol1->OnCollision_Enter(pPart2.second, fTimedelta);
 						pCol2->OnCollision_Enter(pPart1.second, fTimedelta);

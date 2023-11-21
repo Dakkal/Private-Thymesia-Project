@@ -75,8 +75,12 @@ HRESULT CBody_Halberd::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	_bool	Is_Normal, Is_ORM;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		Is_Normal = Is_ORM = true;
+
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
 			return E_FAIL;
 
@@ -84,17 +88,34 @@ HRESULT CBody_Halberd::Render()
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
+			Is_Normal = false;
 
 		if (true == m_pOwner->Is_Dead())
 		{
-			if (FAILED(m_pShaderCom->Begin(3)))
-				return E_FAIL;
+			if (true == Is_Normal)
+			{
+				if (FAILED(m_pShaderCom->Begin(7)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pShaderCom->Begin(6)))
+					return E_FAIL;
+			}
+			
 		}
 		else
 		{
-			if (FAILED(m_pShaderCom->Begin(0)))
-				return E_FAIL;
+			if (true == Is_Normal)
+			{
+				if (FAILED(m_pShaderCom->Begin(1)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pShaderCom->Begin(0)))
+					return E_FAIL;
+			}
 		}
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -165,6 +186,7 @@ void CBody_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDe
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom();
 
 	switch (eOwnerType)
 	{
@@ -174,7 +196,7 @@ void CBody_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDe
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -208,7 +230,7 @@ void CBody_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDe
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -234,6 +256,7 @@ void CBody_Halberd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDel
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom();
 
 	switch (eOwnerType)
 	{
@@ -243,7 +266,7 @@ void CBody_Halberd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDel
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -277,7 +300,7 @@ void CBody_Halberd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDel
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;

@@ -137,8 +137,12 @@ void CHitBox_GreatSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fT
 		case Engine::CGameObject::BODY:
 			break;
 		case Engine::CGameObject::WEAPON_R:
-			if (true == pPartOwner->Is_Attack())
+			if (true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
 				m_pOwner->Set_Hit(true);
+
+				m_bJustHitOne = true;
+			}
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
@@ -201,6 +205,15 @@ void CHitBox_GreatSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTi
 		case Engine::CGameObject::BODY:
 			break;
 		case Engine::CGameObject::WEAPON_R:
+			if (true == m_bJustHitOne && false == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_bJustHitOne = false;
+			}
+			if (false == m_bJustHitOne && true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_pOwner->Set_Hit(true);
+				m_bJustHitOne = true;
+			}
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;

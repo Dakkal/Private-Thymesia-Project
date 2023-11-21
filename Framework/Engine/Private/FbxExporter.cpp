@@ -154,7 +154,7 @@ HRESULT CFbxExporter::Export_Static_Mesh(const aiScene* pAIScene, CAsFileUtils* 
     {
         aiMesh* pMesh = pAIScene->mMeshes[i];
 
-        pFile->Write<string>(pAIScene->mMaterials[pMesh->mMaterialIndex]->GetName().data);
+        pFile->Write<string>(pMesh->mName.data);
         pFile->Write<_uint>(pMesh->mMaterialIndex);
         pFile->Write<_uint>(pMesh->mNumFaces);
         pFile->Write<_uint>(pMesh->mNumVertices);
@@ -285,6 +285,7 @@ HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, const string& str
     for (size_t i = 0; i < pAIScene->mNumMaterials; i++)
     {
         aiMaterial* pMaterial = pAIScene->mMaterials[i];
+        pFile->Write<string>(pMaterial->GetName().data);
 
         for (size_t j = 0; j < AI_TEXTURE_TYPE_MAX; j++)
         {
@@ -306,6 +307,12 @@ HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, const string& str
                 char			szFileName[MAX_PATH] = "";
                 char			szExt[MAX_PATH] = "";
                 _splitpath_s(strTexturePath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
+
+                if (j == aiTextureType::aiTextureType_NORMALS)
+                {
+                    string Ext = ".png";
+                    memcpy(szExt, Ext.c_str(), sizeof(MAX_PATH));
+                }
 
                 char			szFullPath[MAX_PATH] = "";
                 strcpy_s(szFullPath, szDrive);
@@ -571,6 +578,7 @@ HRESULT CFbxExporter::Import_Material(CAsFileUtils* pFile)
     for (size_t i = 0; i < ModelMaterial.iNumMaterial; i++)
     {
         SAVE_MATERIAL_INFO MaterilInfo;
+        pFile->Read(MaterilInfo.strMaterialName);
 
         for (size_t j = 0; j < AI_TEXTURE_TYPE_MAX; j++)
         {

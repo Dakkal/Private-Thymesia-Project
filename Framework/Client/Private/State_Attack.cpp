@@ -23,6 +23,9 @@ STATE CState_Attack::Tick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	if (true == m_pRealOwner->Is_Hit() || true == m_pRealOwner->Is_Parried())
+		return STATE::HIT;
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	
 	if (true == m_bIdle  && m_pOwnerBodyPart->IsAnimationEnd())
@@ -64,6 +67,26 @@ STATE CState_Attack::Tick(const _float& fTimeDelta)
 		eState = m_eState;
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(8))
+		m_pRealOwner->Set_Attack(true);
+	else if (true == m_bAttack2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
+		m_pRealOwner->Set_Attack(true);
+	else if (true == m_bAttack3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
+		m_pRealOwner->Set_Attack(true);
+	else if (true == m_bAttackRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
+		m_pRealOwner->Set_Attack(true);
+
+
+	if (true == m_bAttack1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
+		m_pRealOwner->Set_Attack(false);
+	else if (true == m_bAttack2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
+		m_pRealOwner->Set_Attack(false);
+	else if (true == m_bAttack3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+		m_pRealOwner->Set_Attack(false);
+	else if (true == m_bAttackRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
+		m_pRealOwner->Set_Attack(false);
+
 
 	return eState;
 }

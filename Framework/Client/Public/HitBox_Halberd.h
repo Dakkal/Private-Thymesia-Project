@@ -30,6 +30,9 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+private:
+	_bool	m_bJustHitOne = { false };
+
 public:
 	static CHitBox_Halberd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
 	virtual CGameObject* Clone(void* pArg) override;

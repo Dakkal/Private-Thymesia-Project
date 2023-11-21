@@ -59,9 +59,9 @@ const _bool& CPartObject::IsAnimChange()
 	return m_pModelCom->Is_AnimChange();
 }
 
-void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset, _uint iStartKeyFrame, _float fChangeDuration)
+void CPartObject::Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset, _uint iStartKeyFrame, _float fRootAnimDist, _float fChangeDuration)
 {
-	m_pModelCom->Set_Animation(isLoop, iAnimIndex, fAnimSpeed, bWantReset, iStartKeyFrame, fChangeDuration);
+	m_pModelCom->Set_Animation(isLoop, iAnimIndex, fAnimSpeed, bWantReset, iStartKeyFrame, fRootAnimDist, fChangeDuration);
 }
 
 void CPartObject::Set_First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed)
@@ -88,6 +88,7 @@ HRESULT CPartObject::Initialize(void* pArg)
 		m_pParentTransform = pPartDesc->pParentTransform;
 		Safe_AddRef(m_pParentTransform);
 		m_pSocketBone = pPartDesc->pSocketBone;
+		m_pWeaponSocketPivot = pPartDesc->pWeaponSocketPivot;
 		Safe_AddRef(m_pSocketBone);
 
 		m_SocketPivotMatrix = pPartDesc->SocketPivot;

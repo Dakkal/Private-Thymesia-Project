@@ -43,6 +43,15 @@ HRESULT CLevel_GamePlay::Initialize()
 
 HRESULT CLevel_GamePlay::PriorityTick(_float fTimeDelta)
 {
+	/*SetWindowText(g_hWnd, TEXT("게임플레이레벨 입니다."));
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_BOSS, fTimeDelta);
+	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_MONSTER, fTimeDelta);
+
+	RELEASE_INSTANCE(CGameInstance)*/
+
 	return S_OK;
 }
 
@@ -298,11 +307,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_GreatSword"))))
+	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_GreatSword"))))
+		return E_FAIL;*/
+
+	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Halberd"))))
+		return E_FAIL;*/
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Shield"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Halberd"))))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_TwinSword"))))
+		return E_FAIL;*/
 
 	RELEASE_INSTANCE(CGameInstance);
 

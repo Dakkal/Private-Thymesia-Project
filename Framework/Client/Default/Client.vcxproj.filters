@@ -190,6 +190,45 @@
     <Filter Include="02.GameObject\Object\Monster\Enemy_Halberd\State">
       <UniqueIdentifier>{b30ddcad-7fee-4019-b3ec-98b2758fab8f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Land\Sub_Building">
+      <UniqueIdentifier>{b6ae6dab-a734-44fd-a2fb-433afa22e8bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Shield">
+      <UniqueIdentifier>{7b91ee9d-51e8-4a84-ab77-e3c231c12ab6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_TwinSword">
+      <UniqueIdentifier>{02ed15bc-6948-44d8-8954-dc459bd7e17b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Shield\State">
+      <UniqueIdentifier>{b0fb2948-7bac-404b-ba65-92a30ed55533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Shield\Part">
+      <UniqueIdentifier>{dc2ac3cc-4127-430d-bddb-03d8b18b54b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Shield\Part\Body">
+      <UniqueIdentifier>{9b1c8a02-305a-4737-9f32-0ef34f03886b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Shield\Part\Weapon">
+      <UniqueIdentifier>{0327881c-80d9-40f2-95c2-16285a9aa88e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_Shield\Part\HitBox">
+      <UniqueIdentifier>{59fecea3-54a4-4d08-9303-196f5299dd1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_TwinSword\Part">
+      <UniqueIdentifier>{b94deffc-b52d-4c09-99bd-5be3d7f86fe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_TwinSword\State">
+      <UniqueIdentifier>{b69d969f-8334-4522-b12b-2b23e6fb7edd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_TwinSword\Part\Body">
+      <UniqueIdentifier>{86963a5e-23fb-447b-9d4e-ec1d496b09bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_TwinSword\Part\HitBox">
+      <UniqueIdentifier>{dfe8e31e-4eaf-41f9-8418-674f899aafe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Enemy_TwinSword\Part\Weapon">
+      <UniqueIdentifier>{d8696275-1251-4255-a23a-3de66fab7079}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -434,6 +473,87 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Run_Halberd.cpp">
       <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sub_Building.cpp">
+      <Filter>02.GameObject\Object\Porps\Land\Sub_Building</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\Part\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitBox_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\Part\HitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\Part\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\Part\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitBox_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\Part\HitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\Part\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Sword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\Part\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_TwinSword2.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\Part\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Parry_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Avoid_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Attack_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Walk_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dead_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Hit_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Parry_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Avoid_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Attack_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Walk_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dead_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Hit_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Run_Shield.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Run_TwinSword.cpp">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -694,6 +814,87 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Run_Halberd.h">
       <Filter>02.GameObject\Object\Monster\Enemy_Halberd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sub_Building.h">
+      <Filter>02.GameObject\Object\Porps\Land\Sub_Building</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\Part\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitBox_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\Part\HitBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\Part\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\Part\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitBox_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\Part\HitBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\Part\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Sword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\Part\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_TwinSword2.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\Part\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Attack_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Run_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Parry_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Avoid_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dead_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Hit_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Walk_Shield.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_Shield\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Attack_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Run_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Parry_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Avoid_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dead_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Hit_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Walk_TwinSword.h">
+      <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

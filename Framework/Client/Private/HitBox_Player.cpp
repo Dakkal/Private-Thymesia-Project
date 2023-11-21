@@ -134,31 +134,24 @@ void CHitBox_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 		case Engine::CGameObject::BODY:
 			break;
 		case Engine::CGameObject::WEAPON_R:
-			if (true == pPartOwner->Is_Attack())
+			if (true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
 				m_pOwner->Set_Hit(true);
+
+				m_bJustHitOne = true;
+			}
 			break;
 		case Engine::CGameObject::WEAPON_L:
+			if (true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_pOwner->Set_Hit(true);
+
+				m_bJustHitOneSub = true;
+			}
 			break;
 		case Engine::CGameObject::SIGHT:
 			break;
 
-			break;
-		}
-	}
-	break;
-	case OBJECT_TYPE::PORP:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		default:
 			break;
 		}
 	}
@@ -170,10 +163,20 @@ void CHitBox_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 		case Engine::CGameObject::BODY:
 			break;
 		case Engine::CGameObject::WEAPON_R:
-			if (true == pPartOwner->Is_Attack())
+			if (true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
 				m_pOwner->Set_Hit(true);
+
+				m_bJustHitOne = true;
+			}
 			break;
 		case Engine::CGameObject::WEAPON_L:
+			if (true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_pOwner->Set_Hit(true);
+
+				m_bJustHitOneSub = true;
+			}
 			break;
 		case Engine::CGameObject::SIGHT:
 			break;
@@ -200,27 +203,28 @@ void CHitBox_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::BODY:
 			break;
 		case Engine::CGameObject::WEAPON_R:
+			if (true == m_bJustHitOne && false == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_bJustHitOne = false;
+			}
+			if (false == m_bJustHitOne && true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_pOwner->Set_Hit(true);
+				m_bJustHitOne = true;
+			}
 			break;
 		case Engine::CGameObject::WEAPON_L:
+			if (true == m_bJustHitOneSub && false == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_bJustHitOneSub = false;
+			}
+			if (false == m_bJustHitOneSub && true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_pOwner->Set_Hit(true);
+				m_bJustHitOneSub = true;
+			}
 			break;
 		case Engine::CGameObject::SIGHT:
-			break;
-		}
-	}
-	break;
-	case OBJECT_TYPE::PORP:
-	{
-		switch (ePart)
-		{
-		case Engine::CGameObject::BODY:
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		default:
 			break;
 		}
 	}
@@ -232,8 +236,26 @@ void CHitBox_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::BODY:
 			break;
 		case Engine::CGameObject::WEAPON_R:
+			if (true == m_bJustHitOne && false == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_bJustHitOne = false;
+			}
+			if (false == m_bJustHitOne && true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_pOwner->Set_Hit(true);
+				m_bJustHitOne = true;
+			}
 			break;
 		case Engine::CGameObject::WEAPON_L:
+			if (true == m_bJustHitOneSub && false == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_bJustHitOneSub = false;
+			}
+			if (false == m_bJustHitOneSub && true == pPartOwner->Is_Attack() && false == m_pOwner->Is_Hit())
+			{
+				m_pOwner->Set_Hit(true);
+				m_bJustHitOneSub = true;
+			}
 			break;
 		case Engine::CGameObject::SIGHT:
 			break;
@@ -260,8 +282,10 @@ void CHitBox_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::BODY:
 			break;
 		case Engine::CGameObject::WEAPON_R:
+			m_bJustHitOne = false;
 			break;
 		case Engine::CGameObject::WEAPON_L:
+			m_bJustHitOneSub = false;
 			break;
 		case Engine::CGameObject::SIGHT:
 			break;
@@ -292,8 +316,10 @@ void CHitBox_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::BODY:
 			break;
 		case Engine::CGameObject::WEAPON_R:
+			m_bJustHitOne = false;
 			break;
 		case Engine::CGameObject::WEAPON_L:
+			m_bJustHitOneSub = false;
 			break;
 		case Engine::CGameObject::SIGHT:
 			break;

@@ -27,6 +27,9 @@ STATE CState_Lockon_ParrySuccess::Tick(const _float& fTimeDelta)
 	if (nullptr == pTarget)
 		return STATE::IDLE;
 
+	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(10) && true == m_pRealOwner->Is_Hit())
+		return STATE::HIT;
+
 	CComponent* pCom = pTarget->Get_Component(TEXT("Com_Transform"));
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pCom);
 
@@ -113,7 +116,7 @@ STATE CState_Lockon_ParrySuccess::Key_Input(const _float& fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(10))
+	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(1))
 	{
 		if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
 		{
@@ -121,7 +124,7 @@ STATE CState_Lockon_ParrySuccess::Key_Input(const _float& fTimeDelta)
 			return STATE::LOCK_PARRY;
 		}
 	}
-	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(20))
+	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(10))
 	{
 		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
 		{

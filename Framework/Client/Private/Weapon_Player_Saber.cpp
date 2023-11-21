@@ -5,6 +5,8 @@
 #include "BinBone.h"
 #include "Collider.h"
 #include "Bounding_OBB.h"
+#include "StateMachine.h"
+#include "PartObject.h"
 
 CWeapon_Player_Saber::CWeapon_Player_Saber(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -73,16 +75,28 @@ HRESULT CWeapon_Player_Saber::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	_bool	Is_Normal, Is_ORM;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		Is_Normal = Is_ORM = true;
+
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
+			Is_Normal = false;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
+		if (true == Is_Normal)
+		{
+			if (FAILED(m_pShaderCom->Begin(1)))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(0)))
+				return E_FAIL;
+		}
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
@@ -165,24 +179,16 @@ void CWeapon_Player_Saber::OnCollision_Part_Enter(CGameObject* _pColObj, _float 
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		}
-	}
-	break;
-	case OBJECT_TYPE::PORP:
-	{
-		switch (ePart)
+		case Engine::CGameObject::HITBOX:
 		{
-		case Engine::CGameObject::BODY:
-			break;
-		case Engine::CGameObject::WEAPON_R:
-			break;
-		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
-			break;
-		default:
+			CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+			CStateMachine* pPartOwnerState = dynamic_cast<CStateMachine*>(pPartOwner->Get_Component(TEXT("Com_StateMachine")));
+
+			STATE ePartOwnerState = pPartOwnerState->Get_CurState();
+
+			if (true == m_pOwner->Is_Attack() && STATE::PARRY == ePartOwnerState)
+				m_pOwner->Set_Parried(true);
+		}
 			break;
 		}
 	}
@@ -197,7 +203,16 @@ void CWeapon_Player_Saber::OnCollision_Part_Enter(CGameObject* _pColObj, _float 
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
+		{
+			CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
+			CStateMachine* pPartOwnerState = dynamic_cast<CStateMachine*>(pPartOwner->Get_Component(TEXT("Com_StateMachine")));
+
+			STATE ePartOwnerState = pPartOwnerState->Get_CurState();
+
+			if (true == m_pOwner->Is_Attack() && STATE::PARRY == ePartOwnerState)
+				m_pOwner->Set_Parried(true);
+		}
 			break;
 		default:
 			break;
@@ -229,7 +244,15 @@ void CWeapon_Player_Saber::OnCollision_Part_Stay(CGameObject* _pColObj, _float f
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
+		{
+			CStateMachine* pPartOwnerState = dynamic_cast<CStateMachine*>(pPartOwner->Get_Component(TEXT("Com_StateMachine")));
+
+			STATE ePartOwnerState = pPartOwnerState->Get_CurState();
+
+			if (true == m_pOwner->Is_Attack() && STATE::PARRY == ePartOwnerState)
+				m_pOwner->Set_Parried(true);
+		}
 			break;
 		}
 	}
@@ -261,7 +284,15 @@ void CWeapon_Player_Saber::OnCollision_Part_Stay(CGameObject* _pColObj, _float f
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
+		{
+			CStateMachine* pPartOwnerState = dynamic_cast<CStateMachine*>(pPartOwner->Get_Component(TEXT("Com_StateMachine")));
+
+			STATE ePartOwnerState = pPartOwnerState->Get_CurState();
+
+			if (true == m_pOwner->Is_Attack() && STATE::PARRY == ePartOwnerState)
+				m_pOwner->Set_Parried(true);
+		}
 			break;
 		default:
 			break;

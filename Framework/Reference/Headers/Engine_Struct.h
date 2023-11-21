@@ -46,7 +46,8 @@ namespace Engine
 
 	typedef struct tagMeshMaterial
 	{
-		class CTexture*		pTextures[AI_TEXTURE_TYPE_MAX];
+		string				strMaterialName = "";
+		class CTexture*		pTextures[AI_TEXTURE_TYPE_MAX] = { nullptr };
 
 	}MESH_MATERIAL;
 

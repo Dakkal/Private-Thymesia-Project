@@ -68,15 +68,24 @@ HRESULT CStair::Render()
 
 	_uint	iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	
+
+	_bool	Is_Normal, Is_ORM;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		Is_Normal = Is_ORM = true;
+
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
+			Is_Normal = false;
 
-		m_pShaderCom->Begin(0);
+		if(true == Is_Normal)
+			m_pShaderCom->Begin(1);
+		else
+			m_pShaderCom->Begin(0);
 
 		m_pModelCom->Render(i);
 	}

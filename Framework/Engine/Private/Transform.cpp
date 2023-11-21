@@ -156,6 +156,7 @@ void CTransform::Go_Forward(_float fTimeDelta, CNavigation* pNavi)
 
 			if (-1 != vSlider.w)
 				m_vSlide = vSlider;
+
 			Go_Dir(m_vSlide, fTimeDelta, pNavi);
 		}
 
@@ -378,6 +379,7 @@ _bool CTransform::Chase(_vector vPoint, _float fTimeDelta, _float fDis, CNavigat
 
 				if (-1 != vSlider.w)
 					m_vSlide = vSlider;
+
 				Go_Dir(m_vSlide, fTimeDelta, pNavi);
 			}
 

@@ -35,24 +35,30 @@ public:
 public:
     const _bool&          Is_Active()  { return m_IsActive; }
 
-    const _bool&          Is_Remain()  { return m_IsRemain; }
-    const _bool&          Is_Cloned()  { return m_IsCloned; }
-    const _bool&          Is_Dead()    { return m_IsDead; }
-    const _bool&          Is_Hit()     { return m_IsHit; }
-    const _bool&          Is_Attack()  { return m_IsAttack; }
-    const _bool&          Is_OktoHit() { return m_bOktoHit; }
-    const _bool&          Is_Move()    { return m_IsMove; }
-    const _bool&          Is_Cull()    { return m_IsCull; }
+    const _bool&          Is_Remain()       { return m_IsRemain; }
+    const _bool&          Is_Cloned()       { return m_IsCloned; }
+    const _bool&          Is_Dead()         { return m_IsDead; }
+    const _bool&          Is_Hit()          { return m_IsHit; }
+    const _bool&          Is_Attack()       { return m_IsAttack; }
+    const _bool&          Is_SubAttack()    { return m_IsAttack; }
+    const _bool&          Is_OktoHit()      { return m_bOktoHit; }
+    const _bool&          Is_Move()         { return m_IsMove; }
+    const _bool&          Is_Cull()         { return m_IsCull; }
+    const _bool&          Is_Parried()      { return m_IsParried; }
 
 public:
-    void            Set_Active(_bool IsActive)  { m_IsActive = IsActive; }
-    void            Set_Index(_uint iIndex)     { m_iIndex = iIndex; }
+    void            Set_Active(_bool IsActive)      { m_IsActive = IsActive; }
+    void            Set_Index(_uint iIndex)         { m_iIndex = iIndex; }
 
-    void            Set_Dead(_bool IsDead)      { m_IsDead = IsDead; }
-    void            Set_Hit(_bool IsHit)        { m_IsHit = IsHit; }
-    void            Set_Attack(_bool IsAttack)  { m_IsAttack = IsAttack; }
-    void            Set_OktoHit(_bool OktoHit)  { m_bOktoHit = OktoHit; }
-    void            Set_Move(_bool IsMove)      { m_IsMove = IsMove; }
+    void            Set_Dead(_bool IsDead)          { m_IsDead = IsDead; }
+    void            Set_Hit(_bool IsHit)            { m_IsHit = IsHit; }
+
+    void            Set_Attack(_bool IsAttack)      { m_IsAttack = IsAttack; }
+    void            Set_SubAttack(_bool IsSubAttack) { m_IsSubAttack = IsSubAttack; }
+
+    void            Set_OktoHit(_bool OktoHit)      { m_bOktoHit = OktoHit; }
+    void            Set_Move(_bool IsMove)          { m_IsMove = IsMove; }
+    void            Set_Parried(_bool IsParried)    { m_IsParried = IsParried; }
 
 public:
     const _uint&    Get_HP() const              { return m_iHp; }
@@ -91,11 +97,15 @@ protected:
     _bool	    m_IsCloned = { false };
     _bool       m_IsRemain = { false };
     _bool       m_IsDead = { false };
+
     _bool       m_IsAttack = { false };
+    _bool       m_IsSubAttack = { false };
+
     _bool       m_IsHit = { false };
     _bool       m_IsMove = { false };
     _bool       m_bOktoHit = { false };
     _bool       m_IsCull = { false };
+    _bool       m_IsParried = { false };
 
     OBJECT_TYPE m_eObjType = OBJECT_TYPE::_END;
     wstring     m_strObjectName = { TEXT("") };
@@ -107,7 +117,7 @@ protected:
     _float      m_fDissolveTime = { 0.f };
     _float      m_fDissolveDuraton = { 0.f };
 
-    _uint       m_iHp = { 10 };
+    _uint       m_iHp = { 30 };
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);

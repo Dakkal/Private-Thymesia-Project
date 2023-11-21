@@ -89,8 +89,12 @@ HRESULT CBody_Player::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	_bool		Is_Normal, Is_ORM;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		Is_Normal = Is_ORM = true;
+
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
 			return E_FAIL;
 
@@ -98,10 +102,21 @@ HRESULT CBody_Player::Render()
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
+			Is_Normal = false;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
+
+		if (true == Is_Normal)
+		{
+			if (FAILED(m_pShaderCom->Begin(1)))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(0)))
+				return E_FAIL;
+		}
+
+		
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
@@ -194,7 +209,7 @@ void CBody_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDel
 
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pPartOwner->Get_Component(TEXT("Com_Transform")));
-	CNavigation* pNavigation = dynamic_cast<CLandObject*>(pPartOwner)->Get_CurNaviCom();
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
 
@@ -247,7 +262,7 @@ void CBody_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelt
 
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pPartOwner->Get_Component(TEXT("Com_Transform")));
-	CNavigation* pNavigation = dynamic_cast<CLandObject*>(pPartOwner)->Get_CurNaviCom();
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
 
@@ -381,16 +396,6 @@ HRESULT CBody_Player::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
-
-	/* For.Com_Collider_AABB */
-	/*CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
-	AABBDesc.vExtents = _float3(0.45f, 0.85f, 0.45f);
-	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
-	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
-	AABBDesc.vColor = _vector( 0.33f, 0.63f, 0.93f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &AABBDesc)))
-		return E_FAIL;*/
 
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		SphereDesc = {};
 	SphereDesc.vCenter = _float3(0.f, 1.f, 0.f);

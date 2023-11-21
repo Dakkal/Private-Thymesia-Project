@@ -25,39 +25,52 @@ STATE CState_Idle_GreatSword::Tick(const _float& fTimeDelta)
 	if (true == m_pOwnerBodyPart->IsAnimChange())
 		return m_eState;
 
-	STATE eState = m_eState;
-
 	if (true == m_pRealOwner->Is_Hit())
 		return STATE::HIT;
 
-	m_fIdleTime += fTimeDelta;
+	STATE eState = m_eState;
 
-	if (0.1f <= m_fIdleTime)
+	if (false == dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Is_LookPlayer())
 	{
-		_float fMinRushDist = 8.f; _float fMaxRushDist = 10.f;
-		if (fMinRushDist <= dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerDistance() &&
-			fMaxRushDist >= dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerDistance())
-			return STATE::ATTACK;
+		_float fLookDist = 20.f;
+		if (fLookDist >= dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerDistance())
+			dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(true);
+	}
 
-		_float fWalkDist = 4.f;
-		if (fWalkDist < dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerDistance())
-			return STATE::WALK;
-		else
+	_float fActDist = 15.f;
+	if (fActDist >= dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerDistance())
+	{
+		m_fIdleTime += fTimeDelta;
+
+		if (0.1f <= m_fIdleTime)
 		{
-			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+			_float fMinRushDist = 8.f; _float fMaxRushDist = 10.f;
+			if (fMinRushDist <= dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerDistance() &&
+				fMaxRushDist >= dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerDistance())
+				return STATE::ATTACK;
 
-			if (true == pGameInstance->Random_Coin(0.8f))
-			{
-				RELEASE_INSTANCE(CGameInstance);
+			_float fWalkDist = 4.f;
+			if (fWalkDist < dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerDistance())
 				return STATE::WALK;
-			}
 			else
 			{
-				RELEASE_INSTANCE(CGameInstance);
-				return STATE::AVOID;
+				CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+				if (true == pGameInstance->Random_Coin(0.8f))
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return STATE::WALK;
+				}
+				else
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return STATE::AVOID;
+				}
 			}
 		}
 	}
+
+	
 
 	return eState;
 }

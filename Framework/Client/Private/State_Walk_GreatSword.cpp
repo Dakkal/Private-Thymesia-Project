@@ -111,6 +111,9 @@ STATE CState_Walk_GreatSword::WalkState(_float fTimeDelta)
 	CTransform* pTransform = dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerTransform();
 	CNavigation* pNavi = dynamic_cast<CLandObject*>(m_pRealOwner)->Get_CurNaviCom();
 
+	if (nullptr == pTransform)
+		return STATE::IDLE;
+
 	if (false == m_pOwnerTransform->Chase(pTransform->Get_State(CTransform::STATE_POS), fTimeDelta, 4.f, pNavi))
 	{
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

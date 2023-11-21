@@ -6,7 +6,7 @@
 #include "BinMesh.h"
 
 #include "StateMachine.h"
-#include "Bounding_AABB.h"
+#include "Bounding_Sphere.h"
 #include "Collider.h"
 
 CBody_Boss_Urd::CBody_Boss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -175,7 +175,7 @@ void CBody_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 		{
 		case Engine::CGameObject::BODY:
 			if(true == m_pOwner->Is_Move())
-				//pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -242,7 +242,7 @@ void CBody_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 		{
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
-				//pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
+				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform);
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -376,14 +376,14 @@ HRESULT CBody_Boss_Urd::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
-	/* For.Com_Collider_AABB */
-	CBounding_AABB::BOUNDING_AABB_DESC		AABBDesc = {};
-	AABBDesc.vExtents = _float3(0.45f, 1.f, 0.45f);
-	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y + 0.01f, 0.f);
-	AABBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
-	AABBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &AABBDesc)))
+	/* For.Com_Collider_Sphere */
+	CBounding_Sphere::BOUNDING_SPHERE_DESC		SphereDesc = {};
+	SphereDesc.vCenter = _float3(0.f, 1.f, 0.f);
+	SphereDesc.fRadius = 0.7f;
+	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
 		return E_FAIL;
 
 	return S_OK;

@@ -54,12 +54,22 @@ HRESULT CChurchWindowGriles::Render()
 
 	_uint	iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	_bool	Is_Normal, Is_ORM;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
+		Is_Normal = Is_ORM = true;
 
-		m_pShaderCom->Begin(0);
+		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
+			Is_Normal = false;
+
+		if (true == Is_Normal)
+			m_pShaderCom->Begin(1);
+		else
+			m_pShaderCom->Begin(0);
 
 		m_pModelCom->Render(i);
 	}

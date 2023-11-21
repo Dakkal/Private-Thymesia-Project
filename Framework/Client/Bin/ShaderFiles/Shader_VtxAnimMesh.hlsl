@@ -31,6 +31,8 @@ struct VS_OUT
     float4		vPosition : SV_POSITION;
     float4		vNormal   : NORMAL;
     float3      vTangent  : TANGENT;
+    float3      vBiTangent : BINORMAL;
+    
 	float2		vTexcoord : TEXCOORD0;
     float4		vWorldPos : TEXCOORD1;
     float4      vProjPos  : TEXCOORD2;
@@ -49,6 +51,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	
     vector vPosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
     vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+    vector vTangent = mul(float4(In.vTangent, 0.f), BoneMatrix);
 	
 	matrix			matWV, matWVP;
 
@@ -57,8 +60,10 @@ VS_OUT VS_MAIN(VS_IN In)
 
     Out.vPosition = mul(vPosition, matWVP);
     Out.vTexcoord = In.vTexcoord;
-    Out.vTangent = In.vTangent;
-    Out.vNormal = mul(vNormal, g_WorldMatrix);
+    Out.vTangent = normalize(mul(vTangent, g_WorldMatrix));
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
+    Out.vBiTangent = normalize(cross(Out.vNormal.xyz, Out.vTangent));
+    
     Out.vWorldPos = mul(vPosition, g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
   
@@ -71,6 +76,8 @@ struct PS_IN
 	float4		vPosition : SV_POSITION;
     float4		vNormal : NORMAL;
     float3      vTangent : TANGENT;
+    float3      vBiTangent : BINORMAL;
+    
 	float2		vTexcoord : TEXCOORD0;
     float4		vWorldPos : TEXCOORD1;
     float4      vProjPos : TEXCOORD2;
@@ -88,12 +95,36 @@ PS_OUT	PS_MAIN_ALPHA(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    
+   
     if (vMtrlDiffuse.a < 0.3f)
         discard;
 
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_ALPHA_NORMAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+    
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    float3x3 TangentMatrix = float3x3(In.vTangent, In.vBiTangent, In.vNormal.xyz);
+    vNormal = normalize(mul(vNormal, TangentMatrix));
+    
+  
+
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
 
     return Out;
@@ -112,6 +143,24 @@ PS_OUT PS_MAIN_NONALPHA(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_NONALPHA_NORMAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    float3x3 TangentMatrix = float3x3(In.vTangent, In.vBiTangent, In.vNormal.xyz);
+    vNormal = normalize(mul(vNormal, TangentMatrix));
+
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
+
+    return Out;
+}
+
 PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -124,8 +173,38 @@ PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
     if (fDissolveAlpha < 0.1f)
         discard;
     
-    Out.vDiffuse = vMtrlDiffuse;
+    if (fDissolveAlpha < 0.5f)
+        Out.vDiffuse = vector(0.043735f, 0.366253f, 0.234551f, 1.f);
+    else
+        Out.vDiffuse = vMtrlDiffuse;
+   
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_DISSOLVE_NORMAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vMtrlDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    float3x3 TangentMatrix = float3x3(In.vTangent, In.vBiTangent, In.vNormal.xyz);
+    vNormal = normalize(mul(vNormal, TangentMatrix));
+    
+    float fDissolveAlpha = saturate(-g_Time / g_DissolveDuration + vMtrlDissolve.r);
+ 
+    if (fDissolveAlpha < 0.1f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+      
+    
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
 
     return Out;
@@ -146,6 +225,19 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_ALPHA();
     }
 
+    pass Mesh_Alpha_Normal
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_ALPHA_NORMAL();
+    }
+
     pass Mesh_NonAlpha
     {
         SetRasterizerState(RS_Default);
@@ -157,6 +249,19 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_NONALPHA();
+    }
+
+    pass Mesh_NonAlpha_Normal
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_NONALPHA_NORMAL();
     }
 
     pass Mesh_Alpha_NonCull
@@ -172,6 +277,19 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_ALPHA();
     }
 
+    pass Mesh_Alpha_NonCull_Normal
+    {
+        SetRasterizerState(RS_Sky);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_ALPHA_NORMAL();
+    }
+
     pass Mesh_Alpha_NonCull_Dissolve
     {
         SetRasterizerState(RS_Sky);
@@ -183,6 +301,19 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DISSOLVE();
+    }
+
+    pass Mesh_Alpha_NonCull_Dissolve_Normal
+    {
+        SetRasterizerState(RS_Sky);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISSOLVE_NORMAL();
     }
 
 }

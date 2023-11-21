@@ -77,8 +77,12 @@ HRESULT CBody_GreatSword::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	_bool	Is_Normal, Is_ORM;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		Is_Normal = Is_ORM = true;
+
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
 			return E_FAIL;
 
@@ -86,17 +90,34 @@ HRESULT CBody_GreatSword::Render()
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
+			Is_Normal = false;
 
 		if (true == m_pOwner->Is_Dead())
 		{
-			if (FAILED(m_pShaderCom->Begin(3)))
-				return E_FAIL;
+			if (true == Is_Normal)
+			{
+				if (FAILED(m_pShaderCom->Begin(7)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pShaderCom->Begin(6)))
+					return E_FAIL;
+			}
+
 		}
 		else
 		{
-			if (FAILED(m_pShaderCom->Begin(2)))
-				return E_FAIL;
+			if (true == Is_Normal)
+			{
+				if (FAILED(m_pShaderCom->Begin(5)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pShaderCom->Begin(4)))
+					return E_FAIL;
+			}
 		}
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -166,7 +187,7 @@ void CBody_GreatSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTim
 
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pPartOwner->Get_Component(TEXT("Com_Transform")));
-	CNavigation* pNavigation = dynamic_cast<CLandObject*>(pPartOwner)->Get_CurNaviCom();
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
 
@@ -220,7 +241,7 @@ void CBody_GreatSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTime
 
 	CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(pPartOwner->Get_Component(TEXT("Com_Transform")));
-	CNavigation* pNavigation = dynamic_cast<CLandObject*>(pPartOwner)->Get_CurNaviCom();
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom();
 	OBJECT_TYPE eOwnerType = pPartOwner->Get_ObjectType();
 	CGameObject::PARTS ePart = dynamic_cast<CPartObject*>(_pColObj)->Get_Part_Index();
 
