@@ -267,8 +267,6 @@ void CWeapon_Player_Saber::OnCollision_Part_Stay(CGameObject* _pColObj, _float f
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
 		default:
 			break;
 		}
@@ -324,8 +322,6 @@ void CWeapon_Player_Saber::OnCollision_Part_Exit(CGameObject* _pColObj, _float f
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
 		}
 	}
 	break;
@@ -338,8 +334,6 @@ void CWeapon_Player_Saber::OnCollision_Part_Exit(CGameObject* _pColObj, _float f
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -355,8 +349,6 @@ void CWeapon_Player_Saber::OnCollision_Part_Exit(CGameObject* _pColObj, _float f
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;

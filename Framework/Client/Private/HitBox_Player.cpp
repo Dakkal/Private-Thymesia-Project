@@ -149,7 +149,7 @@ void CHitBox_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 				m_bJustHitOneSub = true;
 			}
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 
 			break;
@@ -178,7 +178,7 @@ void CHitBox_Player::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 				m_bJustHitOneSub = true;
 			}
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -224,7 +224,7 @@ void CHitBox_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 				m_bJustHitOneSub = true;
 			}
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -257,7 +257,7 @@ void CHitBox_Player::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 				m_bJustHitOneSub = true;
 			}
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -287,7 +287,7 @@ void CHitBox_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::WEAPON_L:
 			m_bJustHitOneSub = false;
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -302,7 +302,7 @@ void CHitBox_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -321,7 +321,7 @@ void CHitBox_Player::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::WEAPON_L:
 			m_bJustHitOneSub = false;
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;

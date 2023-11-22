@@ -376,7 +376,7 @@ _matrix CGameInstance::Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORM_STATE e
 	return m_pPipeLine->Get_Transform_Matrix_Inverse(eState);
 }
 
-_vector CGameInstance::Get_CamPosition_Vector() const
+_vector CGameInstance::Get_CamPosition_Vector() const 
 {
 	if (nullptr == m_pPipeLine)
 		return _vector();

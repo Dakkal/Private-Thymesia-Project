@@ -195,7 +195,7 @@ void CWeapon_TwinSword2::OnCollision_Part_Enter(CGameObject* _pColObj, _float fT
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -210,7 +210,7 @@ void CWeapon_TwinSword2::OnCollision_Part_Enter(CGameObject* _pColObj, _float fT
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -227,7 +227,7 @@ void CWeapon_TwinSword2::OnCollision_Part_Enter(CGameObject* _pColObj, _float fT
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -255,7 +255,7 @@ void CWeapon_TwinSword2::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTi
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -270,7 +270,7 @@ void CWeapon_TwinSword2::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTi
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -287,7 +287,7 @@ void CWeapon_TwinSword2::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTi
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -315,7 +315,7 @@ void CWeapon_TwinSword2::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTi
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -330,7 +330,7 @@ void CWeapon_TwinSword2::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTi
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -347,7 +347,7 @@ void CWeapon_TwinSword2::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTi
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;

@@ -108,7 +108,8 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
         m_pTransform->LookAt(m_vAt);
     }  
 
-    __super::LateTick(fTimeDelta);
+    if(false == g_BossSeq)
+        __super::LateTick(fTimeDelta);
 }
 
 void CPlayerCamera::MouseMove(_float fTimeDelta)

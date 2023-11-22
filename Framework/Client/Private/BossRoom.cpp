@@ -83,9 +83,9 @@ HRESULT CBossRoom::Render()
 			Is_Normal = false;
 
 		if (true == Is_Normal)
-			m_pShaderCom->Begin(3);
+			m_pShaderCom->Begin(1);
 		else
-			m_pShaderCom->Begin(2);
+			m_pShaderCom->Begin(0);
 
 		m_pModelCom->Render(i);
 	}

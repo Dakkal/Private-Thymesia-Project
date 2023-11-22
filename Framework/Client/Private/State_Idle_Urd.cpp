@@ -22,35 +22,48 @@ HRESULT CState_Idle_Urd::Initialize()
 
 STATE CState_Idle_Urd::Tick(const _float& fTimeDelta)
 {
-	STATE eState = m_eState;
+	if (true == m_pOwnerBodyPart->IsAnimChange())
+		return m_eState;
 
 	if (true == m_pRealOwner->Is_Hit())
 		return STATE::HIT;
 
-	CTransform* pPlayerTransform = dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerTransform();
-	if (nullptr != pPlayerTransform)
+	STATE eState = m_eState;
+
+	m_fIdleTime += fTimeDelta;
+
+	if (0.1f <= m_fIdleTime)
 	{
-		_vector vPlayerPos = pPlayerTransform->Get_State(CTransform::STATE_POS);
-		_vector vOwnerPos = m_pOwnerTransform->Get_State(CTransform::STATE_POS);
+		_float fMinRushDist = 4.f;
+		if (fMinRushDist < dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance())
+			return STATE::RUN;
 
-		_float fDist = _vector(vPlayerPos - vOwnerPos).Length();
+		_float fWalkDist = 4.f;
+		if (fWalkDist >= dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance())
+		{
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-		cout << fDist << endl;
+			_int iRandom = pGameInstance->Random_Int(0, 6);
 
-		if (5 >= fDist)
-		{
-			return STATE::AVOID;
-		}
-		else if (5 < fDist && 10 >= fDist)
-		{
-			return STATE::AVOID;
-		}
-		else if(10 < fDist)
-		{
-			return STATE::AVOID;
+			if (0 == iRandom || 1 == iRandom || 5 == iRandom || 6 == iRandom)
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return STATE::WALK;
+			}
+			else if (2 == iRandom || 4 == iRandom)
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return STATE::ATTACK;
+			}
+			else if (3 == iRandom)
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return STATE::AVOID;
+			}
+
+			RELEASE_INSTANCE(CGameInstance);
 		}
 	}
-	
 
 	return eState;
 }
@@ -66,6 +79,8 @@ STATE CState_Idle_Urd::LateTick(const _float& fTimeDelta)
 
 void CState_Idle_Urd::Reset_State()
 {
+	m_fIdleTime = 0.f;
+
 	m_bEnter = false;
 }
 
@@ -76,6 +91,7 @@ void CState_Idle_Urd::Enter_State()
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 
 	m_pOwnerBodyPart->Set_AnimationIndex(true, 19, 1.2f);
+
 }
 
 STATE CState_Idle_Urd::Key_Input(const _float& fTimeDelta)

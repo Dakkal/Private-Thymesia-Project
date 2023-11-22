@@ -4,6 +4,8 @@
 #include "Level_Loading.h"
 #include "ToolCamera.h"
 
+_bool	g_BossSeq = { false };
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -26,8 +28,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER)))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
 		return E_FAIL;
@@ -313,8 +315,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _uint& iLayerIndex)
 	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Halberd"))))
 		return E_FAIL;*/
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Shield"))))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Shield"))))
+		return E_FAIL;*/
 
 	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_TwinSword"))))
 		return E_FAIL;*/

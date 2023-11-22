@@ -24,16 +24,61 @@ HRESULT CState_Avoid_Urd::Initialize()
 STATE CState_Avoid_Urd::Tick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
-
-	cout << "È¸ÇÇ" << endl;
-
-	if (TYPE::FRONT == m_eAvoidType && m_pOwnerBodyPart->Is_AnimCurKeyFrame(32))
-	{
-		return STATE::ATTACK;
-	}
-	else if (m_pOwnerBodyPart->Is_AnimCurKeyFrame(32))
-		return STATE::IDLE;
 		
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (31 == m_pOwnerBodyPart->Get_AnimationIndex())
+	{
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(35))
+		{
+			if (true == pGameInstance->Random_Coin(0.7f))
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return STATE::WALK;
+			}
+			else
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return STATE::RUN;
+			}
+		}
+	}
+	else
+	{
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(32))
+		{
+			if (1 <= m_iAvoidCnt)
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return STATE::ATTACK;
+			}
+
+			if (true == pGameInstance->Random_Coin(0.4f))
+			{
+				if (true == m_bLeft)
+				{
+					m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.f);
+					m_bLeft = false;
+					m_bRight = true;
+
+				}
+				else if (true == m_bRight)
+				{
+					m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.f);
+					m_bLeft = true;
+					m_bRight = false;
+				}
+				m_iAvoidCnt++;
+			}
+			else
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return STATE::ATTACK;
+			}
+		}
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return eState;
 }
@@ -42,62 +87,41 @@ STATE CState_Avoid_Urd::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
-
+	
 
 	return eState;
 }
 
 void CState_Avoid_Urd::Reset_State()
 {
-	m_bEnter = false;
+	m_bLeft = false;
+	m_bRight = false;
+	m_iAvoidCnt = 0;
 }
 
 void CState_Avoid_Urd::Enter_State()
 {
 	m_pRealOwner->Set_Move(true);
 
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 
-
-	CTransform* pPlayerTransform = dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerTransform();
-	_vector vPlayerPos = pPlayerTransform->Get_State(CTransform::STATE_POS);
-	_vector vOwnerPos = m_pOwnerTransform->Get_State(CTransform::STATE_POS);
-
-	_float fDist = _vector(vPlayerPos - vOwnerPos).Length();
-
-	if (5 >= fDist)
+	if (STATE::ATTACK == m_pStateOwner->Get_PreState())
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 31, 1.2f, true);
-		m_eAvoidType = TYPE::BEHIND;
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 31, 1.f);
+		return;
 	}
-	else if (5 < fDist && 10 >= fDist)
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (pGameInstance->Random_Coin(0.5))
 	{
-		if (pGameInstance->Random_Coin(0.5))
-		{
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.2f, true);
-			m_eAvoidType = TYPE::SIDE;
-		}
-		else
-		{
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.2f, true);
-			m_eAvoidType = TYPE::SIDE;
-		}
-			
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.f);
+		m_bLeft = true;
 	}
-	else if (10 < fDist)
+	else
 	{
-		_int iSelect = pGameInstance->Random_Int(0, 2);
-
-		if (0 == iSelect)
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 35, 1.2f, true);
-		else if(1 == iSelect)
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 32, 1.2f, true);
-		else
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 33, 1.2f, true);
-
-		m_eAvoidType = TYPE::FRONT;
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.f);
+		m_bRight = true;
 	}
 	
 	RELEASE_INSTANCE(CGameInstance);

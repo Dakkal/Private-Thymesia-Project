@@ -196,8 +196,6 @@ void CWeapon_Shield::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
 		}
 	}
 	break;
@@ -210,8 +208,6 @@ void CWeapon_Shield::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -227,8 +223,6 @@ void CWeapon_Shield::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -256,8 +250,6 @@ void CWeapon_Shield::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
 		}
 	}
 	break;
@@ -270,8 +262,6 @@ void CWeapon_Shield::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -287,8 +277,6 @@ void CWeapon_Shield::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -316,8 +304,6 @@ void CWeapon_Shield::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
 		}
 	}
 	break;
@@ -330,8 +316,6 @@ void CWeapon_Shield::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -347,8 +331,6 @@ void CWeapon_Shield::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;

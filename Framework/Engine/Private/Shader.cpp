@@ -77,7 +77,7 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	return S_OK;
 }
 
-HRESULT CShader::Bind_RawValue(const char* pConstantName, const void* pData, _uint iSize) const
+HRESULT CShader::Bind_RawValue(const char* pConstantName, const void* pData, _uint iSize)
 {
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)

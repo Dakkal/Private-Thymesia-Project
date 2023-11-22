@@ -88,8 +88,9 @@ HRESULT CPartObject::Initialize(void* pArg)
 		m_pParentTransform = pPartDesc->pParentTransform;
 		Safe_AddRef(m_pParentTransform);
 		m_pSocketBone = pPartDesc->pSocketBone;
-		m_pWeaponSocketPivot = pPartDesc->pWeaponSocketPivot;
+		m_pSocketBoneforPivot = pPartDesc->pSocketBoneforPivot;
 		Safe_AddRef(m_pSocketBone);
+		Safe_AddRef(m_pSocketBoneforPivot);
 
 		m_SocketPivotMatrix = pPartDesc->SocketPivot;
 	}
@@ -129,5 +130,6 @@ void CPartObject::Free()
 	__super::Free();
 
 	Safe_Release(m_pSocketBone);
+	Safe_Release(m_pSocketBoneforPivot);
 	Safe_Release(m_pParentTransform);
 }

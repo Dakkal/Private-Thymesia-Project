@@ -5,6 +5,7 @@
 #include "BinBone.h"
 #include "Bounding_OBB.h"
 #include "Collider.h"
+#include "Boss_Urd.h"
 
 CWeapon_Boss_Urd::CWeapon_Boss_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -52,6 +53,18 @@ void CWeapon_Boss_Urd::Tick(_float fTimeDelta)
 
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix() * WorldMatrix);
 
+	if (true == g_BossSeq && true == dynamic_cast<CBoss_Urd*>(m_pOwner)->Is_Seq1())
+	{
+		XMMATRIX	WorldMatrix = m_pSocketBoneforPivot->Get_CombinedTransform() * m_SocketPivotMatrix;
+
+		WorldMatrix.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
+		WorldMatrix.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
+		WorldMatrix.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
+
+		Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix() * WorldMatrix);
+	}
+
+
 	/* 계산한뒤에 월드를 업데이트 */
 	m_pColliderCom->Update(m_WorldMatrix);
 }
@@ -85,7 +98,7 @@ HRESULT CWeapon_Boss_Urd::Render()
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(1)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -167,7 +180,7 @@ void CWeapon_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -182,7 +195,7 @@ void CWeapon_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -199,7 +212,7 @@ void CWeapon_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -227,7 +240,7 @@ void CWeapon_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -242,7 +255,7 @@ void CWeapon_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -259,7 +272,7 @@ void CWeapon_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -287,7 +300,7 @@ void CWeapon_Boss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -302,7 +315,7 @@ void CWeapon_Boss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -319,7 +332,7 @@ void CWeapon_Boss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Transform.h"
+#include "PartObject.h"
 
 BEGIN(Engine)
 
@@ -37,6 +38,9 @@ protected:
 	class CPipeLine*	m_pPipeLine = { nullptr };
 
 	class CTransform* m_pTargetTransform = { nullptr };
+
+protected:
+	friend class CPartObject;
 
 public:
 	virtual CGameObject* Clone(void* pArg);

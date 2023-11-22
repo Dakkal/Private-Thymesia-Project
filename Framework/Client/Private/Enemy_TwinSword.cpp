@@ -211,7 +211,7 @@ void CEnemy_TwinSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -226,7 +226,7 @@ void CEnemy_TwinSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -243,7 +243,7 @@ void CEnemy_TwinSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -271,7 +271,7 @@ void CEnemy_TwinSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -286,7 +286,7 @@ void CEnemy_TwinSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -303,7 +303,7 @@ void CEnemy_TwinSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -331,7 +331,7 @@ void CEnemy_TwinSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -346,7 +346,7 @@ void CEnemy_TwinSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -363,7 +363,7 @@ void CEnemy_TwinSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTime
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;

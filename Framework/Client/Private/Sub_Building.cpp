@@ -49,7 +49,7 @@ void CSub_Building::LateTick(_float fTimeDelta)
 
 	if (true == pGameInstance->IsIn_Frustum_World(m_pTransformCom->Get_State(CTransform::STATE_POS), 50.f))
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_BLEND, this);
 
 #ifdef _DEBUG
 		if (nullptr != m_pCurNavigationCom)
@@ -106,9 +106,9 @@ HRESULT CSub_Building::Render()
 				Is_Normal = false;
 
 			if (true == Is_Normal)
-				m_pShaderCom->Begin(3);
+				m_pShaderCom->Begin(7);
 			else
-				m_pShaderCom->Begin(2);
+				m_pShaderCom->Begin(7);
 
 			m_pModelCom->Render(i);
 		}
@@ -130,15 +130,15 @@ HRESULT CSub_Building::Ready_Components()
 		return E_FAIL;
 
 #ifdef _DEBUG
-	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
-		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
-		return E_FAIL;
+	///* Com_Shader */
+	//if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
+	//	TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+	//	return E_FAIL;
 
-	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_Sub_Building"),
-		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-		return E_FAIL;
+	///* Com_Model */
+	//if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_Sub_Building"),
+	//	TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+	//	return E_FAIL;
 #else
 	///* Com_Shader */
 	//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
@@ -155,22 +155,22 @@ HRESULT CSub_Building::Ready_Components()
 	//	TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
 	//	return E_FAIL;
 #endif // !NDEBUG
-	///* Com_Shader */
-	//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
-	//	TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
-	//	return E_FAIL;
+	/* Com_Shader */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
+		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
 
-	///* Com_Model */
-	//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sub_Building"),
-	//	TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-	//	return E_FAIL;
+	/* Com_Model */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sub_Building"),
+		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+		return E_FAIL;
 
-	///* Com_Navigation */
-	//if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Sub_Building_Navigation"),
-	//	TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
-	//	return E_FAIL;
+	/* Com_Navigation */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_SubBuilding_Navigation"),
+		TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
+		return E_FAIL;
 
-	//m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return S_OK;
 }
@@ -186,6 +186,24 @@ HRESULT CSub_Building::Bind_ShaderResources()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
+		return E_FAIL;
+
+	m_vCamPos = pGameInstance->Get_CamPosition_Vector();
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_vector))))
+		return E_FAIL;
+
+	const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
+	if (nullptr == pLightDesc)
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vLightDir, sizeof(_vector))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_vector))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_vector))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_vector))))
 		return E_FAIL;
 
 

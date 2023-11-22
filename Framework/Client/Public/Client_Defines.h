@@ -15,8 +15,9 @@ namespace Client
 	const unsigned int		g_iWinSizeY = 720;
 }
 
-extern HWND g_hWnd;
+extern HWND			g_hWnd;
 extern HINSTANCE	g_hInstance;
+extern _bool		g_BossSeq;
 
 using namespace Client;
 

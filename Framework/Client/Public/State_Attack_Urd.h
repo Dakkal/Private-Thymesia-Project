@@ -2,9 +2,9 @@
 #include "Client_Defines.h"
 #include "State.h"
 
-BEGIN(Client)
+	BEGIN(Client)
 
-class CState_Attack_Urd final : public CState
+	class CState_Attack_Urd final : public CState
 {
 private:
 	CState_Attack_Urd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
@@ -21,6 +21,32 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
+	STATE	Combo_1();
+	STATE	Combo_2();
+	STATE	Combo_3();
+	STATE	Combo_4();
+
+private:
+	_bool					m_bCombo1 = { false };
+	_bool					m_bCombo1_1 = { false };
+	_bool					m_bCombo1_2 = { false };
+	_bool					m_bCombo1_3 = { false };
+
+	_bool					m_bCombo2 = { false };
+	_bool					m_bCombo2_1 = { false };
+	_bool					m_bCombo2_2 = { false };
+	_bool					m_bCombo2_3 = { false };
+
+	_bool					m_bCombo3 = { false };
+	_bool					m_bCombo3_1 = { false };
+	_bool					m_bCombo3_2 = { false };
+	_bool					m_bCombo3_3 = { false };
+
+	_bool					m_bCombo4 = { false };
+	_bool					m_bCombo4_1 = { false };
+	_bool					m_bCombo4_2 = { false };
+	_bool					m_bCombo4_3 = { false };
+
 
 public:
 	static CState_Attack_Urd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
@@ -28,5 +54,8 @@ public:
 };
 
 END
+
+
+
 
 

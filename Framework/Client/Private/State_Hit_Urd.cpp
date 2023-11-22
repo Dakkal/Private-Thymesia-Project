@@ -26,24 +26,55 @@ STATE CState_Hit_Urd::Tick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	if (true == m_IsParry)
+		return STATE::PARRY;
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (m_iRecoverCnt < m_iHitCnt)
+	{
+		if (true == pGameInstance->Random_Coin(0.8f))
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::AVOID;
+		}
+		else
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::ATTACK;
+		}
+	}
+
+
 	if (m_pRealOwner->Is_Hit())
 	{
+		if (true == pGameInstance->Random_Coin(0.3f))
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::PARRY;
+		}
+
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
+
 		if (true == m_bRight_Hit)
 		{
 			m_bRight_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 15, 1.2f);
 			m_bLeft_Hit = true;
+			m_iHitCnt++;
 		}
 		else if (true == m_bLeft_Hit)
 		{
 			m_bLeft_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 16, 1.2f);
 			m_bRight_Hit = true;
+			m_iHitCnt++;
 		}
 	}
 	else if (m_pOwnerBodyPart->IsAnimationEnd())
 		return STATE::IDLE;
 
+	RELEASE_INSTANCE(CGameInstance);
 
 	return eState;
 }
@@ -52,7 +83,7 @@ STATE CState_Hit_Urd::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
-
+	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 
 	return eState;
 }
@@ -68,18 +99,35 @@ void CState_Hit_Urd::Enter_State()
 
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 
-	if (true == m_bRight_Hit)
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (true == pGameInstance->Random_Coin(0.2f))
 	{
-		m_bRight_Hit = false;
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 15, 1.2f);
-		m_bLeft_Hit = true;
+		m_IsParry = true;
 	}
-	else if (true == m_bLeft_Hit)
+	else
 	{
-		m_bLeft_Hit = false;
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 16, 1.2f);
-		m_bRight_Hit = true;
+		if (true == m_bRight_Hit)
+		{
+			m_bRight_Hit = false;
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 15, 1.2f);
+			m_bLeft_Hit = true;
+		}
+		else if (true == m_bLeft_Hit)
+		{
+			m_bLeft_Hit = false;
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 16, 1.2f);
+			m_bRight_Hit = true;
+		}
+
+		m_iRecoverCnt = pGameInstance->Random_Int(2, 3);
+
+		m_pRealOwner->Subtract_HP();
+		m_iHitCnt++;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
+
 }
 
 STATE CState_Hit_Urd::Key_Input(const _float& fTimeDelta)

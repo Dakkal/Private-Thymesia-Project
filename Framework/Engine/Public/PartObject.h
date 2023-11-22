@@ -13,7 +13,7 @@ public:
 		PARTS				ePart = { PARTS::_END };
 		class CTransform*	pParentTransform = { nullptr };
 		class CBinBone*		pSocketBone = { nullptr };
-		class CBinBone*		pWeaponSocketPivot = { nullptr };
+		class CBinBone*		pSocketBoneforPivot = { nullptr };
 		_matrix				SocketPivot;
 
 		CBounding_Frustrum::BOUNDING_FRUSTRUM_DESC FrustrumDesc;
@@ -55,7 +55,7 @@ protected:
 	PARTS					m_ePart = { PARTS::_END };
 	class CTransform*		m_pParentTransform = { nullptr };
 	class CBinBone*			m_pSocketBone = { nullptr };
-	class CBinBone*			m_pWeaponSocketPivot = { nullptr };
+	class CBinBone*			m_pSocketBoneforPivot = { nullptr };
 	_matrix					m_SocketPivotMatrix;
 	_matrix					m_WorldMatrix;
 	_vector					m_vTargetPos = { XMVectorZero() };

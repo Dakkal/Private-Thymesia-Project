@@ -12,6 +12,21 @@ float           g_DissolveDuration;
 
 vector          g_vColor = { 0.f, 0.f, 0.f, 0.f };
 
+
+matrix g_ViewMatrixInv, g_ProjMatrixInv;
+
+vector g_vCamPosition;
+vector g_vLightDir;
+vector g_vLightPos;
+vector g_fLightRange;
+
+vector g_vLightDiffuse;
+vector g_vLightAmbient;
+vector g_vLightSpecular;
+
+vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
+vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
+
 /* 버텍스 쉐이더 */
 struct VS_IN
 {
@@ -88,9 +103,7 @@ PS_OUT	PS_MAIN(PS_IN In)
         vector vColor = g_vColor;
         
         vColor.a *= vMtrlDiffuse.r;
-        
-        if (vMtrlDiffuse.a < 0.3f)
-        discard;
+  
         
         Out.vDiffuse = vColor;
         Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
@@ -204,6 +217,42 @@ PS_OUT PS_MAIN_DISSOLVE_NORMAL(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_BLEND(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    float3x3 TangentMatrix = float3x3(In.vTangent, In.vBiTangent, In.vNormal.xyz);
+    vNormal = normalize(mul(vNormal, TangentMatrix));
+    
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+    
+    if (0.f < g_vColor.a)
+    {
+        vector vColor = g_vColor;
+        
+        vColor.a *= vMtrlDiffuse.r;
+        vMtrlDiffuse = vColor;
+    }
+
+
+    vector vShade = g_vLightDiffuse * (saturate(dot(normalize(g_vLightDir) * -1.f, vNormal)) + (g_vLightAmbient * g_vMtrlAmbient));
+
+    vector vReflect = reflect(normalize(g_vLightDir), float4(vNormal, 0));
+		
+    vector vLook = In.vWorldPos - g_vCamPosition;
+
+    vector vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vLook) * -1.f, normalize(vReflect))), 30.f);
+    
+    Out.vDiffuse = vMtrlDiffuse * vShade + vSpecular;
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Mesh
@@ -295,6 +344,19 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SKY();
+    }
+
+    pass Mesh_Blend
+    {
+        SetRasterizerState(RS_Sky);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLEND();
     }
 
 }

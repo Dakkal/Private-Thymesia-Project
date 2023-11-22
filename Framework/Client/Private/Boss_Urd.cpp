@@ -8,6 +8,10 @@
 #include "State_Hit_Urd.h"
 #include "State_Avoid_Urd.h"
 #include "State_Attack_Urd.h"
+#include "State_Seq_Urd.h"
+#include "State_Walk_Urd.h"
+#include "State_Parry_Urd.h"
+#include "State_Run_Urd.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -54,10 +58,34 @@ void CBoss_Urd::Tick(_float fTimeDelta)
 {
 	if (true == m_bFirstDrop)
 	{
-		m_pCurNavigationCom->Set_toCell(6, m_pTransformCom);
+		m_pCurNavigationCom->Set_toCell(17, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
-	
+	if (false == m_IsSeq)
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		auto pObj = pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_PLAYER);
+		if (nullptr == pObj)
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return;
+		}
+
+		CNavigation* pNavi = dynamic_cast<CLandObject*>(pObj)->Get_CurNaviCom();
+		if ("BossRoom" == pNavi->Get_NaviName())
+		{
+			m_IsSeq = true;
+		}
+		else
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return;
+		}
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+		
 
 	Out_Player(fTimeDelta);
 	Look_Player(fTimeDelta);
@@ -79,6 +107,9 @@ void CBoss_Urd::Tick(_float fTimeDelta)
 
 void CBoss_Urd::LateTick(_float fTimeDelta)
 {
+	if (false == m_IsActive)
+		return;
+
 	if(true == m_IsHit) m_IsHit = false;
 
 	m_pStateMachineCom->LateTick(fTimeDelta);
@@ -195,8 +226,6 @@ void CBoss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
 		}
 	}
 	break;
@@ -209,8 +238,6 @@ void CBoss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -226,8 +253,6 @@ void CBoss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -255,8 +280,6 @@ void CBoss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
 		}
 	}
 	break;
@@ -269,8 +292,6 @@ void CBoss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -286,8 +307,6 @@ void CBoss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -315,8 +334,6 @@ void CBoss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
 		}
 	}
 	break;
@@ -329,8 +346,6 @@ void CBoss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
 		case Engine::CGameObject::WEAPON_R:
 			break;
 		case Engine::CGameObject::WEAPON_L:
-			break;
-		case Engine::CGameObject::SIGHT:
 			break;
 		default:
 			break;
@@ -347,14 +362,25 @@ void CBoss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
-			break;
 		default:
 			break;
 		}
 	}
 	break;
 	}
+}
+
+_float CBoss_Urd::Get_PlayerDistance()
+{
+	if (nullptr == m_pPlayerTransform)
+		return -1.f;
+
+	_vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
+
+	_float fLength = _vector(vPlayerPos - vPos).Length();
+
+	return fLength;
 }
 
 void CBoss_Urd::Out_Player(_float fTimeDelta)
@@ -429,7 +455,7 @@ HRESULT CBoss_Urd::Ready_Components()
 
 	/* Com_Transform */
 	CTransform::TRANSFORM_DESC		TransformDesc;
-	TransformDesc.fSpeedPerSec = 10.f;
+	TransformDesc.fSpeedPerSec = 1.f;
 	TransformDesc.fRotRadianPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
@@ -442,7 +468,7 @@ HRESULT CBoss_Urd::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Navigation */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BossRoom_Navigation"),
 		TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
 		return E_FAIL;
 
@@ -484,6 +510,7 @@ HRESULT CBoss_Urd::Ready_Parts()
 	PartDesc_Weapon.pParentTransform = m_pTransformCom;
 	PartDesc_Weapon.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_r");
 	PartDesc_Weapon.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
+	PartDesc_Weapon.pSocketBoneforPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("AnimTargetPoint");
 
 	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_Weapon"), &PartDesc_Weapon);
 	if (nullptr == pParts)
@@ -499,6 +526,19 @@ HRESULT CBoss_Urd::Ready_Parts()
 	if (nullptr == pParts)
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::HITBOX, pParts);
+
+	CPartObject::PART_DESC			PartDesc_Camera;
+	PartDesc_Camera.pOwner = this;
+	PartDesc_Camera.ePart = PARTS::CAMERA;
+	PartDesc_Camera.pParentTransform = m_pTransformCom;
+	PartDesc_Camera.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("camera");
+	PartDesc_Camera.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
+	PartDesc_Camera.pSocketBoneforPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("AnimTargetPoint");
+
+	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_SeqCamera"), &PartDesc_Camera);
+	if (nullptr == pParts)
+		return E_FAIL;
+	m_Parts.emplace(CGameObject::PARTS::CAMERA, pParts);
 	
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -528,8 +568,28 @@ HRESULT CBoss_Urd::Ready_State()
 		return E_FAIL;
 	m_pStateMachineCom->Add_State(STATE::ATTACK, pState);
 
+	pState = CState_Parry_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::PARRY);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::PARRY, pState);
 
-	m_pStateMachineCom->Set_State(STATE::IDLE);
+	pState = CState_Run_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::RUN);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::RUN, pState);
+
+	pState = CState_Walk_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::WALK);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::WALK, pState);
+
+	pState = CState_Seq_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_IDLE);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::LOCK_IDLE, pState);
+
+
+	m_pStateMachineCom->Set_State(STATE::LOCK_IDLE);
 
 	return S_OK;
 }

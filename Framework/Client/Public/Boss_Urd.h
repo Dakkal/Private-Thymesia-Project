@@ -36,13 +36,19 @@ public:
 	virtual void OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta) override;
 
 public:
-	CTransform* Get_PlayerTransform() const { return m_pPlayerTransform; }
-	void		Set_LookPlayer(_bool bIsLook) { m_bIsLookPlayer = bIsLook; }
+	CTransform*				Get_PlayerTransform()			const { return m_pPlayerTransform; }
+	const _bool&			Is_LookPlayer()			const { return m_bIsLookPlayer; }
+	void					Set_LookPlayer(_bool bIsLook) { m_bIsLookPlayer = bIsLook; }
+	_float					Get_PlayerDistance();
 
 public:
 	void	Out_Player(_float fTimeDelta);
 	void	Look_Player(_float fTimeDelta);
 	void	Set_PlayerTransform();
+
+public:
+	void			Set_Seq1_State(_bool IsSeq1)	{ m_IsSeq1 = IsSeq1; }
+	const _bool&	Is_Seq1() const					{ return m_IsSeq1; }
 
 private:
 	CTransform*				m_pPlayerTransform = { nullptr };
@@ -58,6 +64,11 @@ private:
 	_bool					m_bIsLookPlayer = { false };
 
 	_bool					m_bFirstDrop = { true };
+
+	_bool					m_IsSeq = { false };
+
+	_bool					m_IsSeq1 = { true };
+	
 
 private:
 	HRESULT Ready_Components();

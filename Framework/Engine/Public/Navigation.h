@@ -10,6 +10,7 @@ public:
 	typedef struct tagNavigationDesc
 	{
 		_int	iCurIndex = { -1 };
+		string	strNavi;
 	}NAVI_DESC;
 
 private:
@@ -28,8 +29,10 @@ public:
 	_int    CheckIn(_vector vPoint);
 
 public:
-	const _matrix&	Get_Navi_Matrix() { return m_NaviWorldMatrix[m_iNaviIndex]; }
-	class CCell*	Get_CurCell() { return m_Cells[m_iCurrentIndex]; }
+	const string&	Get_NaviName()		{ return m_strNavi; }
+
+	const _matrix&	Get_Navi_Matrix()	{ return m_NaviWorldMatrix[m_iNaviIndex]; }
+	class CCell*	Get_CurCell()		{ return m_Cells[m_iCurrentIndex]; }
 	_float3			Get_Closet_Cell_Point(_vector vPick);
 
 public:
@@ -57,6 +60,7 @@ private:
 	static	_matrix			m_NaviWorldMatrix[];
 	static	_uint			m_iIndex;
 
+	string					m_strNavi;
 	_uint					m_iNaviIndex = { 0 };
 
 	_int					m_iCurrentIndex = { -1 };

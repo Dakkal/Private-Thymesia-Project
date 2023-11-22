@@ -210,7 +210,7 @@ void CEnemy_GreatSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTi
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -225,7 +225,7 @@ void CEnemy_GreatSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTi
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -242,7 +242,7 @@ void CEnemy_GreatSword::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTi
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -270,7 +270,7 @@ void CEnemy_GreatSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -285,7 +285,7 @@ void CEnemy_GreatSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -302,7 +302,7 @@ void CEnemy_GreatSword::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -330,7 +330,7 @@ void CEnemy_GreatSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -345,7 +345,7 @@ void CEnemy_GreatSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -362,7 +362,7 @@ void CEnemy_GreatSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTim
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;

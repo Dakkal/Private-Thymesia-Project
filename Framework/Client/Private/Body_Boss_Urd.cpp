@@ -75,8 +75,12 @@ HRESULT CBody_Boss_Urd::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		_bool		Is_Normal = true;
+
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
 			return E_FAIL;
 
@@ -84,18 +88,36 @@ HRESULT CBody_Boss_Urd::Render()
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
+			Is_Normal = false;
 
-		if (m_pModelCom->Get_Meshes()[i]->Get_MeshName() == "Boss_Urd.Alpha")
+		if (true == Is_Normal)
 		{
-			if (FAILED(m_pShaderCom->Begin(0)))
-				return E_FAIL;
+			if (m_pModelCom->Get_Meshes()[i]->Get_MeshName() == "Boss_Urd.Alpha")
+			{
+				if (FAILED(m_pShaderCom->Begin(1)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pShaderCom->Begin(3)))
+					return E_FAIL;
+			}
 		}
 		else
 		{
-			if (FAILED(m_pShaderCom->Begin(1)))
-				return E_FAIL;
+			if (m_pModelCom->Get_Meshes()[i]->Get_MeshName() == "Boss_Urd.Alpha")
+			{
+				if (FAILED(m_pShaderCom->Begin(0)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pShaderCom->Begin(2)))
+					return E_FAIL;
+			}
 		}
+
+		
 	
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -181,7 +203,7 @@ void CBody_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -196,7 +218,7 @@ void CBody_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -213,7 +235,7 @@ void CBody_Boss_Urd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeD
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -248,7 +270,7 @@ void CBody_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -263,7 +285,7 @@ void CBody_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -280,7 +302,7 @@ void CBody_Boss_Urd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -310,7 +332,7 @@ void CBody_Boss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -325,7 +347,7 @@ void CBody_Boss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -342,7 +364,7 @@ void CBody_Boss_Urd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;

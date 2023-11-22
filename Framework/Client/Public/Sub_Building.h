@@ -36,6 +36,7 @@ private:
 
 private:
 	_vector		m_vColor;
+	_vector		m_vCamPos;
 
 private:
 	HRESULT Ready_Components();

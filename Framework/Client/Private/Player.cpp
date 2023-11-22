@@ -69,6 +69,10 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_pCurNavigationCom->Set_toCell(15, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
+	if (true == g_BossSeq)
+		return;
+
+
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (true == pGameInstance->Key_Down('Q'))
@@ -88,6 +92,9 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
+	if (true == g_BossSeq)
+		return;
+
 	if (true == m_IsHit) m_IsHit = false;
 
 	Check_TargetEnemy();
@@ -230,7 +237,7 @@ void CPlayer::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -245,7 +252,7 @@ void CPlayer::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -262,7 +269,7 @@ void CPlayer::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -294,7 +301,7 @@ void CPlayer::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -309,7 +316,7 @@ void CPlayer::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -326,7 +333,7 @@ void CPlayer::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -358,7 +365,7 @@ void CPlayer::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -373,7 +380,7 @@ void CPlayer::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -390,7 +397,7 @@ void CPlayer::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDelta)
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -535,18 +542,28 @@ HRESULT CPlayer::Ready_Components()
 
 	/* Com_Navigation */
 	CNavigation* pNavigation = { nullptr };
+	CNavigation::NAVI_DESC		NaviDesc;
+	NaviDesc.strNavi = "BossRoom";
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BossRoom_Navigation"),
-		TEXT("Com_Navigation1"), (CComponent**)&pNavigation)))
+		TEXT("Com_Navigation1"), (CComponent**)&pNavigation, &NaviDesc)))
 		return E_FAIL;
 	m_NavigationComs.push_back(pNavigation);
 
+	NaviDesc.strNavi = "SubBuilding";
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_SubBuilding_Navigation"),
+		TEXT("Com_Navigation2"), (CComponent**)&pNavigation, &NaviDesc)))
+		return E_FAIL;
+	m_NavigationComs.push_back(pNavigation);
+
+	NaviDesc.strNavi = "Stair";
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Stair_Navigation"),
-		TEXT("Com_Navigation2"), (CComponent**)&pNavigation)))
+		TEXT("Com_Navigation4"), (CComponent**)&pNavigation, &NaviDesc)))
 		return E_FAIL;
 	m_NavigationComs.push_back(pNavigation);
 
+	NaviDesc.strNavi = "Church";
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
-		TEXT("Com_Navigation3"), (CComponent**)&pNavigation)))
+		TEXT("Com_Navigation5"), (CComponent**)&pNavigation, &NaviDesc)))
 		return E_FAIL;
 	m_NavigationComs.push_back(pNavigation);
 

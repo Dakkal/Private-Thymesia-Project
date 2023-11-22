@@ -143,12 +143,16 @@ HRESULT CChurch::Ready_Components()
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
-	/* Com_Navigation */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
-		TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
-		return E_FAIL;
+	if (1 == m_iCloneIndex)
+	{
+		/* Com_Navigation */
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
+			TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
+			return E_FAIL;
 
-	m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+		m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+	}
+
 
 	return S_OK;
 }

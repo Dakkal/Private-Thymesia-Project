@@ -6,7 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CGameObject abstract : public CBase
 {
 public:
-    enum PARTS { BODY, WEAPON_R, WEAPON_L, SIGHT, HITBOX, _END };
+    enum PARTS { BODY, WEAPON_R, WEAPON_L, HITBOX, CAMERA, _END };
 
 protected:
     CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

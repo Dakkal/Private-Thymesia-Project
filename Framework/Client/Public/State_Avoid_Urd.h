@@ -26,6 +26,11 @@ public:
 private:
 	TYPE	m_eAvoidType = { TYPE::_END };
 
+	_bool	m_bLeft = { false };
+	_bool	m_bRight = { false };
+
+	_uint	m_iAvoidCnt = { 0 };
+		 
 public:
 	static CState_Avoid_Urd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
 	virtual void	Free() override;

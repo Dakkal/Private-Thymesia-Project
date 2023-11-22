@@ -24,9 +24,17 @@ STATE CState_Attack_Urd::Tick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
-	if (m_pOwnerBodyPart->IsAnimationEnd())
-		return STATE::IDLE;
+	if (true == m_bCombo1)
+		eState = Combo_1();
 
+	if (true == m_bCombo2)
+		eState = Combo_2();
+
+	if (true == m_bCombo3)
+		eState = Combo_3();
+
+	if (true == m_bCombo4)
+		eState = Combo_4();
 
 	return eState;
 }
@@ -35,14 +43,42 @@ STATE CState_Attack_Urd::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
-
-
 	return eState;
 }
 
 void CState_Attack_Urd::Reset_State()
 {
-	m_bEnter = false;
+	m_pOwnerBodyPart->Set_Anim_TargetPos(XMVectorZero());
+
+	if (true == m_bCombo1)
+	{
+		m_bCombo1 = false;
+		m_bCombo1_1 = false;
+		m_bCombo1_2 = false;
+		m_bCombo1_3 = false;
+	}
+	if (true == m_bCombo2)
+	{
+		m_bCombo2 = false;
+		m_bCombo2_1 = false;
+		m_bCombo2_2 = false;
+		m_bCombo2_3 = false;
+	}
+	if (true == m_bCombo3)
+	{
+		m_bCombo3 = false;
+		m_bCombo3_1 = false;
+		m_bCombo3_2 = false;
+		m_bCombo3_3 = false;
+	}
+	if (true == m_bCombo4)
+	{
+		m_bCombo4 = false;
+		m_bCombo4_1 = false;
+		m_bCombo4_2 = false;
+		m_bCombo4_3 = false;
+	}
+
 }
 
 void CState_Attack_Urd::Enter_State()
@@ -51,11 +87,229 @@ void CState_Attack_Urd::Enter_State()
 
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 
-	m_pOwnerBodyPart->Set_AnimationIndex(false, 0, 2.f);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	_int iRandom = pGameInstance->Random_Int(0, 6);
+
+	if (0 == iRandom || 1 == iRandom)
+	{
+		m_bCombo1 = true;
+		m_bCombo1_1 = true;
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 0, 1.5f);
+	}
+	else if (2 == iRandom || 3 == iRandom)
+	{
+		m_bCombo2 = true;
+		m_bCombo2_1 = true;
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 2, 2.f);
+	}
+	else if (4 == iRandom || 5 == iRandom)
+	{
+		m_bCombo3 = true;
+		m_bCombo3_1 = true;
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 7, 2.f);
+	}
+	else if (6 == iRandom)
+	{
+		m_bCombo4 = true;
+		m_bCombo4_1 = true;
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 0, 1.5f);
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 STATE CState_Attack_Urd::Key_Input(const _float& fTimeDelta)
 {
+	return m_eState;
+}
+
+STATE CState_Attack_Urd::Combo_1()
+{
+	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	{
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
+	{
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
+	{
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+
+	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(130))
+	{
+		if (true == m_pRealOwner->Is_Hit())
+			return STATE::HIT;
+	}
+	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
+	{
+		return STATE::IDLE;
+	}
+
+	return m_eState;
+}
+
+STATE CState_Attack_Urd::Combo_2()
+{
+	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
+	{
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+
+	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(140))
+	{
+		if (true == m_pRealOwner->Is_Hit())
+			return STATE::HIT;
+	}
+	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
+	{
+		return STATE::AVOID;
+	}
+
+	return m_eState;
+}
+
+STATE CState_Attack_Urd::Combo_3()
+{
+	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	{
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(90))
+	{
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(120))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+	
+	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(170))
+	{
+		if (true == m_pRealOwner->Is_Hit())
+			return STATE::HIT;
+	}
+	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
+	{
+		return STATE::IDLE;
+	}
+
+
+	return m_eState;
+}
+
+STATE CState_Attack_Urd::Combo_4()
+{
+	if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	{
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
+	{
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
+	{
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
+	{
+		m_pRealOwner->Set_Attack(false);
+		m_bCombo4_1 = false;
+
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		if (true == pGameInstance->Random_Coin(0.5f))
+		{
+			m_bCombo4_2 = true;
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 8, 2.f);
+		}
+		else
+		{
+			m_bCombo4_3 = true;
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 9, 2.f);
+		}
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+
+
+	if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	{
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+
+	if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(115))
+	{
+		if (true == m_pRealOwner->Is_Hit())
+			return STATE::HIT;
+	}
+	if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->IsAnimationEnd())
+	{
+		return STATE::IDLE;
+	}
+
+	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
+	{
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
+	{
+		m_pRealOwner->Set_Attack(false);
+	}
+
+	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(160))
+	{
+		if (true == m_pRealOwner->Is_Hit())
+			return STATE::HIT;
+	}
+	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->IsAnimationEnd())
+	{
+		return STATE::IDLE;
+	}
+
+
+
 	return m_eState;
 }
 

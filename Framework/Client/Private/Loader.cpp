@@ -18,6 +18,7 @@
 #include "Stair.h"
 #include "BossRoom.h"
 #include "Sub_Building.h"
+#include "Sub_Door.h"
 
 #include "Player.h"
 #include "Body_Player.h"
@@ -29,6 +30,7 @@
 #include "Body_Boss_Urd.h"
 #include "Weapon_Boss_Urd.h"
 #include "HitBox_Boss_Urd.h"
+#include "Seq_Camera_Urd.h"
 
 #include "Enemy_GreatSword.h"
 #include "Body_GreatSword.h"
@@ -497,6 +499,11 @@ HRESULT CLoader::Loading_Mesh()
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Sub_Building/SubBuilding.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sub_Door"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Sub_Door/Sub_Door.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
 
 		break;
 	case Client::LEVEL_1:
@@ -550,6 +557,11 @@ HRESULT CLoader::Loading_Mesh()
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Sub_Building"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Sub_Building/SubBuilding.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Sub_Door"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Sub_Door/Sub_Door.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
 		break;
@@ -669,6 +681,11 @@ HRESULT CLoader::Loading_EtcComponent()
 			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation/BossRoom.dat")))))
 			return E_FAIL;
 
+		/* For.Prototype_Component_Navigation */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_SubBuilding_Navigation"),
+			CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/Data/Navigation/SubBuilding.dat")))))
+			return E_FAIL;
+
 		/* For.Prototype_Component_StateMachine*/
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
 			CStateMachine::Create(m_pDevice, m_pContext))))
@@ -745,6 +762,9 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_HitBox"), CHitBox_Boss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_HitBox")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_SeqCamera"), CSeq_Camera_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_SeqCamera")))))
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword"), CEnemy_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword")))))
@@ -829,6 +849,9 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ChurchSideDoor"), CChurchSideDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ChurchSideDoor")))))
 			return E_FAIL;
 
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sub_Door"), CSub_Door::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Sub_Door")))))
+			return E_FAIL;
+
 		
 
 		break;
@@ -881,6 +904,9 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sub_Building"), CSub_Building::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Sub_Building")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sub_Door"), CSub_Door::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Sub_Door")))))
 			return E_FAIL;
 
 		break;

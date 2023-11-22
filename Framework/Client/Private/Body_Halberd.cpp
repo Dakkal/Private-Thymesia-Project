@@ -202,7 +202,7 @@ void CBody_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -217,7 +217,7 @@ void CBody_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -236,7 +236,7 @@ void CBody_Halberd::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDe
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -272,7 +272,7 @@ void CBody_Halberd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDel
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -287,7 +287,7 @@ void CBody_Halberd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDel
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -306,7 +306,7 @@ void CBody_Halberd::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDel
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -336,7 +336,7 @@ void CBody_Halberd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDel
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		}
 	}
@@ -351,7 +351,7 @@ void CBody_Halberd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDel
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;
@@ -368,7 +368,7 @@ void CBody_Halberd::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDel
 			break;
 		case Engine::CGameObject::WEAPON_L:
 			break;
-		case Engine::CGameObject::SIGHT:
+		case Engine::CGameObject::HITBOX:
 			break;
 		default:
 			break;

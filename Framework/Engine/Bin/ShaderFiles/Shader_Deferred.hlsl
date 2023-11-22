@@ -175,7 +175,9 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 	vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
 	vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
 
-
+    float3 vColor = { 0.08f, 0.086667f, 0.1f };
+       
+	
     Out.vColor = vDiffuse * vShade + vSpecular;
 
 	return Out;

@@ -21,8 +21,14 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
+	_uint					m_iHitCnt = { 0 };
+	_uint					m_iRecoverCnt = { 0 };
+
+
 	_bool	m_bLeft_Hit = { false };
 	_bool	m_bRight_Hit = { false };
+
+	_bool	m_IsParry = { false };
 
 public:
 	static CState_Hit_Urd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);

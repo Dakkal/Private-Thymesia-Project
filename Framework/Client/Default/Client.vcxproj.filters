@@ -229,6 +229,12 @@
     <Filter Include="02.GameObject\Object\Monster\Enemy_TwinSword\Part\Weapon">
       <UniqueIdentifier>{d8696275-1251-4255-a23a-3de66fab7079}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\Sub_Door">
+      <UniqueIdentifier>{33d490b1-0031-46b5-b611-7eea9f56652c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Boss\Boss_Urd\Part\Seq_Camera_Urd">
+      <UniqueIdentifier>{4131252f-a3dc-4530-8f83-9d55bdc58b9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -554,6 +560,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Run_TwinSword.cpp">
       <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sub_Door.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\Sub_Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Throw_Weapon_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Part\Weapon_Boss_Urd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Seq_Camera_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Part\Seq_Camera_Urd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Seq_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Parry_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Run_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Walk_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Rush_Urd.cpp">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -895,6 +925,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Walk_TwinSword.h">
       <Filter>02.GameObject\Object\Monster\Enemy_TwinSword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sub_Door.h">
+      <Filter>02.GameObject\Object\Porps\Deco\Sub_Door</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Throw_Weapon_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Part\Weapon_Boss_Urd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Seq_Camera_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\Part\Seq_Camera_Urd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Seq_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Parry_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Run_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Walk_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Rush_Urd.h">
+      <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
