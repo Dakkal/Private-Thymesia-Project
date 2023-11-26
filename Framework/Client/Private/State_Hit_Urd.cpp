@@ -29,6 +29,9 @@ STATE CState_Hit_Urd::Tick(const _float& fTimeDelta)
 	if (true == m_IsParry)
 		return STATE::PARRY;
 
+	if (0 >= m_pRealOwner->Get_HP())
+		return STATE::STUN;
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (m_iRecoverCnt < m_iHitCnt)
@@ -48,7 +51,7 @@ STATE CState_Hit_Urd::Tick(const _float& fTimeDelta)
 
 	if (m_pRealOwner->Is_Hit())
 	{
-		if (true == pGameInstance->Random_Coin(0.3f))
+		if (true == pGameInstance->Random_Coin(0.1f))
 		{
 			RELEASE_INSTANCE(CGameInstance);
 			return STATE::PARRY;
@@ -61,6 +64,8 @@ STATE CState_Hit_Urd::Tick(const _float& fTimeDelta)
 			m_bRight_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 15, 1.2f);
 			m_bLeft_Hit = true;
+
+			m_pRealOwner->Subtract_HP();
 			m_iHitCnt++;
 		}
 		else if (true == m_bLeft_Hit)
@@ -68,11 +73,17 @@ STATE CState_Hit_Urd::Tick(const _float& fTimeDelta)
 			m_bLeft_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 16, 1.2f);
 			m_bRight_Hit = true;
+
+			m_pRealOwner->Subtract_HP();
 			m_iHitCnt++;
 		}
 	}
 	else if (m_pOwnerBodyPart->IsAnimationEnd())
+	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
+	}
+		
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -91,6 +102,8 @@ STATE CState_Hit_Urd::LateTick(const _float& fTimeDelta)
 void CState_Hit_Urd::Reset_State()
 {
 	m_bRight_Hit = true;
+	m_IsParry = false;
+	m_iHitCnt = 0;
 }
 
 void CState_Hit_Urd::Enter_State()
@@ -101,7 +114,7 @@ void CState_Hit_Urd::Enter_State()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == pGameInstance->Random_Coin(0.2f))
+	if (true == pGameInstance->Random_Coin(0.1f))
 	{
 		m_IsParry = true;
 	}
@@ -120,7 +133,7 @@ void CState_Hit_Urd::Enter_State()
 			m_bRight_Hit = true;
 		}
 
-		m_iRecoverCnt = pGameInstance->Random_Int(2, 3);
+		m_iRecoverCnt = pGameInstance->Random_Int(3, 4);
 
 		m_pRealOwner->Subtract_HP();
 		m_iHitCnt++;

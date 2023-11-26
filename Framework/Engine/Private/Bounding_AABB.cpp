@@ -61,6 +61,11 @@ _bool CBounding_AABB::IsCollision(CCollider::TYPE eType, CBounding* pBouding)
 	return IsColl;
 }
 
+_vector CBounding_AABB::Get_ColWorldPos()
+{
+	return 	_vector(m_pAABB->Center.x, m_pAABB->Center.y, m_pAABB->Center.z, 1.f);
+}
+
 #ifdef _DEBUG
 HRESULT CBounding_AABB::Render(PrimitiveBatch<VertexPositionColor>* pBatch)
 {

@@ -12,6 +12,9 @@
 #include "State_Walk_Urd.h"
 #include "State_Parry_Urd.h"
 #include "State_Run_Urd.h"
+#include "State_Stun_Urd.h"
+#include "State_Dead_Urd.h"
+#include "State_Skill_Urd.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -51,16 +54,32 @@ HRESULT CBoss_Urd::Initialize(void* pArg)
 	if (FAILED(Ready_State()))
 		return E_FAIL;
 
+	m_fDissolveDuraton = 4.f;
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	_uint iRandom = pGameInstance->Random_Int(2, 3);
+
+	m_iSkillActive = iRandom;
+
+	RELEASE_INSTANCE(CGameInstance);
+		
+
 	return S_OK;
 }
 
-void CBoss_Urd::Tick(_float fTimeDelta)
+void CBoss_Urd::Enter_Object()
 {
 	if (true == m_bFirstDrop)
 	{
 		m_pCurNavigationCom->Set_toCell(17, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
+}
+
+void CBoss_Urd::Tick(_float fTimeDelta)
+{
+	
 	if (false == m_IsSeq)
 	{
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -85,12 +104,22 @@ void CBoss_Urd::Tick(_float fTimeDelta)
 
 		RELEASE_INSTANCE(CGameInstance);
 	}
-		
 
 	Out_Player(fTimeDelta);
 	Look_Player(fTimeDelta);
 	
 	m_pStateMachineCom->Tick(fTimeDelta);
+
+	if (true == m_IsDead)
+	{
+		m_fDissolveTime += fTimeDelta;
+
+		if (m_fDissolveDuraton < m_fDissolveTime)
+			m_IsActive = false;
+	}
+	/* 작동이 멈추면 리턴, 데드 스테이트 틱에서 꺼지니까 여기가 맞을거다 */
+	if (false == m_IsActive)
+		return;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -107,10 +136,15 @@ void CBoss_Urd::Tick(_float fTimeDelta)
 
 void CBoss_Urd::LateTick(_float fTimeDelta)
 {
+	if (false == m_IsSeq)
+		return;
+
 	if (false == m_IsActive)
 		return;
 
-	if(true == m_IsHit) m_IsHit = false;
+	if (true == m_IsHit) m_IsHit = false;
+
+
 
 	m_pStateMachineCom->LateTick(fTimeDelta);
 
@@ -119,6 +153,15 @@ void CBoss_Urd::LateTick(_float fTimeDelta)
 		if (nullptr != iter.second)
 			iter.second->LateTick(fTimeDelta);
 	}
+
+
+	if (3 < m_listProjectile.size())
+	{
+		CThrow_Weapon_Urd* pObject = m_listProjectile.front();
+		pObject->Set_Active(false);
+		m_listProjectile.pop_front();
+	}
+
 
 	m_pColliderCom->LateUpdate();
 
@@ -517,6 +560,21 @@ HRESULT CBoss_Urd::Ready_Parts()
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::WEAPON_R, pParts);
 
+	/* For.Part_WeaponGara */
+	CPartObject::PART_DESC			PartDesc_WeaponGara;
+	PartDesc_WeaponGara.pOwner = this;
+	PartDesc_WeaponGara.ePart = PARTS::WEAPON_L;
+	PartDesc_WeaponGara.pParentTransform = m_pTransformCom;
+	PartDesc_WeaponGara.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_l");
+	PartDesc_WeaponGara.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
+
+	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Boss_Urd_WeaponGara"), &PartDesc_WeaponGara);
+	if (nullptr == pParts)
+		return E_FAIL;
+	pParts->Set_Active(false);
+	m_Parts.emplace(CGameObject::PARTS::WEAPON_L, pParts);
+
+	/* For.HitBox */
 	CPartObject::PART_DESC			PartDesc_HitBox;
 	PartDesc_HitBox.pOwner = this;
 	PartDesc_HitBox.ePart = PARTS::HITBOX;
@@ -583,13 +641,28 @@ HRESULT CBoss_Urd::Ready_State()
 		return E_FAIL;
 	m_pStateMachineCom->Add_State(STATE::WALK, pState);
 
-	pState = CState_Seq_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::LOCK_IDLE);
+	pState = CState_Seq_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::SEQUENCE);
 	if (nullptr == pState)
 		return E_FAIL;
-	m_pStateMachineCom->Add_State(STATE::LOCK_IDLE, pState);
+	m_pStateMachineCom->Add_State(STATE::SEQUENCE, pState);
+
+	pState = CState_Stun_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::STUN);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::STUN, pState);
+
+	pState = CState_Dead_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::DEAD);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::DEAD, pState);
+
+	pState = CState_Skill_Urd::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::SKILL);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(STATE::SKILL, pState);
 
 
-	m_pStateMachineCom->Set_State(STATE::LOCK_IDLE);
+	m_pStateMachineCom->Set_State(STATE::SEQUENCE);
 
 	return S_OK;
 }
@@ -626,10 +699,13 @@ void CBoss_Urd::Free()
 {
 	__super::Free();
 
+	m_listProjectile.clear();
+
 	for (auto& iter : m_Parts)
 		Safe_Release(iter.second);
 	m_Parts.clear();
 
+	
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTransformCom);

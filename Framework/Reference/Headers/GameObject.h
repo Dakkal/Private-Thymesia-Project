@@ -16,9 +16,11 @@ protected:
 public:
     virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
     virtual HRESULT Initialize(void* pArg);
+    virtual void Enter_Object();
     virtual void PriorityTick(_float fTimeDelta);
     virtual void Tick(_float fTimeDelta);
     virtual void LateTick(_float fTimeDelta);
+    virtual void Exit_Object();
     virtual HRESULT Render();
 
 public:
@@ -39,6 +41,7 @@ public:
     const _bool&          Is_Cloned()       { return m_IsCloned; }
     const _bool&          Is_Dead()         { return m_IsDead; }
     const _bool&          Is_Hit()          { return m_IsHit; }
+    const _bool&          Is_Parry()        { return m_IsParry; }
     const _bool&          Is_Attack()       { return m_IsAttack; }
     const _bool&          Is_SubAttack()    { return m_IsAttack; }
     const _bool&          Is_OktoHit()      { return m_bOktoHit; }
@@ -52,6 +55,7 @@ public:
 
     void            Set_Dead(_bool IsDead)          { m_IsDead = IsDead; }
     void            Set_Hit(_bool IsHit)            { m_IsHit = IsHit; }
+    void            Set_Parry(_bool IsParry)        { m_IsParry = IsParry; }
 
     void            Set_Attack(_bool IsAttack)      { m_IsAttack = IsAttack; }
     void            Set_SubAttack(_bool IsSubAttack) { m_IsSubAttack = IsSubAttack; }
@@ -105,6 +109,7 @@ protected:
     _bool       m_IsMove = { false };
     _bool       m_bOktoHit = { false };
     _bool       m_IsCull = { false };
+    _bool       m_IsParry = { false };
     _bool       m_IsParried = { false };
 
     OBJECT_TYPE m_eObjType = OBJECT_TYPE::_END;
@@ -117,7 +122,7 @@ protected:
     _float      m_fDissolveTime = { 0.f };
     _float      m_fDissolveDuraton = { 0.f };
 
-    _uint       m_iHp = { 30 };
+    _uint       m_iHp = { 5 };
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);

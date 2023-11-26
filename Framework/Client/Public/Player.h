@@ -24,8 +24,9 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
 	virtual HRESULT Initialize(void* pArg);
-	virtual void Tick(_float fTimeDelta);
-	virtual void LateTick(_float fTimeDelta);
+	virtual void	Enter_Object();
+	virtual void	Tick(_float fTimeDelta);
+	virtual void	LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
 public:
@@ -41,11 +42,17 @@ public:
 	HRESULT					Search_TargetEnemy();
 	HRESULT					ReSearch_TargetEnemy();
 	HRESULT					Check_TargetEnemy();
-	CGameObject*			Get_TargetEnemy() const { return m_pTargetEnemy; }
-	vector<CGameObject*>	Get_TargetEnemies() const { return m_vecTargetEnemy; }
+	CGameObject*			Get_TargetEnemy() const		{ return m_pTargetEnemy; }
+	vector<CGameObject*>	Get_TargetEnemies() const	{ return m_vecTargetEnemy; }
 
-	void					Set_Parry(_bool IsParry) { m_IsParry = IsParry; }
-	const _bool&			Is_Parry() const		 { return m_IsParry; }
+public:
+	_bool					Is_TargetEnemys()			{ if (0 < m_vecTargetEnemy.size()) return true; else return false; }
+
+	void					Set_Parry(_bool IsParry)	{ m_IsParry = IsParry; }
+	const _bool&			Is_Parry() const			{ return m_IsParry; }
+
+	void					Set_Excute(_bool IsExcute)	{ m_IsExcute = IsExcute; }
+	const _bool&			Is_Excute() const			{ return m_IsExcute; }
 
 private:
 	vector<CGameObject*>	m_vecTargetEnemy;	
@@ -57,6 +64,8 @@ private:
 
 	_bool					m_bFirstDrop = { true };
 	_bool					m_IsParry = { false };
+
+	_bool					m_IsExcute = { false };
 
 private:
 	HRESULT Ready_Components();

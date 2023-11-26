@@ -33,6 +33,12 @@ HRESULT CBossRoom::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CBossRoom::Enter_Object()
+{
+	if (nullptr != m_pCurNavigationCom)
+		m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+}
+
 void CBossRoom::PriorityTick(_float fTimeDelta)
 {
 	if (nullptr != m_pCurNavigationCom)

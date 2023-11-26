@@ -95,7 +95,7 @@ _bool CCell::IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex)
 		vSour.Normalize();
 		vDest.Normalize();
 
-		if (0 < vSour.Dot(vDest))
+		if (0 < XMVectorGetX(XMVector3Dot(vSour, vDest)))
 		{
 			if (-1 == m_iNeighborIndicies[i])
 			{

@@ -46,8 +46,11 @@ STATE CState_Walk::Tick(const _float& fTimeDelta)
 	}
 	else if (pGameInstance->Key_Down(VK_LSHIFT))
 	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::LOCK_WALK;
+		if (true == dynamic_cast<CPlayer*>(m_pRealOwner)->Is_TargetEnemys())
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::LOCK_WALK;
+		}
 	}
 
 	if (true == pGameInstance->Is_MouseMove())

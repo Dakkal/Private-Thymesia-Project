@@ -5,6 +5,7 @@
 #include "ToolCamera.h"
 
 _bool	g_BossSeq = { false };
+_bool	g_PlayerSeq = { false };
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -40,6 +41,24 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
+
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Enter_Level()
+{
+	CGameInstance* pGameInstace = GET_INSTANCE(CGameInstance);
+
+	pGameInstace->Enter_Objects(LEVEL_GAMEPLAY, LAYER_PROP);
+	pGameInstace->Enter_Objects(LEVEL_GAMEPLAY, LAYER_PLAYER);
+	pGameInstace->Enter_Objects(LEVEL_GAMEPLAY, LAYER_MONSTER);
+	pGameInstace->Enter_Objects(LEVEL_GAMEPLAY, LAYER_BOSS);
+
+	pGameInstace->Enter_Objects(LEVEL_GAMEPLAY, LAYER_CAMERA);
+
+	RELEASE_INSTANCE(CGameInstance);
+
 	return S_OK;
 }
 
@@ -70,11 +89,20 @@ HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
 
 	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_BOSS, fTimeDelta);
 	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_MONSTER, fTimeDelta);
+	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_PROJECTILE, fTimeDelta);
+	
 
 	pGameInstance->Delete_NonActive_Objects(LEVEL_GAMEPLAY, LAYER_MONSTER);
+	pGameInstance->Delete_NonActive_Objects(LEVEL_GAMEPLAY, LAYER_BOSS);
+	pGameInstance->Delete_NonActive_Objects(LEVEL_GAMEPLAY, LAYER_PROJECTILE);
 
 	RELEASE_INSTANCE(CGameInstance)
 
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Exit_Level()
+{
 	return S_OK;
 }
 
@@ -216,6 +244,8 @@ HRESULT CLevel_GamePlay::Load_Level(LEVELID eLevel)
 	}
 #pragma endregion
 	RELEASE_INSTANCE(CGameInstance);
+
+
 
 	return S_OK;
 }

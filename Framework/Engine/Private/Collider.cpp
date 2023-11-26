@@ -123,6 +123,11 @@ void CCollider::Set_Colli(_bool _IsColli)
 	return m_pBounding->Set_Coll(_IsColli);
 }
 
+_vector CCollider::Get_ColWorldPos()
+{
+	return m_pBounding->Get_ColWorldPos();
+}
+
 void CCollider::OnCollision_Enter(CGameObject* _pColObj, _float fTimedelta)
 {
 	++m_iNumbCol;

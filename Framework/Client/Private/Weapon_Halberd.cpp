@@ -390,7 +390,7 @@ HRESULT CWeapon_Halberd::Ready_Components()
 	OBBDesc.vExtents = _float3(0.9f, 0.08f, 0.02f);
 	OBBDesc.vCenter = _float3(1.1f, -0.04f, 0.f);
 	OBBDesc.vDegree = _float3(0.f, 0.f, 0.f);
-	OBBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	OBBDesc.vCollideColor = _vector(1.f, 0.5f, 0.f, 1.f);
 	OBBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &OBBDesc)))

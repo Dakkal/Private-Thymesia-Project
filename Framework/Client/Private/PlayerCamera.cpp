@@ -33,14 +33,32 @@ HRESULT CPlayerCamera::Initialize(void* pArg)
 
     m_pPlayerTransform = dynamic_cast<CTransform*>(pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_PLAYER)->Get_Component(TEXT("Com_Transform")));
 
-    m_vEye = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
-    _vector vAt = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
-    vAt.y += 1.5f;
-    m_vAt = vAt;
-
     RELEASE_INSTANCE(CGameInstance);
 
     return S_OK;
+}
+
+void CPlayerCamera::Enter_Object()
+{
+    _vector vCamDir;
+    _vector vCamOffset;
+
+    vCamDir = { 0.f, 1.f, -1.f, 0.f };
+    vCamOffset = vCamDir * m_fOffsetDis;
+    vCamOffset.y -= 2.5f;
+
+    _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+    _vector vOffsetPos = vPlayerPos + vCamOffset;
+
+    _vector vCamPos = vOffsetPos;
+    if (vPlayerPos.y + 0.3f >= vCamPos.y)
+        vCamPos.y = vPlayerPos.y + 0.3f;
+
+    m_pTransform->Set_State(CTransform::STATE_POS, vCamPos);
+
+    vPlayerPos.y += 1.5f;
+    m_vAt = vPlayerPos;
+    m_pTransform->LookAt(m_vAt);
 }
 
 void CPlayerCamera::Tick(_float fTimeDelta)
@@ -108,8 +126,15 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
         m_pTransform->LookAt(m_vAt);
     }  
 
-    if(false == g_BossSeq)
+    if (false == g_BossSeq && false == g_PlayerSeq)
+    {
         __super::LateTick(fTimeDelta);
+    }
+       
+}
+
+void CPlayerCamera::Exit_Object()
+{
 }
 
 void CPlayerCamera::MouseMove(_float fTimeDelta)

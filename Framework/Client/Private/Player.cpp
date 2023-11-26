@@ -20,6 +20,7 @@
 #include "State_Hit.h"
 #include "State_ParrySuccess.h"
 #include "State_Lockon_ParrySuccess.h"
+#include "State_Excute.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -62,17 +63,19 @@ HRESULT CPlayer::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPlayer::Tick(_float fTimeDelta)
+void CPlayer::Enter_Object()
 {
 	if (true == m_bFirstDrop)
 	{
 		m_pCurNavigationCom->Set_toCell(15, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
+}
+
+void CPlayer::Tick(_float fTimeDelta)
+{
 	if (true == g_BossSeq)
 		return;
-
-
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (true == pGameInstance->Key_Down('Q'))
@@ -640,6 +643,20 @@ HRESULT CPlayer::Ready_PlayerParts()
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::HITBOX, pPlayerParts);
 
+
+	CPartObject::PART_DESC			PartDesc_Camera;
+	PartDesc_Camera.pOwner = this;
+	PartDesc_Camera.ePart = PARTS::CAMERA;
+	PartDesc_Camera.pParentTransform = m_pTransformCom;
+	PartDesc_Camera.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("camera");
+	PartDesc_Camera.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
+	PartDesc_Camera.pSocketBoneforPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("AnimTargetPoint");
+
+	pPlayerParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Player_SeqCamera"), &PartDesc_Camera);
+	if (nullptr == pPlayerParts)
+		return E_FAIL;
+	m_Parts.emplace(CGameObject::PARTS::CAMERA, pPlayerParts);
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -708,6 +725,11 @@ HRESULT CPlayer::Ready_State()
 	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
 
 	pState = CState_ParrySuccess::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::PARRY_SUCCESS);
+	if (nullptr == pState)
+		return E_FAIL;
+	m_pStateMachineCom->Add_State(pState->Get_State(), pState);
+
+	pState = CState_Excute::Create(m_pDevice, m_pContext, m_pStateMachineCom, STATE::SEQUENCE);
 	if (nullptr == pState)
 		return E_FAIL;
 	m_pStateMachineCom->Add_State(pState->Get_State(), pState);

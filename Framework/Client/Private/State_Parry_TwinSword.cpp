@@ -28,6 +28,8 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 	{
 		if (true == m_pOwnerBodyPart->IsAnimationEnd())
 		{
+			m_pRealOwner->Set_Parry(false);
+
 			dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(true);
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 33, 1.f);
 			m_bParryEnd = true;
@@ -37,6 +39,8 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 	{
 		if (true == m_pOwnerBodyPart->IsAnimationEnd())
 		{
+			m_pRealOwner->Set_Parry(false);
+
 			dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(true);
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 35, 2.2f);
 			m_bParryEnd = true;
@@ -87,7 +91,7 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(90))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;
@@ -125,7 +129,7 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(220))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(210))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;
@@ -143,6 +147,8 @@ STATE CState_Parry_TwinSword::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	
+
 	return eState;
 }
 
@@ -159,6 +165,8 @@ void CState_Parry_TwinSword::Enter_State()
 {
 	m_pRealOwner->Set_Move(true);
 	dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(false);
+
+	m_pRealOwner->Set_Parry(true);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 

@@ -23,8 +23,10 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag) override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Enter_Object() override;
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void LateTick(_float fTimeDelta) override;
+	virtual void Exit_Object() override;
 
 public:
 	virtual void Set_TargetTransform(class CTransform* pTransform) { m_pTargetTransform = pTransform; }

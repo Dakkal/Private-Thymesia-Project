@@ -32,8 +32,18 @@ STATE CState_Idle_Urd::Tick(const _float& fTimeDelta)
 
 	m_fIdleTime += fTimeDelta;
 
-	if (0.1f <= m_fIdleTime)
+	if (0.3f <= m_fIdleTime)
 	{
+		_float fMinSkillDist = 4.f; _float fMaxSkilDist = 10.f;
+
+		if (fMinSkillDist <= dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance() &&
+			fMaxSkilDist >= dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance() &&
+			dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_SkillCnt() >= dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_SkillActive())
+		{
+			return STATE::SKILL;
+		}
+
+
 		_float fMinRushDist = 4.f;
 		if (fMinRushDist < dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance())
 			return STATE::RUN;

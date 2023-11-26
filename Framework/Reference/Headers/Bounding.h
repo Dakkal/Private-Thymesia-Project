@@ -25,6 +25,8 @@ public:
 	virtual _bool	IsCollision(CCollider::TYPE eType, CBounding * pBouding) PURE;
 	virtual void	Set_Coll(_bool _bIsColli) { m_IsColl = _bIsColli; }
 
+	virtual _vector	Get_ColWorldPos() PURE;
+
 protected:
 	CCollider*		m_pBoundingOwner = { nullptr };
 	_bool			m_IsColl = { false };

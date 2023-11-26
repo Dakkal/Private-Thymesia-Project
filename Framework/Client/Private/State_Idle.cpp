@@ -82,8 +82,11 @@ STATE CState_Idle::Key_Input(const _float& fTimeDelta)
 	}
 	if (pGameInstance->Key_Down(VK_LSHIFT))
 	{
-		RELEASE_INSTANCE(CGameInstance);
-		return STATE::LOCK_IDLE;
+		if (true == dynamic_cast<CPlayer*>(m_pRealOwner)->Is_TargetEnemys())
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::LOCK_IDLE;
+		}
 	}
 	
 	RELEASE_INSTANCE(CGameInstance);

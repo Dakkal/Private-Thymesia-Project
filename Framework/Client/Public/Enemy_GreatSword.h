@@ -23,6 +23,7 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag);
 	virtual HRESULT Initialize(void* pArg);
+	virtual void	Enter_Object();
 	virtual void	Tick(_float fTimeDelta);
 	virtual void	LateTick(_float fTimeDelta);
 	virtual HRESULT Render();

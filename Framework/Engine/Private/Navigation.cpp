@@ -130,8 +130,13 @@ _int CNavigation::IsMove(_vector vPoint)
 		}
 		else if (-1 != iNeighborIndex)
 		{
+			_uint iGetOut = 0;
 			while (true)
 			{
+				if (30 <= iGetOut)
+					return -1;
+				iGetOut++;
+
 				if (-2 == iNeighborIndex)
 					return -2;
 				if (-1 == iNeighborIndex)

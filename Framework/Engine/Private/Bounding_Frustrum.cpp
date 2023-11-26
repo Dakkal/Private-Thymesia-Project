@@ -62,6 +62,11 @@ _bool CBounding_Frustrum::IsCollision(CCollider::TYPE eType, CBounding* pBouding
 	return IsColl;
 }
 
+_vector CBounding_Frustrum::Get_ColWorldPos()
+{
+	return 	_vector(m_pFrustrum->Origin.x, m_pFrustrum->Origin.y, m_pFrustrum->Origin.z, 1.f);
+}
+
 #ifdef _DEBUG
 HRESULT CBounding_Frustrum::Render(PrimitiveBatch<VertexPositionColor>* pBatch)
 {

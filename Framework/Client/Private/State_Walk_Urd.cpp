@@ -30,6 +30,15 @@ STATE CState_Walk_Urd::Tick(const _float& fTimeDelta)
 
 	if (true == m_bAttack)
 	{
+		_float fMinSkillDist = 4.f; _float fMaxSkillDist = 10.f;
+
+		if (fMinSkillDist <= dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance() &&
+			fMaxSkillDist >= dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance() &&
+			dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_SkillCnt() >= dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_SkillActive())
+		{
+			return STATE::SKILL;
+		}
+
 		_float fMinRushDist = 4.f;
 		if (fMinRushDist < dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance())
 			return STATE::RUN;
@@ -130,7 +139,7 @@ STATE CState_Walk_Urd::WalkState(_float fTimeDelta)
 		m_fAttackTime += fTimeDelta;
 	}
 
-	if (2.5f <= m_fAttackTime)
+	if (1.5f <= m_fAttackTime)
 	{
 		m_bAttack = true;
 	}

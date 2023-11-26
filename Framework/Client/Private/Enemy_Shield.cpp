@@ -57,13 +57,18 @@ HRESULT CEnemy_Shield::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CEnemy_Shield::Tick(_float fTimeDelta)
+void CEnemy_Shield::Enter_Object()
 {
 	if (true == m_bFirstDrop)
 	{
 		m_pCurNavigationCom->Set_toCell(6, m_pTransformCom);
 		m_bFirstDrop = false;
 	}
+}
+
+void CEnemy_Shield::Tick(_float fTimeDelta)
+{
+	
 
 	Out_Player(fTimeDelta);
 	Look_Player(fTimeDelta);
@@ -96,6 +101,9 @@ void CEnemy_Shield::Tick(_float fTimeDelta)
 
 void CEnemy_Shield::LateTick(_float fTimeDelta)
 {
+	if (false == m_IsActive)
+		return;
+
 	if (true == m_IsHit) m_IsHit = false;
 
 	m_pStateMachineCom->LateTick(fTimeDelta);

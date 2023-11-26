@@ -12,9 +12,11 @@ private:
 public:
 	HRESULT Initialize();
 	HRESULT Add_GameObject(class CGameObject* pGameObject);
+	void Enter_Layer();
 	void PriorityTick(_float fTimeDelta);
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
+	void Exit_Layer();
 
 public:
 	list<class CGameObject*>*	Get_LayerList() { return &m_listGameObject; }

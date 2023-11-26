@@ -39,6 +39,7 @@ HRESULT CLevel_Manager::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
 
+		m_pCurLevel->Exit_Level();
 		pGameInstance->Clear(m_iCurLevelIndex);
 
 		Safe_Release(pGameInstance);
@@ -49,6 +50,8 @@ HRESULT CLevel_Manager::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 	m_pCurLevel = pNewLevel;
 
 	m_iCurLevelIndex = iLevelIndex;
+
+	m_pCurLevel->Enter_Level();
 
 	return S_OK;
 }

@@ -56,6 +56,24 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _uint& iLayerIn
 	return S_OK;
 }
 
+HRESULT CObject_Manager::Direct_Add_GameObject(_uint iLevelIndex, const _uint& iLayerIndex, CGameObject* pObject)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, iLayerIndex);
+	if (nullptr == pLayer)
+	{
+		pLayer = CLayer::Create();
+
+		pLayer->Add_GameObject(pObject);
+
+		m_pLayers[iLevelIndex].emplace(iLayerIndex, pLayer);
+	}
+	else
+		pLayer->Add_GameObject(pObject);
+
+
+	return S_OK;
+}
+
 CGameObject* CObject_Manager::Clone_GameObject(const wstring& strPrototypeTag, void* pArg)
 {
 	CGameObject* pPrototype = Find_Prototype(strPrototypeTag);
@@ -67,6 +85,15 @@ CGameObject* CObject_Manager::Clone_GameObject(const wstring& strPrototypeTag, v
 		return nullptr;
 
 	return pGameObject;
+}
+
+void CObject_Manager::Enter_Objects(_uint iLevelIndex, const _uint& iLayerIndex)
+{
+	auto iter = Find_Layer(iLevelIndex, iLayerIndex);
+	if (nullptr == iter)
+		return;
+
+	return iter->Enter_Layer();
 }
 
 void CObject_Manager::PriorityTick(_float fTimeDelta)
@@ -101,6 +128,15 @@ void CObject_Manager::LateTick(_float fTimeDelta)
 			Pair.second->LateTick(fTimeDelta);
 		}
 	}
+}
+
+void CObject_Manager::Exit_Objects(_uint iLevelIndex, const _uint& iLayerIndex)
+{
+	auto iter = Find_Layer(iLevelIndex, iLayerIndex);
+	if (nullptr == iter)
+		return;
+
+	return iter->Exit_Layer();
 }
 
 void CObject_Manager::Clear(_uint iLevelIndex)
@@ -162,6 +198,15 @@ HRESULT CObject_Manager::Delete_NonActive_Objects(_uint iLevelIndex, const _uint
 		return E_FAIL;
 
 	return iter->Delete_NonActive_Objects();
+}
+
+CGameObject* CObject_Manager::Get_Player(_uint iLevelIndex)
+{
+	CGameObject* pPlayer = Last_GameObject(iLevelIndex, LAYER_PLAYER);
+	if (nullptr == pPlayer)
+		return nullptr;
+
+	return pPlayer;
 }
 
 list<class CGameObject*>* CObject_Manager::Get_LayerList(_uint iLevelIndex, const _uint& iLayerIndex)

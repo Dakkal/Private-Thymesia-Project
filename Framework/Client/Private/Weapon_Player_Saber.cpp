@@ -7,6 +7,8 @@
 #include "Bounding_OBB.h"
 #include "StateMachine.h"
 #include "PartObject.h"
+#include "Player.h"
+#include "Boss_Urd.h"
 
 CWeapon_Player_Saber::CWeapon_Player_Saber(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -182,11 +184,12 @@ void CWeapon_Player_Saber::OnCollision_Part_Enter(CGameObject* _pColObj, _float 
 		case Engine::CGameObject::HITBOX:
 		{
 			CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
-			CStateMachine* pPartOwnerState = dynamic_cast<CStateMachine*>(pPartOwner->Get_Component(TEXT("Com_StateMachine")));
-
-			STATE ePartOwnerState = pPartOwnerState->Get_CurState();
-
-			if (true == m_pOwner->Is_Attack() && STATE::PARRY == ePartOwnerState)
+			CStateMachine* pState = dynamic_cast<CStateMachine*>(pPartOwner->Get_Component(TEXT("Com_StateMachine")));
+			if (STATE::STUN == pState->Get_CurState() && true == dynamic_cast<CBoss_Urd*>(pPartOwner)->Is_Excute() && true == m_pOwner->Is_Attack())
+			{
+				dynamic_cast<CPlayer*>(m_pOwner)->Set_Excute(true);
+			}
+			if (true == m_pOwner->Is_Attack() && pPartOwner->Is_Parry())
 				m_pOwner->Set_Parried(true);
 		}
 			break;
@@ -206,11 +209,8 @@ void CWeapon_Player_Saber::OnCollision_Part_Enter(CGameObject* _pColObj, _float 
 		case Engine::CGameObject::HITBOX:
 		{
 			CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
-			CStateMachine* pPartOwnerState = dynamic_cast<CStateMachine*>(pPartOwner->Get_Component(TEXT("Com_StateMachine")));
 
-			STATE ePartOwnerState = pPartOwnerState->Get_CurState();
-
-			if (true == m_pOwner->Is_Attack() && STATE::PARRY == ePartOwnerState)
+			if (true == m_pOwner->Is_Attack() && pPartOwner->Is_Parry())
 				m_pOwner->Set_Parried(true);
 		}
 			break;
@@ -246,13 +246,12 @@ void CWeapon_Player_Saber::OnCollision_Part_Stay(CGameObject* _pColObj, _float f
 			break;
 		case Engine::CGameObject::HITBOX:
 		{
-			CStateMachine* pPartOwnerState = dynamic_cast<CStateMachine*>(pPartOwner->Get_Component(TEXT("Com_StateMachine")));
+			CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 
-			STATE ePartOwnerState = pPartOwnerState->Get_CurState();
-
-			if (true == m_pOwner->Is_Attack() && STATE::PARRY == ePartOwnerState)
+			if (true == m_pOwner->Is_Attack() && pPartOwner->Is_Parry())
 				m_pOwner->Set_Parried(true);
 		}
+		
 			break;
 		}
 	}
@@ -284,11 +283,9 @@ void CWeapon_Player_Saber::OnCollision_Part_Stay(CGameObject* _pColObj, _float f
 			break;
 		case Engine::CGameObject::HITBOX:
 		{
-			CStateMachine* pPartOwnerState = dynamic_cast<CStateMachine*>(pPartOwner->Get_Component(TEXT("Com_StateMachine")));
+			CGameObject* pPartOwner = dynamic_cast<CPartObject*>(_pColObj)->Get_PartOwner();
 
-			STATE ePartOwnerState = pPartOwnerState->Get_CurState();
-
-			if (true == m_pOwner->Is_Attack() && STATE::PARRY == ePartOwnerState)
+			if (true == m_pOwner->Is_Attack() && pPartOwner->Is_Parry())
 				m_pOwner->Set_Parried(true);
 		}
 			break;
@@ -384,10 +381,10 @@ HRESULT CWeapon_Player_Saber::Ready_Components()
 
 	/* Com_Collider */
 	CBounding_OBB::BOUNDING_OBB_DESC		OBBDesc = {};
-	OBBDesc.vExtents = _float3(0.45f, 0.05f, 0.02f);
+	OBBDesc.vExtents = _float3(0.6f, 0.05f, 0.02f);
 	OBBDesc.vCenter = _float3(0.6f, 0.02f, 0.f);
 	OBBDesc.vDegree = _float3(0.f, 0.f, 5.f);
-	OBBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	OBBDesc.vCollideColor = _vector(1.f, 0.5f, 0.f, 1.f);
 	OBBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &OBBDesc)))

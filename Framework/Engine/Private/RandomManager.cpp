@@ -8,7 +8,8 @@ CRandomManager::CRandomManager()
 
 const _float& CRandomManager::Random_Float(_float fMin, _float fMax) 
 {
-	std::mt19937_64 gen(m_Random());
+	std::random_device Random;
+	std::mt19937_64 gen(Random());
 
 	std::uniform_real_distribution<float> xfloatProbality(fMin, fMax);
 
@@ -19,7 +20,8 @@ const _float& CRandomManager::Random_Float(_float fMin, _float fMax)
 
 const _int& CRandomManager::Random_Int(_int iMin, _int iMax)
 {
-	std::mt19937_64 gen(m_Random());
+	std::random_device Random;
+	std::mt19937_64 gen(Random());
 
 	std::uniform_int_distribution<int> xintProbality(iMin, iMax);
 
@@ -35,7 +37,8 @@ const _bool& CRandomManager::Random_Coin(_float fProbality)
 	else if (0.f >= fProbality)
 		fProbality = 0.f;
 
-	std::mt19937_64 gen(m_Random());
+	std::random_device Random;
+	std::mt19937_64 gen(Random());
 
 	std::bernoulli_distribution coinFlip(fProbality);
 

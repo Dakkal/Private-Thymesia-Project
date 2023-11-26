@@ -239,6 +239,14 @@ HRESULT CGameInstance::Add_GameObject(_uint iLevelIndex, const _uint& iLayerInde
 	return m_pObject_Manager->Add_GameObject(iLevelIndex, iLayerIndex, strPrototypeTag, pArg);
 }
 
+HRESULT CGameInstance::Direct_Add_GameObject(_uint iLevelIndex, const _uint& iLayerIndex, CGameObject* pObject)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Direct_Add_GameObject(iLevelIndex, iLayerIndex, pObject);
+}
+
 CGameObject* CGameInstance::Find_GameObject(_uint iLevelIndex, const _uint& iLayerIndex, const wstring& ObjName, _uint iCloneIndex)
 {
 	if (nullptr == m_pObject_Manager)
@@ -263,6 +271,14 @@ CGameObject* CGameInstance::Clone_GameObject(const wstring& strPrototypeTag, voi
 	return m_pObject_Manager->Clone_GameObject(strPrototypeTag, pArg);
 }
 
+CGameObject* CGameInstance::Get_Player(_uint iLevelIndex)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Get_Player(iLevelIndex);
+}
+
 HRESULT CGameInstance::Delete_GameObject(_uint iLevelIndex, const _uint& iLayerIndex, const wstring& ObjName, _uint iCloneIndex)
 {
 	if (nullptr == m_pObject_Manager)
@@ -285,6 +301,22 @@ HRESULT CGameInstance::Delete_NonActive_Objects(_uint iLevelIndex, const _uint& 
 		return E_FAIL;
 
 	return m_pObject_Manager->Delete_NonActive_Objects(iLevelIndex, iLayerIndex);
+}
+
+void CGameInstance::Enter_Objects(_uint iLevelIndex, const _uint& iLayerIndex)
+{
+	if (nullptr == m_pObject_Manager)
+		return;
+
+	return m_pObject_Manager->Enter_Objects(iLevelIndex, iLayerIndex);
+}
+
+void CGameInstance::Exit_Objects(_uint iLevelIndex, const _uint& iLayerIndex)
+{
+	if (nullptr == m_pObject_Manager)
+		return;
+
+	return m_pObject_Manager->Exit_Objects(iLevelIndex, iLayerIndex);
 }
 
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, CComponent* pPrototype)

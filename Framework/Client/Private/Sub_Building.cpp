@@ -33,6 +33,12 @@ HRESULT CSub_Building::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CSub_Building::Enter_Object()
+{
+	if (nullptr != m_pCurNavigationCom)
+		m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+}
+
 void CSub_Building::PriorityTick(_float fTimeDelta)
 {
 	if (nullptr != m_pCurNavigationCom)

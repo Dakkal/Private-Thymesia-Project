@@ -28,6 +28,8 @@ STATE CState_Parry_Shield::Tick(const _float& fTimeDelta)
 	{
 		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(65))
 		{
+			m_pRealOwner->Set_Parry(false);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(80))
@@ -35,7 +37,7 @@ STATE CState_Parry_Shield::Tick(const _float& fTimeDelta)
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(150))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(140))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;
@@ -49,6 +51,8 @@ STATE CState_Parry_Shield::Tick(const _float& fTimeDelta)
 	{
 		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
 		{
+			m_pRealOwner->Set_Parry(false);
+
 			dynamic_cast<CEnemy_Shield*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(true);
 		}
@@ -57,7 +61,7 @@ STATE CState_Parry_Shield::Tick(const _float& fTimeDelta)
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(150))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(140))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;
@@ -76,6 +80,8 @@ STATE CState_Parry_Shield::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	
+
 	return eState;
 }
 
@@ -92,6 +98,8 @@ void CState_Parry_Shield::Enter_State()
 {
 	m_pRealOwner->Set_Move(true);
 	dynamic_cast<CEnemy_Shield*>(m_pRealOwner)->Set_LookPlayer(true);
+
+	m_pRealOwner->Set_Parry(true);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 

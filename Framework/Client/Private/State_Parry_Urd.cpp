@@ -26,13 +26,15 @@ STATE CState_Parry_Urd::Tick(const _float& fTimeDelta)
 
 	if (false == m_bParryEnd && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		m_pRealOwner->Set_Parry(false);
+
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 		m_bParryEnd = true;
 
 		if(true == m_bLeft)
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 1, 1.2f, false, 20);
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 1, 1.5f, false, 20);
 		else if(true == m_bRight)
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 3, 1.2f, false, 30);
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 2, 2.f, false, 30);
 	}
 
 	if (true == m_bLeft && true == m_bParryEnd)
@@ -56,14 +58,15 @@ STATE CState_Parry_Urd::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 		{
+			dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(true);
 		}
-		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
+		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(80))
 		{
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(120))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;
@@ -76,17 +79,18 @@ STATE CState_Parry_Urd::Tick(const _float& fTimeDelta)
 	}
 	if (true == m_bRight && true == m_bParryEnd)
 	{
-		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(70))
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(75))
 		{
+
 			m_pRealOwner->Set_Attack(true);
 		}
-		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
+		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(85))
 		{
+			dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
 		}
-	
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(160))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(130))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;
@@ -105,6 +109,8 @@ STATE CState_Parry_Urd::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	
+
 	return eState;
 }
 
@@ -113,12 +119,18 @@ void CState_Parry_Urd::Reset_State()
 	m_bParryEnd = false;
 	m_bLeft =  false;
 	m_bRight =  false;
+
+	m_pOwnerBodyPart->Set_Anim_TargetPos(XMVectorZero());
 }
 
 void CState_Parry_Urd::Enter_State()
 {
 	m_pRealOwner->Set_Move(true);
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+
+	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Add_SkillCnt();
+
+	m_pRealOwner->Set_Parry(true);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 

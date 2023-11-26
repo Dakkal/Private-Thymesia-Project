@@ -75,7 +75,7 @@ void CSeq_Camera_Urd::LateTick(_float fTimeDelta)
 		CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
 
 		pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransformCom->Get_WorldMatrix_Inverse());
-		pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(XMConvertToRadians(80.f), g_iWinSizeX / (_float)g_iWinSizeY, 0.1f, 1000.f));
+		pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(XMConvertToRadians(85.f), g_iWinSizeX / (_float)g_iWinSizeY, 0.1f, 1000.f));
 
 		RELEASE_INSTANCE(CPipeLine);
 	}

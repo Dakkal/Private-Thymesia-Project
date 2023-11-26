@@ -25,11 +25,13 @@
 #include "Weapon_Player_Saber.h"
 #include "Weapon_Player_Dagger.h"
 #include "HitBox_Player.h"
+#include "Seq_Camera_Player.h"
 
 #include "Boss_Urd.h"
 #include "Body_Boss_Urd.h"
 #include "Weapon_Boss_Urd.h"
 #include "HitBox_Boss_Urd.h"
+#include "WeaponGara_Boss_Urd.h"
 #include "Seq_Camera_Urd.h"
 
 #include "Enemy_GreatSword.h"
@@ -752,6 +754,10 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_HitBox"), CHitBox_Player::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_HitBox")))))
 			return E_FAIL;
 
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_SeqCamera"), CSeq_Camera_Player::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_SeqCamera")))))
+			return E_FAIL;
+
+		/* 우르드 */
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd"), CBoss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd")))))
 			return E_FAIL;
 
@@ -761,12 +767,16 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_Weapon"), CWeapon_Boss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_Weapon")))))
 			return E_FAIL;
 
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_WeaponGara"), CWeaponGara_Boss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_WeaponGara")))))
+			return E_FAIL;
+
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_HitBox"), CHitBox_Boss_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_HitBox")))))
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_SeqCamera"), CSeq_Camera_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_SeqCamera")))))
 			return E_FAIL;
 
+		/* 그소 */
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword"), CEnemy_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword")))))
 			return E_FAIL;
 
@@ -779,6 +789,7 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword_HitBox"), CHitBox_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword_HitBox")))))
 			return E_FAIL;
 
+		/* 할버드 */
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Halberd"), CEnemy_Halberd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_Halberd")))))
 			return E_FAIL;
 

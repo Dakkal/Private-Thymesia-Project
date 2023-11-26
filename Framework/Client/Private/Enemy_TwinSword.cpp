@@ -57,6 +57,10 @@ HRESULT CEnemy_TwinSword::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CEnemy_TwinSword::Enter_Object()
+{
+}
+
 void CEnemy_TwinSword::Tick(_float fTimeDelta)
 {
 	if (true == m_bFirstDrop)
@@ -96,6 +100,9 @@ void CEnemy_TwinSword::Tick(_float fTimeDelta)
 
 void CEnemy_TwinSword::LateTick(_float fTimeDelta)
 {
+	if (false == m_IsActive)
+		return;
+
 	if (true == m_IsHit) m_IsHit = false;
 
 	m_pStateMachineCom->LateTick(fTimeDelta);

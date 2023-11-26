@@ -34,12 +34,12 @@ STATE CState_Avoid_Urd::Tick(const _float& fTimeDelta)
 			if (true == pGameInstance->Random_Coin(0.7f))
 			{
 				RELEASE_INSTANCE(CGameInstance);
-				return STATE::WALK;
+				return STATE::IDLE;
 			}
 			else
 			{
 				RELEASE_INSTANCE(CGameInstance);
-				return STATE::RUN;
+				return STATE::WALK;
 			}
 		}
 	}
@@ -57,14 +57,14 @@ STATE CState_Avoid_Urd::Tick(const _float& fTimeDelta)
 			{
 				if (true == m_bLeft)
 				{
-					m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.f);
+					m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.2f);
 					m_bLeft = false;
 					m_bRight = true;
 
 				}
 				else if (true == m_bRight)
 				{
-					m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.f);
+					m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.2f);
 					m_bLeft = true;
 					m_bRight = false;
 				}
@@ -107,7 +107,7 @@ void CState_Avoid_Urd::Enter_State()
 
 	if (STATE::ATTACK == m_pStateOwner->Get_PreState())
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 31, 1.f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 31, 1.2f);
 		return;
 	}
 
@@ -115,12 +115,12 @@ void CState_Avoid_Urd::Enter_State()
 
 	if (pGameInstance->Random_Coin(0.5))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.2f);
 		m_bLeft = true;
 	}
 	else
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.2f);
 		m_bRight = true;
 	}
 	

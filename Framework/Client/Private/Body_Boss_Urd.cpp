@@ -46,7 +46,7 @@ void CBody_Boss_Urd::Tick(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta);
 
-	m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta, dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom());
+	m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta, dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom(), m_vTargetPos);
 	dynamic_cast<CLandObject*>(m_pOwner)->Set_On_NaviMesh(m_pParentTransform);
 
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix());
@@ -79,6 +79,7 @@ HRESULT CBody_Boss_Urd::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		_bool		Is_ORM = true;
 		_bool		Is_Normal = true;
 
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
@@ -90,35 +91,50 @@ HRESULT CBody_Boss_Urd::Render()
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			Is_Normal = false;
 
-		if (true == Is_Normal)
+		if (true == m_pOwner->Is_Dead())
 		{
-			if (m_pModelCom->Get_Meshes()[i]->Get_MeshName() == "Boss_Urd.Alpha")
+			if (true == Is_Normal)
 			{
-				if (FAILED(m_pShaderCom->Begin(1)))
+				if (FAILED(m_pShaderCom->Begin(7)))
 					return E_FAIL;
 			}
 			else
 			{
-				if (FAILED(m_pShaderCom->Begin(3)))
+				if (FAILED(m_pShaderCom->Begin(6)))
 					return E_FAIL;
 			}
+
 		}
 		else
 		{
-			if (m_pModelCom->Get_Meshes()[i]->Get_MeshName() == "Boss_Urd.Alpha")
+			if (true == Is_Normal)
 			{
-				if (FAILED(m_pShaderCom->Begin(0)))
-					return E_FAIL;
+				if (m_pModelCom->Get_Meshes()[i]->Get_MeshName() == "Boss_Urd.Alpha")
+				{
+					if (FAILED(m_pShaderCom->Begin(1)))
+						return E_FAIL;
+				}
+				else
+				{
+					if (FAILED(m_pShaderCom->Begin(3)))
+						return E_FAIL;
+				}
 			}
 			else
 			{
-				if (FAILED(m_pShaderCom->Begin(2)))
-					return E_FAIL;
+				if (m_pModelCom->Get_Meshes()[i]->Get_MeshName() == "Boss_Urd.Alpha")
+				{
+					if (FAILED(m_pShaderCom->Begin(0)))
+						return E_FAIL;
+				}
+				else
+				{
+					if (FAILED(m_pShaderCom->Begin(2)))
+						return E_FAIL;
+				}
 			}
 		}
 
-		
-	
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
@@ -380,6 +396,11 @@ HRESULT CBody_Boss_Urd::Ready_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
+	/* Com_Texture*/
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
+		TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
 	/* Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
@@ -402,7 +423,7 @@ HRESULT CBody_Boss_Urd::Ready_Components()
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		SphereDesc = {};
 	SphereDesc.vCenter = _float3(0.f, 1.f, 0.f);
 	SphereDesc.fRadius = 0.7f;
-	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	SphereDesc.vCollideColor = _vector(1.f, 0.5f, 0.f, 1.f);
 	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
@@ -424,6 +445,18 @@ HRESULT CBody_Boss_Urd::Bind_ShaderResources()
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	if (true == m_pOwner->Is_Dead())
+	{
+		if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_Time", &m_pOwner->Get_DissolveTime(), sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_DissolveDuration", &m_pOwner->Get_DissolveDuration(), sizeof(_float))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -459,6 +492,9 @@ CGameObject* CBody_Boss_Urd::Clone(void* pArg)
 void CBody_Boss_Urd::Free()
 {
 	__super::Free();
+
+
+	Safe_Release(m_pTextureCom);
 
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);

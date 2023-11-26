@@ -26,6 +26,8 @@ STATE CState_Parry_GreatSword::Tick(const _float& fTimeDelta)
 
 	if (false == m_bParryEnd && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		m_pRealOwner->Set_Parry(false);
+
 		m_bParryEnd = true;
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 4, 1.2f, false , 15);
 		m_pRealOwner->Set_Move(true);
@@ -43,7 +45,7 @@ STATE CState_Parry_GreatSword::Tick(const _float& fTimeDelta)
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(110))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;
@@ -62,6 +64,7 @@ STATE CState_Parry_GreatSword::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+
 	return eState;
 }
 
@@ -74,6 +77,8 @@ void CState_Parry_GreatSword::Enter_State()
 {
 	m_pRealOwner->Set_Move(false);
 	dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(true);
+
+	m_pRealOwner->Set_Parry(true);
 
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 29, 1.2f);
 }

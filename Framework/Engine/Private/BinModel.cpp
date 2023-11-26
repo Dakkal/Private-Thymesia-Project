@@ -430,8 +430,9 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 		{
 			vPos = pTransform->Get_State(CTransform::STATE_POS);
 
-			vWorldDir.z = 0;
+			vWorldDir.z = 0.f;
 			vPos += vWorldDir * fDist * fTimeDelta;
+			vPos.w = 1.f;
 		}
 	}
 
@@ -440,10 +441,13 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 		_int iMove = pNavi->IsMove(vPos);
 
 		if (0 == iMove)
+		{
 			pTransform->Set_State(CTransform::STATE_POS, vPos);
+		}
 		else if (-2 == iMove)
 		{
 			_bool bFind;
+
 			if (OBJECT_TYPE::PART == m_pOwner->Get_ObjectType())
 			{
 				CGameObject* pPartOwner = dynamic_cast<CPartObject*>(m_pOwner)->Get_PartOwner();
@@ -454,7 +458,6 @@ HRESULT CBinModel::Set_OwnerPosToRootPos(CTransform* pTransform, _float fTimeDel
 				bFind = dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPos);
 			}
 			
-
 			if (true == bFind)
 				pTransform->Set_State(CTransform::STATE_POS, vPos);
 		}

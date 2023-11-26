@@ -27,6 +27,8 @@ public:
 	_bool			Is_Colli() const { return (0 < m_iNumbCol) ? true : false; }
 	const _uint&	Get_ID() const { return m_iColID; }
 
+	_vector					Get_ColWorldPos();
+
 	void			OnCollision_Enter(CGameObject* _pColObj, _float fTimedelta);
 	void			OnCollision_Stay(CGameObject* _pColObj, _float fTimedelta);
 	void			OnCollision_Exit(CGameObject* _pColObj, _float fTimedelta);

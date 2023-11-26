@@ -13,9 +13,11 @@ private:
 
 public:
 	virtual HRESULT Initialize() override;
+	virtual HRESULT Enter_Level() override;
 	virtual HRESULT PriorityTick(_float fTimeDelta) override;
 	virtual HRESULT Tick(_float fTimeDelta) override;
 	virtual HRESULT LateTick(_float fTimeDelta) override;
+	virtual HRESULT Exit_Level() override;
 
 private:
 	HRESULT Load_Level(LEVELID eLevel);
@@ -27,6 +29,8 @@ private:
 	HRESULT Ready_Layer_Boss(const _uint& iLayerIndex);
 	HRESULT Ready_Layer_Monster(const _uint& iLayerIndex);
 	HRESULT Ready_Light();
+
+
 
 public:
 	static class CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

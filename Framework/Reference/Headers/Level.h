@@ -11,9 +11,11 @@ protected:
 
 public:
 	virtual HRESULT Initialize();
+	virtual HRESULT Enter_Level();
 	virtual HRESULT PriorityTick(_float fTimeDelta);
 	virtual HRESULT Tick(_float fTimeDelta);
 	virtual HRESULT LateTick(_float fTimeDelta);
+	virtual HRESULT Exit_Level();
 
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };

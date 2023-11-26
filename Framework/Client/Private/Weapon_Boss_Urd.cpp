@@ -45,6 +45,9 @@ HRESULT CWeapon_Boss_Urd::Initialize(void* pArg)
 
 void CWeapon_Boss_Urd::Tick(_float fTimeDelta)
 {
+	if (false == Is_Active())
+		return;
+
 	XMMATRIX	WorldMatrix = m_pSocketBone->Get_CombinedTransform() * m_SocketPivotMatrix;
 
 	WorldMatrix.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
@@ -71,6 +74,9 @@ void CWeapon_Boss_Urd::Tick(_float fTimeDelta)
 
 void CWeapon_Boss_Urd::LateTick(_float fTimeDelta)
 {
+	if (false == Is_Active())
+		return;
+
 	m_pColliderCom->LateUpdate();
 
 
@@ -90,16 +96,45 @@ HRESULT CWeapon_Boss_Urd::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	_bool	Is_Normal, Is_ORM;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		Is_Normal = Is_ORM = true;
+
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_MaterialTexture(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
+			Is_Normal = false;
 
-		if (FAILED(m_pShaderCom->Begin(1)))
-			return E_FAIL;
+		if (true == m_pOwner->Is_Dead())
+		{
+			if (true == Is_Normal)
+			{
+				if (FAILED(m_pShaderCom->Begin(5)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pShaderCom->Begin(4)))
+					return E_FAIL;
+			}
+
+		}
+		else
+		{
+			if (true == Is_Normal)
+			{
+				if (FAILED(m_pShaderCom->Begin(1)))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pShaderCom->Begin(0)))
+					return E_FAIL;
+			}
+		}
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
@@ -349,6 +384,11 @@ HRESULT CWeapon_Boss_Urd::Ready_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
+	/* Com_Texture*/
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
+		TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
 	/* Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
@@ -368,7 +408,7 @@ HRESULT CWeapon_Boss_Urd::Ready_Components()
 	OBBDesc.vExtents = _float3(0.55f, 0.05f, 0.05f);
 	OBBDesc.vCenter = _float3(OBBDesc.vExtents.x, 0.f, 0.f);
 	OBBDesc.vDegree = _float3(0.0f, 0.f, 0.f);
-	OBBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	OBBDesc.vCollideColor = _vector(1.f, 0.5f, 0.f, 1.f);
 	OBBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &OBBDesc)))
@@ -390,6 +430,18 @@ HRESULT CWeapon_Boss_Urd::Bind_ShaderResources()
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	if (true == m_pOwner->Is_Dead())
+	{
+		if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_Time", &m_pOwner->Get_DissolveTime(), sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_DissolveDuration", &m_pOwner->Get_DissolveDuration(), sizeof(_float))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -425,6 +477,8 @@ CGameObject* CWeapon_Boss_Urd::Clone(void* pArg)
 void CWeapon_Boss_Urd::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTextureCom);
 
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pTransformCom);

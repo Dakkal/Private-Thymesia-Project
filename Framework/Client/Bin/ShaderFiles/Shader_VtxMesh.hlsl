@@ -179,11 +179,7 @@ PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
     if (fDissolveAlpha < 0.1f)
         discard;
     
-    if (fDissolveAlpha < 0.5f)
-        Out.vDiffuse = vector(0.043735f, 0.366253f, 0.234551f, 1.f);
-    else
-        Out.vDiffuse = vMtrlDiffuse;
-    
+    Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
 

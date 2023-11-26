@@ -371,7 +371,7 @@ HRESULT CWeapon_Shield::Ready_Components()
 	OBBDesc.vExtents = _float3(0.4f, 0.2f, 0.02f);
 	OBBDesc.vCenter = _float3(-0.05f, 0.15f, 0.15f);
 	OBBDesc.vDegree = _float3(0.f, 0.f, 0.f);
-	OBBDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+	OBBDesc.vCollideColor = _vector(1.f, 0.5f, 0.f, 1.f);
 	OBBDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &OBBDesc)))

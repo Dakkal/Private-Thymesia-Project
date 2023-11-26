@@ -25,8 +25,12 @@ STATE CState_Seq_Urd::Tick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
-	if (false == g_BossSeq)
-		g_BossSeq = true;
+	
+	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(2))
+	{
+		if (false == g_BossSeq)
+			g_BossSeq = true;
+	}
 
 	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(545))
 	{

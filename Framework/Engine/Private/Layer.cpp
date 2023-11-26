@@ -20,6 +20,15 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 	return S_OK;
 }
 
+void CLayer::Enter_Layer()
+{
+	for (auto& pGameObject : m_listGameObject)
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Enter_Object();
+	}
+}
+
 void CLayer::PriorityTick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_listGameObject)
@@ -47,6 +56,15 @@ void CLayer::LateTick(_float fTimeDelta)
 			pGameObject->LateTick(fTimeDelta);
 	}
 
+}
+
+void CLayer::Exit_Layer()
+{
+	for (auto& pGameObject : m_listGameObject)
+	{
+		if (nullptr != pGameObject && true == pGameObject->Is_Active())
+			pGameObject->Exit_Object();
+	}
 }
 
 CGameObject* CLayer::Last_GameObject()

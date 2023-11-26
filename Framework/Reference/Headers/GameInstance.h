@@ -55,12 +55,17 @@ public: /* For.Level_Manager */
 public: /* For.Object_Manager */
 	HRESULT			Add_Prototype(const wstring & strPrototypeTag, class CGameObject* pPrototype);
 	HRESULT			Add_GameObject(_uint iLevelIndex, const _uint & iLayerIndex, const wstring & strPrototypeTag, void* pArg = nullptr);
+	HRESULT			Direct_Add_GameObject(_uint iLevelIndex, const _uint & iLayerIndex, class CGameObject* pObject);
 	CGameObject*	Find_GameObject(_uint iLevelIndex, const _uint & iLayerIndex, const wstring & ObjName, _uint iCloneIndex = 1);
 	CGameObject*	Last_GameObject(_uint iLevelIndex, const _uint & iLayerIndex);
 	CGameObject*	Clone_GameObject(const wstring & strPrototypeTag, void* pArg = nullptr);
+	CGameObject*	Get_Player(_uint iLevelIndex);
 	HRESULT			Delete_GameObject(_uint iLevelIndex, const _uint & iLayerIndex, const wstring & ObjName, _uint iCloneIndex = 1);
 	HRESULT			Delete_Layer(_uint iLevelIndex, const _uint & iLayerIndex);
 	HRESULT			Delete_NonActive_Objects(_uint iLevelIndex, const _uint & iLayerIndex);
+
+	void			Enter_Objects(_uint iLevelIndex, const _uint & iLayerIndex);
+	void			Exit_Objects(_uint iLevelIndex, const _uint & iLayerIndex);
 
 	const map<const wstring, class CGameObject*>*	Get_Prototypes();
 	list<class CGameObject*>*						Get_LayerList(_uint iLevelIndex, const _uint & iLayerIndex);

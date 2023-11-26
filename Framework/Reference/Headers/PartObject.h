@@ -34,6 +34,8 @@ public:
 	_uint			Get_CurKeyFrameNumb();
 	CGameObject*	Get_PartOwner() { return m_pOwner; }
 
+	const _matrix&	Get_Part_WorldMatrix() const { return m_WorldMatrix; }
+
 public:
 	_bool			Is_AnimCurKeyFrame(_uint iIndex);
 	_bool			Is_AnimOverKeyFrame(_uint iIndex);
@@ -42,6 +44,7 @@ public:
 	void			Set_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed, _bool bWantReset = false, _uint iStartKeyFrame = 0, _float fRootAnimDist = 0.55f,_float fChangeDuration = 0.2f);
 	void			Set_First_AnimationIndex(_bool isLoop, _uint iAnimIndex, _float fAnimSpeed);
 	void			Set_Anim_TargetPos(_vector vTargetPos) { m_vTargetPos = vTargetPos; }
+	void			Set_CurAnimSpeed(_float fAnimSpeed);
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring & strProtoTag);

@@ -87,6 +87,8 @@ void CState_Attack_Urd::Enter_State()
 
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 
+	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Add_SkillCnt();
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	_int iRandom = pGameInstance->Random_Int(0, 6);
@@ -147,12 +149,12 @@ STATE CState_Attack_Urd::Combo_1()
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
+	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(70))
 	{
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(130))
+	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(110))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -167,17 +169,17 @@ STATE CState_Attack_Urd::Combo_1()
 
 STATE CState_Attack_Urd::Combo_2()
 {
-	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
+	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(75))
 	{
-		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
+	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(85))
 	{
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(140))
+	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(130))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -200,17 +202,17 @@ STATE CState_Attack_Urd::Combo_3()
 	{
 		m_pRealOwner->Set_Attack(false);
 	}
-	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(90))
+	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
 	{
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(120))
+	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(120))
 	{
 		m_pRealOwner->Set_Attack(false);
 	}
 	
-	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(170))
+	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(160))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -226,7 +228,7 @@ STATE CState_Attack_Urd::Combo_3()
 
 STATE CState_Attack_Urd::Combo_4()
 {
-	if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		m_pRealOwner->Set_Attack(true);
 	}
@@ -234,7 +236,7 @@ STATE CState_Attack_Urd::Combo_4()
 	{
 		m_pRealOwner->Set_Attack(false);
 	}
-	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
+	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
 	{
 		m_pRealOwner->Set_Attack(true);
 	}
@@ -244,9 +246,10 @@ STATE CState_Attack_Urd::Combo_4()
 	}
 	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
+	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(70))
 	{
 		m_pRealOwner->Set_Attack(false);
 		m_bCombo4_1 = false;
@@ -266,6 +269,7 @@ STATE CState_Attack_Urd::Combo_4()
 
 		RELEASE_INSTANCE(CGameInstance);
 	}
+	
 
 
 	if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
@@ -273,12 +277,13 @@ STATE CState_Attack_Urd::Combo_4()
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
+	else if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(60))
 	{
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(115))
+	/* 4-2 ÄÞº¸ */
+	if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(105))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -288,17 +293,20 @@ STATE CState_Attack_Urd::Combo_4()
 		return STATE::IDLE;
 	}
 
-	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
+	/* 4-3 ÄÞº¸ */
+	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(90))
 	{
-		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+		CTransform* pTransform = dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerTransform();
+		m_pOwnerBodyPart->Set_Anim_TargetPos(pTransform->Get_State(CTransform::STATE_POS));
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
+	else if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(120))
 	{
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(160))
+	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(150))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;

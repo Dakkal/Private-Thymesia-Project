@@ -33,6 +33,12 @@ HRESULT CStair::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CStair::Enter_Object()
+{
+	if (nullptr != m_pCurNavigationCom)
+		m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+}
+
 void CStair::PriorityTick(_float fTimeDelta)
 {
 	if (nullptr != m_pCurNavigationCom)

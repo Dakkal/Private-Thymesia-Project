@@ -25,6 +25,10 @@ STATE CState_Lockon_Attack::Tick(const _float& fTimeDelta)
 	if (nullptr == pTarget)
 		return STATE::IDLE;
 
+	if (true == dynamic_cast<CPlayer*>(m_pRealOwner)->Is_Excute())
+		return STATE::SEQUENCE;
+
+
 	if (true == m_pRealOwner->Is_Hit() || true == m_pRealOwner->Is_Parried())
 		return STATE::HIT;
 
@@ -202,6 +206,14 @@ void CState_Lockon_Attack::Enter_State()
 
 void CState_Lockon_Attack::Reset_State()
 {
+	if (true == dynamic_cast<CPlayer*>(m_pRealOwner)->Is_Excute())
+	{
+		dynamic_cast<CPlayer*>(m_pRealOwner)->Get_CurNaviCom()->Set_toCell(10, m_pOwnerTransform);
+
+		m_pOwnerTransform->Fix_Rotation(AXIS::Y,XMConvertToRadians(90.f));
+
+	}
+
 	m_pRealOwner->Set_Attack(false);
 
 	m_bAttack1 = false;

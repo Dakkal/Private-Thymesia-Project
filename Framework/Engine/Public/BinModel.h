@@ -47,7 +47,7 @@ public:
 	_bool									Is_OverAnimKeyFrame(_uint iIndex);
 	_bool									Is_CurAnimFinished();
 	const _bool&							Is_AnimChange() { return m_bIsAnimChange; }
-	
+	void									Set_CurAnimSpeed(_float fAnimSpeed) { m_Animations[m_iCurAnimIndex]->Set_AnimSpeed(fAnimSpeed); }
 
 	_uint									Get_NumMeshes() const { return m_iNumMeshes; }
 	_int									Get_BoneIndex(const string& strBoneName) const;

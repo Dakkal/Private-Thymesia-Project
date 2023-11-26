@@ -56,11 +56,11 @@ void CState_ParrySuccess::Enter_State()
 
 		if (true == pGameInstance->Random_Coin(0.5f))
 		{
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 111, 2.5f);
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 111, 3.5f);
 		}
 		else
 		{
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 113, 2.5f);
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 113, 3.5f);
 		}
 
 		m_bParryRight = true;
@@ -71,11 +71,11 @@ void CState_ParrySuccess::Enter_State()
 
 		if (true == pGameInstance->Random_Coin(0.5f))
 		{
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 115, 2.5f);
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 115, 3.5f);
 		}
 		else
 		{
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 116, 2.5f);
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 116, 3.5f);
 		}
 
 		m_bParryLeft = true;
@@ -88,14 +88,6 @@ STATE CState_ParrySuccess::Key_Input(const _float& fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(1))
-	{
-		if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
-		{
-			RELEASE_INSTANCE(CGameInstance);
-			return STATE::LOCK_PARRY;
-		}
-	}
 	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(10))
 	{
 		if (pGameInstance->Get_DIKeyState(DIK_SPACE) & 0x80)
@@ -117,6 +109,15 @@ STATE CState_ParrySuccess::Key_Input(const _float& fTimeDelta)
 			return STATE::LOCK_WALK;
 		}
 	}
+	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(2))
+	{
+		if (pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::LOCK_PARRY;
+		}
+	}
+
 	if (true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
 		RELEASE_INSTANCE(CGameInstance);

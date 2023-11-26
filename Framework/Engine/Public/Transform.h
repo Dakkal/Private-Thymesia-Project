@@ -28,10 +28,11 @@ public:
 	_matrix			Get_WorldMatrix_Inverse() const { return m_WorldMatrix.Invert();}
 	TRANSFORM_DESC	Get_TransformDesc() const { return m_TrasformDesc; }
 
-	void		Set_State(STATE eState, _vector vState);
-	void		Set_Look(_vector vChangeLook);
-	void		Set_Scale(_float3 vScale);
-	void		Set_WorldMatrix(_matrix matWorld);
+	void			Set_State(STATE eState, _vector vState);
+	void			Set_Look(_vector vChangeLook);
+	void			Set_Right(_vector vChangeLook);
+	void			Set_Scale(_float3 vScale);
+	void			Set_WorldMatrix(_matrix matWorld);
 
 	void		Set_Modulate_Speed(_float fModulate) { m_fModulate_Speed = fModulate; }
 	void		Reset_Modulate_Speed() { m_fModulate_Speed = 1.f; }

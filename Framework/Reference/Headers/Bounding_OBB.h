@@ -26,6 +26,8 @@ public:
 
 	virtual _bool			IsCollision(CCollider::TYPE eType, CBounding* pBouding);
 
+	virtual _vector			Get_ColWorldPos() override;
+
 #ifdef _DEBUG
 public:
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch) override;

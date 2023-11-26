@@ -52,6 +52,20 @@ void CTransform::Set_Look(_vector vChangeLook)
 	Set_State(STATE_LOOK, vLook);
 }
 
+void CTransform::Set_Right(_vector vChangeLook)
+{
+	_vector		vScaled = Get_Scale();
+
+	_vector		vPosition = Get_State(STATE_POS);
+	_vector		vRight = XMVector3Normalize(vChangeLook) * vScaled.x;
+	_vector		vLook = XMVector3Normalize(XMVector3Cross(_vector(0.f, 1.f, 0.f, 0.f), vRight)) * vScaled.z;
+	_vector		vUp = XMVector3Normalize(XMVector3Cross(vRight, vLook)) * vScaled.y;
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
 void CTransform::Set_Scale(_float3 vScale)
 {
 	_vector		vRight = Get_State(STATE_RIGHT);

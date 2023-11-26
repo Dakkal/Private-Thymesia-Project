@@ -38,7 +38,7 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == m_bIdle && m_pOwnerBodyPart->Is_AnimCurKeyFrame(120))
+	if (true == m_bIdle && m_pOwnerBodyPart->Is_AnimOverKeyFrame(120))
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
@@ -58,14 +58,14 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 		return STATE::WALK;
 	}
-	else if (true == m_bParry2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	else if (true == m_bParry2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(30))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 45, 3.f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 45, 4.f);
 		m_IsKeepParry = false;
 	}
-	else if (true == m_bParryRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	else if (true == m_bParryRe && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(30))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 3.f, false, 10);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 4.f, false, 10);
 		m_IsKeepParry = false;
 	}
 	else
@@ -139,6 +139,7 @@ STATE CState_Parry::LateTick(const _float& fTimeDelta)
 		m_bParry1 = false;
 		m_bParryRe = false;
 		m_IsKeepParry = true;
+		m_bIdle = false;
 	}
 	else if (true == m_bParry2 && 45 == m_pOwnerBodyPart->Get_AnimationIndex() &&
 		pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
@@ -146,6 +147,7 @@ STATE CState_Parry::LateTick(const _float& fTimeDelta)
 		m_bParry2 = false;
 		m_bParryRe = true;
 		m_IsKeepParry = true;
+		m_bIdle = false;
 	}
 
 
@@ -159,7 +161,9 @@ void CState_Parry::Enter_State()
 {
 	m_pRealOwner->Set_Move(false);
 
-	m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 3.f);
+
+
+	m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 4.f);
 	m_bParry1 = true;
 }
 

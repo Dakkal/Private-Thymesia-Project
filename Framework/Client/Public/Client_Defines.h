@@ -17,7 +17,9 @@ namespace Client
 
 extern HWND			g_hWnd;
 extern HINSTANCE	g_hInstance;
+
 extern _bool		g_BossSeq;
+extern _bool		g_PlayerSeq;
 
 using namespace Client;
 

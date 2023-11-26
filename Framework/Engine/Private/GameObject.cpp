@@ -36,6 +36,10 @@ HRESULT CGameObject::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CGameObject::Enter_Object()
+{
+}
+
 void CGameObject::PriorityTick(_float fTimeDelta)
 {
 }
@@ -45,6 +49,10 @@ void CGameObject::Tick(_float fTimeDelta)
 }
 
 void CGameObject::LateTick(_float fTimeDelta)
+{
+}
+
+void CGameObject::Exit_Object()
 {
 }
 
