@@ -47,8 +47,8 @@ HRESULT CMainApp::Initialize()
 
 
 	/* 실프레임 워크에서는 지우자 */
-	if (FAILED(Create_FakeTexture()))
-		return E_FAIL;
+	/*if (FAILED(Create_FakeTexture()))
+		return E_FAIL;*/
 
 	//CFbxExporter FbxExport;
 	//FbxExport.Initialize_Static_Export(TEXT("../Bin/Resources/Models/Static/"));

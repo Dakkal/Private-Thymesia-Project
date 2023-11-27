@@ -1699,6 +1699,11 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
     }
 
    m_pSelectObject = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT);
+   CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
+   m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
+   m_vPropScale[m_iCurLevel] = pTransform->Get_Scale();
+   m_vPropRot[m_iCurLevel] = XMVectorZero();
+   m_vPropPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
 #pragma endregion
     RELEASE_INSTANCE(CGameInstance);
 

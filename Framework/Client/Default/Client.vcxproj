@@ -64,6 +64,7 @@
     <ClCompile Include="..\Private\ChurchRightDoor.cpp" />
     <ClCompile Include="..\Private\ChurchSideDoor.cpp" />
     <ClCompile Include="..\Private\ChurchWindowGriles.cpp" />
+    <ClCompile Include="..\Private\DeadTree.cpp" />
     <ClCompile Include="..\Private\Edit_Terrain.cpp" />
     <ClCompile Include="..\Private\Enemy_GreatSword.cpp" />
     <ClCompile Include="..\Private\Body_GreatSword.cpp" />
@@ -73,6 +74,10 @@
     <ClCompile Include="..\Private\HitBox_Halberd.cpp" />
     <ClCompile Include="..\Private\HitBox_Shield.cpp" />
     <ClCompile Include="..\Private\HitBox_TwinSword.cpp" />
+    <ClCompile Include="..\Private\Left_BossDoor.cpp" />
+    <ClCompile Include="..\Private\Left_Shaft.cpp" />
+    <ClCompile Include="..\Private\Right_BossDoor.cpp" />
+    <ClCompile Include="..\Private\Right_Shaft.cpp" />
     <ClCompile Include="..\Private\Seq_Camera_Player.cpp" />
     <ClCompile Include="..\Private\Seq_Camera_Urd.cpp" />
     <ClCompile Include="..\Private\State_Attack_GreatSword.cpp" />
@@ -200,6 +205,7 @@
     <ClInclude Include="..\Public\ChurchSideDoor.h" />
     <ClInclude Include="..\Public\ChurchWindowGriles.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\DeadTree.h" />
     <ClInclude Include="..\Public\Edit_Terrain.h" />
     <ClInclude Include="..\Public\Enemy_GreatSword.h" />
     <ClInclude Include="..\Public\Body_GreatSword.h" />
@@ -209,6 +215,10 @@
     <ClInclude Include="..\Public\HitBox_Halberd.h" />
     <ClInclude Include="..\Public\HitBox_Shield.h" />
     <ClInclude Include="..\Public\HitBox_TwinSword.h" />
+    <ClInclude Include="..\Public\Left_BossDoor.h" />
+    <ClInclude Include="..\Public\Left_Shaft.h" />
+    <ClInclude Include="..\Public\Right_BossDoor.h" />
+    <ClInclude Include="..\Public\Right_Shaft.h" />
     <ClInclude Include="..\Public\Seq_Camera_Player.h" />
     <ClInclude Include="..\Public\Seq_Camera_Urd.h" />
     <ClInclude Include="..\Public\State_Attack_GreatSword.h" />

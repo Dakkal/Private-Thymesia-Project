@@ -51,9 +51,9 @@ void CCell::Set_Passage()
 	if (-1 == m_iNeighborIndicies[LINE_AB])
 		m_iNeighborIndicies[LINE_AB] = -2;
 	if (-1 == m_iNeighborIndicies[LINE_BC])
-		m_iNeighborIndicies[LINE_AB] = -2;
+		m_iNeighborIndicies[LINE_BC] = -2;
 	if (-1 == m_iNeighborIndicies[LINE_CA])
-		m_iNeighborIndicies[LINE_AB] = -2;
+		m_iNeighborIndicies[LINE_CA] = -2;
 }
 
 _bool CCell::Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint)

@@ -235,6 +235,21 @@
     <Filter Include="02.GameObject\Object\Player\Part\Camera_Player">
       <UniqueIdentifier>{98d54c00-4e02-410f-a281-38f55030571a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\Left_BossDoor">
+      <UniqueIdentifier>{d68722fe-1ab9-4f2d-ae2e-5a0d193f9ac0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\Right_BossDoor">
+      <UniqueIdentifier>{63198ecd-7a31-4278-a3bd-cca62e1b323d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\Left_Shaft">
+      <UniqueIdentifier>{10cda033-4733-4e94-96c3-04f1bc498d7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\DeadTree">
+      <UniqueIdentifier>{0bb3f4a6-8548-4836-b06a-3ccb90ee6c0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\Right_Shaft">
+      <UniqueIdentifier>{b7db382a-7954-4324-8674-28e0325946fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -599,6 +614,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Skill_Urd.cpp">
       <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Left_BossDoor.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\Left_BossDoor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Right_BossDoor.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\Right_BossDoor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Right_Shaft.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\Right_Shaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Left_Shaft.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\Left_Shaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DeadTree.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\DeadTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -979,6 +1009,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Skill_Urd.h">
       <Filter>02.GameObject\Object\Boss\Boss_Urd\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Left_BossDoor.h">
+      <Filter>02.GameObject\Object\Porps\Deco\Left_BossDoor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Right_BossDoor.h">
+      <Filter>02.GameObject\Object\Porps\Deco\Right_BossDoor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Right_Shaft.h">
+      <Filter>02.GameObject\Object\Porps\Deco\Right_Shaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Left_Shaft.h">
+      <Filter>02.GameObject\Object\Porps\Deco\Left_Shaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DeadTree.h">
+      <Filter>02.GameObject\Object\Porps\Deco\DeadTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

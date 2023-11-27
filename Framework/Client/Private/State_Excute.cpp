@@ -29,15 +29,10 @@ STATE CState_Excute::Tick(const _float& fTimeDelta)
 	{
 		m_pOwnerBodyPart->Set_CurAnimSpeed(0.5f);
 
-
-		dynamic_cast<CSeq_Camera_Player*>(m_pRealOwner->Get_Index_Parts(CGameObject::PARTS::CAMERA))->Set_Camera_Fov(78);
-
 	}
 	else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(115))
 	{
 		m_pOwnerBodyPart->Set_CurAnimSpeed(1.5f);
-
-		dynamic_cast<CSeq_Camera_Player*>(m_pRealOwner->Get_Index_Parts(CGameObject::PARTS::CAMERA))->Set_Camera_Fov(82);
 	}
 
 

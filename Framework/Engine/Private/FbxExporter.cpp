@@ -310,7 +310,7 @@ HRESULT CFbxExporter::Export_Material(const aiScene* pAIScene, const string& str
 
                 if (j == aiTextureType::aiTextureType_NORMALS)
                 {
-                    string Ext = ".png";
+                    string Ext = ".dds";
                     memcpy(szExt, Ext.c_str(), sizeof(MAX_PATH));
                 }
 

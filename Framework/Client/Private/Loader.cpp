@@ -19,6 +19,11 @@
 #include "BossRoom.h"
 #include "Sub_Building.h"
 #include "Sub_Door.h"
+#include "DeadTree.h"
+#include "Left_BossDoor.h"
+#include "Left_Shaft.h"
+#include "Right_Shaft.h"
+#include "Right_BossDoor.h"
 
 #include "Player.h"
 #include "Body_Player.h"
@@ -497,14 +502,41 @@ HRESULT CLoader::Loading_Mesh()
 			return E_FAIL;
 
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sub_Door"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Sub_Door/Sub_Door.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sub_Building"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Sub_Building/SubBuilding.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sub_Door"),
-			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Sub_Door/Sub_Door.dat"), ModelInitMatrix))))
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Left_BossDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Left_BossDoor/LeftBossDoor.dat"), ModelInitMatrix))))
 			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Left_Shaft"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Left_Shaft/LeftShaft.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Right_BossDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Right_BossDoor/RightBossDoor.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Right_Shaft"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Right_Shaft/RightShaft.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_DeadTree"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/DeadTree/DeadTree.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		
 
 
 		break;
@@ -564,6 +596,31 @@ HRESULT CLoader::Loading_Mesh()
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Sub_Door"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Sub_Door/Sub_Door.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Left_BossDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Left_BossDoor/LeftBossDoor.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Left_Shaft"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Left_Shaft/LeftShaft.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Right_BossDoor"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Right_BossDoor/RightBossDoor.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Right_Shaft"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Right_Shaft/RightShaft.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_DeadTree"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/DeadTree/DeadTree.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
 		break;
@@ -863,7 +920,20 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sub_Door"), CSub_Door::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Sub_Door")))))
 			return E_FAIL;
 
-		
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Left_BossDoor"), CLeft_BossDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Left_BossDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Left_Shaft"), CLeft_Shaft::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Left_Shaft")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Right_BossDoor"), CRight_BossDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Right_BossDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Right_Shaft"), CRight_Shaft::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Right_Shaft")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DeadTree"), CDeadTree::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DeadTree")))))
+			return E_FAIL;
 
 		break;
 	case Client::LEVEL_1:
@@ -918,6 +988,21 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sub_Door"), CSub_Door::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Sub_Door")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Left_BossDoor"), CLeft_BossDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Left_BossDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Left_Shaft"), CLeft_Shaft::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Left_Shaft")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Right_BossDoor"), CRight_BossDoor::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Right_BossDoor")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Right_Shaft"), CRight_Shaft::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Right_Shaft")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DeadTree"), CDeadTree::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DeadTree")))))
 			return E_FAIL;
 
 		break;

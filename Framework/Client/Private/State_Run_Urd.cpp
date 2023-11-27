@@ -154,7 +154,7 @@ STATE CState_Run_Urd::Tick(const _float& fTimeDelta)
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(110))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 			{

@@ -88,8 +88,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
 	PS_OUT_LIGHT		Out = (PS_OUT_LIGHT)0;
 
-	vector		vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
-	vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+	vector		vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+	vector		vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexcoord);
     float		fViewZ = vDepthDesc.y * 1000.f;
 	
 	vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
