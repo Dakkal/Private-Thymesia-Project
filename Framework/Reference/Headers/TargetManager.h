@@ -16,7 +16,7 @@ public:
 	HRESULT Add_RenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _vector& vColor);
 	HRESULT Add_MRT(const wstring& strMRTTag, const wstring& strTargetTag);
 	HRESULT Bind_SRV(class CShader* pShader, const wstring& strTargetTag, const _char* pConstantName);
-	HRESULT Begin_MRT(ID3D11DeviceContext* pContext, const wstring& strMRTTag);
+	HRESULT Begin_MRT(ID3D11DeviceContext* pContext, const wstring& strMRTTag, ID3D11DepthStencilView* pDsv = nullptr);
 	HRESULT End_MRT(ID3D11DeviceContext* pContext);
 
 

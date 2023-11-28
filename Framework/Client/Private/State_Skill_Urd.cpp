@@ -119,7 +119,7 @@ void CState_Skill_Urd::Enter_State()
 
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Reset_SkillCnt();
 
-	_uint iRandom = pGameInstance->Random_Int(2, 3);
+	_uint iRandom = pGameInstance->Random_Int(1, 3);
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_SkillActive(iRandom);
 
 	RELEASE_INSTANCE(CGameInstance);	

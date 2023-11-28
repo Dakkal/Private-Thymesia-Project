@@ -64,6 +64,8 @@ void CBody_Boss_Urd::LateTick(_float fTimeDelta)
 #ifdef _DEBUG
 		m_pRendererCom->Add_Debug(m_pColliderCom);
 #endif
+		if(false == m_pOwner->Is_Dead())
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_SHADOW, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 	}
 }
@@ -135,6 +137,47 @@ HRESULT CBody_Boss_Urd::Render()
 			}
 		}
 
+
+		if (FAILED(m_pModelCom->Render(i)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CBody_Boss_Urd::Render_LightDepth()
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+
+	_matrix		ViewMatrix, ProjMatrix;
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	_vector vLightPos = pGameInstance->Get_ShadowLightDesc(0)->vLightPos;
+	_vector vLightAt = pGameInstance->Get_ShadowLightDesc(0)->vLightAt;
+
+	ViewMatrix = XMMatrixLookAtLH(vLightPos, vLightAt, _vector(0.f, 1.f, 0.f, 0.f));
+	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), (_float)g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
+		return E_FAIL;
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Begin(8)))
+			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
@@ -396,6 +439,14 @@ HRESULT CBody_Boss_Urd::Ready_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
+	/* Com_Transform */
+	CTransform::TRANSFORM_DESC		TransformDesc;
+	TransformDesc = m_pParentTransform->Get_TransformDesc();
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
 	/* Com_Texture*/
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
 		TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
@@ -411,13 +462,7 @@ HRESULT CBody_Boss_Urd::Ready_Components()
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
-	/* Com_Transform */
-	CTransform::TRANSFORM_DESC		TransformDesc;
-	TransformDesc = m_pParentTransform->Get_TransformDesc();
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
-		return E_FAIL;
 
 	/* For.Com_Collider_Sphere */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		SphereDesc = {};

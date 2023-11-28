@@ -130,7 +130,7 @@ STATE CState_Attack_Halberd::Combo_1()
 	{
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
+	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(25))
 	{
 		m_pRealOwner->Set_Attack(false);
 
@@ -149,15 +149,16 @@ STATE CState_Attack_Halberd::Combo_1()
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(28))
 	{
-		dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
+		
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
+	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(45))
 	{
+		dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(60))
+	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(50))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -174,15 +175,16 @@ STATE CState_Attack_Halberd::Combo_2()
 {
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
 	{
-		dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
+	
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(40))
 	{
+		dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(60))
+	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(50))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -205,7 +207,7 @@ STATE CState_Attack_Halberd::Combo_3()
 	{
 		m_pRealOwner->Set_Attack(false);
 	}
-	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
+	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(50))
 	{
 		m_bCombo3_1 = false;
 		m_bCombo3_2 = true;
@@ -214,15 +216,16 @@ STATE CState_Attack_Halberd::Combo_3()
 
 	if (true == m_bCombo3_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(15))
 	{
-		dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
+		
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo3_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	else if (true == m_bCombo3_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(30))
 	{
+		dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo3_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(50))
+	if (true == m_bCombo3_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(40))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -250,16 +253,13 @@ STATE CState_Attack_Halberd::Combo_4()
 	{
 		m_pRealOwner->Set_Attack(true);
 	}
-	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(150))
+	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(180))
 	{
 		dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
-	}
-	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(180))
-	{
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(270))
+	if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(260))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;

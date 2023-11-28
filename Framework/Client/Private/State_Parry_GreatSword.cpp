@@ -37,15 +37,16 @@ STATE CState_Parry_GreatSword::Tick(const _float& fTimeDelta)
 	{
 		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
 		{
-			dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
+			
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
 		{
+			dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(90))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;

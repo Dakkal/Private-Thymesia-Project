@@ -147,15 +147,16 @@ STATE CState_Attack_TwinSword::Combo_1()
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
 	{
-		dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(false);
+		
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
+		dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(110))
+	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -188,15 +189,16 @@ STATE CState_Attack_TwinSword::Combo_2()
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
 	{
-		dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(false);
+	
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(110))
 	{
+		dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(150))
+	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(140))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -220,7 +222,7 @@ STATE CState_Attack_TwinSword::Combo_3()
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
+	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(90))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;

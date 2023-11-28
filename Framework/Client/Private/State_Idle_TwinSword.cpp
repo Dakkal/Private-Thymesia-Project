@@ -29,12 +29,12 @@ STATE CState_Idle_TwinSword::Tick(const _float& fTimeDelta)
 
 	if (false == dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Is_LookPlayer())
 	{
-		_float fLookDist = 20.f;
+		_float fLookDist = 15.f;
 		if (fLookDist >= dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Get_PlayerDistance())
 			dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(true);
 	}
 
-	_float fActDist = 15.f;
+	_float fActDist = 10.f;
 	if (fActDist >= dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Get_PlayerDistance())
 	{
 		m_fIdleTime += fTimeDelta;
@@ -85,7 +85,7 @@ void CState_Idle_TwinSword::Enter_State()
 {
 	m_pRealOwner->Set_Move(false);
 
-	_float fDist = 20.f;
+	_float fDist = 15.f;
 
 	if (fDist >= dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Get_PlayerDistance())
 		dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(true);

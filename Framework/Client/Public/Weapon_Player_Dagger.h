@@ -17,6 +17,7 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_LightDepth() override;
 
 public:
 	virtual void OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta) override;

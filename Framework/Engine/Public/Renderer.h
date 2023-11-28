@@ -6,7 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP { RG_PRIORITY, RG_NONLIGHT, RG_NONBLEND, RG_BLEND, RG_UI, RG_TOOL, RG_END };
+	enum RENDERGROUP { RG_PRIORITY, RG_SHADOW, RG_NONLIGHT, RG_NONBLEND, RG_BLEND, RG_UI, RG_TOOL, RG_END };
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -34,8 +34,17 @@ private:
 	list<class CGameObject*>	m_listRenderObject[static_cast<_uint>(RENDERGROUP::RG_END)];
 
 private:
+	HRESULT Create_Shadow_ViewPort(POINT Shadow);
+	HRESULT Create_Shadow_DSV(POINT Shadow);
+
+	D3D11_VIEWPORT	m_ClientViewPort;
+	D3D11_VIEWPORT	m_ShadowViewPort;
+	ID3D11DepthStencilView* m_pShadowDSV = { nullptr };
+
+private:
 	HRESULT	Render_Priority();
 	HRESULT	Render_NonLight();
+	HRESULT Render_LightDepth();
 	HRESULT	Render_NonBlend();
 	HRESULT Render_LightAcc();
 	HRESULT Render_Deferred();
@@ -50,7 +59,6 @@ private:
 #endif
 
 private:
-	list<class CGameObject*>			m_RenderObjects[RG_END];
 
 	class CTargetManager*	m_pTarget_Manager = { nullptr };
 	class CLight_Manager*	m_pLight_Manager = { nullptr };

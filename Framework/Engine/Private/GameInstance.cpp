@@ -86,6 +86,9 @@ void CGameInstance::Tick(_float fTimeDelta)
 	m_pFrustrum_Cull->Tick();
 
 	m_pObject_Manager->LateTick(fTimeDelta);
+
+	m_pLight_Manager->Caculate_ShadowLight();
+
 	m_pLevel_Manager->LateTick(fTimeDelta);
 }
 
@@ -432,13 +435,29 @@ const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iLightIndex)
 	return m_pLight_Manager->Get_LightDesc(iLightIndex);
 }
 
-HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
+const LIGHT_DESC* CGameInstance::Get_ShadowLightDesc(_uint iLightIndex)
+{
+	if (nullptr == m_pLight_Manager)
+		return nullptr;
+
+	return m_pLight_Manager->Get_ShadowLightDesc(iLightIndex);
+}
+
+HRESULT CGameInstance::Caculate_ShadowLight()
+{
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	return m_pLight_Manager->Caculate_ShadowLight();
+}
+
+HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc, CTransform* pPlayerTransform)
 {
 	if (nullptr == m_pLight_Manager)
 		return E_FAIL;
 
 
-	return m_pLight_Manager->Add_Light(LightDesc);
+	return m_pLight_Manager->Add_Light(LightDesc, pPlayerTransform);
 }
 
 _vector CGameInstance::Picking_Terrain(RECT rc, POINT pt, CTransform* pTransform, CVIBuffer* pBuffer)
@@ -457,12 +476,12 @@ _vector CGameInstance::Picking_Object(RECT rc, POINT pt, CTransform* pTransform,
 	return m_pCalculator->Picking_Object(rc, pt, pTransform, pBuffer);
 }
 
-HRESULT CGameInstance::Detrude_AABB_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform)
+HRESULT CGameInstance::Detrude_AABB_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform, CNavigation* pNavigation)
 {
 	if (nullptr == m_pCalculator)
 		return E_FAIL;
 
-	return m_pCalculator->Detrude_Collide(pColObj, pObjCol, pObjTransform);
+	return m_pCalculator->Detrude_Collide(pColObj, pObjCol, pObjTransform, pNavigation);
 }
 
 HRESULT CGameInstance::Detrude_Sphere_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform, CNavigation* pNavigation)

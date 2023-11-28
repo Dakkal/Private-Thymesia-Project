@@ -127,7 +127,7 @@ _bool CCell::IsIn(_vector vPoint, _matrix WorldMatrix, _int& pCurIndex)
 		vSour.Normalize();
 		vDest.Normalize();
 
-		if (0 < vSour.Dot(vDest))
+		if (0 < XMVectorGetX(XMVector3Dot(vSour, vDest)))
 		{
 			return false;
 		}

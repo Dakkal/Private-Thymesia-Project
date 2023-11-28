@@ -171,15 +171,16 @@ STATE CState_Attack_GreatSword::Combo_1()
 
 	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
 	{
-		dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
+		
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
+		dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(110))
+	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -211,15 +212,16 @@ STATE CState_Attack_GreatSword::Combo_2()
 
 	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
 	{
-		dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
+		
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
+		dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(110))
+	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;
@@ -236,15 +238,16 @@ STATE CState_Attack_GreatSword::Combo_3()
 {
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
-		dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
+		
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
 	{
+		dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(false);
 	}
 
-	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(90))
+	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(80))
 	{
 		if (true == m_pRealOwner->Is_Hit())
 			return STATE::HIT;

@@ -464,9 +464,7 @@ HRESULT CImgui_Manager::Setting_Object()
 
                         if (m_strCurMonsterProtoObject[m_iCurLevel] != wstring().assign(m_vecMonsters[i].begin(), m_vecMonsters[i].end()))
                         {
-                            m_vMonsterScale[m_iCurLevel] = XMVectorZero();
-                            m_vMonsterRot[m_iCurLevel] = XMVectorZero();
-                            m_vMonsterPos[m_iCurLevel] = XMVectorZero();
+                          
                         }
                         m_strCurMonsterProtoObject[m_iCurLevel].assign(m_vecMonsters[i].begin(), m_vecMonsters[i].end());
                         ImGui::SetItemDefaultFocus();
@@ -476,12 +474,52 @@ HRESULT CImgui_Manager::Setting_Object()
 
                 if (ImGui::Button("Clone"))
                 {
+                    if (TEXT("") != m_strCurMonsterProtoObject[m_iCurLevel])
+                    {
+                        CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+                        if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT, m_strCurMonsterProtoObject[m_iCurLevel])))
+                            return E_FAIL;
+
+                        m_pSelectObject = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT);
+                        if (nullptr == m_pSelectObject)
+                            return E_FAIL;
+
+                        CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
+
+                        if (0 == m_vTerrainPos[m_iCurLevel].w)
+                            m_vTerrainPos[m_iCurLevel].w = 1;
+                        pTransform->Set_State(CTransform::STATE_POS, m_vTerrainPos[m_iCurLevel]);
+
+                        m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
+                        m_vMonsterScale[m_iCurLevel] = pTransform->Get_Scale();
+                        m_vMonsterRot[m_iCurLevel] = XMVectorZero();
+                        m_vMonsterPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+
+                        wstring strObjectName = m_pSelectObject->Get_Name();
+                        string strSelectNameIndex;
+                        strSelectNameIndex.assign(strObjectName.begin(), strObjectName.end());
+                        strSelectNameIndex += to_string(m_pSelectObject->Get_Index());
+
+                        m_vecObjectList.push_back(strSelectNameIndex);
+                        m_iSelectObject[m_iCurLevel] = m_vecObjectList.size() - 1;
+
+                        RELEASE_INSTANCE(CGameInstance);
+                    }
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Delete All"))
                 {
+                    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+                    pGameInstance->Delete_Layer(LEVEL_EDIT, LAYER_EDITOBJECT);
+
+                    m_vecObjectList.clear();
+
+                    if (nullptr != m_pSelectObject)
+                        m_pSelectObject = nullptr;
+
+                    RELEASE_INSTANCE(CGameInstance);
                 }
             }
 
@@ -489,59 +527,59 @@ HRESULT CImgui_Manager::Setting_Object()
             {
                 m_IsMonTransformOpen[m_iCurLevel] = true;
 
-                /* 스케일 */
                 ImGui::SeparatorText("Scale");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizX");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##MonScaleX Input", &m_vMonsterScale[m_iCurLevel].x, -50, 50, "%.1f");
+                ImGui::InputFloat("##PropScaleX Input", &m_vMonsterScale[m_iCurLevel].x, -50.f, 50.f, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##MonScaleX Slider", &m_vMonsterScale[m_iCurLevel].x, -50, 50, "%.1f");
+                ImGui::SliderFloat("##PropScaleX Slider", &m_vMonsterScale[m_iCurLevel].x, -50.f, 50.f, "%.2f");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizY");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##MonScaleY Input", &m_vMonsterScale[m_iCurLevel].y, -50, 50, "%.1f");
+                ImGui::InputFloat("##PropScaleY Input", &m_vMonsterScale[m_iCurLevel].y, -50.f, 50.f, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##MonScaleY Slider", &m_vMonsterScale[m_iCurLevel].y, -50, 50, "%.1f");
+                ImGui::SliderFloat("##PropScaleY Slider", &m_vMonsterScale[m_iCurLevel].y, -50.f, 50.f, "%.2f");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizZ");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##MonScaleZ Input", &m_vMonsterScale[m_iCurLevel].z, -50, 50, "%.1f");
+                ImGui::InputFloat("##PropScaleZ Input", &m_vMonsterScale[m_iCurLevel].z, -50.f, 50.f, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##MonScaleZ Slider", &m_vMonsterScale[m_iCurLevel].z, -50, 50, "%.1f");
+                ImGui::SliderFloat("##PropScaleZ Slider", &m_vMonsterScale[m_iCurLevel].z, -50.f, 50.f, "%.2f");
 
-                /* 회전 */
+
+                /* 스케일 */
                 ImGui::SeparatorText("Rotation");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("RotX");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                if (ImGui::InputFloat("##MonRotX Input", &m_vMonsterRot[m_iCurLevel].x, 0, 360, "%.1f"))
+                if (ImGui::InputFloat("##MonRotX Input", &m_vMonsterRot[m_iCurLevel].x, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
                         CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
-                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_RIGHT), XMConvertToRadians(m_vPropRot[m_iCurLevel].x));
+                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_RIGHT), XMConvertToRadians(m_vMonsterRot[m_iCurLevel].x));
                     }
                 }
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                if (ImGui::SliderFloat("##MonRotX Slider", &m_vMonsterRot[m_iCurLevel].x, 0, 360, "%.1f"))
+                if (ImGui::SliderFloat("##MonRotX Slider", &m_vMonsterRot[m_iCurLevel].x, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
                         CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
-                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_RIGHT), XMConvertToRadians(m_vPropRot[m_iCurLevel].x));
+                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_RIGHT), XMConvertToRadians(m_vMonsterRot[m_iCurLevel].x));
                     }
                 }
                 ImGui::SetNextItemWidth(80);
@@ -549,22 +587,22 @@ HRESULT CImgui_Manager::Setting_Object()
                 ImGui::Text("RotY");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                if (ImGui::InputFloat("##MonRotY Input", &m_vMonsterRot[m_iCurLevel].y, 0, 360, "%.1f"))
+                if (ImGui::InputFloat("##MonRotY Input", &m_vMonsterRot[m_iCurLevel].y, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
                         CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
-                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_vPropRot[m_iCurLevel].y));
+                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_vMonsterRot[m_iCurLevel].y));
                     }
                 }
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                if (ImGui::SliderFloat("##MonRotY Slider", &m_vMonsterRot[m_iCurLevel].y, 0, 360, "%.1f"))
+                if (ImGui::SliderFloat("##MonRotY Slider", &m_vPropRot[m_iCurLevel].y, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
                         CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
-                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_vPropRot[m_iCurLevel].y));
+                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_vMonsterRot[m_iCurLevel].y));
                     }
                 }
                 ImGui::SetNextItemWidth(80);
@@ -572,65 +610,98 @@ HRESULT CImgui_Manager::Setting_Object()
                 ImGui::Text("RotZ");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                if (ImGui::InputFloat("##MonRotZ Input", &m_vMonsterRot[m_iCurLevel].z, 0, 360, "%.1f"))
+                if (ImGui::InputFloat("##PropRotZ Input", &m_vMonsterRot[m_iCurLevel].z, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
                         CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
-                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_LOOK), XMConvertToRadians(m_vPropRot[m_iCurLevel].z));
+                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_LOOK), XMConvertToRadians(m_vMonsterRot[m_iCurLevel].z));
                     }
                 }
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                if (ImGui::SliderFloat("##MonRotZ Slider", &m_vMonsterRot[m_iCurLevel].z, 0, 360, "%.1f"))
+                if (ImGui::SliderFloat("##PropRotZ Slider", &m_vMonsterRot[m_iCurLevel].z, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
                         CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
-                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_LOOK), XMConvertToRadians(m_vPropRot[m_iCurLevel].z));
+                        pTransform->Fix_Rotation(pTransform->Get_State(CTransform::STATE_LOOK), XMConvertToRadians(m_vMonsterRot[m_iCurLevel].z));
                     }
                 }
                 ImGui::SetNextItemWidth(80);
 
-                /* 위치 */
+               /* 위치 */
                 ImGui::SeparatorText("Position");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosX");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##MonPosX Input", &m_vMonsterPos[m_iCurLevel].x, 0, m_iNumVerticesX[m_iCurLevel], "%.1f");
+                ImGui::InputFloat("##MonPosX Input", &m_vMonsterPos[m_iCurLevel].x
+                    , m_matStore[m_iCurLevel]._41 - 50, m_matStore[m_iCurLevel]._41 + 50, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##MonPosX Slider", &m_vMonsterPos[m_iCurLevel].x, 0, m_iNumVerticesX[m_iCurLevel], "%.1f");
+                ImGui::SliderFloat("##MonPosX Slider", &m_vMonsterPos[m_iCurLevel].x
+                    , m_matStore[m_iCurLevel]._41 - 50, m_matStore[m_iCurLevel]._41 + 50, "%.2f");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosY");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##MonPosY Input", &m_vMonsterPos[m_iCurLevel].y, 0, 100, "%.1f");
+                ImGui::InputFloat("##MonPosY Input", &m_vMonsterPos[m_iCurLevel].y, m_matStore[m_iCurLevel]._42 - 10, m_matStore[m_iCurLevel]._42 + 10, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##MonPosY Slider", &m_vMonsterPos[m_iCurLevel].y, 0, 100, "%.1f");
+                ImGui::SliderFloat("##MonPosY Slider", &m_vMonsterPos[m_iCurLevel].y, m_matStore[m_iCurLevel]._42 - 10, m_matStore[m_iCurLevel]._42 + 10, "%.2f");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosZ");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##MonPosZ Input", &m_vMonsterPos[m_iCurLevel].z, 0, m_iNumVerticesZ[m_iCurLevel], "%.1f");
+                ImGui::InputFloat("##MonPosZ Input", &m_vMonsterPos[m_iCurLevel].z
+                    , m_matStore[m_iCurLevel]._43 - 50, m_matStore[m_iCurLevel]._43 + 50, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##MonPosZ Slider", &m_vMonsterPos[m_iCurLevel].z, 0, m_iNumVerticesZ[m_iCurLevel], "%.1f");
+                ImGui::SliderFloat("##MonPosZ Slider", &m_vMonsterPos[m_iCurLevel].z
+                    , m_matStore[m_iCurLevel]._43 - 50, m_matStore[m_iCurLevel]._43 + 50, "%.2f");
 
                 ImGui::Spacing();
                 if (ImGui::Button("Set"))
                 {
+                    if (nullptr != m_pSelectObject)
+                    {
+                        CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
+                        if (nullptr == pTransform)
+                            return E_FAIL;
 
+                        m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
+                        m_vMonsterScale[m_iCurLevel] = pTransform->Get_Scale();
+                        m_vMonsterRot[m_iCurLevel] = XMVectorZero();
+                        m_vMonsterPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+                    }
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Reset"))
                 {
+                    if (nullptr != m_pSelectObject)
+                    {
+                        CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
+                        if (nullptr == pTransform)
+                            return E_FAIL;
 
+                        pTransform->Set_WorldMatrix(m_matStore[m_iCurLevel]);
+                        m_vMonsterScale[m_iCurLevel] = pTransform->Get_Scale();
+                        m_vMonsterRot[m_iCurLevel] = XMVectorZero();
+                        m_vMonsterPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+                    }
+                }
+                if (ImGui::Button("To ObjectPos"))
+                {
+                    if (nullptr != m_pSelectObject)
+                    {
+                        m_vMonsterPos[m_iCurLevel] = m_vObjectPos[m_iCurLevel];
+                        CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
+                        pTransform->Set_State(CTransform::STATE_POS, m_vMonsterPos[m_iCurLevel]);
+                    }
                 }
             }
             else
@@ -725,28 +796,28 @@ HRESULT CImgui_Manager::Setting_Object()
                 ImGui::Text("SizX");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##PropScaleX Input", &m_vPropScale[m_iCurLevel].x, -50, 50, "%.1f");
+                ImGui::InputFloat("##PropScaleX Input", &m_vPropScale[m_iCurLevel].x, -50, 50, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##PropScaleX Slider", &m_vPropScale[m_iCurLevel].x, -50, 50, "%.1f");
+                ImGui::SliderFloat("##PropScaleX Slider", &m_vPropScale[m_iCurLevel].x, -50, 50, "%.2f");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizY");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##PropScaleY Input", &m_vPropScale[m_iCurLevel].y, -50, 50, "%.1f");
+                ImGui::InputFloat("##PropScaleY Input", &m_vPropScale[m_iCurLevel].y, -50, 50, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##PropScaleY Slider", &m_vPropScale[m_iCurLevel].y, -50, 50, "%.1f");
+                ImGui::SliderFloat("##PropScaleY Slider", &m_vPropScale[m_iCurLevel].y, -50, 50, "%.2f");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("SizZ");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##PropScaleZ Input", &m_vPropScale[m_iCurLevel].z, -50, 50, "%.1f");
+                ImGui::InputFloat("##PropScaleZ Input", &m_vPropScale[m_iCurLevel].z, -50, 50, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##PropScaleZ Slider", &m_vPropScale[m_iCurLevel].z, -50, 50, "%.1f");
+                ImGui::SliderFloat("##PropScaleZ Slider", &m_vPropScale[m_iCurLevel].z, -50, 50, "%.2f");
 
                 /* 회전 */
                 ImGui::SeparatorText("Rotation");
@@ -755,7 +826,7 @@ HRESULT CImgui_Manager::Setting_Object()
                 ImGui::Text("RotX");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                if (ImGui::InputFloat("##PropRotX Input", &m_vPropRot[m_iCurLevel].x, 0, 360, "%.1f"))
+                if (ImGui::InputFloat("##PropRotX Input", &m_vPropRot[m_iCurLevel].x, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
@@ -765,7 +836,7 @@ HRESULT CImgui_Manager::Setting_Object()
                 }
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                if (ImGui::SliderFloat("##PropRotX Slider", &m_vPropRot[m_iCurLevel].x, 0, 360, "%.1f"))
+                if (ImGui::SliderFloat("##PropRotX Slider", &m_vPropRot[m_iCurLevel].x, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
@@ -778,7 +849,7 @@ HRESULT CImgui_Manager::Setting_Object()
                 ImGui::Text("RotY");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                if (ImGui::InputFloat("##PropRotY Input", &m_vPropRot[m_iCurLevel].y, 0, 360, "%.1f"))
+                if (ImGui::InputFloat("##PropRotY Input", &m_vPropRot[m_iCurLevel].y, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
@@ -788,7 +859,7 @@ HRESULT CImgui_Manager::Setting_Object()
                 }
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                if (ImGui::SliderFloat("##PropRotY Slider", &m_vPropRot[m_iCurLevel].y, 0, 360, "%.1f"))
+                if (ImGui::SliderFloat("##PropRotY Slider", &m_vPropRot[m_iCurLevel].y, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
@@ -801,7 +872,7 @@ HRESULT CImgui_Manager::Setting_Object()
                 ImGui::Text("RotZ");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                if (ImGui::InputFloat("##PropRotZ Input", &m_vPropRot[m_iCurLevel].z, 0, 360, "%.1f"))
+                if (ImGui::InputFloat("##PropRotZ Input", &m_vPropRot[m_iCurLevel].z, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
@@ -811,7 +882,7 @@ HRESULT CImgui_Manager::Setting_Object()
                 }
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                if (ImGui::SliderFloat("##PropRotZ Slider", &m_vPropRot[m_iCurLevel].z, 0, 360, "%.1f"))
+                if (ImGui::SliderFloat("##PropRotZ Slider", &m_vPropRot[m_iCurLevel].z, 0, 360, "%.2f"))
                 {
                     if (nullptr != m_pSelectObject)
                     {
@@ -829,31 +900,31 @@ HRESULT CImgui_Manager::Setting_Object()
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##PropPosX Input", &m_vPropPos[m_iCurLevel].x
-                    , m_matStore[m_iCurLevel]._41 - 50, m_matStore[m_iCurLevel]._41 + 50, "%.1f");
+                    , m_matStore[m_iCurLevel]._41 - 50, m_matStore[m_iCurLevel]._41 + 50, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##PropPosX Slider", &m_vPropPos[m_iCurLevel].x
-                    , m_matStore[m_iCurLevel]._41 - 50, m_matStore[m_iCurLevel]._41 + 50, "%.1f");
+                    , m_matStore[m_iCurLevel]._41 - 50, m_matStore[m_iCurLevel]._41 + 50, "%.2f");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosY");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::InputFloat("##PropPosY Input", &m_vPropPos[m_iCurLevel].y, m_matStore[m_iCurLevel]._42 -10, m_matStore[m_iCurLevel]._42 + 10, "%.1f");
+                ImGui::InputFloat("##PropPosY Input", &m_vPropPos[m_iCurLevel].y, m_matStore[m_iCurLevel]._42 -10, m_matStore[m_iCurLevel]._42 + 10, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::SliderFloat("##PropPosY Slider", &m_vPropPos[m_iCurLevel].y, m_matStore[m_iCurLevel]._42 -10, m_matStore[m_iCurLevel]._42 + 10, "%.1f");
+                ImGui::SliderFloat("##PropPosY Slider", &m_vPropPos[m_iCurLevel].y, m_matStore[m_iCurLevel]._42 -10, m_matStore[m_iCurLevel]._42 + 10, "%.2f");
                 ImGui::SetNextItemWidth(80);
 
                 ImGui::Text("PosZ");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
                 ImGui::InputFloat("##PropPosZ Input", &m_vPropPos[m_iCurLevel].z
-                    , m_matStore[m_iCurLevel]._43 - 50, m_matStore[m_iCurLevel]._43 + 50, "%.1f");
+                    , m_matStore[m_iCurLevel]._43 - 50, m_matStore[m_iCurLevel]._43 + 50, "%.2f");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                 ImGui::SliderFloat("##PropPosZ Slider", &m_vPropPos[m_iCurLevel].z
-                    , m_matStore[m_iCurLevel]._43 - 50, m_matStore[m_iCurLevel]._43 + 50, "%.1f");
+                    , m_matStore[m_iCurLevel]._43 - 50, m_matStore[m_iCurLevel]._43 + 50, "%.2f");
 
                 ImGui::Spacing();
                 if (ImGui::Button("Size Reset"))
@@ -1058,10 +1129,22 @@ HRESULT CImgui_Manager::List_Object()
 
                 CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
 
-                m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
-                m_vPropScale[m_iCurLevel] = pTransform->Get_Scale();
-                m_vPropRot[m_iCurLevel] = XMVectorZero();
-                m_vPropPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+                if (OBJECT_TYPE::PORP == m_pSelectObject->Get_ObjectType())
+                {
+                    m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
+                    m_vPropScale[m_iCurLevel] = pTransform->Get_Scale();
+                    m_vPropRot[m_iCurLevel] = XMVectorZero();
+                    m_vPropPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+                }
+                else if (OBJECT_TYPE::MONSTER == m_pSelectObject->Get_ObjectType())
+                {
+                    m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
+                    m_vMonsterScale[m_iCurLevel] = pTransform->Get_Scale();
+                    m_vMonsterRot[m_iCurLevel] = XMVectorZero();
+                    m_vMonsterPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+                }
+
+              
 
                 RELEASE_INSTANCE(CGameInstance);
             }
@@ -1097,6 +1180,13 @@ HRESULT CImgui_Manager::List_Object()
 
             m_pSelectObject = nullptr;
             m_iSelectObject[m_iCurLevel] = 0;
+            m_matStore[m_iCurLevel] = XMMatrixIdentity();
+            m_vPropScale[m_iCurLevel] = XMVectorZero();
+            m_vPropRot[m_iCurLevel] = XMVectorZero();
+            m_vPropPos[m_iCurLevel] = XMVectorZero();
+            m_vMonsterScale[m_iCurLevel] = XMVectorZero();
+            m_vMonsterRot[m_iCurLevel] = XMVectorZero();
+            m_vMonsterPos[m_iCurLevel] = XMVectorZero();
 
             RELEASE_INSTANCE(CGameInstance);
         }
@@ -1135,6 +1225,8 @@ HRESULT CImgui_Manager::List_Object()
         {
             for (auto& pObject : *pList)
             {
+                if (OBJECT_TYPE::MONSTER == pObject->Get_ObjectType()) continue;
+
                 CTransform* pTransform = dynamic_cast<CTransform*>(pObject->Get_Component(TEXT("Com_Transform")));
                 CBinModel* pModel = dynamic_cast<CBinModel*>(pObject->Get_Component(TEXT("Com_Model")));
 
@@ -1147,29 +1239,12 @@ HRESULT CImgui_Manager::List_Object()
 
                     if (-1 != vPick.w)
                     {
-                        if (false == IsFirstCheck)
-                        {
-                            _vector vPickLenght = pGameInstance->Get_CamPosition_Vector() - vPick;
-                            _vector vClosePickLenght = pGameInstance->Get_CamPosition_Vector() - vClosePick;
-                          
-                            if (vPickLenght.Length() < vClosePickLenght.Length())
-                            {
-                                vClosePick = vPick;
-                                m_vObjectPos[m_iCurLevel] = vClosePick;
-                                m_pSelectObject = pObject;
-                                ChangeListToSelectObj();
-                            }
-                        }
-                        else
-                        {
-                            vClosePick = vPick;
-                            m_vObjectPos[m_iCurLevel] = vClosePick;
 
-                            m_pSelectObject = pObject;
-                            ChangeListToSelectObj();
-
-                            IsFirstCheck = false;
-                        }
+                        vPick = XMVector3TransformCoord(vPick, pTransform->Get_WorldMatrix());
+                        vClosePick = vPick;
+                        m_vObjectPos[m_iCurLevel] = vClosePick;
+                        m_pSelectObject = pObject;
+                        ChangeListToSelectObj();
                         
                     }
                 }
@@ -1679,6 +1754,8 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
         eType = OBJECT_TYPE(iType);
         wstrTag.assign(strTag.begin(), strTag.end());
 
+       
+
         if (FAILED(pGameInstance->Add_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT, wstrTag)))
             return E_FAIL;
 
@@ -1700,10 +1777,22 @@ HRESULT CImgui_Manager::Load_Data(LEVEL eLevel)
 
    m_pSelectObject = pGameInstance->Last_GameObject(LEVEL_EDIT, LAYER_EDITOBJECT);
    CTransform* pTransform = dynamic_cast<CTransform*>(m_pSelectObject->Get_Component(TEXT("Com_Transform")));
-   m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
-   m_vPropScale[m_iCurLevel] = pTransform->Get_Scale();
-   m_vPropRot[m_iCurLevel] = XMVectorZero();
-   m_vPropPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+
+   if (OBJECT_TYPE::MONSTER == m_pSelectObject->Get_ObjectType())
+   {
+       m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
+       m_vMonsterScale[m_iCurLevel] = pTransform->Get_Scale();
+       m_vMonsterRot[m_iCurLevel] = XMVectorZero();
+       m_vMonsterPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+   }
+   else if (OBJECT_TYPE::PORP == m_pSelectObject->Get_ObjectType())
+   {
+       m_matStore[m_iCurLevel] = pTransform->Get_WorldMatrix();
+       m_vPropScale[m_iCurLevel] = pTransform->Get_Scale();
+       m_vPropRot[m_iCurLevel] = XMVectorZero();
+       m_vPropPos[m_iCurLevel] = pTransform->Get_State(CTransform::STATE_POS);
+   }
+  
 #pragma endregion
     RELEASE_INSTANCE(CGameInstance);
 

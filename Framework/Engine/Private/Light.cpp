@@ -1,14 +1,34 @@
 #include "..\Public\Light.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "Transform.h"
 
 CLight::CLight()
 {
 }
 
-HRESULT CLight::Initialize(const LIGHT_DESC& LightDesc)
+HRESULT CLight::Initialize(const LIGHT_DESC& LightDesc, class CTransform* pPlayerTransform)
 {
 	memmove(&m_LightDesc, &LightDesc, sizeof LightDesc);
+
+	m_pPlayerTransform = pPlayerTransform;
+
+	m_vLightPos_Origin = m_LightDesc.vLightPos;
+	m_vLightAt_Origin = m_LightDesc.vLightAt;
+
+	return S_OK;
+}
+
+HRESULT CLight::Calculate_ShadowLight()
+{
+	if (nullptr == m_pPlayerTransform)
+		return E_FAIL;
+
+	_vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
+
+	m_LightDesc.vLightPos = m_vLightPos_Origin + vPlayerPos;
+	m_LightDesc.vLightAt = m_vLightAt_Origin + vPlayerPos;;
+
 
 	return S_OK;
 }
@@ -50,11 +70,11 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 	return S_OK;
 }
 
-CLight* CLight::Create(const LIGHT_DESC& LightDesc)
+CLight* CLight::Create(const LIGHT_DESC& LightDesc, CTransform* pPlayerTransform)
 {
 	CLight* pInstance = new CLight;
 
-	if (FAILED(pInstance->Initialize(LightDesc)))
+	if (FAILED(pInstance->Initialize(LightDesc, pPlayerTransform)))
 	{
 		MSG_BOX("CLight Create Failed");
 		Safe_Release(pInstance);

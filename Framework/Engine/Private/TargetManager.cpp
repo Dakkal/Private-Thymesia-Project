@@ -53,7 +53,7 @@ HRESULT CTargetManager::Bind_SRV(CShader* pShader, const wstring& strTargetTag, 
 	return pRenderTarget->Bind_SRV(pShader, pConstantName);
 }
 
-HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pContext, const wstring& strMRTTag)
+HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pContext, const wstring& strMRTTag, ID3D11DepthStencilView* pDsv)
 {
 	list<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
 
@@ -72,7 +72,10 @@ HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pContext, const wstring& 
 		pRenderTarget->Clear();
 	}
 
-	pContext->OMSetRenderTargets(iNumRTVs, pRenderTargets, m_pDSV);
+	if(nullptr == pDsv)
+		pContext->OMSetRenderTargets(iNumRTVs, pRenderTargets, m_pDSV);
+	else if (nullptr != pDsv)
+		pContext->OMSetRenderTargets(iNumRTVs, pRenderTargets, pDsv);
 
 	return	S_OK;
 }

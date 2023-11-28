@@ -53,6 +53,7 @@
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\Body_Boss_Urd.cpp" />
     <ClCompile Include="..\Private\Body_Halberd.cpp" />
+    <ClCompile Include="..\Private\Body_Npc_Kid.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_Shield.cpp" />
     <ClCompile Include="..\Private\Body_TwinSword.cpp" />
@@ -76,6 +77,7 @@
     <ClCompile Include="..\Private\HitBox_TwinSword.cpp" />
     <ClCompile Include="..\Private\Left_BossDoor.cpp" />
     <ClCompile Include="..\Private\Left_Shaft.cpp" />
+    <ClCompile Include="..\Private\Npc_Kid.cpp" />
     <ClCompile Include="..\Private\Right_BossDoor.cpp" />
     <ClCompile Include="..\Private\Right_Shaft.cpp" />
     <ClCompile Include="..\Private\Seq_Camera_Player.cpp" />
@@ -98,6 +100,7 @@
     <ClCompile Include="..\Private\State_Hit_Shield.cpp" />
     <ClCompile Include="..\Private\State_Hit_TwinSword.cpp" />
     <ClCompile Include="..\Private\State_Idle_Halberd.cpp" />
+    <ClCompile Include="..\Private\State_Idle_Kid.cpp" />
     <ClCompile Include="..\Private\State_Idle_Shield.cpp" />
     <ClCompile Include="..\Private\State_Idle_TwinSword.cpp" />
     <ClCompile Include="..\Private\State_Lockon_ParrySuccess.cpp" />
@@ -122,6 +125,7 @@
     <ClCompile Include="..\Private\Sub_Building.cpp" />
     <ClCompile Include="..\Private\Sub_Door.cpp" />
     <ClCompile Include="..\Private\Throw_Weapon_Urd.cpp" />
+    <ClCompile Include="..\Private\Wall.cpp" />
     <ClCompile Include="..\Private\Weapon_TwinSword2.cpp" />
     <ClCompile Include="..\Private\Weapon_GreatSword.cpp" />
     <ClCompile Include="..\Private\Enemy_Halberd.cpp" />
@@ -169,6 +173,8 @@
     <ClCompile Include="..\Private\Weapon_Shield.cpp" />
     <ClCompile Include="..\Private\Weapon_Sword.cpp" />
     <ClCompile Include="..\Private\Weapon_TwinSword.cpp" />
+    <ClCompile Include="..\Private\WindowWall.cpp" />
+    <ClCompile Include="..\Private\WindowWall2.cpp" />
     <ClCompile Include="..\Public\State_Dead_Urd.cpp" />
     <ClCompile Include="Client.cpp">
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
@@ -193,6 +199,7 @@
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\Public\Body_Boss_Urd.h" />
     <ClInclude Include="..\Public\Body_Halberd.h" />
+    <ClInclude Include="..\Public\Body_Npc_Kid.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_Shield.h" />
     <ClInclude Include="..\Public\Body_TwinSword.h" />
@@ -217,6 +224,7 @@
     <ClInclude Include="..\Public\HitBox_TwinSword.h" />
     <ClInclude Include="..\Public\Left_BossDoor.h" />
     <ClInclude Include="..\Public\Left_Shaft.h" />
+    <ClInclude Include="..\Public\Npc_Kid.h" />
     <ClInclude Include="..\Public\Right_BossDoor.h" />
     <ClInclude Include="..\Public\Right_Shaft.h" />
     <ClInclude Include="..\Public\Seq_Camera_Player.h" />
@@ -240,6 +248,7 @@
     <ClInclude Include="..\Public\State_Hit_Shield.h" />
     <ClInclude Include="..\Public\State_Hit_TwinSword.h" />
     <ClInclude Include="..\Public\State_Idle_Halberd.h" />
+    <ClInclude Include="..\Public\State_Idle_Kid.h" />
     <ClInclude Include="..\Public\State_Idle_Shield.h" />
     <ClInclude Include="..\Public\State_Idle_TwinSword.h" />
     <ClInclude Include="..\Public\State_Lockon_ParrySuccess.h" />
@@ -264,6 +273,7 @@
     <ClInclude Include="..\Public\Sub_Building.h" />
     <ClInclude Include="..\Public\Sub_Door.h" />
     <ClInclude Include="..\Public\Throw_Weapon_Urd.h" />
+    <ClInclude Include="..\Public\Wall.h" />
     <ClInclude Include="..\Public\Weapon_TwinSword2.h" />
     <ClInclude Include="..\Public\Weapon_GreatSword.h" />
     <ClInclude Include="..\Public\Enemy_Halberd.h" />
@@ -306,6 +316,8 @@
     <ClInclude Include="..\Public\Weapon_Shield.h" />
     <ClInclude Include="..\Public\Weapon_Sword.h" />
     <ClInclude Include="..\Public\Weapon_TwinSword.h" />
+    <ClInclude Include="..\Public\WindowWall.h" />
+    <ClInclude Include="..\Public\WindowWall2.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="WeaponGara_Boss_Urd.h" />
     <ClInclude Include="framework.h" />

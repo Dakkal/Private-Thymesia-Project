@@ -250,6 +250,27 @@
     <Filter Include="02.GameObject\Object\Porps\Deco\Right_Shaft">
       <UniqueIdentifier>{b7db382a-7954-4324-8674-28e0325946fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\WindowWall">
+      <UniqueIdentifier>{66094211-240e-4792-80a5-4012c22cd609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\WindowWall2">
+      <UniqueIdentifier>{5c3e291c-61df-497b-b698-c186f70f8a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Porps\Deco\Wall">
+      <UniqueIdentifier>{24799cdf-e372-4b74-95e7-83e49a78fbc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Npc_Kid">
+      <UniqueIdentifier>{7d5372f8-4399-406f-b366-4e3bd4c63cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Npc_Kid\Part">
+      <UniqueIdentifier>{9b9c146a-5c79-49b3-90c7-499d6e18186c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Npc_Kid\Part\Body">
+      <UniqueIdentifier>{d03c4157-32d9-489e-a79e-56422c76b1b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Monster\Npc_Kid\State">
+      <UniqueIdentifier>{b6194071-8c89-4179-a7bb-10043f3226c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -629,6 +650,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\DeadTree.cpp">
       <Filter>02.GameObject\Object\Porps\Deco\DeadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Wall.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WindowWall.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\WindowWall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WindowWall2.cpp">
+      <Filter>02.GameObject\Object\Porps\Deco\WindowWall2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Npc_Kid.cpp">
+      <Filter>02.GameObject\Object\Monster\Npc_Kid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Npc_Kid.cpp">
+      <Filter>02.GameObject\Object\Monster\Npc_Kid\Part\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle_Kid.cpp">
+      <Filter>02.GameObject\Object\Monster\Npc_Kid\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1024,6 +1063,24 @@
     </ClInclude>
     <ClInclude Include="..\Public\DeadTree.h">
       <Filter>02.GameObject\Object\Porps\Deco\DeadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Wall.h">
+      <Filter>02.GameObject\Object\Porps\Deco\Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WindowWall.h">
+      <Filter>02.GameObject\Object\Porps\Deco\WindowWall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WindowWall2.h">
+      <Filter>02.GameObject\Object\Porps\Deco\WindowWall2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Npc_Kid.h">
+      <Filter>02.GameObject\Object\Monster\Npc_Kid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Npc_Kid.h">
+      <Filter>02.GameObject\Object\Monster\Npc_Kid\Part\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle_Kid.h">
+      <Filter>02.GameObject\Object\Monster\Npc_Kid\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

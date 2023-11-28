@@ -30,11 +30,12 @@ STATE CState_Parry_Halberd::Tick(const _float& fTimeDelta)
 		{
 			m_pRealOwner->Set_Parry(false);
 
-			dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
+			
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(40))
 		{
+			dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
 		}
 
@@ -54,11 +55,12 @@ STATE CState_Parry_Halberd::Tick(const _float& fTimeDelta)
 		{
 			m_pRealOwner->Set_Parry(false);
 
-			dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
+		
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(80))
 		{
+			dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
 		}
 
@@ -78,11 +80,12 @@ STATE CState_Parry_Halberd::Tick(const _float& fTimeDelta)
 		{
 			m_pRealOwner->Set_Parry(false);
 
-			dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
+			
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(60))
 		{
+			dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
 		}
 
@@ -102,11 +105,12 @@ STATE CState_Parry_Halberd::Tick(const _float& fTimeDelta)
 		{
 			m_pRealOwner->Set_Parry(false);
 
-			dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
+			
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(150))
 		{
+			dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
 		}
 

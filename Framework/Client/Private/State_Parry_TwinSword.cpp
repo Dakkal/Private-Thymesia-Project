@@ -83,11 +83,12 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(75))
 		{
-			dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(false);
+		
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
 		{
+			dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
 		}
 
@@ -121,15 +122,16 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(125))
 		{
-			dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(false);
+			
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(145))
 		{
+			dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(210))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(200))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;

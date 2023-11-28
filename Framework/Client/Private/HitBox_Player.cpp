@@ -5,6 +5,7 @@
 #include "BinBone.h"
 #include "Bounding_AABB.h"
 #include "Collider.h"
+#include "LandObject.h"
 
 CHitBox_Player::CHitBox_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -67,6 +68,10 @@ HRESULT CHitBox_Player::Render()
 
 void CHitBox_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom();
+
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
 	switch (eObject)
@@ -76,16 +81,26 @@ void CHitBox_Player::OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta)
 	case OBJECT_TYPE::PROJECTILE:
 		m_pOwner->Set_Hit(true);
 		break;
+	case OBJECT_TYPE::PORP:
+		pGameInstance->Detrude_AABB_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
+		break;
 	case OBJECT_TYPE::MONSTER:
 		break;
 	case OBJECT_TYPE::PART:
 		OnCollision_Part_Enter(_pColObj, fTimeDelta);
 		break;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 void CHitBox_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	
+	CNavigation* pNavigation = dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom();
+
 	OBJECT_TYPE eObject = _pColObj->Get_ObjectType();
 
 	switch (eObject)
@@ -93,6 +108,10 @@ void CHitBox_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 	case OBJECT_TYPE::BOSS:
 		break;
 	case OBJECT_TYPE::PORP:
+		if (true == pGameInstance->Key_Down('E'))
+			g_OpenDoor = true;
+
+		pGameInstance->Detrude_AABB_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
 		break;
 	case OBJECT_TYPE::MONSTER:
 		break;
@@ -100,6 +119,8 @@ void CHitBox_Player::OnCollision_Stay(CGameObject* _pColObj, _float fTimeDelta)
 		OnCollision_Part_Stay(_pColObj, fTimeDelta);
 		break;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 void CHitBox_Player::OnCollision_Exit(CGameObject* _pColObj, _float fTimeDelta)

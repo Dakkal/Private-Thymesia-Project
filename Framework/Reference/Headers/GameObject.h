@@ -22,6 +22,7 @@ public:
     virtual void LateTick(_float fTimeDelta);
     virtual void Exit_Object();
     virtual HRESULT Render();
+    virtual HRESULT Render_LightDepth() { return S_OK; }
 
 public:
     virtual void	OnCollision_Enter(CGameObject* _pColObj, _float fTimeDelta) {};

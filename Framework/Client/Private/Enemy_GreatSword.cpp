@@ -33,7 +33,7 @@ HRESULT CEnemy_GreatSword::Initialize_Prototype(const wstring& strProtoTag)
 	__super::Initialize_Prototype(strProtoTag);
 
 	m_eObjType = OBJECT_TYPE::MONSTER;
-	m_strObjectName = TEXT("Enemy_GreatSword");
+	m_strObjectName = TEXT("EnemyGreatSword");
 
 	return S_OK;
 }
@@ -58,12 +58,8 @@ HRESULT CEnemy_GreatSword::Initialize(void* pArg)
 
 void CEnemy_GreatSword::Enter_Object()
 {
-	if (true == m_bFirstDrop)
-	{
-		m_pCurNavigationCom->Set_toCell(38, m_pTransformCom);
-		m_bFirstDrop = false;
-	}
-
+	if (nullptr != m_pCurNavigationCom)
+		m_pCurNavigationCom->IsIn(m_pTransformCom->Get_State(CTransform::STATE_POS));
 }
 
 void CEnemy_GreatSword::Tick(_float fTimeDelta)
@@ -92,7 +88,8 @@ void CEnemy_GreatSword::Tick(_float fTimeDelta)
 			iter.second->Tick(fTimeDelta);
 	}
 
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if(false == g_EditMode)
+		m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	RELEASE_INSTANCE(CGameInstance)
 }
@@ -112,14 +109,16 @@ void CEnemy_GreatSword::LateTick(_float fTimeDelta)
 			iter.second->LateTick(fTimeDelta);
 	}
 
-	m_pColliderCom->LateUpdate();
+	if (false == g_EditMode)
+		m_pColliderCom->LateUpdate();
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	
 	if (true == pGameInstance->IsIn_Frustum_World(m_pTransformCom->Get_State(CTransform::STATE_POS), 2.f))
 	{
 #ifdef _DEBUG
-		m_pRendererCom->Add_Debug(m_pColliderCom);
+		if (false == g_EditMode)
+			m_pRendererCom->Add_Debug(m_pColliderCom);
 
 		if (nullptr != m_pCurNavigationCom)
 			m_pRendererCom->Add_Debug(m_pCurNavigationCom);
@@ -382,7 +381,7 @@ void CEnemy_GreatSword::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTim
 _float CEnemy_GreatSword::Get_PlayerDistance()
 {
 	if (nullptr == m_pPlayerTransform)
-		return -1.f;
+		return 99.f;
 
 	_vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
@@ -471,29 +470,42 @@ HRESULT CEnemy_GreatSword::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
-	/* Com_StateMachine*/
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
-		TEXT("Com_StateMachine"), (CComponent**)&m_pStateMachineCom)))
-		return E_FAIL;
 
-	/* Com_Navigation */
-	CNavigation* pNavigation = { nullptr };
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
-		TEXT("Com_Navigation1"), (CComponent**)&pNavigation)))
-		return E_FAIL;
-	m_NavigationComs.push_back(pNavigation);
+	if (true == g_EditMode)
+	{
+		/* Com_StateMachine*/
+		if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_StateMachine"),
+			TEXT("Com_StateMachine"), (CComponent**)&m_pStateMachineCom)))
+			return E_FAIL;
+	}
+	else
+	{
+		/* Com_StateMachine*/
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
+			TEXT("Com_StateMachine"), (CComponent**)&m_pStateMachineCom)))
+			return E_FAIL;
 
-	m_pCurNavigationCom = pNavigation;
+		/* Com_Navigation */
+		CNavigation* pNavigation = { nullptr };
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Church_Navigation"),
+			TEXT("Com_Navigation1"), (CComponent**)&pNavigation)))
+			return E_FAIL;
+		m_NavigationComs.push_back(pNavigation);
 
-	/* Com_Collider_Sphere */
-	CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
-	SphereDesc.fRadius = 5.f;
-	SphereDesc.vCenter = _float3(0.f, 0.01f, 0.f);
-	SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
-	SphereDesc.vColor = _vector(1.f, 1.f, 0.f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
-		return E_FAIL;
+		m_pCurNavigationCom = pNavigation;
+
+		/* Com_Collider_Sphere */
+		CBounding_Sphere::BOUNDING_SPHERE_DESC	SphereDesc = {};
+		SphereDesc.fRadius = 5.f;
+		SphereDesc.vCenter = _float3(0.f, 0.01f, 0.f);
+		SphereDesc.vCollideColor = _vector(1.f, 0.f, 0.f, 1.f);
+		SphereDesc.vColor = _vector(1.f, 1.f, 0.f, 1.f);
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+			TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
+			return E_FAIL;
+	}
+
+	
 
 	return S_OK;
 }
@@ -515,28 +527,33 @@ HRESULT CEnemy_GreatSword::Ready_Parts()
 		return E_FAIL;
 	m_Parts.emplace(CGameObject::PARTS::BODY, pParts);
 
-	/* For.Part_Weapon */
-	CPartObject::PART_DESC			PartDesc_Weapon;
-	PartDesc_Weapon.pOwner = this;
-	PartDesc_Weapon.ePart = PARTS::WEAPON_R;
-	PartDesc_Weapon.pParentTransform = m_pTransformCom;
-	PartDesc_Weapon.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_r");
-	PartDesc_Weapon.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
+	if (false == g_EditMode)
+	{
+		/* For.Part_Weapon */
+		CPartObject::PART_DESC			PartDesc_Weapon;
+		PartDesc_Weapon.pOwner = this;
+		PartDesc_Weapon.ePart = PARTS::WEAPON_R;
+		PartDesc_Weapon.pParentTransform = m_pTransformCom;
+		PartDesc_Weapon.pSocketBone = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketBonePtr("weapon_r");
+		PartDesc_Weapon.SocketPivot = dynamic_cast<CPartObject*>(m_Parts[PARTS::BODY])->Get_SocketPivotMatrix();
 
-	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_GreatSword_Weapon"), &PartDesc_Weapon);
-	if (nullptr == pParts)
-		return E_FAIL;
-	m_Parts.emplace(CGameObject::PARTS::WEAPON_R, pParts);
+		pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_GreatSword_Weapon"), &PartDesc_Weapon);
+		if (nullptr == pParts)
+			return E_FAIL;
+		m_Parts.emplace(CGameObject::PARTS::WEAPON_R, pParts);
 
-	CPartObject::PART_DESC			PartDesc_HitBox;
-	PartDesc_HitBox.pOwner = this;
-	PartDesc_HitBox.ePart = PARTS::HITBOX;
-	PartDesc_HitBox.pParentTransform = m_pTransformCom;
+		CPartObject::PART_DESC			PartDesc_HitBox;
+		PartDesc_HitBox.pOwner = this;
+		PartDesc_HitBox.ePart = PARTS::HITBOX;
+		PartDesc_HitBox.pParentTransform = m_pTransformCom;
 
-	pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_GreatSword_HitBox"), &PartDesc_HitBox);
-	if (nullptr == pParts)
-		return E_FAIL;
-	m_Parts.emplace(CGameObject::PARTS::HITBOX, pParts);
+		pParts = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Enemy_GreatSword_HitBox"), &PartDesc_HitBox);
+		if (nullptr == pParts)
+			return E_FAIL;
+		m_Parts.emplace(CGameObject::PARTS::HITBOX, pParts);
+	}
+
+	
 
 
 	RELEASE_INSTANCE(CGameInstance);

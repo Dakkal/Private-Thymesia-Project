@@ -23,6 +23,11 @@ HRESULT CState_Walk_GreatSword::Initialize()
 
 STATE CState_Walk_GreatSword::Tick(const _float& fTimeDelta)
 {
+	if (nullptr == dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerTransform())
+		return STATE::IDLE;
+
+	
+
 	STATE eState = m_eState;
 
 	if (true == m_pRealOwner->Is_Hit())
@@ -68,6 +73,7 @@ void CState_Walk_GreatSword::Reset_State()
 
 void CState_Walk_GreatSword::Enter_State()
 {
+
 	m_pRealOwner->Set_Move(true);
 
 	dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(true);
@@ -158,7 +164,7 @@ STATE CState_Walk_GreatSword::WalkState(_float fTimeDelta)
 		m_fAttackTime += fTimeDelta;
 	}
 
-	if (3.f <= m_fAttackTime)
+	if (2.5f <= m_fAttackTime)
 	{
 		m_bAttack = true;
 	}

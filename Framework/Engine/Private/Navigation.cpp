@@ -133,7 +133,7 @@ _int CNavigation::IsMove(_vector vPoint)
 			_uint iGetOut = 0;
 			while (true)
 			{
-				if (30 <= iGetOut)
+				if (60 <= iGetOut)
 					return -1;
 				iGetOut++;
 

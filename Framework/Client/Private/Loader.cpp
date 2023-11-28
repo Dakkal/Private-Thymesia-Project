@@ -24,6 +24,9 @@
 #include "Left_Shaft.h"
 #include "Right_Shaft.h"
 #include "Right_BossDoor.h"
+#include "Wall.h"
+#include "WindowWall.h"
+#include "WindowWall2.h"
 
 #include "Player.h"
 #include "Body_Player.h"
@@ -61,12 +64,16 @@
 #include "Weapon_TwinSword.h"
 #include "Weapon_TwinSword2.h"
 
+#include "Npc_Kid.h"
+#include "Body_Npc_Kid.h"
+
 #include "BinModel.h"
 
 #include "Navigation.h"
 #include "StateMachine.h"
 #include "Collider.h"
 
+_bool	g_EditMode = false;
 
 _uint APIENTRY ThreadEntry(void* pArg)
 {
@@ -316,6 +323,8 @@ HRESULT CLoader::Loading_For_Level_4()
 
 HRESULT CLoader::Loading_For_Level_Edit()
 {
+	g_EditMode = true;
+
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
 	Loading_Texture();
@@ -465,6 +474,12 @@ HRESULT CLoader::Loading_Mesh()
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Enemy_Soldier/Sword/Sword.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Npc_Kid_Body"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Kiddo/Kiddo.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+
 		/* For.PropMesh */
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Church"),
@@ -536,17 +551,21 @@ HRESULT CLoader::Loading_Mesh()
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/DeadTree/DeadTree.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
-		
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_WindowWall"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/WindowWall/WindowWall.dat"), ModelInitMatrix))))
+			return E_FAIL;
 
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_WindowWall2"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/WindowWall2/WindowWall2.dat"), ModelInitMatrix))))
+			return E_FAIL;
 
-		break;
-	case Client::LEVEL_1:
-		break;
-	case Client::LEVEL_2:
-		break;
-	case Client::LEVEL_3:
-		break;
-	case Client::LEVEL_4:
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Wall"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Wall/Wall.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
 		break;
 	case Client::LEVEL_EDIT:
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_VIBuffer_Edit_Terrain"),
@@ -621,6 +640,49 @@ HRESULT CLoader::Loading_Mesh()
 		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_DeadTree"),
 			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/DeadTree/DeadTree.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		/* For.GreatSwordMesh */
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Enemy_GreatSword_Body"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Enemy_GreatSword/Body/Enemy_GreatSword.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		/* For.Halberd */
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Enemy_Halberd_Body"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Enemy_Halberd/Body/Enemy_Halberd.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		/* For.Shield & Sword */
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Enemy_Shield_Body"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Enemy_Shield/Enemy_Shield.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Enemy_TwinSword_Body"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Enemy_TwinSword/Enemy_TwinSword.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_WindowWall"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/WindowWall/WindowWall.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_WindowWall2"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/WindowWall2/WindowWall2.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Wall"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_NONANIM, TEXT("../Bin/Resources/Models/Static/Props/Wall/Wall.dat"), ModelInitMatrix))))
+			return E_FAIL;
+
+		ModelInitMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_EDIT, TEXT("Prototype_Component_Model_Npc_Kid_Body"),
+			CBinModel::Create(m_pDevice, m_pContext, CBinModel::TYPE_ANIM, TEXT("../Bin/Resources/Models/Dynamic/Kiddo/Kiddo.dat"), ModelInitMatrix))))
 			return E_FAIL;
 
 		break;
@@ -833,6 +895,13 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Urd_SeqCamera"), CSeq_Camera_Urd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Boss_Urd_SeqCamera")))))
 			return E_FAIL;
 
+		/* 키드 */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Npc_Kid"), CNpc_Kid::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Npc_Kid")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Npc_Kid_Body"), CBody_Npc_Kid::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Npc_Kid_Body")))))
+			return E_FAIL;
+
 		/* 그소 */
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword"), CEnemy_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword")))))
 			return E_FAIL;
@@ -935,25 +1004,15 @@ HRESULT CLoader::Loading_Object()
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DeadTree"), CDeadTree::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DeadTree")))))
 			return E_FAIL;
 
-		break;
-	case Client::LEVEL_1:
-		/* For.Terrain*/
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Edit_Terrain"), CEdit_Terrain::Create(m_pDevice, m_pContext))))
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wall"), CWall::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Wall")))))
 			return E_FAIL;
-		/* For.Camera*/
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CToolCamera::Create(m_pDevice, m_pContext))))
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WindowWall"), CWindowWall::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_WindowWall")))))
 			return E_FAIL;
-		/* For.Porps_ChurchGrillesFloor */
-		
-		/* For.Porps_Church */
-		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Church"), CChurch::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Church")))))
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WindowWall2"), CWindowWall2::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_WindowWall2")))))
 			return E_FAIL;
-		break;
-	case Client::LEVEL_2:
-		break;
-	case Client::LEVEL_3:
-		break;
-	case Client::LEVEL_4:
+
 		break;
 	case Client::LEVEL_EDIT:
 		/* For.Terrain*/
@@ -1003,6 +1062,49 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DeadTree"), CDeadTree::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DeadTree")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wall"), CWall::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Wall")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WindowWall"), CWindowWall::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_WindowWall")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WindowWall2"), CWindowWall2::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_WindowWall2")))))
+			return E_FAIL;
+
+		/* 그소 */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword"), CEnemy_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_GreatSword_Body"), CBody_GreatSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_GreatSword_Body")))))
+			return E_FAIL;
+
+		/* 할버드 */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Halberd"), CEnemy_Halberd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_Halberd")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Halberd_Body"), CBody_Halberd::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_Halberd_Body")))))
+			return E_FAIL;
+
+		/* 쉴드 */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Shield"), CEnemy_Shield::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_Shield")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Shield_Body"), CBody_Shield::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_Shield_Body")))))
+			return E_FAIL;
+
+		/* 트윈소드 */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_TwinSword"), CEnemy_TwinSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_TwinSword")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_TwinSword_Body"), CBody_TwinSword::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Enemy_TwinSword_Body")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Npc_Kid"), CNpc_Kid::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Npc_Kid")))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Npc_Kid_Body"), CBody_Npc_Kid::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Npc_Kid_Body")))))
 			return E_FAIL;
 
 		break;

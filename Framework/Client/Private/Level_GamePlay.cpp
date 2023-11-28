@@ -6,6 +6,7 @@
 
 _bool	g_BossSeq = { false };
 _bool	g_PlayerSeq = { false };
+_bool	g_OpenDoor = { false };
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -32,8 +33,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Boss(LAYER_BOSS)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
@@ -89,7 +90,9 @@ HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
 
 	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_BOSS, fTimeDelta);
 	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_MONSTER, fTimeDelta);
+	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_MONSTER, LAYER_MONSTER, fTimeDelta);
 	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_PROJECTILE, fTimeDelta);
+	pGameInstance->Check_Collision(LEVEL_GAMEPLAY, LAYER_PLAYER, LAYER_PROP, fTimeDelta);
 	
 
 	pGameInstance->Delete_NonActive_Objects(LEVEL_GAMEPLAY, LAYER_MONSTER);
@@ -339,17 +342,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _uint& iLayerIndex)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_GreatSword"))))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_GreatSword"))))
+		return E_FAIL;
 
-	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Halberd"))))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Halberd"))))
+		return E_FAIL;
 
-	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Shield"))))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_Shield"))))
+		return E_FAIL;
 
-	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_TwinSword"))))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, iLayerIndex, TEXT("Prototype_GameObject_Enemy_TwinSword"))))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -373,6 +376,17 @@ HRESULT CLevel_GamePlay::Ready_Light()
 
 	if (FAILED(pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
+
+	ZeroMemory(&LightDesc, sizeof LightDesc);
+	LightDesc.eLightType = LIGHT_DESC::TYPE::SHADOW;
+	LightDesc.vLightPos = _vector(-30.f, 30.f, -30.f, 0.f);
+	LightDesc.vLightAt = _vector(10.f, 0.f, 10.f, 0.f);
+
+	CTransform* pPlayerTransform = dynamic_cast<CTransform*>(pGameInstance->Get_Player(LEVEL_GAMEPLAY)->Get_Component(TEXT("Com_Transform")));
+
+	if (FAILED(pGameInstance->Add_Light(LightDesc, pPlayerTransform)))
+		return E_FAIL;
+
 
 	/* 점 광원을 추가한다. */
 	/*ZeroMemory(&LightDesc, sizeof LightDesc);

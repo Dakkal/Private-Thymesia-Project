@@ -132,8 +132,6 @@ _vector CCalculator::Picking_Object(RECT rc, POINT pt, CTransform* pTransform, C
                 ray.position.y + (ray.direction.y * fDist),
                 ray.position.z + (ray.direction.z * fDist), 1.f);
 
-            vPick = XMVector3TransformCoord(vPick, pTransform->Get_WorldMatrix());
-
             return vPick;
         }
     }
@@ -143,7 +141,7 @@ _vector CCalculator::Picking_Object(RECT rc, POINT pt, CTransform* pTransform, C
     return _vector(-1.f, -1.f, -1.f, -1.f);
 }
 
-HRESULT CCalculator::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform)
+HRESULT CCalculator::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform, CNavigation* pNavigation)
 {
     if (nullptr == pColObj || nullptr == pObjCol || nullptr == pObjTransform)
         return E_FAIL;
@@ -153,13 +151,13 @@ HRESULT CCalculator::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, C
 
     _float3 vTargetCenter = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Center;
     _float3 vPlayerCenter = dynamic_cast<CBounding_AABB*>(pObjCol->Get_ParentBouning())->Get_Bouding()->Center;
-    _float3 vFinalCenter = vPlayerCenter - vTargetCenter;
+    _float3 vFinalCenter = vTargetCenter - vPlayerCenter;
 
     _float3 vTargetExtents = dynamic_cast<CBounding_AABB*>(pCollider->Get_ParentBouning())->Get_Bouding()->Extents;
     _float3 vPlayerExtents = dynamic_cast<CBounding_AABB*>(pObjCol->Get_ParentBouning())->Get_Bouding()->Extents;
     _float3 vFinalExtents = 0.5 * _float3(::fabs(vFinalCenter.x), ::fabs(vFinalCenter.y), ::fabs(vFinalCenter.z));
 
-    if (vFinalExtents.x >= vFinalExtents.z)
+    if (vFinalCenter.Length() > vTargetExtents.x + vPlayerExtents.x)
     {
         // 충돌이 X 축에서 발생.
         if (vPlayerCenter.x > vTargetCenter.x)
@@ -181,7 +179,7 @@ HRESULT CCalculator::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, C
             pObjTransform->Set_State(CTransform::STATE::STATE_POS, vPos);
         }
     }
-    else if (vFinalExtents.z >= vFinalExtents.x)
+    else if (vFinalCenter.Length() > vTargetExtents.z + vPlayerExtents.z)
     {
         // 충돌이 Z 축에서 발생.
         if (vPlayerCenter.z > vTargetCenter.z)

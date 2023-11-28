@@ -20,6 +20,8 @@ extern HINSTANCE	g_hInstance;
 
 extern _bool		g_BossSeq;
 extern _bool		g_PlayerSeq;
+extern _bool		g_OpenDoor;
+extern _bool		g_EditMode;
 
 using namespace Client;
 

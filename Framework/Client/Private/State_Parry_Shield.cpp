@@ -37,7 +37,7 @@ STATE CState_Parry_Shield::Tick(const _float& fTimeDelta)
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(140))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(130))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;
@@ -53,15 +53,16 @@ STATE CState_Parry_Shield::Tick(const _float& fTimeDelta)
 		{
 			m_pRealOwner->Set_Parry(false);
 
-			dynamic_cast<CEnemy_Shield*>(m_pRealOwner)->Set_LookPlayer(false);
+			
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
 		{
+			dynamic_cast<CEnemy_Shield*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
 		}
 
-		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(140))
+		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(130))
 		{
 			if (true == m_pRealOwner->Is_Hit())
 				return STATE::HIT;

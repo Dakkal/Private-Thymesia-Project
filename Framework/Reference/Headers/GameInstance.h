@@ -91,12 +91,14 @@ public: /* For.PipeLine */
 
 public: /* For.Light_Manager */
 	const LIGHT_DESC* Get_LightDesc(_uint iLightIndex);
-	HRESULT Add_Light(const LIGHT_DESC & LightDesc);
+	const LIGHT_DESC* Get_ShadowLightDesc(_uint iLightIndex);
+	HRESULT Add_Light(const LIGHT_DESC & LightDesc, class CTransform* pPlayerTransform = nullptr);
+	HRESULT	Caculate_ShadowLight();
 
 public: /* For.Calculaotr */
 	_vector		Picking_Terrain(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
 	_vector		Picking_Object(RECT rc, POINT pt, class CTransform* pTransform, class CVIBuffer* pBuffer);
-	HRESULT		Detrude_AABB_Collide(class CGameObject* pColObj, class CCollider* pObjCol, class CTransform* pObjTransform);
+	HRESULT		Detrude_AABB_Collide(class CGameObject* pColObj, class CCollider* pObjCol, class CTransform* pObjTransform, class CNavigation* pNavigation = nullptr);
 	HRESULT		Detrude_Sphere_Collide(class CGameObject* pColObj, class CCollider* pObjCol, class CTransform* pObjTransform, class CNavigation* pNavigation = nullptr);
 	_float3		QuaternionToEuler(_vector vQuaternion);
 	_float		Clamp(float value, float min, float max);

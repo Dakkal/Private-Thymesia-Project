@@ -53,7 +53,7 @@ void CBossRoom::LateTick(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == pGameInstance->IsIn_Frustum_World(m_pTransformCom->Get_State(CTransform::STATE_POS), 100.f))
+	if (true == pGameInstance->IsIn_Frustum_World(m_pTransformCom->Get_State(CTransform::STATE_POS), 40.f))
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 
@@ -62,7 +62,6 @@ void CBossRoom::LateTick(_float fTimeDelta)
 			m_pRendererCom->Add_Debug(m_pCurNavigationCom);
 #endif
 	}
-
 
 	RELEASE_INSTANCE(CGameInstance);
 }
@@ -137,22 +136,38 @@ HRESULT CBossRoom::Ready_Components()
 	//	TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
 	//	return E_FAIL;
 #endif // !NDEBUG
-	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
-		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
-		return E_FAIL;
+	if (true == g_EditMode)
+	{
+		/* Com_Shader */
+		if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxMesh"),
+			TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+			return E_FAIL;
 
-	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_BossRoom"),
-		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-		return E_FAIL;
+		/* Com_Model */
+		if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_BossRoom"),
+			TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+	}
+	else
+	{
+		/* Com_Shader */
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
+			TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+			return E_FAIL;
 
-	/* Com_Navigation */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BossRoom_Navigation"),
-		TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
-		return E_FAIL;
+		/* Com_Model */
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_BossRoom"),
+			TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
 
-	m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+		/* Com_Navigation */
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BossRoom_Navigation"),
+			TEXT("Com_Navigation"), (CComponent**)&m_pCurNavigationCom)))
+			return E_FAIL;
+
+		m_pCurNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+	}
+	
 
 	return S_OK;
 }

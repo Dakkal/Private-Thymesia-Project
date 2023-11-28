@@ -48,24 +48,37 @@ void CBody_GreatSword::Tick(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta);
 
-	m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta, dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom(), m_vTargetPos);
-	dynamic_cast<CLandObject*>(m_pOwner)->Set_On_NaviMesh(m_pParentTransform);
+	if (false == g_EditMode)
+	{
+		m_pModelCom->Set_OwnerPosToRootPos(m_pParentTransform, fTimeDelta, dynamic_cast<CLandObject*>(m_pOwner)->Get_CurNaviCom(), m_vTargetPos);
+		dynamic_cast<CLandObject*>(m_pOwner)->Set_On_NaviMesh(m_pParentTransform);
+	}
+	
 
 	Compute_RenderMatrix(m_pTransformCom->Get_WorldMatrix());
 
 	/* 계산한뒤에 월드를 업데이트 */
-	m_pColliderCom->Update(m_WorldMatrix);
+	if (false == g_EditMode)
+	{
+		m_pColliderCom->Update(m_WorldMatrix);
+	}
+
 }
 
 void CBody_GreatSword::LateTick(_float fTimeDelta)
 {
-	m_pColliderCom->LateUpdate();
+	if (false == g_EditMode)
+		m_pColliderCom->LateUpdate();
 
 	if (true == m_pOwner->Is_Cull())
 	{
 #ifdef _DEBUG
-		m_pRendererCom->Add_Debug(m_pColliderCom);
+		if (false == g_EditMode)
+			m_pRendererCom->Add_Debug(m_pColliderCom);
 #endif
+		if (false == m_pOwner->Is_Dead())
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_SHADOW, this);
+
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 	}
 }
@@ -119,6 +132,47 @@ HRESULT CBody_GreatSword::Render()
 					return E_FAIL;
 			}
 		}
+
+		if (FAILED(m_pModelCom->Render(i)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CBody_GreatSword::Render_LightDepth()
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+
+	_matrix		ViewMatrix, ProjMatrix;
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	_vector vLightPos = pGameInstance->Get_ShadowLightDesc(0)->vLightPos;
+	_vector vLightAt = pGameInstance->Get_ShadowLightDesc(0)->vLightAt;
+
+	ViewMatrix = XMMatrixLookAtLH(vLightPos, vLightAt, _vector(0.f, 1.f, 0.f, 0.f));
+	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), (_float)g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
+		return E_FAIL;
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, i, "g_BoneMatrices")))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Begin(8)))
+			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
@@ -355,21 +409,6 @@ HRESULT CBody_GreatSword::Ready_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/* Com_Texture*/
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
-		TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
-
-	/* Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
-		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
-		return E_FAIL;
-
-	/* Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_GreatSword_Body"),
-		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-		return E_FAIL;
-
 	/* Com_Transform */
 	CTransform::TRANSFORM_DESC		TransformDesc;
 	TransformDesc = m_pParentTransform->Get_TransformDesc();
@@ -378,14 +417,46 @@ HRESULT CBody_GreatSword::Ready_Components()
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
-	CBounding_Sphere::BOUNDING_SPHERE_DESC		SphereDesc = {};
-	SphereDesc.vCenter = _float3(0.f, 1.f, 0.f);
-	SphereDesc.fRadius = 0.7f;
-	SphereDesc.vCollideColor = _vector(1.f, 0.5f, 0.f, 1.f);
-	SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
-		return E_FAIL;
+	if (true == g_EditMode)
+	{
+		/* Com_Shader */
+		if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+			TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+			return E_FAIL;
+
+		/* Com_Model */
+		if (FAILED(__super::Add_Component(LEVEL_EDIT, TEXT("Prototype_Component_Model_Enemy_GreatSword_Body"),
+			TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+	}
+	else
+	{
+		/* Com_Texture*/
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
+			TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
+			return E_FAIL;
+
+		/* Com_Shader */
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+			TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+			return E_FAIL;
+
+		/* Com_Model */
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_GreatSword_Body"),
+			TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+
+		CBounding_Sphere::BOUNDING_SPHERE_DESC		SphereDesc = {};
+		SphereDesc.vCenter = _float3(0.f, 1.f, 0.f);
+		SphereDesc.fRadius = 0.7f;
+		SphereDesc.vCollideColor = _vector(1.f, 0.5f, 0.f, 1.f);
+		SphereDesc.vColor = _vector(0.33f, 0.63f, 0.93f, 1.f);
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+			TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &SphereDesc)))
+			return E_FAIL;
+	}
+
+	
 
 	return S_OK;
 }

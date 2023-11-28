@@ -25,6 +25,8 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_LightDepth() override;
+
 
 private:
 	CRenderer* m_pRendererCom = { nullptr };
@@ -35,6 +37,9 @@ private:
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+
+private:
+	_float3		m_vAngle = { 0.f, 0.f, 0.f };
 
 public:
 	static CRight_BossDoor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));

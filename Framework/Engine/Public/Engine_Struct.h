@@ -23,11 +23,12 @@ namespace Engine
 
 	typedef struct tagLightDesc
 	{
-		enum class TYPE { DIRECTIONAL, POINT, _END };
+		enum class TYPE { DIRECTIONAL, POINT, SHADOW, _END };
 
 		TYPE		eLightType = { TYPE::_END };
 
 		_vector		vLightPos;
+		_vector		vLightAt;
 		float		fLightRange;
 		_vector		vLightDir;
 

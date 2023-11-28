@@ -41,9 +41,24 @@ void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eTyp
 			pCol2 = dynamic_cast<CCollider*>(pObj2->Get_Component(TEXT("Com_Collider")));
 
 			if (nullptr == pCol1 || nullptr == pCol2) continue;
-			else if (false == pCol1->Is_Active() || false == pCol2->Is_Active()) continue;
 
 			Set_Info(iter, pCol1, pCol2);
+			if (false == pCol1->Is_Active() || false == pCol2->Is_Active())
+			{
+				if (iter->second) // 이전에도 충돌
+				{
+					pCol1->OnCollision_Exit(pObj2, fTimedelta);
+					pCol2->OnCollision_Exit(pObj1, fTimedelta);
+					iter->second = false;
+
+					if (0 < pObj1->Get_Parts_Size() || 0 < pObj2->Get_Parts_Size())
+					{
+						Check_Part_Collision(pObj1, pObj2, pCol1, pCol2, fTimedelta);
+					}
+				}
+				continue;
+			}
+			
 
 			if (pCol1->IsCollision(pCol2)) // 충돌
 			{
@@ -106,9 +121,21 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 		pCol2 = dynamic_cast<CCollider*>(pPart2.second->Get_Component(TEXT("Com_Collider")));
 
 		if (nullptr == _pObj1Col || nullptr == pCol2) continue;
-		else if (false == _pObj1Col->Is_Active() || false == pCol2->Is_Active()) continue;
 
 		Set_Info(iter, _pObj1Col, pCol2);
+		if (false == _pObj1Col->Is_Active() || false == pCol2->Is_Active())
+		{
+			if (iter->second) // 이전에도 충돌
+			{
+				_pObj1Col->OnCollision_Exit(pPart2.second, fTimedelta);
+				pCol2->OnCollision_Exit(_pObj1, fTimedelta);
+				iter->second = false;
+			}
+			continue;
+		}
+		
+
+		
 
 		if (_pObj1Col->IsCollision(pCol2)) // 충돌
 		{
@@ -154,9 +181,21 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 		pCol1 = dynamic_cast<CCollider*>(pPart1.second->Get_Component(TEXT("Com_Collider")));
 
 		if (nullptr == _pObj2Col || nullptr == pCol1) continue;
-		else if (false == _pObj2Col->Is_Active() || false == pCol1->Is_Active()) continue;
 
 		Set_Info(iter, _pObj2Col, pCol1);
+		if (false == _pObj2Col->Is_Active() || false == pCol1->Is_Active())
+		{
+			if (iter->second) // 이전에도 충돌
+			{
+				_pObj2Col->OnCollision_Exit(pPart1.second, fTimedelta);
+				pCol1->OnCollision_Exit(_pObj2, fTimedelta);
+				iter->second = false;
+			}
+			continue;
+		}
+		
+
+		
 
 		if (_pObj2Col->IsCollision(pCol1)) // 충돌
 		{
@@ -206,10 +245,19 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 			pCol2 = dynamic_cast<CCollider*>(pPart2.second->Get_Component(TEXT("Com_Collider")));
 
 			if (nullptr == pCol1 || nullptr == pCol2) continue;
-			else if (false == pCol1->Is_Active() || false == pCol2->Is_Active()) continue;
 
 			Set_Info(iter, pCol1, pCol2);
-
+			if (false == pCol1->Is_Active() || false == pCol2->Is_Active())
+			{
+				if (iter->second) // 이전에도 충돌
+				{
+					pCol1->OnCollision_Exit(pPart2.second, fTimedelta);
+					pCol2->OnCollision_Exit(pPart1.second, fTimedelta);
+					iter->second = false;
+				}
+				continue;
+			}
+			
 			if (pCol1->IsCollision(pCol2)) // 충돌
 			{
 				if (iter->second) // 이전에도 충돌

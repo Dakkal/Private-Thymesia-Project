@@ -20,14 +20,40 @@ const LIGHT_DESC* CLight_Manager::Get_LightDesc(_uint iLightIndex)
 	return (*iter)->Get_LightDesc();
 }
 
-HRESULT CLight_Manager::Add_Light(const LIGHT_DESC& LightDesc)
+const LIGHT_DESC* CLight_Manager::Get_ShadowLightDesc(_uint iLightIndex)
 {
-	CLight* pLight = CLight::Create(LightDesc);
+	if (iLightIndex >= m_ShadowLights.size())
+		return nullptr;
+
+	auto iter = m_ShadowLights.begin();
+
+	for (size_t i = 0; i < iLightIndex; i++)
+		++iter;
+
+	return (*iter)->Get_LightDesc();
+}
+
+HRESULT CLight_Manager::Add_Light(const LIGHT_DESC& LightDesc, class CTransform* pPlayerTransform)
+{
+	CLight* pLight = CLight::Create(LightDesc, pPlayerTransform);
 
 	if (nullptr == pLight)
 		return E_FAIL;
 
-	m_Lights.push_back(pLight);
+	if (nullptr == pPlayerTransform)
+		m_Lights.push_back(pLight);
+	else
+		m_ShadowLights.push_back(pLight);
+
+	return S_OK;
+}
+
+HRESULT CLight_Manager::Caculate_ShadowLight()
+{
+	for (auto& pLight : m_ShadowLights)
+	{
+		pLight->Calculate_ShadowLight();
+	}
 
 	return S_OK;
 }
@@ -48,6 +74,9 @@ void CLight_Manager::Free()
 
 	for (auto& pLight : m_Lights)
 		Safe_Release(pLight);
-
 	m_Lights.clear();
+
+	for (auto& pLight : m_ShadowLights)
+		Safe_Release(pLight);
+	m_ShadowLights.clear();
 }

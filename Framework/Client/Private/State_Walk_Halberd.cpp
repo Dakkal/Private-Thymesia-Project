@@ -23,6 +23,9 @@ HRESULT CState_Walk_Halberd::Initialize()
 
 STATE CState_Walk_Halberd::Tick(const _float& fTimeDelta)
 {
+	if (nullptr == dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Get_PlayerTransform())
+		return STATE::IDLE;
+
 	STATE eState = m_eState;
 
 	if (true == m_pRealOwner->Is_Hit())
@@ -157,7 +160,7 @@ STATE CState_Walk_Halberd::WalkState(_float fTimeDelta)
 		m_fAttackTime += fTimeDelta;
 	}
 
-	if (3.f <= m_fAttackTime)
+	if (2.5f <= m_fAttackTime)
 	{
 		m_bAttack = true;
 	}

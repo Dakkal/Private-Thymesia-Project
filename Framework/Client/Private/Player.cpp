@@ -80,6 +80,8 @@ void CPlayer::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (true == pGameInstance->Key_Down('Q'))
 		ReSearch_TargetEnemy();
+
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	m_pStateMachineCom->Tick(fTimeDelta);
@@ -443,7 +445,7 @@ HRESULT CPlayer::Search_TargetEnemy()
 	{
 		CTransform* pTargetTransform = dynamic_cast<CTransform*>(pTarget->Get_Component(TEXT("Com_Transform")));
 		_vector TargetPos = pTargetTransform->Get_State(CTransform::STATE_POS);
-		_vector PlayerPos = pTargetTransform->Get_State(CTransform::STATE_POS);
+		_vector PlayerPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
 		_float fDist = _vector(TargetPos - PlayerPos).Length();
 
 		if (fCloseDist >= fDist)
@@ -453,6 +455,9 @@ HRESULT CPlayer::Search_TargetEnemy()
 		}
 
 	}
+
+	if (nullptr == m_pTargetEnemy)
+		return S_OK;
 
 	CPlayerCamera* pPlayerCamera = dynamic_cast<CPlayerCamera*>(pGameInstance->Last_GameObject(LEVEL_GAMEPLAY, LAYER_CAMERA));
 	CTransform* pTargetTransform = dynamic_cast<CTransform*>(m_pTargetEnemy->Get_Component(TEXT("Com_Transform")));
@@ -532,7 +537,7 @@ HRESULT CPlayer::Ready_Components()
 
 	/* Com_Transform */
 	CTransform::TRANSFORM_DESC		TransformDesc;
-	TransformDesc.fSpeedPerSec = 4.f;
+	TransformDesc.fSpeedPerSec = 3.5f;
 	TransformDesc.fRotRadianPerSec = XMConvertToRadians(120.0f);
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
