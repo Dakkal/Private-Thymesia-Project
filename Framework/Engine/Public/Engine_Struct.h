@@ -29,8 +29,9 @@ namespace Engine
 
 		_vector		vLightPos;
 		_vector		vLightAt;
-		float		fLightRange;
+		_float		fLightRange;
 		_vector		vLightDir;
+		_float		fLightFOV;
 
 		_vector		vDiffuse, vAmbient, vSpecular;
 

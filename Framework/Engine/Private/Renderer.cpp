@@ -24,8 +24,8 @@ HRESULT CRenderer::Initialize_Prototype()
 
 
 	POINT Shadow;
-	Shadow.x = m_ClientViewPort.Width * 6.f;
-	Shadow.y = m_ClientViewPort.Height * 6.f;
+	Shadow.x = m_ClientViewPort.Width * 9.f;
+	Shadow.y = m_ClientViewPort.Height * 9.f;
 
 	/* For.Target_Diffuse */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse"),
@@ -247,10 +247,12 @@ HRESULT CRenderer::Render_LightDepth()
 	}
 	m_listRenderObject[(_uint)RENDERGROUP::RG_SHADOW].clear();
 
+	m_pContext->RSSetViewports(1, &m_ClientViewPort);
+
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
 
-	m_pContext->RSSetViewports(1, &m_ClientViewPort);
+	
 
 	return S_OK;
 }

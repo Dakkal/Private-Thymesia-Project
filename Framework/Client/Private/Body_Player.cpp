@@ -138,9 +138,10 @@ HRESULT CBody_Player::Render_LightDepth()
 
 	_vector vLightPos = pGameInstance->Get_ShadowLightDesc(0)->vLightPos;
 	_vector vLightAt = pGameInstance->Get_ShadowLightDesc(0)->vLightAt;
+	_float fLightFOV = pGameInstance->Get_ShadowLightDesc(0)->fLightFOV;
 
 	ViewMatrix = XMMatrixLookAtLH(vLightPos, vLightAt, _vector(0.f, 1.f, 0.f, 0.f));
-	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), (_float)g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f);
+	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(fLightFOV), (_float)g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f);
 
 	RELEASE_INSTANCE(CGameInstance);
 

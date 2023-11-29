@@ -38,6 +38,8 @@ HRESULT CShader::Initialize_Prototype(const wstring& strShaderFilePath, const D3
 
 	pTechnique->GetDesc(&tTechniqueDesc);
 
+	
+
 	for (size_t i = 0; i < tTechniqueDesc.Passes; i++)
 	{
 		ID3DX11EffectPass*	pPass = pTechnique->GetPassByIndex(i);
