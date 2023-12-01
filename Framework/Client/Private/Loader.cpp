@@ -67,11 +67,15 @@
 #include "Npc_Kid.h"
 #include "Body_Npc_Kid.h"
 
+#include "ParrySpark.h"
+
 #include "BinModel.h"
 
 #include "Navigation.h"
 #include "StateMachine.h"
 #include "Collider.h"
+#include "VIBuffer_Point_Instance.h"
+#include "VIBuffer_Rect_Instance.h"
 
 _bool	g_EditMode = false;
 
@@ -369,6 +373,12 @@ HRESULT CLoader::Loading_Texture()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Dissolve"),
 			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Dissolve/Dissolve.png"), 1))))
 			return E_FAIL;
+
+		/* For.Prototype_Component_Texture_Dissolve */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_ParryFlare"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/ParryFlare/ParryFlare.dds"), 1))))
+			return E_FAIL;
+
 		break;
 	case Client::LEVEL_1:
 		break;
@@ -708,6 +718,7 @@ HRESULT CLoader::Loading_Shader()
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosNorTex.hlsl"), VTXPOSNORTEX::tElements, VTXPOSNORTEX::iNumElements))))
 			return E_FAIL;
 
+
 		/* For.Proto_VtxAnimMesh */
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::tElements, VTXANIMMESH::iNumElements))))
@@ -717,6 +728,17 @@ HRESULT CLoader::Loading_Shader()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxMesh"),
 			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::tElements, VTXMESH::iNumElements))))
 			return E_FAIL;
+
+		/* For.Prototype_Component_Shader_Point_Instance */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Point_Instance"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Point_Instance.hlsl"), VTX_POINT_INSTANCE::Elements, VTX_POINT_INSTANCE::iNumElements))))
+			return E_FAIL;
+
+		/* For.Prototype_Component_Shader_Point_Instance */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_Rect_Instance"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Rect_Instance.hlsl"), VTX_RECT_INSTANCE::Elements, VTX_RECT_INSTANCE::iNumElements))))
+			return E_FAIL;
+
 
 		break;
 	case Client::LEVEL_1:
@@ -811,6 +833,17 @@ HRESULT CLoader::Loading_EtcComponent()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
 			CStateMachine::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
+
+		/* For.Prototype_Component_Shader_Point_Instance */
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Point_Instance"),
+			CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Rect_Instance"),
+			CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+
 		break;
 	case Client::LEVEL_1:
 		break;
@@ -1011,6 +1044,10 @@ HRESULT CLoader::Loading_Object()
 			return E_FAIL;
 
 		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WindowWall2"), CWindowWall2::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_WindowWall2")))))
+			return E_FAIL;
+
+		/* For.Effect */
+		if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ParrySpark"), CParrySpark::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_ParrySpark")))))
 			return E_FAIL;
 
 		break;

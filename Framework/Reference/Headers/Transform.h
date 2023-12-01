@@ -58,6 +58,7 @@ public:
 	void Rotation(_vector vAxis, _float fRadian);
 	void Turn(_vector vAxis, _float fTimeDelta);
 	void LookAt(_vector vPoint);
+	void LookAt_NoYaw(_vector vPoint);
 	_bool Chase(_vector vPoint, _float fTimeDelta, _float fDis = 0.1f, class CNavigation* pNavi = nullptr);
 
 private:

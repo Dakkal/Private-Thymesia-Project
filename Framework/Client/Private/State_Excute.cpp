@@ -32,7 +32,7 @@ STATE CState_Excute::Tick(const _float& fTimeDelta)
 	}
 	else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(115))
 	{
-		m_pOwnerBodyPart->Set_CurAnimSpeed(1.5f);
+		m_pOwnerBodyPart->Set_CurAnimSpeed(1.8f);
 	}
 
 
@@ -66,7 +66,7 @@ void CState_Excute::Enter_State()
 
 	dynamic_cast<CPlayer*>(m_pRealOwner)->Reset_TargetEnemy();
 
-	m_pOwnerBodyPart->Set_AnimationIndex(false, 176, 1.5f);
+	m_pOwnerBodyPart->Set_AnimationIndex(false, 176, 1.8f);
 
 
 	dynamic_cast<CPlayer*>(m_pRealOwner)->Set_Excute(false);

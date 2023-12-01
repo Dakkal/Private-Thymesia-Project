@@ -271,6 +271,12 @@
     <Filter Include="02.GameObject\Object\Monster\Npc_Kid\State">
       <UniqueIdentifier>{b6194071-8c89-4179-a7bb-10043f3226c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Object\Effect">
+      <UniqueIdentifier>{57b3a290-8c9e-45dc-8dd7-5fb31f803ad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Object\Effect\ParrySpark">
+      <UniqueIdentifier>{ec2aa38b-e18e-4253-96c7-997a76b7c45e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -668,6 +674,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Idle_Kid.cpp">
       <Filter>02.GameObject\Object\Monster\Npc_Kid\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectManager.cpp">
+      <Filter>02.GameObject\Object\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ParrySpark.cpp">
+      <Filter>02.GameObject\Object\Effect\ParrySpark</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1082,6 +1094,12 @@
     <ClInclude Include="..\Public\State_Idle_Kid.h">
       <Filter>02.GameObject\Object\Monster\Npc_Kid\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\EffectManager.h">
+      <Filter>02.GameObject\Object\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParrySpark.h">
+      <Filter>02.GameObject\Object\Effect\ParrySpark</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1107,6 +1125,12 @@
       <Filter>97.Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl">
+      <Filter>97.Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Point_Instance.hlsl">
+      <Filter>97.Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Rect_Instance.hlsl">
       <Filter>97.Shader</Filter>
     </FxCompile>
   </ItemGroup>

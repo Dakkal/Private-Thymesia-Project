@@ -38,7 +38,7 @@ STATE CState_Dead_Urd::Tick(const _float& fTimeDelta)
 	}
 	else if (false == m_bExcuted && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(115))
 	{
-		m_pOwnerBodyPart->Set_CurAnimSpeed(1.5f);
+		m_pOwnerBodyPart->Set_CurAnimSpeed(1.8f);
 	}
 
 	if (false == m_bExcuted && m_pOwnerBodyPart->Is_AnimOverKeyFrame(220))
@@ -77,7 +77,7 @@ void CState_Dead_Urd::Enter_State()
 
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 
-	m_pOwnerBodyPart->Set_AnimationIndex(false, 41, 1.5f);
+	m_pOwnerBodyPart->Set_AnimationIndex(false, 41, 1.8f);
 
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

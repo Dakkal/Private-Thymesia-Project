@@ -372,14 +372,14 @@ HRESULT CLevel_GamePlay::Ready_Light()
 
 	LightDesc.vDiffuse = _vector(0.8f, 0.8f, 0.8f, 1.f);
 	LightDesc.vAmbient = _vector(0.8f, 0.8f, 0.8f, 1.f);
-	LightDesc.vSpecular = _vector(0.f, 0.f, 0.f, 1.f);
+	LightDesc.vSpecular = _vector(0.12f, 0.12f, 0.12f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
 
 	ZeroMemory(&LightDesc, sizeof LightDesc);
 	LightDesc.eLightType = LIGHT_DESC::TYPE::SHADOW;
-	LightDesc.vLightPos = _vector(-40.f, 40.f, -40.f, 1.f);
+	LightDesc.vLightPos = _vector(-30.f, 30.f, -30.f, 1.f);
 	LightDesc.vLightAt = _vector(10.f, 0.f, 10.f, 1.f);
 	LightDesc.fLightFOV = 45.f;
 

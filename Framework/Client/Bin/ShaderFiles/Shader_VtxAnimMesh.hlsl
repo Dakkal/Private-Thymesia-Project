@@ -169,9 +169,14 @@ PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
     vector vMtrlDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexcoord);
     
     float fDissolveAlpha = saturate(-g_Time / g_DissolveDuration + vMtrlDissolve.r);
- 
+    
+   
+    
     if (fDissolveAlpha < 0.1f)
         discard;
+    
+    if (fDissolveAlpha < 0.12f)
+        vMtrlDiffuse = float4(0.48f, 0.74f, 0.46, 1.f);
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
@@ -194,8 +199,13 @@ PS_OUT PS_MAIN_DISSOLVE_NORMAL(PS_IN In)
     
     float fDissolveAlpha = saturate(-g_Time / g_DissolveDuration + vMtrlDissolve.r);
  
+    
+    
     if (fDissolveAlpha < 0.1f)
         discard;
+    
+    if (fDissolveAlpha < 0.12f)
+        vMtrlDiffuse = float4(0.48f, 0.74f, 0.46, 1.f);
     
     Out.vDiffuse = vMtrlDiffuse;
       

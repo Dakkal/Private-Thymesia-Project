@@ -29,21 +29,35 @@ HRESULT CSound_Manager::PlaySoundFile(const wstring& strSoundKey, CHANNELID eCh,
 	if (iter == m_Sounds.end())
 		return E_FAIL;
 
-	FMOD_BOOL	bPlay = FALSE;
-
-	if (FMOD_Channel_IsPlaying(m_pChannelArr[_uint(eCh)], &bPlay))
-	{
-		FMOD_System_PlaySound(m_pSystem, iter->second, NULL, FALSE, &m_pChannelArr[_uint(eCh)]);
-	}
-	else
-	{
-		FMOD_Channel_Stop(m_pChannelArr[_uint(eCh)]);
-		FMOD_System_PlaySound(m_pSystem, iter->second, NULL, FALSE, &m_pChannelArr[_uint(eCh)]);
-	}
+	FMOD_Channel_Stop(m_pChannelArr[_uint(eCh)]);
+	FMOD_System_PlaySound(m_pSystem, iter->second, NULL, FALSE, &m_pChannelArr[_uint(eCh)]);
 
 	FMOD_Channel_SetVolume(m_pChannelArr[_uint(eCh)], fVolume);
 
 	FMOD_System_Update(m_pSystem);
+
+	return S_OK;
+}
+
+HRESULT CSound_Manager::CheckPlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, _float fVolume)
+{
+	auto iter = m_Sounds.find(strSoundKey);
+
+	if (iter == m_Sounds.end())
+		return E_FAIL;
+
+	FMOD_BOOL	bPlay = FALSE;
+	FMOD_RESULT bResult = FMOD_Channel_IsPlaying(m_pChannelArr[_uint(eCh)], &bPlay);
+
+	if (bResult != FMOD_OK)
+	{
+		FMOD_Channel_Stop(m_pChannelArr[_uint(eCh)]);
+		FMOD_System_PlaySound(m_pSystem, iter->second, NULL, FALSE, &m_pChannelArr[_uint(eCh)]);
+
+		FMOD_Channel_SetVolume(m_pChannelArr[_uint(eCh)], fVolume);
+
+		FMOD_System_Update(m_pSystem);
+	}
 
 	return S_OK;
 }

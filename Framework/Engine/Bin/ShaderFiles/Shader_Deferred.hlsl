@@ -194,22 +194,19 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     float2 vUV;
     vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
     vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
-
-
+    
     vector vLightDepthDesc = g_LightDepthTexture.Sample(PointSampler, vUV);
     
     float fragDepth = vPosition.w;
-    float Depth = (vLightDepthDesc.x * 1000.f);
+    float LightDepth = (vLightDepthDesc.x * 1000.f);
     
-    float2 Moments = ComputeMoments(Depth);
+    float2 Moments = ComputeMoments(LightDepth);
     Moments = DistributePrecision(Moments);
     float p = ChebyshevUpperBound(Moments, fragDepth);
-    float fLit = ReduceLightBleeding(p, 0.01f);
+    float fLit = ReduceLightBleeding(p, 0.3f);
     fLit = saturate(fLit + 0.5f);
     
-    //float fShadow = PCF_ShadowCalculation(vPosition, g_LightDepthTexture);
-      
-    
+
     vector vShadowColor = vector(fLit, fLit, fLit, 1.f);
 
     vector vDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
@@ -303,69 +300,7 @@ PS_OUT PS_MAIN_PCF(PS_IN In)
 }
 
 
-PS_OUT PS_MAIN_SHADOW(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-	
-    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
-    float fViewZ = vDepthDesc.y * 1000.f;
 
-    vector vWorldPos;
-
-	/* 투영스페이스 상의 위치를 구한다. */
-    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
-    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
-    vWorldPos.z = vDepthDesc.x;
-    vWorldPos.w = 1.f;
-
-	/* 뷰스페이스 상의 위치를 구한다. */
-    vWorldPos = vWorldPos * fViewZ;
-    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-
-	/* 월드까지 가자. */
-    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-
-	/* 광원기준의 뷰랑 투영행렬을 곱한다. */
-    vector vPosition = mul(vWorldPos, g_LightViewMatrix);
-    vPosition = mul(vPosition, g_LightProjMatrix);
-
-
-    float2 vUV;
-    vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
-    vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
-
-    vector vLightDepthDesc = g_LightDepthTexture.Sample(PointSampler, vUV);
-
-    float fOldZ = vLightDepthDesc.x * 1000.f;
-
-    float fragDepth = vPosition.w;
-    float fLit = 1.0f;
-    float E_x2 = vLightDepthDesc.y * 1000.f;
-    float Ex_2 = fOldZ * fOldZ;
-    float variance = (E_x2 - Ex_2);
-    
-    variance = max(variance, 0.00005f);
-
-    float mD = (fragDepth - fOldZ);
-    float mD_2 = mD * mD;
-    float p = (variance / (variance + mD_2));
-   
-    fLit = max(p, fragDepth > fOldZ);
-    fLit = (1.f - fLit) + 0.5f;
-    if (fLit > 1.f)
-        fLit = 1.f;
-
-    vector vDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    if (vDiffuse.a == 0.f)
-        discard;
-
-    vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-
-    Out.vColor = (vDiffuse * vShade + vSpecular) * fLit;
-
-    return Out;
-}
 
 technique11 DefaultTechnique
 {

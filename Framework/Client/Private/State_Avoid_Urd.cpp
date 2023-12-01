@@ -49,8 +49,16 @@ STATE CState_Avoid_Urd::Tick(const _float& fTimeDelta)
 		{
 			if (1 <= m_iAvoidCnt)
 			{
-				RELEASE_INSTANCE(CGameInstance);
-				return STATE::ATTACK;
+				if (4.f < dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance())
+				{
+					RELEASE_INSTANCE(CGameInstance);
+						return STATE::RUN;
+				}
+				else
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return STATE::ATTACK;
+				}	
 			}
 
 			if (true == pGameInstance->Random_Coin(0.4f))
@@ -72,8 +80,16 @@ STATE CState_Avoid_Urd::Tick(const _float& fTimeDelta)
 			}
 			else
 			{
-				RELEASE_INSTANCE(CGameInstance);
-				return STATE::ATTACK;
+				if (4.f < dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance())
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return STATE::RUN;
+				}
+				else
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return STATE::ATTACK;
+				}
 			}
 		}
 	}

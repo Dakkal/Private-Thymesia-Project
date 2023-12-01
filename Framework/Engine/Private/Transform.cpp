@@ -361,6 +361,23 @@ void CTransform::LookAt(_vector vPoint)
 	Set_State(STATE_LOOK, vLook);
 }
 
+void CTransform::LookAt_NoYaw(_vector vPoint)
+{
+	_vector		vScaled = Get_Scale();
+
+	_vector		vPosition = Get_State(STATE_POS);
+	_vector		vDir = XMVector3Normalize(vPoint - vPosition);
+	vDir.y = 0.f;
+	
+	_vector		vLook = vDir * vScaled.z;
+	_vector		vRight = XMVector3Normalize(XMVector3Cross(_vector(0.f, 1.f, 0.f, 0.f), vLook)) * vScaled.x;
+	_vector		vUp = XMVector3Normalize(XMVector3Cross(vLook, vRight)) * vScaled.y;
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
 _bool CTransform::Chase(_vector vPoint, _float fTimeDelta, _float fDis, CNavigation* pNavi)
 {
 	_vector		vPosition = Get_State(STATE_POS);

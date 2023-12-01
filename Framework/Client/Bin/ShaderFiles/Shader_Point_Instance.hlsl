@@ -1,12 +1,10 @@
-
-#include "Engine_Shader_Defines.hpp"
+#include "Engine_Shader_Defines.hlsl"
 
 /* 상수테이블. */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_Texture;
 
 vector			g_vCamPosition;
-
 
 
 //struct VS_IN
@@ -22,19 +20,18 @@ vector			g_vCamPosition;
 struct VS_IN
 {
 	/* 그리기용 정점. m_pVB */
-	float3		vPosition : POSITION;
-	float2		vPSize : PSIZE;
+	float3		vPosition	 : POSITION;
+	float2		vPSize		 : PSIZE;
 
 	/* 상태변환용 정점. m_pVBInstance */
-	float4		vRight : WORLD0;
-	float4		vUp : WORLD1;
-	float4		vLook : WORLD2;
+	float4		vRight		 : WORLD0;
+	float4		vUp			 : WORLD1;
+	float4		vLook		 : WORLD2;
 	float4		vTranslation : WORLD3;
 };
 
 struct VS_OUT
 {
-	/* float4 : w값을 반드시 남겨야하는 이유는 w에 뷰스페이스 상의 깊이(z)를 보관하기 위해서다. */
 	float4		vPosition : POSITION;
 	float2		vPSize : PSIZE;
 };
@@ -46,15 +43,16 @@ struct VS_OUT
 VS_OUT VS_MAIN(/* 정점 */VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;	
-
+	
+    In.vRight.w = 0;
+    In.vUp.w = 0;
+    In.vLook.w = 0;
+	
 	matrix		TransformMatrix = float4x4(normalize(In.vRight), normalize(In.vUp), normalize(In.vLook), In.vTranslation);	
 
 	vector		vPosition;
 
-	if(1.f == In.vTranslation.w)
-		vPosition = mul(float4(In.vPosition, 1.f), TransformMatrix);
-	else if (0.f == In.vTranslation.w)
-		vPosition = mul(float4(In.vPosition, 0.f), TransformMatrix);
+    vPosition = mul(float4(In.vPosition, 1.f), TransformMatrix);
 
 	Out.vPosition = mul(vPosition, g_WorldMatrix);
 	Out.vPSize = float2(In.vPSize.x * length(In.vRight), In.vPSize.y * length(In.vUp));
@@ -82,11 +80,13 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 
 	/* 받아온 정점을 기준으로하여 사각형을 구성하기위한 정점 여섯개를 만들거야. */
-	vector		vLook = g_vCamPosition - In[0].vPosition;
-
+    vector		vLook = normalize(g_vCamPosition - In[0].vPosition);
 	float3		vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
 	float3		vUp = normalize(cross(vLook.xyz, vRight.xyz)) * In[0].vPSize.y * 0.5f;
-
+	
+	
+	
+	
 	matrix		matVP;
 
 	matVP = mul(g_ViewMatrix, g_ProjMatrix);
@@ -142,12 +142,18 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	Out.vColor = g_Texture.Sample(PointSampler, In.vTexcoord);
 
-	Out.vColor.rgb = float3(1.f, 0.f, 0.f);
-
-	if (Out.vColor.a < 0.1f)
-		discard;
-
-	return Out;
+   // 쉐이더에서 텍스처와 알파 채널을 읽어옴
+    float alphaValue = Out.vColor.r;
+    Out.vColor.a = alphaValue;
+	
+	
+    if (alphaValue < 0.3f)
+        discard;
+	
+	
+    Out.vColor.rgb = float3(1.f, 0.7f, 0.3f);
+	
+  return Out;
 }
 
 technique11 DefaultTechnique
@@ -155,11 +161,10 @@ technique11 DefaultTechnique
 	/* */
 	pass Particle
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_Sky);
 		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
-		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = compile gs_5_0 GS_MAIN();
 		HullShader = NULL;

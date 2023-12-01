@@ -67,6 +67,7 @@
     <ClCompile Include="..\Private\ChurchWindowGriles.cpp" />
     <ClCompile Include="..\Private\DeadTree.cpp" />
     <ClCompile Include="..\Private\Edit_Terrain.cpp" />
+    <ClCompile Include="..\Private\EffectManager.cpp" />
     <ClCompile Include="..\Private\Enemy_GreatSword.cpp" />
     <ClCompile Include="..\Private\Body_GreatSword.cpp" />
     <ClCompile Include="..\Private\Enemy_Shield.cpp" />
@@ -78,6 +79,7 @@
     <ClCompile Include="..\Private\Left_BossDoor.cpp" />
     <ClCompile Include="..\Private\Left_Shaft.cpp" />
     <ClCompile Include="..\Private\Npc_Kid.cpp" />
+    <ClCompile Include="..\Private\ParrySpark.cpp" />
     <ClCompile Include="..\Private\Right_BossDoor.cpp" />
     <ClCompile Include="..\Private\Right_Shaft.cpp" />
     <ClCompile Include="..\Private\Seq_Camera_Player.cpp" />
@@ -214,6 +216,7 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\DeadTree.h" />
     <ClInclude Include="..\Public\Edit_Terrain.h" />
+    <ClInclude Include="..\Public\EffectManager.h" />
     <ClInclude Include="..\Public\Enemy_GreatSword.h" />
     <ClInclude Include="..\Public\Body_GreatSword.h" />
     <ClInclude Include="..\Public\Enemy_Shield.h" />
@@ -225,6 +228,7 @@
     <ClInclude Include="..\Public\Left_BossDoor.h" />
     <ClInclude Include="..\Public\Left_Shaft.h" />
     <ClInclude Include="..\Public\Npc_Kid.h" />
+    <ClInclude Include="..\Public\ParrySpark.h" />
     <ClInclude Include="..\Public\Right_BossDoor.h" />
     <ClInclude Include="..\Public\Right_Shaft.h" />
     <ClInclude Include="..\Public\Seq_Camera_Player.h" />
@@ -333,6 +337,8 @@
     <ResourceCompile Include="Client.rc" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Point_Instance.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Rect_Instance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosNorTex.hlsl" />

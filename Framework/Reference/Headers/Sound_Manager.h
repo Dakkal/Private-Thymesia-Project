@@ -16,6 +16,7 @@ public:
 
 public:
 	HRESULT PlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, _float fVolume);
+	HRESULT CheckPlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, _float fVolume);
 	HRESULT PlayBGM(const wstring& strSoundKey, _float fVolume);
 	HRESULT StopSound(CHANNELID eCh);
 	HRESULT StopSoundAll();

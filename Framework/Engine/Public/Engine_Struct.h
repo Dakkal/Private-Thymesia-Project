@@ -54,6 +54,15 @@ namespace Engine
 	}MESH_MATERIAL;
 
 	/* 버퍼 구조체 */
+	typedef struct ENGINE_DLL tagVertex_Position_Size
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT2		vPSize;
+
+		static const unsigned int				iNumElements = 2;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+
+	}VTXPOINT;
 
 	typedef struct ENGINE_DLL tagVertex_Pos
 	{
@@ -112,6 +121,26 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC tElements[iNumElements];
 
 	}VTXANIMMESH;
+
+	typedef struct ENGINE_DLL tagVertex_Instance
+	{
+		_vector		vRight;
+		_vector		vUp;
+		_vector		vLook;
+		_vector		vTranslation;
+	}VTXINSTANCE;
+
+	typedef struct ENGINE_DLL tagVertex_Point_Instance
+	{
+		static const unsigned int				iNumElements = 6;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTX_POINT_INSTANCE;
+
+	typedef struct ENGINE_DLL tagVertex_Rect_Instance
+	{
+		static const unsigned int				iNumElements = 6;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTX_RECT_INSTANCE;
 
 
 	enum class LERP_MODE { DEFAULT, EASE_OUT, EASE_IN, EXPONENTIAL, SMOOTHSTEP, SMOOTHERSTEP, TYPEEND };

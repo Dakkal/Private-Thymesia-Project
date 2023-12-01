@@ -45,6 +45,11 @@ STATE CState_Avoid_Shield::Tick(const _float& fTimeDelta)
 		}
 			
 
+		if (pGameInstance->Random_Coin(0.2f))
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::PARRY;
+		}
 		if (m_iGuardCount <= m_iGuardTime)
 		{
 			RELEASE_INSTANCE(CGameInstance);

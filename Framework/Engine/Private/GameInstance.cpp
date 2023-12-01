@@ -347,6 +347,14 @@ HRESULT CGameInstance::PlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, 
 	return m_pSound_Manager->PlaySoundFile(strSoundKey, eCh, fVolume);
 }
 
+HRESULT CGameInstance::CheckPlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, _float fVolume)
+{
+	if (nullptr == m_pSound_Manager)
+		return E_FAIL;
+
+	return m_pSound_Manager->CheckPlaySoundFile(strSoundKey, eCh, fVolume);
+}
+
 HRESULT CGameInstance::PlayBGM(const wstring& strSoundKey, _float fVolume)
 {
 	if (nullptr == m_pSound_Manager)

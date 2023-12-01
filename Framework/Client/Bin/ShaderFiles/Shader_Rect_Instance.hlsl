@@ -1,5 +1,4 @@
-
-#include "Engine_Shader_Defines.hpp"
+#include "Engine_Shader_Defines.hlsl"
 
 /* 상수테이블. */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -14,9 +13,9 @@ struct VS_IN
 	float2		vTexcoord : TEXCOORD0;
 
 	/* 상태변환용 정점. m_pVBInstance */
-	float4		vRight : TEXCOORD1;
-	float4		vUp : TEXCOORD2;
-	float4		vLook : TEXCOORD3;
+	float4		vRight		 : TEXCOORD1;
+	float4		vUp			 : TEXCOORD2;
+	float4		vLook		 : TEXCOORD3;
 	float4		vTranslation : TEXCOORD4;
 };
 
@@ -37,7 +36,7 @@ VS_OUT VS_MAIN(/* 정점 */VS_IN In)
 
 	float4x4		TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
 
-	vector		vPosition = mul(float4(In.vPosition, 1.f), TransformMatrix);
+	vector			vPosition = mul(float4(In.vPosition, 1.f), TransformMatrix);
 
 
 	/* mul : 모든(곱하기가 가능한) 행렬의 곱하기를 수행한다. */
@@ -75,10 +74,18 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	Out.vColor = g_Texture.Sample(PointSampler, In.vTexcoord);
+    Out.vColor = g_Texture.Sample(PointSampler, In.vTexcoord);
 
-	if (Out.vColor.a < 0.1f)
-		discard;
+   // 쉐이더에서 텍스처와 알파 채널을 읽어옴
+    float alphaValue = Out.vColor.r;
+    Out.vColor.a = alphaValue;
+	
+	
+    if (alphaValue < 0.2f)
+        discard;
+	
+	
+    Out.vColor.rgb = float3(1.f, 0.7f, 0.3f);
 
 	return Out;
 }
@@ -88,9 +95,9 @@ technique11 DefaultTechnique
 	/* */
 	pass Particle
 	{
-		SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Sky);
 		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
 		VertexShader = compile vs_5_0 VS_MAIN();

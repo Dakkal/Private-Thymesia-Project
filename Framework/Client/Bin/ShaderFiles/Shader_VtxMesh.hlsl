@@ -196,8 +196,14 @@ PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
     
     float fDissolveAlpha = saturate(-g_Time / g_DissolveDuration + vMtrlDissolve.r);
  
+
+    
     if (fDissolveAlpha < 0.1f)
         discard;
+    
+    if (fDissolveAlpha < 0.12f)
+        vMtrlDiffuse = float4(0.48f, 0.74f, 0.46, 1.f);
+    
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
@@ -221,8 +227,13 @@ PS_OUT PS_MAIN_DISSOLVE_NORMAL(PS_IN In)
     
     float fDissolveAlpha = saturate(-g_Time / g_DissolveDuration + vMtrlDissolve.r);
  
+    
+    
     if (fDissolveAlpha < 0.1f)
         discard;
+    
+    if (fDissolveAlpha < 0.12f)
+        vMtrlDiffuse = float4(0.48f, 0.74f, 0.46, 1.f);
     
     Out.vDiffuse = vMtrlDiffuse;
       
@@ -254,7 +265,7 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
         vColor.a *= vMtrlDiffuse.r;
         vMtrlDiffuse = vColor;
     }
-
+    
 
     vector vShade = g_vLightDiffuse * (saturate(dot(normalize(g_vLightDir) * -1.f, vNormal)) + (g_vLightAmbient * g_vMtrlAmbient));
 
@@ -280,7 +291,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 
     float Depth_Color = In.vProjPos.w / 1000.0f;
     
-    Out.vLightDepth = vector(Depth_Color, Depth_Color * Depth_Color, 0, 1.f);
+    Out.vLightDepth = vector(Depth_Color, Depth_Color, Depth_Color, 1.f);
 
     return Out;
 }

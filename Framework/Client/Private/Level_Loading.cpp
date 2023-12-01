@@ -36,12 +36,14 @@ HRESULT CLevel_Loading::LateTick(_float fTimeDelta)
 
 	SetWindowText(g_hWnd, strLoadingText.c_str());
 
-	if (GetKeyState(VK_RETURN) & 0x8000)
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Key_Down(VK_RETURN))
 	{
 		if (true == m_pLoader->Get_Finished())
 		{
-			CGameInstance* pGameInstance = CGameInstance::GetInstance();
-			Safe_AddRef(pGameInstance);
+			
 
 			CLevel* pNewLevel = nullptr;
 
@@ -67,9 +69,11 @@ HRESULT CLevel_Loading::LateTick(_float fTimeDelta)
 			if (FAILED(pGameInstance->Open_Level(m_eNextLevel, pNewLevel)))
 				return E_FAIL;
 
-			Safe_Release(pGameInstance);
+			
 		}
 	}
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }

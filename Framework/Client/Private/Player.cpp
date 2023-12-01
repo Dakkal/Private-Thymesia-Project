@@ -25,6 +25,8 @@
 #include "Collider.h"
 #include "Bounding_Sphere.h"
 
+#include "EffectObject.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLandObject(pDevice, pContext)
 {
@@ -80,6 +82,14 @@ void CPlayer::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (true == pGameInstance->Key_Down('Q'))
 		ReSearch_TargetEnemy();
+
+	if (true == pGameInstance->Key_Down('T'))
+	{
+		CEffectObject::EFFECT_DESC	effectdesc;
+		effectdesc.vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
+
+		pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_EFFECT, TEXT("Prototype_GameObject_ParrySpark"), &effectdesc);
+	}
 
 
 	RELEASE_INSTANCE(CGameInstance);

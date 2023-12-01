@@ -32,14 +32,14 @@ protected:
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
 	_uint						m_iNumVBs = { 0 };
 
-	vector<_float3> m_BufferPoses;
-	vector<_ulong> m_Indicies;
+	vector<_float3>				m_BufferPoses;
+	vector<_ulong>				m_Indicies;
 
 protected:
 	HRESULT Create_Buffer(_Inout_ ID3D11Buffer * *ppOut);
 
 public:
-	virtual CComponent* Clone(class CGameObject* pOwner, void* pArg) = 0;
+	virtual CComponent* Clone(class CGameObject* pOwner, void* pArg) PURE;
 	virtual void Free() override;
 
 };

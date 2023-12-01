@@ -77,6 +77,78 @@ BlendState BS_LightBlend
     BlendOp = Add;
 };
 
+float4x4 RotateZ(float angle)
+{
+    angle = radians(angle);
+    
+    float c = cos(angle);
+    float s = sin(angle);
+
+    return float4x4(
+        c, -s, 0, 0,
+        s, c, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    );
+}
+
+
+float4x4 RotateX(float angle)
+{
+    angle = radians(angle);
+    
+    float c = cos(angle);
+    float s = sin(angle);
+
+    return float4x4(
+        1, 0, 0, 0,
+        0, c, -s, 0,
+        0, s, c, 0,
+        0, 0, 0, 1
+    );
+}
+
+float4x4 RotateY(float angle)
+{
+    angle = radians(angle);
+    
+    float c = cos(angle);
+    float s = sin(angle);
+
+    return float4x4(
+        c, 0, s, 0,
+        0, 1, 0, 0,
+        -s, 0, c, 0,
+        0, 0, 0, 1
+    );
+}
+
+float4x4 RotateAroundVector(float3 vLook, float angle)
+{
+    float3 vRight = normalize(cross(vLook, float3(0, 1, 0))); // 수정된 부분
+    float3 vUp = cross(vRight, vLook);
+
+    float4x4 rotationMatrix = float4x4(
+        vRight.x, vRight.y, vRight.z, 0,
+        vUp.x, vUp.y, vUp.z, 0,
+        vLook.x, vLook.y, vLook.z, 0,
+        0, 0, 0, 1
+    );
+
+    angle = radians(angle);
+    float c = cos(angle);
+    float s = sin(angle);
+
+    float4x4 rotation = float4x4(
+        c, -s, 0, 0,
+        s, c, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    );
+
+    return mul(rotationMatrix, rotation);
+}
+
 /* Moment 계산 */
 float2 ComputeMoments(float LightDepth)
 {
@@ -109,7 +181,7 @@ float ChebyshevUpperBound(float2 Moments, float Depth)
 /* 라이트 블리딩 */
 float linstep(float minValue, float maxValue, float v)
 {
-    return clamp(((v - minValue) / (maxValue - minValue)), 0, 1);
+    return clamp((v - minValue) / (maxValue - minValue), 0, 1);
 }
 
 float ReduceLightBleeding(float p_max, float Amount)
@@ -122,16 +194,20 @@ float g_DistributeFactor = 256;
 float2 RecombinePrecision(float4 Value)
 {
     float FactorInv = 1 / g_DistributeFactor;
-    return (Value.zw * FactorInv + Value.xy);
+    float Compute = Value.zw * FactorInv + Value.xy;
+    return Compute;
 }
 float2 DistributePrecision(float2 Moments) 
 {   float FactorInv = 1 / g_DistributeFactor;   
     // Split precision    
     float2 IntPart;  
     float2 FracPart = modf(Moments * g_DistributeFactor, IntPart);
-    // Compose outputs to make reconstruction cheap.    
-    float4 Value = float4(IntPart * FactorInv, FracPart);
-    return RecombinePrecision(Value);
+    // Compose outputs to make reconstruction cheap.   
+    float2 Compute = IntPart * FactorInv;
+    float4 Value = float4(Compute.x, Compute.y, FracPart.x, FracPart.y);
+    float2 ComputeMoment = RecombinePrecision(Value);
+    
+    return ComputeMoment;
 }
 
 //PCF
@@ -158,11 +234,11 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace, texture2D LightDepthImg)
     // 클라이언트 화면 크기
     float2 texelSize = float2(1.f / 1280.f, 1.f / 720.f);
     // 쉐도우 이미지 크기배율
-    texelSize /= 6;
+    texelSize /= 8;
 
-    for (int x = -1; x <= 1; ++x)
+    for (int x = -3; x <= 3; ++x)
     {
-        for (int y = -1; y <= 1; ++y)
+        for (int y = -3; y <= 3; ++y)
         {
             float pcfDepth = LightDepthImg.Sample(PointSampler, projCoords.xy + float2(x, y) * texelSize).x;
             shadow += currentDepth > pcfDepth ? 0.5f : 1.0f;

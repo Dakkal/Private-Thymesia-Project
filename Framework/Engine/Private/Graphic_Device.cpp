@@ -73,6 +73,9 @@ HRESULT CGraphic_Device::Clear_DepthStencil_View()
 
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
+
+
+
 	return S_OK;
 }
 
