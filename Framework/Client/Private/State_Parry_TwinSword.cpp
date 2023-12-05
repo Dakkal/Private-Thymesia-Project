@@ -48,10 +48,14 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		}
 	}
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if(true == m_bParryEnd && true == m_bParryLeft1)
 	{
 		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(15))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(21))
@@ -60,6 +64,8 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(41))
@@ -68,6 +74,8 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_03.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
@@ -76,6 +84,8 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(65))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(70))
@@ -84,7 +94,9 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(75))
 		{
-		
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_ComboEnd_02.ogg"), CHANNELID::CHANNEL_12, 1.f);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
@@ -96,10 +108,15 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(90))
 		{
 			if (true == m_pRealOwner->Is_Hit())
+			{
+				RELEASE_INSTANCE(CGameInstance);
 				return STATE::HIT;
+			}
+				
 		}
 		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(110))
 		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::IDLE;
 		}
 	}
@@ -107,6 +124,8 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 	{
 		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
@@ -115,6 +134,8 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(85))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(95))
@@ -123,7 +144,9 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(125))
 		{
-			
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_03.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_ComboB01_2.ogg"), CHANNELID::CHANNEL_12, 1.f);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(145))
@@ -135,13 +158,20 @@ STATE CState_Parry_TwinSword::Tick(const _float& fTimeDelta)
 		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(200))
 		{
 			if (true == m_pRealOwner->Is_Hit())
+			{
+				RELEASE_INSTANCE(CGameInstance);
 				return STATE::HIT;
+			}
+				
 		}
 		if (true == m_pOwnerBodyPart->IsAnimationEnd())
 		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::IDLE;
 		}
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return eState;
 }
@@ -209,6 +239,8 @@ void CState_Parry_TwinSword::Enter_State()
 	}
 
 	m_IsParry = true;
+
+	pGameInstance->PlaySoundFile(TEXT("ParrySuc_02_02.ogg"), CHANNELID::CHANNEL_11, 0.8f);
 
 	RELEASE_INSTANCE(CGameInstance);
 }

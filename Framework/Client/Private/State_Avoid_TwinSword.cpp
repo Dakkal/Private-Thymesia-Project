@@ -65,6 +65,8 @@ void CState_Avoid_TwinSword::Enter_State()
 
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 8, 1.5f);
 
+	pGameInstance->PlaySoundFile(TEXT("WhooshNylonHard_01.ogg"), CHANNELID::CHANNEL_11, 0.6f);
+
 	RELEASE_INSTANCE(CGameInstance);
 }
 

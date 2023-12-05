@@ -80,14 +80,17 @@ STATE CState_Run_Urd::Tick(const _float& fTimeDelta)
 
 				if (0 == iRandom)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 32, 1.2f);
 				}
 				else if (1 == iRandom)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 33, 1.2f);
 				}
 				else if (2 == iRandom)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-002.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 35, 1.2f);
 				}
 			}
@@ -97,10 +100,12 @@ STATE CState_Run_Urd::Tick(const _float& fTimeDelta)
 
 				if (true == bRandom)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 32, 1.2f);
 				}
 				else
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-002.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 35, 1.2f);
 				}
 			}
@@ -110,10 +115,12 @@ STATE CState_Run_Urd::Tick(const _float& fTimeDelta)
 
 				if (true == bRandom)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 32, 1.2f);
 				}
 				else
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 33, 1.2f);
 				}
 			}
@@ -138,13 +145,19 @@ STATE CState_Run_Urd::Tick(const _float& fTimeDelta)
 
 	if (true == m_bRush)
 	{
-		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(5))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Urd_Attack03_04_01.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+			pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction04.ogg"), CHANNELID::CHANNEL_14, 1.f);
+		}
+		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
+		{
+			pGameInstance->PlaySoundFile(TEXT("Urd_Attack03_04_02.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+			
+
 			CTransform* pTransform = dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerTransform();
 			if (nullptr != pTransform)
 				m_pOwnerBodyPart->Set_Anim_TargetPos(pTransform->Get_State(CTransform::STATE_POS));
-
-		
 
 			m_pRealOwner->Set_Attack(true);
 		}
@@ -201,14 +214,17 @@ void CState_Run_Urd::Enter_State()
 
 	if (0 == iRandom)
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 32, 1.2f);
 	}
 	else if (1 == iRandom)
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 33, 1.2f);
 	}
 	else if (2 == iRandom)
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-002.ogg"), CHANNELID::CHANNEL_13, 1.f);
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 35, 1.2f);
 	}
 

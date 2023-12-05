@@ -66,6 +66,12 @@ void CState_Stun_Urd::Enter_State()
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 40, 0.9f);
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->PlaySoundFile(TEXT("Urd_StunStart.ogg"), CHANNELID::CHANNEL_13, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 STATE CState_Stun_Urd::Key_Input(const _float& fTimeDelta)

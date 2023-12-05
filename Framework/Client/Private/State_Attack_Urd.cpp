@@ -128,8 +128,12 @@ STATE CState_Attack_Urd::Key_Input(const _float& fTimeDelta)
 
 STATE CState_Attack_Urd::Combo_1()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_01.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction01.ogg"), CHANNELID::CHANNEL_14, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
@@ -138,6 +142,7 @@ STATE CState_Attack_Urd::Combo_1()
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_02.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
@@ -147,30 +152,49 @@ STATE CState_Attack_Urd::Combo_1()
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_03.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(70))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_04.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 		m_pRealOwner->Set_Attack(false);
 	}
 
 	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(110))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_Urd::Combo_2()
 {
-	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(75))
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+
+	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack03_04_01.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction03_01.ogg"), CHANNELID::CHANNEL_14, 1.f);
+	}
+	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(75))
+	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack03_04_02.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(85))
@@ -182,20 +206,36 @@ STATE CState_Attack_Urd::Combo_2()
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(130))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_Urd::Combo_3()
 {
-	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack05_01.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack05_02.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction06_01.ogg"), CHANNELID::CHANNEL_14, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
@@ -205,31 +245,44 @@ STATE CState_Attack_Urd::Combo_3()
 	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
 	{
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack05_03.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction06_02.ogg"), CHANNELID::CHANNEL_14, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(120))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack05_04.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 		m_pRealOwner->Set_Attack(false);
 	}
 	
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(160))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
 
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_Urd::Combo_4()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_01.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction01.ogg"), CHANNELID::CHANNEL_14, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
@@ -238,6 +291,7 @@ STATE CState_Attack_Urd::Combo_4()
 	}
 	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_02.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
@@ -246,15 +300,15 @@ STATE CState_Attack_Urd::Combo_4()
 	}
 	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_03.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(70))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_04.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 		m_pRealOwner->Set_Attack(false);
 		m_bCombo4_1 = false;
-
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 		if (true == pGameInstance->Random_Coin(0.5f))
 		{
@@ -266,14 +320,14 @@ STATE CState_Attack_Urd::Combo_4()
 			m_bCombo4_3 = true;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 9, 2.f);
 		}
-
-		RELEASE_INSTANCE(CGameInstance);
 	}
 	
-
-
+	/* 4-2 ÄÞº¸ */
 	if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack06.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction09_01.ogg"), CHANNELID::CHANNEL_14, 1.f);
+
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pRealOwner->Set_Attack(true);
 	}
@@ -281,20 +335,28 @@ STATE CState_Attack_Urd::Combo_4()
 	{
 		m_pRealOwner->Set_Attack(false);
 	}
-
-	/* 4-2 ÄÞº¸ */
+	
 	if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(105))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo4_2 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
 
 	/* 4-3 ÄÞº¸ */
-	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(90))
+	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
+	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_Attack07.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+	}
+	else if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(90))
 	{
 		CTransform* pTransform = dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerTransform();
 		m_pOwnerBodyPart->Set_Anim_TargetPos(pTransform->Get_State(CTransform::STATE_POS));
@@ -309,14 +371,19 @@ STATE CState_Attack_Urd::Combo_4()
 	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(150))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo4_3 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
 
-
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }

@@ -56,12 +56,14 @@ STATE CState_Hit_TwinSword::Tick(const _float& fTimeDelta)
 			RELEASE_INSTANCE(CGameInstance);
 			return STATE::PARRY;
 		}
-		RELEASE_INSTANCE(CGameInstance);
-
+		
 		dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Set_LookPlayer(true);
 
 		if (true == m_bRight_Hit)
 		{
+			pGameInstance->PlaySoundFile(TEXT("Magician_Hurt_02.ogg"), CHANNELID::CHANNEL_11, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_HurtM.ogg"), CHANNELID::CHANNEL_12, 1.f);
+
 			m_bRight_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 23, 2.f);
 			m_bLeft_Hit = true;
@@ -71,6 +73,9 @@ STATE CState_Hit_TwinSword::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_bLeft_Hit)
 		{
+			pGameInstance->PlaySoundFile(TEXT("Magician_Hurt_03.ogg"), CHANNELID::CHANNEL_11, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_HurtM.ogg"), CHANNELID::CHANNEL_12, 1.f);
+
 			m_bLeft_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 24, 2.f);
 			m_bRight_Hit = true;
@@ -78,6 +83,7 @@ STATE CState_Hit_TwinSword::Tick(const _float& fTimeDelta)
 			m_pRealOwner->Subtract_HP();
 			m_iHitCnt++;
 		}
+		RELEASE_INSTANCE(CGameInstance);
 	}
 	else if (m_pOwnerBodyPart->IsAnimationEnd())
 		return STATE::IDLE;
@@ -115,6 +121,9 @@ void CState_Hit_TwinSword::Enter_State()
 	}
 	else
 	{
+		pGameInstance->PlaySoundFile(TEXT("Magician_Hurt_01.ogg"), CHANNELID::CHANNEL_11, 1.f);
+		pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_HurtM.ogg"), CHANNELID::CHANNEL_12, 1.f);
+
 		if (true == m_bRight_Hit)
 		{
 			m_bRight_Hit = false;

@@ -36,6 +36,15 @@ STATE CState_Run_TwinSword::Tick(const _float& fTimeDelta)
 		return STATE::WALK;
 	}
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(8))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Magician_03.ogg"), CHANNELID::CHANNEL_11, 1.f);
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(16))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Magician_04.ogg"), CHANNELID::CHANNEL_12, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
 	return eState;
 }
 

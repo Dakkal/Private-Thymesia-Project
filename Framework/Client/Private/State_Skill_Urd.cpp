@@ -76,6 +76,8 @@ void CState_Skill_Urd::Enter_State()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	pGameInstance->PlaySoundFile(TEXT("Urd_Skill01.ogg"), CHANNELID::CHANNEL_13, 0.5f);
+
 	if (6.f <= dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerDistance())
 	{
 		if (true == pGameInstance->Random_Coin(0.7f))
@@ -146,6 +148,8 @@ void CState_Skill_Urd::Skill_LeftRight()
 
 		if (true == m_bLeft && false == m_bCreateProjectile)
 		{
+			pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction10.ogg"), CHANNELID::CHANNEL_14, 1.f);
+
 			m_bCreateProjectile = true;
 
 			ProjectileMatrix = dynamic_cast<CPartObject*>(m_pRealOwner->Get_Index_Parts(CGameObject::PARTS::WEAPON_L))->Get_Part_WorldMatrix();
@@ -161,6 +165,8 @@ void CState_Skill_Urd::Skill_LeftRight()
 		}
 		else if (true == m_bRight && false == m_bCreateProjectile)
 		{
+			pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction10.ogg"), CHANNELID::CHANNEL_14, 1.f);
+
 			m_bCreateProjectile = true;
 
 			ProjectileMatrix = dynamic_cast<CPartObject*>(m_pRealOwner->Get_Index_Parts(CGameObject::PARTS::WEAPON_R))->Get_Part_WorldMatrix();
@@ -193,6 +199,8 @@ void CState_Skill_Urd::Skill_Front()
 		m_pRealOwner->Get_Index_Parts(CGameObject::PARTS::WEAPON_L)->Set_Active(true);
 
 		m_pRealOwner->Set_Attack(true);
+
+		pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction10.ogg"), CHANNELID::CHANNEL_14, 1.f);
 	}
 
 	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))

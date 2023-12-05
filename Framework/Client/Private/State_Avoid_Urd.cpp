@@ -31,7 +31,7 @@ STATE CState_Avoid_Urd::Tick(const _float& fTimeDelta)
 	{
 		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(35))
 		{
-			if (true == pGameInstance->Random_Coin(0.7f))
+			if (true == pGameInstance->Random_Coin(0.9f))
 			{
 				RELEASE_INSTANCE(CGameInstance);
 				return STATE::IDLE;
@@ -65,6 +65,8 @@ STATE CState_Avoid_Urd::Tick(const _float& fTimeDelta)
 			{
 				if (true == m_bLeft)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveB-002.ogg"), CHANNELID::CHANNEL_13, 1.f);
+
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.2f);
 					m_bLeft = false;
 					m_bRight = true;
@@ -72,6 +74,8 @@ STATE CState_Avoid_Urd::Tick(const _float& fTimeDelta)
 				}
 				else if (true == m_bRight)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveB-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
+
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.2f);
 					m_bLeft = true;
 					m_bRight = false;
@@ -121,21 +125,29 @@ void CState_Avoid_Urd::Enter_State()
 
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (STATE::ATTACK == m_pStateOwner->Get_PreState())
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveB-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
+
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 31, 1.2f);
 		return;
 	}
 
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	
 
 	if (pGameInstance->Random_Coin(0.5))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveB-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
+
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.2f);
 		m_bLeft = true;
 	}
 	else
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveB-002.ogg"), CHANNELID::CHANNEL_13, 1.f);
+
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 37, 1.2f);
 		m_bRight = true;
 	}

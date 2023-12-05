@@ -41,6 +41,16 @@ STATE CState_Walk_TwinSword::Tick(const _float& fTimeDelta)
 	if(nullptr == dynamic_cast<CEnemy_TwinSword*>(m_pRealOwner)->Get_PlayerTransform())
 		return STATE::IDLE;
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(8))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Magician_03.ogg"), CHANNELID::CHANNEL_11, 1.f);
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Magician_04.ogg"), CHANNELID::CHANNEL_11, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
+
 	eState = WalkState(fTimeDelta);
 
 	return eState;

@@ -40,9 +40,13 @@ STATE CState_Parry_Urd::Tick(const _float& fTimeDelta)
 
 	if (true == m_bLeft && true == m_bParryEnd)
 	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 		{
-			
+			pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_01.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+			pGameInstance->PlaySoundFile(TEXT("CV_Urd_AtkAction01.ogg"), CHANNELID::CHANNEL_14, 1.f);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
@@ -51,6 +55,7 @@ STATE CState_Parry_Urd::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_02.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(55))
@@ -59,30 +64,44 @@ STATE CState_Parry_Urd::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_03.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 			dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(80))
 		{
+			pGameInstance->PlaySoundFile(TEXT("Urd_Attack01_04.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 			m_pRealOwner->Set_Attack(false);
 		}
 
 		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
 		{
 			if (true == m_pRealOwner->Is_Hit())
+			{
+				RELEASE_INSTANCE(CGameInstance);
 				return STATE::HIT;
+			}
+				
 		}
 		if (true == m_pOwnerBodyPart->IsAnimationEnd())
 		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::IDLE;
 		}
 
+		RELEASE_INSTANCE(CGameInstance);
 	}
 	if (true == m_bRight && true == m_bParryEnd)
 	{
-		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(75))
-		{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+		{
+			pGameInstance->PlaySoundFile(TEXT("Urd_Attack03_04_01.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		}
+		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(75))
+		{
+			pGameInstance->PlaySoundFile(TEXT("Urd_Attack03_04_02.ogg"), CHANNELID::CHANNEL_13, 0.8f);
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(85))
@@ -94,13 +113,18 @@ STATE CState_Parry_Urd::Tick(const _float& fTimeDelta)
 		if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(130))
 		{
 			if (true == m_pRealOwner->Is_Hit())
+			{
+				RELEASE_INSTANCE(CGameInstance);
 				return STATE::HIT;
+			}	
 		}
 		if (true == m_pOwnerBodyPart->IsAnimationEnd())
 		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::IDLE;
 		}
 
+		RELEASE_INSTANCE(CGameInstance);
 	}
 
 	return eState;
@@ -158,6 +182,8 @@ void CState_Parry_Urd::Enter_State()
 	m_pRealOwner->Set_Parry(true);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->PlaySoundFile(TEXT("Urd_Parry.ogg"), CHANNELID::CHANNEL_13, 1.f);
 
 	if (true == pGameInstance->Random_Coin(0.5f))
 	{

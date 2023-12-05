@@ -27,9 +27,24 @@ STATE CState_Parry_Shield::Tick(const _float& fTimeDelta)
 
 	if (true == m_bParryLeft1)
 	{
-		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(65))
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 		{
 			m_pRealOwner->Set_Parry(false);
+
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			if (1 == m_pRealOwner->Get_Index())
+			{
+				pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_7, 1.f);
+				pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Parry_Attack01-001.ogg"), CHANNELID::CHANNEL_8, 1.f);
+			}
+			else
+			{
+				pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_9, 1.f);
+				pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Parry_Attack01-001.ogg"), CHANNELID::CHANNEL_10, 1.f);
+			}
+
+			RELEASE_INSTANCE(CGameInstance);
 
 			m_pRealOwner->Set_Attack(true);
 		}
@@ -53,6 +68,22 @@ STATE CState_Parry_Shield::Tick(const _float& fTimeDelta)
 		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
 		{
 			m_pRealOwner->Set_Parry(false);
+
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			if (1 == m_pRealOwner->Get_Index())
+			{
+				pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_7, 1.f);
+				pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Parry_Attack02-001.ogg"), CHANNELID::CHANNEL_8, 1.f);
+			}
+			else
+			{
+				pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_9, 1.f);
+				pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Parry_Attack02-001.ogg"), CHANNELID::CHANNEL_10, 1.f);
+			}
+
+			
+			RELEASE_INSTANCE(CGameInstance);
 
 			
 			m_pRealOwner->Set_Attack(true);
@@ -138,6 +169,11 @@ void CState_Parry_Shield::Enter_State()
 	}
 
 	m_IsParry = true;
+
+	if(1 == m_pRealOwner->Get_Index())
+		pGameInstance->PlaySoundFile(TEXT("Armor_Metal_ShieldHitA_01.ogg"), CHANNELID::CHANNEL_7, 1.f);
+	else
+		pGameInstance->PlaySoundFile(TEXT("Armor_Metal_ShieldHitA_01.ogg"), CHANNELID::CHANNEL_9, 1.f);
 
 	RELEASE_INSTANCE(CGameInstance);
 }

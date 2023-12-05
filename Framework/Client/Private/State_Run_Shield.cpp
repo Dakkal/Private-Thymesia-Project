@@ -36,6 +36,27 @@ STATE CState_Run_Shield::Tick(const _float& fTimeDelta)
 		return STATE::WALK;
 	}
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (1 == m_pRealOwner->Get_Index())
+	{
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
+			pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Magician_01.ogg"), CHANNELID::CHANNEL_7, 1.f);
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
+			pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Magician_02.ogg"), CHANNELID::CHANNEL_8, 1.f);
+	}
+	else
+	{
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
+			pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Magician_01.ogg"), CHANNELID::CHANNEL_9, 1.f);
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
+			pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Magician_02.ogg"), CHANNELID::CHANNEL_10, 1.f);
+	}
+
+	
+
+	RELEASE_INSTANCE(CGameInstance);
+
 	return eState;
 }
 

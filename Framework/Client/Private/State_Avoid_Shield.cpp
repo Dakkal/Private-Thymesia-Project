@@ -39,17 +39,20 @@ STATE CState_Avoid_Shield::Tick(const _float& fTimeDelta)
 	{
 		if (true == m_pRealOwner->Is_Hit())
 		{
+			if (1 == m_pRealOwner->Get_Index())
+			{
+				pGameInstance->PlaySoundFile(TEXT("Armor_Metal_ShieldHitB_01.ogg"), CHANNELID::CHANNEL_7, 1.f);
+			}
+			else
+			{
+				pGameInstance->PlaySoundFile(TEXT("Armor_Metal_ShieldHitB_01.ogg"), CHANNELID::CHANNEL_9, 1.f);
+			}
+
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 6, 1.2f, true);
 
 			m_iGuardTime++;
 		}
 			
-
-		if (pGameInstance->Random_Coin(0.2f))
-		{
-			RELEASE_INSTANCE(CGameInstance);
-			return STATE::PARRY;
-		}
 		if (m_iGuardCount <= m_iGuardTime)
 		{
 			RELEASE_INSTANCE(CGameInstance);
@@ -102,6 +105,15 @@ void CState_Avoid_Shield::Enter_State()
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 6, 1.2f);
 
 	m_iGuardCount =  pGameInstance->Random_Int(3, 5);
+
+	if (1 == m_pRealOwner->Get_Index())
+	{
+		pGameInstance->PlaySoundFile(TEXT("Armor_Metal_ShieldHitB_01.ogg"), CHANNELID::CHANNEL_7, 1.f);
+	}
+	else
+	{
+		pGameInstance->PlaySoundFile(TEXT("Armor_Metal_ShieldHitB_01.ogg"), CHANNELID::CHANNEL_9, 1.f);
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
 }

@@ -117,8 +117,12 @@ STATE CState_Attack_TwinSword::Key_Input(const _float& fTimeDelta)
 
 STATE CState_Attack_TwinSword::Combo_1()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+		
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
@@ -127,6 +131,8 @@ STATE CState_Attack_TwinSword::Combo_1()
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(70))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_ComboA_01.ogg"), CHANNELID::CHANNEL_12, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(90))
@@ -139,6 +145,7 @@ STATE CState_Attack_TwinSword::Combo_1()
 
 	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_11, 0.8f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
@@ -147,7 +154,8 @@ STATE CState_Attack_TwinSword::Combo_1()
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
 	{
-		
+		pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_ComboA_02.ogg"), CHANNELID::CHANNEL_12, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
@@ -159,20 +167,31 @@ STATE CState_Attack_TwinSword::Combo_1()
 	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+
+		if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->IsAnimationEnd())
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return STATE::IDLE;
+		}
 	}
-	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->IsAnimationEnd())
-	{
-		return STATE::IDLE;
-	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_TwinSword::Combo_2()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_ComboB01_1-001.ogg"), CHANNELID::CHANNEL_12, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
@@ -181,6 +200,8 @@ STATE CState_Attack_TwinSword::Combo_2()
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_ComboB01_1-002.ogg"), CHANNELID::CHANNEL_12, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(75))
@@ -189,7 +210,8 @@ STATE CState_Attack_TwinSword::Combo_2()
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
 	{
-	
+		pGameInstance->PlaySoundFile(TEXT("Blade_Attack_03.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_ComboB01_2.ogg"), CHANNELID::CHANNEL_12, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(110))
@@ -201,20 +223,31 @@ STATE CState_Attack_TwinSword::Combo_2()
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(140))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_TwinSword::Combo_3()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(41))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_11, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("UM_V_TwinSword_ComboC01.ogg"), CHANNELID::CHANNEL_12, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
@@ -225,15 +258,19 @@ STATE CState_Attack_TwinSword::Combo_3()
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(90))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
 
-	
-	
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }

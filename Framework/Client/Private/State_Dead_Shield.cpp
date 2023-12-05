@@ -49,6 +49,22 @@ void CState_Dead_Shield::Enter_State()
 	dynamic_cast<CEnemy_Shield*>(m_pRealOwner)->Set_LookPlayer(false);
 
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 23, 1.2f);
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (1 == m_pRealOwner->Get_Index())
+	{
+		pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_HurtLieDie.ogg"), CHANNELID::CHANNEL_7, 1.f);
+	}
+	else
+	{
+		pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_HurtLieDie.ogg"), CHANNELID::CHANNEL_9, 1.f);
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	
+
 }
 
 STATE CState_Dead_Shield::Key_Input(const _float& fTimeDelta)

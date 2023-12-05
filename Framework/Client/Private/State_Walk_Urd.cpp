@@ -62,9 +62,18 @@ STATE CState_Walk_Urd::Tick(const _float& fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 	}
 		
-
 	if (nullptr == dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerTransform())
 		return STATE::IDLE;
+
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(5))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_HighHeel_01.ogg"), CHANNELID::CHANNEL_13, 1.f);
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_HighHeel_02.ogg"), CHANNELID::CHANNEL_13, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	eState = WalkState(fTimeDelta);
 

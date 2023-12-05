@@ -59,7 +59,7 @@ STATE CState_Hit_Shield::Tick(const _float& fTimeDelta)
 			RELEASE_INSTANCE(CGameInstance);
 			return STATE::AVOID;
 		}
-		if (true == pGameInstance->Random_Coin(0.15f))
+		if (true == pGameInstance->Random_Coin(0.1f))
 		{
 			RELEASE_INSTANCE(CGameInstance);
 			return STATE::PARRY;
@@ -70,6 +70,18 @@ STATE CState_Hit_Shield::Tick(const _float& fTimeDelta)
 
 		if (true == m_bRight_Hit)
 		{
+			if (1 == m_pRealOwner->Get_Index())
+			{
+				pGameInstance->PlaySoundFile(TEXT("Magician_Hurt_02.ogg"), CHANNELID::CHANNEL_7, 1.f);
+				pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_HurtM.ogg"), CHANNELID::CHANNEL_8, 1.f);
+			}
+			else
+			{
+				pGameInstance->PlaySoundFile(TEXT("Magician_Hurt_02.ogg"), CHANNELID::CHANNEL_9, 1.f);
+				pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_HurtM.ogg"), CHANNELID::CHANNEL_10, 1.f);
+			}
+			
+
 			m_bRight_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 17, 0.9f, false, 0, 0.35f);
 			m_bLeft_Hit = true;
@@ -79,6 +91,18 @@ STATE CState_Hit_Shield::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_bLeft_Hit)
 		{
+			if (1 == m_pRealOwner->Get_Index())
+			{
+				pGameInstance->PlaySoundFile(TEXT("Magician_Hurt_03.ogg"), CHANNELID::CHANNEL_7, 1.f);
+				pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_HurtM.ogg"), CHANNELID::CHANNEL_8, 1.f);
+			}
+			else
+			{
+				pGameInstance->PlaySoundFile(TEXT("Magician_Hurt_03.ogg"), CHANNELID::CHANNEL_9, 1.f);
+				pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_HurtM.ogg"), CHANNELID::CHANNEL_10, 1.f);
+			}
+			
+
 			m_bLeft_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 18, 0.9f, false, 0, 0.35f);
 			m_bRight_Hit = true;
@@ -118,7 +142,7 @@ void CState_Hit_Shield::Enter_State()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == pGameInstance->Random_Coin(0.15f))
+	if (true == pGameInstance->Random_Coin(0.1f))
 	{
 		m_bParry = true;
 	}
@@ -128,6 +152,21 @@ void CState_Hit_Shield::Enter_State()
 	}
 	else 
 	{
+
+		if (1 == m_pRealOwner->Get_Index())
+		{
+			pGameInstance->PlaySoundFile(TEXT("Magician_Hurt_01.ogg"), CHANNELID::CHANNEL_7, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_HurtM.ogg"), CHANNELID::CHANNEL_8, 1.f);
+		}
+		else
+		{
+			pGameInstance->PlaySoundFile(TEXT("Magician_Hurt_01.ogg"), CHANNELID::CHANNEL_9, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_HurtM.ogg"), CHANNELID::CHANNEL_10, 1.f);
+		}
+
+	
+
+
 		if (true == m_bRight_Hit)
 		{
 			m_bRight_Hit = false;

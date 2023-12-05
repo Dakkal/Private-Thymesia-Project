@@ -112,6 +112,17 @@ void CBoss_Urd::Tick(_float fTimeDelta)
 
 	if (true == m_IsDead)
 	{
+		if (false == m_bDissolveSound)
+		{
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			pGameInstance->PlaySoundFile(TEXT("SlowMotion_01.ogg"), CHANNELID::CHANNEL_13, 0.25f);
+
+			RELEASE_INSTANCE(CGameInstance);
+
+			m_bDissolveSound = true;
+		}
+
 		m_fDissolveTime += fTimeDelta;
 
 		if (m_fDissolveDuraton < m_fDissolveTime)

@@ -120,9 +120,22 @@ STATE CState_Attack_Shield::Key_Input(const _float& fTimeDelta)
 
 STATE CState_Attack_Shield::Combo_1()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(15))
 	{
-		
+		if (1 == m_pRealOwner->Get_Index())
+		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_7, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Attack01.ogg"), CHANNELID::CHANNEL_8, 1.f);
+		}
+		else
+		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_9, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Attack01.ogg"), CHANNELID::CHANNEL_10, 1.f);
+		}
+
+
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
@@ -134,20 +147,40 @@ STATE CState_Attack_Shield::Combo_1()
 	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(40))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_Shield::Combo_2()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(15))
 	{
+		if (1 == m_pRealOwner->Get_Index())
+		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_7, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Attack02_01.ogg"), CHANNELID::CHANNEL_8, 1.f);
+		}
+		else
+		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_01.ogg"), CHANNELID::CHANNEL_9, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Attack02_01.ogg"), CHANNELID::CHANNEL_10, 1.f);
+		}
+
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
@@ -162,7 +195,17 @@ STATE CState_Attack_Shield::Combo_2()
 
 	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
 	{
-		
+		if (1 == m_pRealOwner->Get_Index())
+		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_7, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Attack02_02.ogg"), CHANNELID::CHANNEL_8, 1.f);
+		}
+		else
+		{
+			pGameInstance->PlaySoundFile(TEXT("Blade_Attack_02.ogg"), CHANNELID::CHANNEL_9, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Attack02_02.ogg"), CHANNELID::CHANNEL_10, 1.f);
+		}
+
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
@@ -173,21 +216,38 @@ STATE CState_Attack_Shield::Combo_2()
 	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(40))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_Shield::Combo_3()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
 	{
-		
+		if (1 == m_pRealOwner->Get_Index())
+		{
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Attack02_03.ogg"), CHANNELID::CHANNEL_7, 1.f);
+		}
+		else
+		{
+			pGameInstance->PlaySoundFile(TEXT("UM_V_Shield_Attack02_03.ogg"), CHANNELID::CHANNEL_9, 1.f);
+		}
+
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
@@ -198,10 +258,14 @@ STATE CState_Attack_Shield::Combo_3()
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(30))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
 	}
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
 	

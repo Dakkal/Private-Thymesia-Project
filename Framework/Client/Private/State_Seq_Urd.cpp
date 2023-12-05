@@ -40,11 +40,17 @@ STATE CState_Seq_Urd::Tick(const _float& fTimeDelta)
 		}
 	}
 
-	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(230))
+	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(248))
 	{
 		CGameInstance* pGameInstace = GET_INSTANCE(CGameInstance);
 
-		pGameInstace->CheckPlaySoundFile(TEXT("Urd_FightStart.ogg"), CHANNELID::CHANNEL_20, 1.f);
+		if (false == m_bPlayOnce1)
+		{
+			pGameInstace->CheckPlaySoundFile(TEXT("Urd_FightStart.ogg"), CHANNELID::CHANNEL_20, 1.f);
+
+			m_bPlayOnce1 = true;
+		}
+		
 
 		RELEASE_INSTANCE(CGameInstance);
 	}
@@ -53,6 +59,23 @@ STATE CState_Seq_Urd::Tick(const _float& fTimeDelta)
 	{
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_Seq1_State(false);
 	}
+
+	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(850))
+	{
+		CGameInstance* pGameInstace = GET_INSTANCE(CGameInstance);
+
+		if (false == m_bPlayOnce2)
+		{
+			pGameInstace->CheckPlaySoundFile(TEXT("CV_Urd_CutScene02.ogg"), CHANNELID::CHANNEL_22, 1.f);
+
+			m_bPlayOnce2 = true;
+		}
+		
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+
+
 	if (true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
 		g_BossSeq = false;

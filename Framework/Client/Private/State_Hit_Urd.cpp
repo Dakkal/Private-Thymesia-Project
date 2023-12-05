@@ -61,6 +61,9 @@ STATE CState_Hit_Urd::Tick(const _float& fTimeDelta)
 
 		if (true == m_bRight_Hit)
 		{
+			pGameInstance->PlaySoundFile(TEXT("Urd_HurtS.ogg"), CHANNELID::CHANNEL_13, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("CV_Urd_Hurt02.ogg"), CHANNELID::CHANNEL_14, 1.f);
+
 			m_bRight_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 15, 1.2f);
 			m_bLeft_Hit = true;
@@ -70,6 +73,9 @@ STATE CState_Hit_Urd::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_bLeft_Hit)
 		{
+			pGameInstance->PlaySoundFile(TEXT("Urd_HurtS.ogg"), CHANNELID::CHANNEL_13, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("CV_Urd_Hurt03.ogg"), CHANNELID::CHANNEL_14, 1.f);
+
 			m_bLeft_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 16, 1.2f);
 			m_bRight_Hit = true;
@@ -120,6 +126,9 @@ void CState_Hit_Urd::Enter_State()
 	}
 	else
 	{
+		pGameInstance->PlaySoundFile(TEXT("Urd_HurtS.ogg"), CHANNELID::CHANNEL_13, 1.f);
+		pGameInstance->PlaySoundFile(TEXT("CV_Urd_Hurt01.ogg"), CHANNELID::CHANNEL_14, 1.f);
+
 		if (true == m_bRight_Hit)
 		{
 			m_bRight_Hit = false;
@@ -133,7 +142,7 @@ void CState_Hit_Urd::Enter_State()
 			m_bRight_Hit = true;
 		}
 
-		m_iRecoverCnt = pGameInstance->Random_Int(3, 4);
+		m_iRecoverCnt = pGameInstance->Random_Int(2, 4);
 
 		m_pRealOwner->Subtract_HP();
 		m_iHitCnt++;
