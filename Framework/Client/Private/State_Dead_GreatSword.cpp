@@ -50,7 +50,11 @@ void CState_Dead_GreatSword::Enter_State()
 
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 24, 1.2f);
 
-	
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->PlaySoundFile(TEXT("NM_V_GreatSword_HurtXL.ogg"), CHANNELID::CHANNEL_3, 0.8f);
+		
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 STATE CState_Dead_GreatSword::Key_Input(const _float& fTimeDelta)

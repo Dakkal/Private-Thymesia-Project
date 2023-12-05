@@ -114,7 +114,7 @@ void CState_Hit_Urd::Enter_State()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == pGameInstance->Random_Coin(0.1f))
+	if (true == pGameInstance->Random_Coin(0.2f))
 	{
 		m_IsParry = true;
 	}

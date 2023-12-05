@@ -74,6 +74,11 @@ void CPartObject::Set_CurAnimSpeed(_float fAnimSpeed)
 	m_pModelCom->Set_CurAnimSpeed(fAnimSpeed);
 }
 
+_vector CPartObject::Get_Collide_Center()
+{
+	return m_pColliderCom->Get_ParentBouning()->Get_ColWorldPos();
+}
+
 HRESULT CPartObject::Initialize_Prototype(const wstring& strProtoTag)
 {
 	__super::Initialize_Prototype(strProtoTag);

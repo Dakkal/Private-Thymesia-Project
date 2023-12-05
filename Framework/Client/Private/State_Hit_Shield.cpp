@@ -59,7 +59,7 @@ STATE CState_Hit_Shield::Tick(const _float& fTimeDelta)
 			RELEASE_INSTANCE(CGameInstance);
 			return STATE::AVOID;
 		}
-		if (true == pGameInstance->Random_Coin(0.1f))
+		if (true == pGameInstance->Random_Coin(0.15f))
 		{
 			RELEASE_INSTANCE(CGameInstance);
 			return STATE::PARRY;
@@ -118,11 +118,11 @@ void CState_Hit_Shield::Enter_State()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == pGameInstance->Random_Coin(0.1f))
+	if (true == pGameInstance->Random_Coin(0.15f))
 	{
 		m_bParry = true;
 	}
-	else if (true == pGameInstance->Random_Coin(0.2f))
+	else if (true == pGameInstance->Random_Coin(0.3f))
 	{
 		m_bAvoid = true;
 	}

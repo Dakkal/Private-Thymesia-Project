@@ -123,7 +123,7 @@ HRESULT CBinModel::Set_Animation(_bool isLoop, _uint iAnimationIndex, _float fAn
 	{
 		m_bWanttoReset = bWantReset;
 
-		m_bIsAnimChange = true;;
+		m_bIsAnimChange = true;
 		
 		m_bIsNextAnimLoop = isLoop;
 		m_iNextStartNumKeyFrames = iStartNumKeyFrames;
@@ -341,7 +341,7 @@ _bool CBinModel::Is_CurAnimKeyFrame(_uint iIndex)
 
 	for (auto& KeyFrame : KeyFrames)
 	{
-		if (iMax < KeyFrame)
+		if (iMax <= KeyFrame)
 		{
 			iMax = KeyFrame;
 		}

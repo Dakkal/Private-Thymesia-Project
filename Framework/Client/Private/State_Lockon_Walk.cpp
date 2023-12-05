@@ -76,6 +76,12 @@ STATE CState_Lockon_Walk::Tick(const _float& fTimeDelta)
 		return STATE::WALK;
 	}
 
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(1))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Leather_01.ogg"), CHANNELID::CHANNEL_1, 1.f);
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(12))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Leather_02.ogg"), CHANNELID::CHANNEL_1, 1.f);
+
+	
 	RELEASE_INSTANCE(CGameInstance);
 
 	STATE eState = Key_Input(fTimeDelta);
@@ -95,6 +101,12 @@ STATE CState_Lockon_Walk::LateTick(const _float& fTimeDelta)
 void CState_Lockon_Walk::Reset_State()
 {
 	m_bEnter = false;
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->StopSound(CHANNELID::CHANNEL_1);
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 void CState_Lockon_Walk::Enter_State()
@@ -104,6 +116,8 @@ void CState_Lockon_Walk::Enter_State()
 	dynamic_cast<CPlayer*>(m_pRealOwner)->Search_TargetEnemy();
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->PlaySoundFile(TEXT("FootStep_Leather_01.ogg"), CHANNELID::CHANNEL_1, 1.f);
 
 	_uint iAnimIndex = 0;
 	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)

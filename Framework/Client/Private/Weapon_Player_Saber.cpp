@@ -69,6 +69,7 @@ void CWeapon_Player_Saber::LateTick(_float fTimeDelta)
 #endif
 	if (false == m_IsDead)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_SHADOW, this);
+
 	m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_NONBLEND, this);
 }
 

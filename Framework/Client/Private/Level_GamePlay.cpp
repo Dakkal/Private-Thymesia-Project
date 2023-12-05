@@ -58,6 +58,8 @@ HRESULT CLevel_GamePlay::Enter_Level()
 
 	pGameInstace->Enter_Objects(LEVEL_GAMEPLAY, LAYER_CAMERA);
 
+	pGameInstace->PlayBGM(TEXT("Fortress_Exploration.ogg"), 0.3f);
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -98,6 +100,7 @@ HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
 	pGameInstance->Delete_NonActive_Objects(LEVEL_GAMEPLAY, LAYER_MONSTER);
 	pGameInstance->Delete_NonActive_Objects(LEVEL_GAMEPLAY, LAYER_BOSS);
 	pGameInstance->Delete_NonActive_Objects(LEVEL_GAMEPLAY, LAYER_PROJECTILE);
+	pGameInstance->Delete_NonActive_Objects(LEVEL_GAMEPLAY, LAYER_EFFECT);
 
 	RELEASE_INSTANCE(CGameInstance)
 

@@ -81,14 +81,18 @@ void CState_Avoid_GreatSword::Enter_State()
 
 	dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(true);
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (STATE::ATTACK == m_pStateOwner->Get_PreState())
 	{
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 36, 1.2f);
 
+		pGameInstance->PlaySoundFile(TEXT("FullPlateFoley_A_01.ogg"), CHANNELID::CHANNEL_3, 1.f);
+		RELEASE_INSTANCE(CGameInstance);
 		return;
 	}
 
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	
 
 	if (true == pGameInstance->Random_Coin(0.6f))
 	{
@@ -96,6 +100,9 @@ void CState_Avoid_GreatSword::Enter_State()
 	}
 	else
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 38, 1.2f);
+
+	
+	pGameInstance->PlaySoundFile(TEXT("FullPlateFoley_A_01.ogg"), CHANNELID::CHANNEL_3, 1.f);
 
 	RELEASE_INSTANCE(CGameInstance);
 }

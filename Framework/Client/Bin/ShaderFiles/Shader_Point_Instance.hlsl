@@ -73,7 +73,7 @@ struct GS_OUT
 };
 
 /* 여러개의 정점을 생성한다. */
-[maxvertexcount(20)]
+[maxvertexcount(100)]
 void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 {
 	GS_OUT		Out[4];

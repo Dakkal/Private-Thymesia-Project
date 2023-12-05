@@ -46,6 +46,8 @@ public:
 	void			Set_Anim_TargetPos(_vector vTargetPos) { m_vTargetPos = vTargetPos; }
 	void			Set_CurAnimSpeed(_float fAnimSpeed);
 
+	_vector			Get_Collide_Center();
+
 public:
 	virtual HRESULT Initialize_Prototype(const wstring & strProtoTag);
 	virtual HRESULT Initialize(void* pArg);

@@ -51,13 +51,12 @@ HRESULT CSound_Manager::CheckPlaySoundFile(const wstring& strSoundKey, CHANNELID
 
 	if (bResult != FMOD_OK)
 	{
-		FMOD_Channel_Stop(m_pChannelArr[_uint(eCh)]);
 		FMOD_System_PlaySound(m_pSystem, iter->second, NULL, FALSE, &m_pChannelArr[_uint(eCh)]);
 
 		FMOD_Channel_SetVolume(m_pChannelArr[_uint(eCh)], fVolume);
-
-		FMOD_System_Update(m_pSystem);
 	}
+
+	FMOD_System_Update(m_pSystem);
 
 	return S_OK;
 }
@@ -87,6 +86,8 @@ HRESULT CSound_Manager::StopSound(CHANNELID eCh)
 
 	FMOD_Channel_Stop(m_pChannelArr[_uint(eCh)]);
 
+	FMOD_System_Update(m_pSystem);
+
 	return S_OK;
 }
 
@@ -97,6 +98,8 @@ HRESULT CSound_Manager::StopSoundAll()
 
 	for (auto iter : m_pChannelArr)
 		FMOD_Channel_Stop(iter);
+
+	FMOD_System_Update(m_pSystem);
 
 	return S_OK;
 }

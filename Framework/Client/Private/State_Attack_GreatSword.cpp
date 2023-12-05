@@ -124,6 +124,23 @@ STATE CState_Attack_GreatSword::Key_Input(const _float& fTimeDelta)
 
 STATE CState_Attack_GreatSword::Rush()
 {
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(15))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		pGameInstance->PlaySoundFile(TEXT("FootStep_FullPlateA_03.ogg"), CHANNELID::CHANNEL_3, 1.f);
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+	else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		pGameInstance->PlaySoundFile(TEXT("FootStep_FullPlateA_04.ogg"), CHANNELID::CHANNEL_3, 1.f);
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+
 	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
 		CTransform* pTransform = dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerTransform();
@@ -133,6 +150,24 @@ STATE CState_Attack_GreatSword::Rush()
 		dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
 		
 		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		pGameInstance->PlaySoundFile(TEXT("NM_V_GreatSword_RaidAttack1.ogg"), CHANNELID::CHANNEL_3, 1.f);
+
+		RELEASE_INSTANCE(CGameInstance);
+		
+	}
+	else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		pGameInstance->PlaySoundFile(TEXT("JumpAttackLanding_01.ogg"), CHANNELID::CHANNEL_4, 1.f);
+
+		RELEASE_INSTANCE(CGameInstance);
+
 	}
 	else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
@@ -154,8 +189,16 @@ STATE CState_Attack_GreatSword::Rush()
 
 STATE CState_Attack_GreatSword::Combo_1()
 {
-	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
 	{
+		pGameInstance->PlaySoundFile(TEXT("FullPlateAction_01_01.ogg"), CHANNELID::CHANNEL_3, 1.f);
+	}
+	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	{
+		pGameInstance->PlaySoundFile(TEXT("Sword_H_ATK_02.ogg"), CHANNELID::CHANNEL_4, 1.f);
+
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
@@ -169,8 +212,14 @@ STATE CState_Attack_GreatSword::Combo_1()
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 0, 1.2f);
 	}
 
-	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
 	{
+		pGameInstance->PlaySoundFile(TEXT("FullPlateAction_01_02.ogg"), CHANNELID::CHANNEL_3, 1.f);
+	}
+	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	{
+		pGameInstance->PlaySoundFile(TEXT("Sword_H_ATK_03.ogg"), CHANNELID::CHANNEL_3, 1.f);
+		pGameInstance->PlaySoundFile(TEXT("NM_V_GreatSword_ComboA01_2.ogg"), CHANNELID::CHANNEL_4, 1.f);
 		
 		m_pRealOwner->Set_Attack(true);
 	}
@@ -183,24 +232,35 @@ STATE CState_Attack_GreatSword::Combo_1()
 	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(100))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(120))
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_GreatSword::Combo_2()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Sword_H_ATK_02.ogg"), CHANNELID::CHANNEL_4, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
 	{
+
 		m_pRealOwner->Set_Attack(false);
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
@@ -210,9 +270,14 @@ STATE CState_Attack_GreatSword::Combo_2()
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 4, 1.2f, false, 15);
 	}
 
-	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(16))
 	{
-		
+		pGameInstance->PlaySoundFile(TEXT("FullPlateAction_01_01.ogg"), CHANNELID::CHANNEL_3, 1.f);
+	}
+	else if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
+	{
+		pGameInstance->PlaySoundFile(TEXT("Sword_H_ATK_03.ogg"), CHANNELID::CHANNEL_3, 1.f);
+		pGameInstance->PlaySoundFile(TEXT("NM_V_GreatSword_ComboB02-002.ogg"), CHANNELID::CHANNEL_4, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
@@ -224,10 +289,15 @@ STATE CState_Attack_GreatSword::Combo_2()
 	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo2_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(120))
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
 
@@ -236,14 +306,32 @@ STATE CState_Attack_GreatSword::Combo_2()
 
 STATE CState_Attack_GreatSword::Combo_3()
 {
-	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+
+	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
 	{
-		
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		pGameInstance->PlaySoundFile(TEXT("FullPlateAction_01_02.ogg"), CHANNELID::CHANNEL_3, 1.f);
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		pGameInstance->PlaySoundFile(TEXT("Sword_H_ATK_03.ogg"), CHANNELID::CHANNEL_4, 1.f);
+
+		RELEASE_INSTANCE(CGameInstance);
+
 		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+	{
+		dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
 	}
 	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(50))
 	{
-		dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
+	
 		m_pRealOwner->Set_Attack(false);
 	}
 

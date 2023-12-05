@@ -126,8 +126,13 @@ STATE CState_Attack_Halberd::Key_Input(const _float& fTimeDelta)
 
 STATE CState_Attack_Halberd::Combo_1()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(15))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Spear_Whoosh_01.ogg"), CHANNELID::CHANNEL_5, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_ComboA01_01.ogg"), CHANNELID::CHANNEL_6, 1.f);
+
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(25))
@@ -141,6 +146,9 @@ STATE CState_Attack_Halberd::Combo_1()
 
 	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(5))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Spear_Whoosh_02.ogg"), CHANNELID::CHANNEL_5, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_ComboA01_02.ogg"), CHANNELID::CHANNEL_6, 1.f);
+
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(15))
@@ -149,7 +157,8 @@ STATE CState_Attack_Halberd::Combo_1()
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(28))
 	{
-		
+		pGameInstance->PlaySoundFile(TEXT("Spear_Whoosh_03.ogg"), CHANNELID::CHANNEL_5, 0.8f);
+		pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_ComboA01_03.ogg"), CHANNELID::CHANNEL_6, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(45))
@@ -161,21 +170,31 @@ STATE CState_Attack_Halberd::Combo_1()
 	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(50))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
+			
 	}
 	if (true == m_bCombo1_2 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_Halberd::Combo_2()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(25))
 	{
-	
+		pGameInstance->PlaySoundFile(TEXT("Spear_AttackHeavy_02.ogg"), CHANNELID::CHANNEL_5, 0.8);
+		pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_ComboB01.ogg"), CHANNELID::CHANNEL_6, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(40))
@@ -187,20 +206,29 @@ STATE CState_Attack_Halberd::Combo_2()
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(50))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
 	}
 	if (true == m_bCombo2_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::AVOID;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_Halberd::Combo_3()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(35))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Spear_Whoosh_01.ogg"), CHANNELID::CHANNEL_5, 0.8);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo3_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
@@ -216,7 +244,8 @@ STATE CState_Attack_Halberd::Combo_3()
 
 	if (true == m_bCombo3_2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(15))
 	{
-		
+		pGameInstance->PlaySoundFile(TEXT("Spear_AttackHeavy_01.ogg"), CHANNELID::CHANNEL_5, 0.8);
+		pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_ComboC01.ogg"), CHANNELID::CHANNEL_6, 1.f);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo3_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(30))
@@ -228,21 +257,29 @@ STATE CState_Attack_Halberd::Combo_3()
 	if (true == m_bCombo3_2 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(40))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
 	}
 	if (true == m_bCombo3_2 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
 	
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }
 
 STATE CState_Attack_Halberd::Combo_4()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Spear_Whoosh_03.ogg"), CHANNELID::CHANNEL_5, 0.8);
 		m_pRealOwner->Set_Attack(true);
 	}
 	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
@@ -251,7 +288,13 @@ STATE CState_Attack_Halberd::Combo_4()
 	}
 	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(130))
 	{
+		pGameInstance->PlaySoundFile(TEXT("Spear_Whoosh_02.ogg"), CHANNELID::CHANNEL_5, 0.8);
+		pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_ComboC02.ogg"), CHANNELID::CHANNEL_6, 1.f);
 		m_pRealOwner->Set_Attack(true);
+	}
+	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(150))
+	{
+		pGameInstance->PlaySoundFile(TEXT("Spear_Whoosh_02.ogg"), CHANNELID::CHANNEL_5, 0.8);
 	}
 	else if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(180))
 	{
@@ -262,12 +305,18 @@ STATE CState_Attack_Halberd::Combo_4()
 	if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(260))
 	{
 		if (true == m_pRealOwner->Is_Hit())
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return STATE::HIT;
+		}
 	}
 	if (true == m_bCombo4_1 && true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
+		RELEASE_INSTANCE(CGameInstance);
 		return STATE::IDLE;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return m_eState;
 }

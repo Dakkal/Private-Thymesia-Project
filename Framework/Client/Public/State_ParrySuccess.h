@@ -24,6 +24,12 @@ private:
 	_bool					m_bParryLeft = { false };
 	_bool					m_bParryRight = { false };
 
+	_bool					m_bParryLeftUp = { false };
+	_bool					m_bParryRightUp = { false };
+	_bool					m_bParryLeftDown = { false };
+	_bool					m_bParryRightDown = { false };
+	_bool					m_IsParry = { false };
+
 public:
 	static CState_ParrySuccess* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);
 	virtual void	Free() override;

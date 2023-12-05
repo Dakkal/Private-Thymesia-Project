@@ -51,7 +51,7 @@ STATE CState_Hit_Halberd::Tick(const _float& fTimeDelta)
 	if (m_pRealOwner->Is_Hit())
 	{
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		if (true == pGameInstance->Random_Coin(0.1f))
+		if (true == pGameInstance->Random_Coin(0.2f))
 		{
 			RELEASE_INSTANCE(CGameInstance);
 			return STATE::PARRY;
@@ -62,6 +62,9 @@ STATE CState_Hit_Halberd::Tick(const _float& fTimeDelta)
 
 		if (true == m_bRight_Hit)
 		{
+			pGameInstance->PlaySoundFile(TEXT("FullPlateImpact_02.ogg"), CHANNELID::CHANNEL_5, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_HurtM.ogg"), CHANNELID::CHANNEL_6, 1.f);
+
 			m_bRight_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 43, 1.2f);
 			m_bLeft_Hit = true;
@@ -71,6 +74,9 @@ STATE CState_Hit_Halberd::Tick(const _float& fTimeDelta)
 		}
 		else if (true == m_bLeft_Hit)
 		{
+			pGameInstance->PlaySoundFile(TEXT("FullPlateImpact_03.ogg"), CHANNELID::CHANNEL_5, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_HurtM.ogg"), CHANNELID::CHANNEL_6, 1.f);
+
 			m_bLeft_Hit = false;
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 1.2f);
 			m_bRight_Hit = true;
@@ -109,12 +115,15 @@ void CState_Hit_Halberd::Enter_State()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (true == pGameInstance->Random_Coin(0.1f))
+	if (true == pGameInstance->Random_Coin(0.2f))
 	{
 		m_bParry = true;
 	}
 	else
 	{
+		pGameInstance->PlaySoundFile(TEXT("FullPlateImpact_01.ogg"), CHANNELID::CHANNEL_5, 1.f);
+		pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_HurtM.ogg"), CHANNELID::CHANNEL_6, 1.f);
+
 		if (true == m_bRight_Hit)
 		{
 			m_bRight_Hit = false;

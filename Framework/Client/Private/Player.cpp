@@ -86,7 +86,11 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (true == pGameInstance->Key_Down('T'))
 	{
 		CEffectObject::EFFECT_DESC	effectdesc;
+		effectdesc.pTargetTransform = m_pTransformCom;
 		effectdesc.vTargetPos = m_pTransformCom->Get_State(CTransform::STATE_POS);
+		effectdesc.vRotFactorX = _float2(-10.f, 10.f);
+		effectdesc.vRotFactorZ = _float2(40.f, 50.f);
+		effectdesc.eEffectType = CEffectObject::TYPE::RECT;
 
 		pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_EFFECT, TEXT("Prototype_GameObject_ParrySpark"), &effectdesc);
 	}

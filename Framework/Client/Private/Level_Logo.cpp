@@ -22,10 +22,6 @@ HRESULT CLevel_Logo::Tick(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if(GetAsyncKeyState('P') & 0x8000)
-		pGameInstance->PlaySoundFile(TEXT("Success.wav"), CHANNELID::CHANNEL_1, 0.5f);
-	if (GetAsyncKeyState('U') & 0x8000)
-		pGameInstance->CheckPlaySoundFile(TEXT("Quest Complete.wav"), CHANNELID::CHANNEL_1, 0.5f);
 
 	RELEASE_INSTANCE(CGameInstance);
 

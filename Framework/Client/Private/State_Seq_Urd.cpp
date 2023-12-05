@@ -26,10 +26,27 @@ STATE CState_Seq_Urd::Tick(const _float& fTimeDelta)
 	STATE eState = m_eState;
 
 	
-	if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(2))
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(1))
 	{
 		if (false == g_BossSeq)
+		{
+			CGameInstance* pGameInstace = GET_INSTANCE(CGameInstance);
+
+			pGameInstace->StopSoundAll();
+
+			RELEASE_INSTANCE(CGameInstance);
+
 			g_BossSeq = true;
+		}
+	}
+
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(230))
+	{
+		CGameInstance* pGameInstace = GET_INSTANCE(CGameInstance);
+
+		pGameInstace->CheckPlaySoundFile(TEXT("Urd_FightStart.ogg"), CHANNELID::CHANNEL_20, 1.f);
+
+		RELEASE_INSTANCE(CGameInstance);
 	}
 
 	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(545))
@@ -39,6 +56,14 @@ STATE CState_Seq_Urd::Tick(const _float& fTimeDelta)
 	if (true == m_pOwnerBodyPart->IsAnimationEnd())
 	{
 		g_BossSeq = false;
+
+		CGameInstance* pGameInstace = GET_INSTANCE(CGameInstance);
+
+		pGameInstace->PlayBGM(TEXT("urd_music_2_A.ogg"), 0.3f);
+
+		RELEASE_INSTANCE(CGameInstance);
+
+
 		return STATE::IDLE;
 	}
 
@@ -65,7 +90,7 @@ void CState_Seq_Urd::Enter_State()
 
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(true);
 
-	m_pOwnerBodyPart->Set_AnimationIndex(false, 24, 3.f);
+	m_pOwnerBodyPart->Set_AnimationIndex(false, 24, 3.6f);
 }
 
 STATE CState_Seq_Urd::Key_Input(const _float& fTimeDelta)

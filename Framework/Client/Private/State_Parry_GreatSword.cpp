@@ -7,6 +7,8 @@
 #include "Transform.h"
 
 #include "Enemy_GreatSword.h"
+#include "ParrySpark.h"
+
 
 CState_Parry_GreatSword::CState_Parry_GreatSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
@@ -35,9 +37,18 @@ STATE CState_Parry_GreatSword::Tick(const _float& fTimeDelta)
 
 	if (true == m_bParryEnd)
 	{
-		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(16))
 		{
-			
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+			pGameInstance->PlaySoundFile(TEXT("FullPlateAction_01_01.ogg"), CHANNELID::CHANNEL_3, 1.f);
+			RELEASE_INSTANCE(CGameInstance);
+		}
+		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
+		{
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+			pGameInstance->PlaySoundFile(TEXT("Sword_H_ATK_02.ogg"), CHANNELID::CHANNEL_4, 1.f);
+			RELEASE_INSTANCE(CGameInstance);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(80))
@@ -65,6 +76,26 @@ STATE CState_Parry_GreatSword::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	if (true == m_IsParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(3))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		CEffectObject::EFFECT_DESC	effectdesc;
+		effectdesc.pTargetTransform = m_pOwnerTransform;
+		effectdesc.vTargetPos = m_pOwnerWeaponRPart->Get_Collide_Center();
+		effectdesc.vRotFactorX = _float2(-15.f, 15.f);
+
+		effectdesc.vRotFactorZ = _float2(60.f, 80.f);
+
+		effectdesc.eEffectType = CEffectObject::TYPE::RECT;
+
+		pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_EFFECT, TEXT("Prototype_GameObject_ParrySpark"), &effectdesc);
+
+		RELEASE_INSTANCE(CGameInstance);
+
+		m_IsParry = false;
+	}
+
 
 	return eState;
 }
@@ -72,6 +103,7 @@ STATE CState_Parry_GreatSword::LateTick(const _float& fTimeDelta)
 void CState_Parry_GreatSword::Reset_State()
 {
 	m_bParryEnd = false;
+	m_IsParry = false;
 }
 
 void CState_Parry_GreatSword::Enter_State()
@@ -82,6 +114,15 @@ void CState_Parry_GreatSword::Enter_State()
 	m_pRealOwner->Set_Parry(true);
 
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 29, 1.2f);
+
+	m_IsParry = true;
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->PlaySoundFile(TEXT("ParrySuc_02_01.ogg"), CHANNELID::CHANNEL_3, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
 }
 
 STATE CState_Parry_GreatSword::Key_Input(const _float& fTimeDelta)

@@ -24,8 +24,12 @@ HRESULT CParrySpark::Initialize(void* pArg)
 {
 	__super::Initialize(pArg);
 
+	m_iNumInstance = 40;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
+
+	Create_RandomRotMatrix(m_vRotFactorX, m_vRotFactorY, m_vRotFactorZ);
 
 	return S_OK;
 }
@@ -52,8 +56,8 @@ void CParrySpark::LateTick(_float fTimeDelta)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	
 	m_pTransformCom->LookAt_NoYaw(pGameInstance->Get_CamPosition_Vector());
-	m_pTransformCom->Rotation(AXIS::Z, 45.f);
 	m_pTransformCom->Set_State(CTransform::STATE_POS, m_vTargetPos);
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -96,16 +100,16 @@ HRESULT CParrySpark::Ready_Components()
 	/* For.Component_VIBuffer_Rect_Instance */
 	CVIBuffer_Rect_Instance::INSTANCE_DESC	InstanceDesc = {};
 
-	InstanceDesc.vCenter = _float3(0.f, 0.f, 0.f);
-	InstanceDesc.vRange = _float3(1.f, 1.f, 1.f);
-	InstanceDesc.fRangeOffset = 0.3f;
+	InstanceDesc.vCenter = _float3(0.f, 0.f, 0.5f);
+	InstanceDesc.vRange = _float3(0.f, 0.f, 0.f);
+	InstanceDesc.fRangeOffset = 0.1f;
 	InstanceDesc.vScaleMin = _float3(0.1f, 0.1f, 0.1f);
 	InstanceDesc.vScaleMax = _float3(0.25f, 1.f, 0.25f);
-	InstanceDesc.iNumInstance = 20;
-	InstanceDesc.fLifeTimeMin = 2.f;
-	InstanceDesc.fLifeTimeMax = 3.f;
-	InstanceDesc.fSpeedMin = 4.5f;
-	InstanceDesc.fSpeedMax = 5.f;
+	InstanceDesc.iNumInstance = m_iNumInstance;
+	InstanceDesc.fLifeTimeMin = 0.2f;
+	InstanceDesc.fLifeTimeMax = 0.4f;
+	InstanceDesc.fSpeedMin = 6.f;
+	InstanceDesc.fSpeedMax = 8.f;
 
 	/* Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Rect_Instance"),
@@ -117,17 +121,21 @@ HRESULT CParrySpark::Ready_Components()
 
 HRESULT CParrySpark::Bind_ShaderResources()
 {
+	__super::Bind_ShaderResources();
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResources(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
+	if (FAILED(m_pTargetTransform->Bind_ShaderResources(m_pShaderCom, "g_TargetMatrix")))
+		return E_FAIL;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)))
 		return E_FAIL;
+
 	if (FAILED(pGameInstance->Bind_TransformToShader(m_pShaderCom, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 		return E_FAIL;
-
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -169,9 +177,9 @@ void CParrySpark::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pVIRectBufferCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pVIRectBufferCom);
 }

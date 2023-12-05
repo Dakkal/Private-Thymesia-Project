@@ -49,6 +49,13 @@ void CState_Dead_Halberd::Enter_State()
 	dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
 
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 29, 1.2f);
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_LieDie.ogg"), CHANNELID::CHANNEL_5, 0.8f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
 }
 
 STATE CState_Dead_Halberd::Key_Input(const _float& fTimeDelta)

@@ -107,3 +107,4 @@ using namespace Engine;
 #endif // _DEBUG
 
 
+#define MAX_INTANCE 100

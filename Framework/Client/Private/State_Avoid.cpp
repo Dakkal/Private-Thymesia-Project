@@ -84,6 +84,8 @@ void CState_Avoid::Enter_State()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	
+	pGameInstance->PlaySoundFile(TEXT("WhooshClothSoft_01_01.ogg"), CHANNELID::CHANNEL_1, 1.f);
+
 	CState_Walk* pWalkState = dynamic_cast<CState_Walk*>(m_pStateOwner->Get_State(STATE::WALK));
 
 	_bool	bClick = false;

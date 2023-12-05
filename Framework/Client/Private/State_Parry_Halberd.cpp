@@ -7,6 +7,7 @@
 #include "Transform.h"
 
 #include "Enemy_Halberd.h"
+#include "ParrySpark.h"
 
 CState_Parry_Halberd::CState_Parry_Halberd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
@@ -31,6 +32,12 @@ STATE CState_Parry_Halberd::Tick(const _float& fTimeDelta)
 			m_pRealOwner->Set_Parry(false);
 
 			
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			pGameInstance->PlaySoundFile(TEXT("Spear_AttackHeavy_01.ogg"), CHANNELID::CHANNEL_6, 1.f);
+
+			RELEASE_INSTANCE(CGameInstance);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(40))
@@ -76,11 +83,28 @@ STATE CState_Parry_Halberd::Tick(const _float& fTimeDelta)
 	}
 	else if (true == m_bParryRight1)
 	{
-		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(45))
+		if (20 <= m_pOwnerBodyPart->Get_CurKeyFrameNumb() && 40 >= m_pOwnerBodyPart->Get_CurKeyFrameNumb())
+		{
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			pGameInstance->CheckPlaySoundFile(TEXT("Spear_Whoosh_01.ogg"), CHANNELID::CHANNEL_6, 1.f);
+			
+
+			RELEASE_INSTANCE(CGameInstance);
+		}
+
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(42))
 		{
 			m_pRealOwner->Set_Parry(false);
 
 			
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			pGameInstance->PlaySoundFile(TEXT("Spear_AttackHeavy_01.ogg"), CHANNELID::CHANNEL_6, 1.f);
+			pGameInstance->PlaySoundFile(TEXT("NM_V_Halberds_Parry_R.ogg"), CHANNELID::CHANNEL_5, 1.f);
+
+			RELEASE_INSTANCE(CGameInstance);
+
 			m_pRealOwner->Set_Attack(true);
 		}
 		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(60))
@@ -101,14 +125,18 @@ STATE CState_Parry_Halberd::Tick(const _float& fTimeDelta)
 	}
 	else if (true == m_bParryRight2)
 	{
-		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(130))
+		if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(120))
 		{
-			m_pRealOwner->Set_Parry(false);
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-			
+			pGameInstance->CheckPlaySoundFile(TEXT("Spear_Whoosh_03.ogg"), CHANNELID::CHANNEL_6, 1.f);
+			pGameInstance->CheckPlaySoundFile(TEXT("NM_V_Halberds_Parry_R_2.ogg"), CHANNELID::CHANNEL_5, 1.f);
+
+			m_pRealOwner->Set_Parry(false);
 			m_pRealOwner->Set_Attack(true);
+			RELEASE_INSTANCE(CGameInstance);
 		}
-		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(150))
+		else if (true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(190))
 		{
 			dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Set_LookPlayer(false);
 			m_pRealOwner->Set_Attack(false);
@@ -132,12 +160,37 @@ STATE CState_Parry_Halberd::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	if (true == m_IsParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(2))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		CEffectObject::EFFECT_DESC	effectdesc;
+		effectdesc.pTargetTransform = m_pOwnerTransform;
+		effectdesc.vTargetPos = m_pOwnerWeaponRPart->Get_Collide_Center();
+		effectdesc.vRotFactorX = _float2(-15.f, 15.f);
+
+		if(true == m_bParryLeft1 || true == m_bParryLeft2)
+			effectdesc.vRotFactorZ = _float2(60.f, 80.f);
+		else if (true == m_bParryRight1 || true == m_bParryRight2)
+			effectdesc.vRotFactorZ = _float2(-60.f, -80.f);
+
+		effectdesc.eEffectType = CEffectObject::TYPE::RECT;
+
+		pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_EFFECT, TEXT("Prototype_GameObject_ParrySpark"), &effectdesc);
+
+		RELEASE_INSTANCE(CGameInstance);
+
+		m_IsParry = false;
+	}
+
 
 	return eState;
 }
 
 void CState_Parry_Halberd::Reset_State()
 {
+	m_IsParry = false;
+
 	m_bParryEnd = false;
 	m_bParryLeft1 = false;
 	m_bParryRight1 = false;
@@ -168,12 +221,16 @@ void CState_Parry_Halberd::Enter_State()
 		}
 		else
 		{
-			m_pOwnerBodyPart->Set_AnimationIndex(false, 14, 3.5f);
+			m_pOwnerBodyPart->Set_AnimationIndex(false, 14, 4.f);
 			m_bParryRight2 = true;
 		}
 	}
 
-	
+
+	pGameInstance->PlaySoundFile(TEXT("ParrySuc_02_03.ogg"), CHANNELID::CHANNEL_6, 0.8f);
+
+
+	m_IsParry = true;
 
 	RELEASE_INSTANCE(CGameInstance);
 }

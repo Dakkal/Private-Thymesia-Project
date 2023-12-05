@@ -119,7 +119,7 @@ void CState_Skill_Urd::Enter_State()
 
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Reset_SkillCnt();
 
-	_uint iRandom = pGameInstance->Random_Int(1, 3);
+	_uint iRandom = pGameInstance->Random_Int(0, 3);
 	dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_SkillActive(iRandom);
 
 	RELEASE_INSTANCE(CGameInstance);	
@@ -184,16 +184,12 @@ void CState_Skill_Urd::Skill_Front()
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	
-	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
 		CTransform* pTransform = dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Get_PlayerTransform();
 		if (nullptr != pTransform)
 			m_pOwnerBodyPart->Set_Anim_TargetPos(pTransform->Get_State(CTransform::STATE_POS));
 
-		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
-	}
-	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
-	{
 		m_pRealOwner->Get_Index_Parts(CGameObject::PARTS::WEAPON_L)->Set_Active(true);
 
 		m_pRealOwner->Set_Attack(true);
@@ -201,6 +197,8 @@ void CState_Skill_Urd::Skill_Front()
 
 	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(60))
 	{
+		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
+
 		_matrix ProjectileMatrix;
 		CTransform* pPlayerTransform;
 

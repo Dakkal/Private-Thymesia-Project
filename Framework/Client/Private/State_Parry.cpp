@@ -65,7 +65,7 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 	}
 	else if (true == m_bParryRe && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(30))
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 4.f, false, 10);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 4.f, false, 5);
 		m_IsKeepParry = false;
 	}
 	else
@@ -81,7 +81,6 @@ STATE CState_Parry::Tick(const _float& fTimeDelta)
 	{
 		dynamic_cast<CPlayer*>(m_pRealOwner)->Set_Parry(false);
 	}
-
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -135,6 +134,8 @@ STATE CState_Parry::LateTick(const _float& fTimeDelta)
 		true == m_bParryRe && 44 == m_pOwnerBodyPart->Get_AnimationIndex() &&
 		pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
 	{
+		pGameInstance->PlaySoundFile(TEXT("WhooshDagger02.ogg"), CHANNELID::CHANNEL_2, 1.f);
+
 		m_bParry2 = true;
 		m_bParry1 = false;
 		m_bParryRe = false;
@@ -144,6 +145,8 @@ STATE CState_Parry::LateTick(const _float& fTimeDelta)
 	else if (true == m_bParry2 && 45 == m_pOwnerBodyPart->Get_AnimationIndex() &&
 		pGameInstance->Get_DIKeyState(DIK_F) & 0x80)
 	{
+		pGameInstance->PlaySoundFile(TEXT("WhooshDagger01.ogg"), CHANNELID::CHANNEL_2, 1.f);
+
 		m_bParry2 = false;
 		m_bParryRe = true;
 		m_IsKeepParry = true;
@@ -161,7 +164,11 @@ void CState_Parry::Enter_State()
 {
 	m_pRealOwner->Set_Move(false);
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	pGameInstance->PlaySoundFile(TEXT("WhooshDagger01.ogg"), CHANNELID::CHANNEL_2, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 44, 4.f);
 	m_bParry1 = true;

@@ -25,6 +25,8 @@ public:
 	virtual	STATE			Get_State() { return m_eState; }
 
 protected:
+	class CPartObject*		m_pOwnerWeaponLPart = { nullptr };
+	class CPartObject*		m_pOwnerWeaponRPart = { nullptr };
 	class CPartObject*		m_pOwnerBodyPart = { nullptr };
 	class CTransform*		m_pOwnerTransform = { nullptr };
 
@@ -34,7 +36,7 @@ protected:
 	CStateMachine*			m_pStateOwner = { nullptr };
 	class CGameObject*		m_pRealOwner = { nullptr };
 	// 어떤 상태인지 정해주는 변수
-	STATE					m_eState = { STATE::_END};
+	STATE					m_eState = { STATE::_END };
 	// 처음들어오면 
 	_bool					m_bEnter = { false };
 

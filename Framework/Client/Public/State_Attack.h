@@ -27,6 +27,8 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
+	_bool	m_bChangeSound = { false };
+
 	_bool	m_bAttack1 = { false };
 	_bool	m_bAttack2 = { false };
 	_bool	m_bAttack3 = { false };

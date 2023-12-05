@@ -36,6 +36,15 @@ STATE CState_Run_Halberd::Tick(const _float& fTimeDelta)
 		return STATE::WALK;
 	}
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(10))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_FullPlateA_03.ogg"), CHANNELID::CHANNEL_5, 1.f);
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_FullPlateA_04.ogg"), CHANNELID::CHANNEL_6, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
 	return eState;
 }
 

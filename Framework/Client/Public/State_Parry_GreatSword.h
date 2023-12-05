@@ -22,6 +22,7 @@ public:
 
 private:
 	_bool					m_bParryEnd = { false };
+	_bool					m_IsParry = { false };
 
 public:
 	static CState_Parry_GreatSword* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);

@@ -7,6 +7,8 @@
 #include "Input_Device.h"
 #include "Player.h"
 
+#include "ParrySpark.h"
+
 CState_ParrySuccess::CState_ParrySuccess(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
 {
@@ -35,13 +37,48 @@ STATE CState_ParrySuccess::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	if (true == m_IsParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(2))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		CEffectObject::EFFECT_DESC	effectdesc;
+		effectdesc.pTargetTransform = m_pOwnerTransform;
+		effectdesc.vTargetPos = m_pOwnerWeaponRPart->Get_Collide_Center();
+		effectdesc.vRotFactorX = _float2(-15.f, 15.f);
+
+		if (true == m_bParryLeftUp)
+			effectdesc.vRotFactorZ = _float2(60.f, 80.f);
+
+		else if (true == m_bParryLeftDown)
+			effectdesc.vRotFactorZ = _float2(100.f, 120.f);
+
+		else if (true == m_bParryRightUp)
+			effectdesc.vRotFactorZ = _float2(-60.f, -80.f);
+
+		else if (true == m_bParryRightDown)
+			effectdesc.vRotFactorZ = _float2(-100.f, -120.f);
+
+
+		effectdesc.eEffectType = CEffectObject::TYPE::RECT;
+
+		pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_EFFECT, TEXT("Prototype_GameObject_ParrySpark"), &effectdesc);
+
+		RELEASE_INSTANCE(CGameInstance);
+
+		m_IsParry = false;
+	}
+
 
 	return eState;
 }
 
 void CState_ParrySuccess::Reset_State()
 {
-
+	m_IsParry = false;
+	m_bParryLeftUp = false;
+	m_bParryRightUp = false;
+	m_bParryLeftDown = false;
+	m_bParryRightDown = false;
 }
 
 void CState_ParrySuccess::Enter_State()
@@ -80,6 +117,10 @@ void CState_ParrySuccess::Enter_State()
 
 		m_bParryLeft = true;
 	}
+
+
+	pGameInstance->PlaySoundFile(TEXT("ParrySuc_03_01.ogg"), CHANNELID::CHANNEL_2, 1.f);
+
 
 	RELEASE_INSTANCE(CGameInstance);
 }

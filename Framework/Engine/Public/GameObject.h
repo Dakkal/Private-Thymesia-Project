@@ -122,6 +122,7 @@ protected:
 
     _float      m_fDissolveTime = { 0.f };
     _float      m_fDissolveDuraton = { 0.f };
+    _bool       m_bDissolveSound = { false };
 
     _uint       m_iHp = { 5 };
 

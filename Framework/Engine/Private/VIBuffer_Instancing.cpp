@@ -34,7 +34,6 @@ HRESULT CVIBuffer_Instancing::Initialize(void* pArg)
 	INSTANCE_DESC InstanceDesc;
 	memmove(&InstanceDesc, pArg, sizeof(InstanceDesc));
 
-
 	m_iStrideInstance = sizeof(VTXINSTANCE);
 
 	/* 정점버퍼와 인덱스 버퍼를 만드낟. */
@@ -42,7 +41,7 @@ HRESULT CVIBuffer_Instancing::Initialize(void* pArg)
 
 	// m_BufferDesc.ByteWidth = 정점하나의 크기(Byte) * 정점의 갯수;
 	m_tBufferDesc.ByteWidth = m_iStrideInstance * m_iNumInstance;
-	m_tBufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+	m_tBufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 동적버퍼로 할당 */
 	m_tBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_tBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_tBufferDesc.MiscFlags = 0;
@@ -68,8 +67,6 @@ HRESULT CVIBuffer_Instancing::Initialize(void* pArg)
 		m_pTimeAccs[i] = 0.f;
 	}
 
-
-	/* 난수 생성 초기화.  */
 	RELEASE_INSTANCE(CGameInstance);
 
 	for (size_t i = 0; i < m_iNumInstance; i++)
@@ -77,8 +74,6 @@ HRESULT CVIBuffer_Instancing::Initialize(void* pArg)
 		_float		fScaleX = pGameInstance->Random_Float(InstanceDesc.vScaleMin.x, InstanceDesc.vScaleMax.x);
 		_float		fScaleY = pGameInstance->Random_Float(InstanceDesc.vScaleMin.y, InstanceDesc.vScaleMax.y);
 		_float		fScaleZ = pGameInstance->Random_Float(InstanceDesc.vScaleMin.z, InstanceDesc.vScaleMax.z);
-
-		_matrix matRot = XMMatrixRotationAxis(_vector(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(45.f));
 
 		m_pVertices[i].vRight = _vector(fScaleX, 0.f, 0.f, 0.f);
 		m_pVertices[i].vUp = _vector(0.f, fScaleY, 0.f, 0.f);
@@ -143,14 +138,11 @@ void CVIBuffer_Instancing::Free()
 {
 	__super::Free();
 
-	if (false == m_IsCloned)
-	{
-		Safe_Delete_Array(m_pIsLifeOver);
-		Safe_Delete_Array(m_pTimeAccs);
-		Safe_Delete_Array(m_pLifeTimes);
-		Safe_Delete_Array(m_pSpeeds);
-		Safe_Delete_Array(m_pVertices);
-	}
+	Safe_Delete_Array(m_pIsLifeOver);
+	Safe_Delete_Array(m_pTimeAccs);
+	Safe_Delete_Array(m_pLifeTimes);
+	Safe_Delete_Array(m_pSpeeds);
+	Safe_Delete_Array(m_pVertices);
 
 	Safe_Release(m_pVBInstance);
 }

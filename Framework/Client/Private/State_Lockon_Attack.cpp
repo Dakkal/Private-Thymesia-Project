@@ -81,16 +81,34 @@ STATE CState_Lockon_Attack::Tick(const _float& fTimeDelta)
 	}
 	else if (true == m_bAttack2 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
 	{
+		if (false == m_bChangeSound)
+		{
+			pGameInstance->PlaySoundFile(TEXT("Sword_Attack_02.ogg"), CHANNELID::CHANNEL_2, 1.f);
+			m_bChangeSound = true;
+		}
+
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 105, 2.5f);
 		m_IsKeepAttack = false;
 	}
 	else if (true == m_bAttack3 && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(20))
 	{
+		if (false == m_bChangeSound)
+		{
+			pGameInstance->PlaySoundFile(TEXT("Sword_H_ATK_01.ogg"), CHANNELID::CHANNEL_2, 1.f);
+			m_bChangeSound = true;
+		}
+
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 106, 2.8f);
 		m_IsKeepAttack = false;
 	}
 	else if (true == m_bAttackRe && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(30))
 	{
+		if (false == m_bChangeSound)
+		{
+			pGameInstance->PlaySoundFile(TEXT("Sword_Attack_01.ogg"), CHANNELID::CHANNEL_2, 1.f);
+			m_bChangeSound = true;
+		}
+
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f, false, 8);
 		m_IsKeepAttack = false;
 	}
@@ -169,6 +187,8 @@ STATE CState_Lockon_Attack::LateTick(const _float& fTimeDelta)
 		true == m_bAttackRe && 103 == m_pOwnerBodyPart->Get_AnimationIndex() &&
 		pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
 	{
+		m_bChangeSound = false;
+
 		m_bAttack2 = true;
 		m_bAttack1 = false;
 		m_bAttackRe = false;
@@ -177,6 +197,8 @@ STATE CState_Lockon_Attack::LateTick(const _float& fTimeDelta)
 	else if (true == m_bAttack2 && 105 == m_pOwnerBodyPart->Get_AnimationIndex() &&
 		pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
 	{
+		m_bChangeSound = false;
+
 		m_bAttack3 = true;
 		m_bAttack2 = false;
 		m_IsKeepAttack = true;
@@ -184,6 +206,8 @@ STATE CState_Lockon_Attack::LateTick(const _float& fTimeDelta)
 	else if (true == m_bAttack3 && 106 == m_pOwnerBodyPart->Get_AnimationIndex() &&
 		pGameInstance->Get_DIMouseState(CInput_Device::MOUSEKEY_STATE::LBUTTON) & 0x80)
 	{
+		m_bChangeSound = false;
+
 		m_bAttackRe = true;
 		m_bAttack3 = false;
 		m_IsKeepAttack = true;
@@ -200,6 +224,12 @@ void CState_Lockon_Attack::Enter_State()
 {
 	m_pRealOwner->Set_Move(true);
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->PlaySoundFile(TEXT("Sword_Attack_01.ogg"), CHANNELID::CHANNEL_2, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
 	m_pOwnerBodyPart->Set_AnimationIndex(false, 103, 2.5f);
 	m_bAttack1 = true;
 }
@@ -213,6 +243,8 @@ void CState_Lockon_Attack::Reset_State()
 		m_pOwnerTransform->Fix_Rotation(AXIS::Y,XMConvertToRadians(90.f));
 
 	}
+
+	m_bChangeSound = false;
 
 	m_pRealOwner->Set_Attack(false);
 

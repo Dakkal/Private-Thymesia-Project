@@ -41,6 +41,17 @@ STATE CState_Walk_Halberd::Tick(const _float& fTimeDelta)
 	if(nullptr == dynamic_cast<CEnemy_Halberd*>(m_pRealOwner)->Get_PlayerTransform())
 		return STATE::IDLE;
 
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(8))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_FullPlateA_03.ogg"), CHANNELID::CHANNEL_5, 1.f);
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(27))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_FullPlateA_04.ogg"), CHANNELID::CHANNEL_5, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
+
 	eState = WalkState(fTimeDelta);
 
 	return eState;

@@ -28,8 +28,10 @@ public:
     virtual HRESULT Render();
 
 private:
-    HRESULT Ready_Components();
-    HRESULT Bind_ShaderResources();
+    virtual HRESULT Ready_Components() override;
+    virtual HRESULT Bind_ShaderResources() override;
+
+private:
 
 public:
     static  CParrySpark* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));

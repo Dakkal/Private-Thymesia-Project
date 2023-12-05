@@ -76,16 +76,18 @@ void CState_Avoid_Halberd::Enter_State()
 
 	if (0 == iRandom || 1 == iRandom)
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 1, 1.5f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 1, 1.8f);
 	}
 	else if (2 == iRandom || 3 == iRandom)
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 2, 1.5f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 2, 1.8f);
 	}
 	else if (4 == iRandom)
 	{
-		m_pOwnerBodyPart->Set_AnimationIndex(false, 0, 1.5f);
+		m_pOwnerBodyPart->Set_AnimationIndex(false, 0, 1.8f);
 	}
+
+	pGameInstance->PlaySoundFile(TEXT("FullPlateFoley_A_02.ogg"), CHANNELID::CHANNEL_5, 1.f);
 
 	RELEASE_INSTANCE(CGameInstance);
 }

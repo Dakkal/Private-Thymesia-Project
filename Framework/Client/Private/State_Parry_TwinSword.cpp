@@ -7,6 +7,7 @@
 #include "Transform.h"
 
 #include "Enemy_TwinSword.h"
+#include "ParrySpark.h"
 
 CState_Parry_TwinSword::CState_Parry_TwinSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
@@ -149,13 +150,37 @@ STATE CState_Parry_TwinSword::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
-	
+	if (true == m_IsParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(3))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		CEffectObject::EFFECT_DESC	effectdesc;
+		effectdesc.pTargetTransform = m_pOwnerTransform;
+		effectdesc.vTargetPos = m_pOwnerWeaponLPart->Get_Collide_Center();
+		effectdesc.vTargetPos.y += 0.2f;
+		effectdesc.vRotFactorX = _float2(-15.f, 15.f);
+
+		if(true == m_bParryLeft1 || true == m_bParryLeft2)
+			effectdesc.vRotFactorZ = _float2(60.f, 80.f);
+		else if (true == m_bParryRight1 || true == m_bParryRight2)
+			effectdesc.vRotFactorZ = _float2(-60.f, -80.f);
+
+		effectdesc.eEffectType = CEffectObject::TYPE::RECT;
+
+		pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_EFFECT, TEXT("Prototype_GameObject_ParrySpark"), &effectdesc);
+
+		RELEASE_INSTANCE(CGameInstance);
+
+		m_IsParry = false;
+	}
 
 	return eState;
 }
 
 void CState_Parry_TwinSword::Reset_State()
 {
+	m_IsParry = false;
+
 	m_bParryEnd = false;
 	m_bParryLeft1 = false;
 	m_bParryRight1 = false;
@@ -183,7 +208,7 @@ void CState_Parry_TwinSword::Enter_State()
 		m_bParryRight1 = true;
 	}
 
-	
+	m_IsParry = true;
 
 	RELEASE_INSTANCE(CGameInstance);
 }

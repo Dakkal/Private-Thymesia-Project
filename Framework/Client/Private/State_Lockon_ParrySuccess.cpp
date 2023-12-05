@@ -6,6 +6,7 @@
 #include "State_Lockon_ParrySuccess.h"
 #include "Input_Device.h"
 #include "Player.h"
+#include "ParrySpark.h"
 
 CState_Lockon_ParrySuccess::CState_Lockon_ParrySuccess(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState)
 	: CState(pDevice, pContext, pOwner, eState)
@@ -63,13 +64,49 @@ STATE CState_Lockon_ParrySuccess::LateTick(const _float& fTimeDelta)
 {
 	STATE eState = m_eState;
 
+	if (true == m_IsParry && true == m_pOwnerBodyPart->Is_AnimOverKeyFrame(2))
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		CEffectObject::EFFECT_DESC	effectdesc;
+		effectdesc.pTargetTransform = m_pOwnerTransform;
+		effectdesc.vTargetPos = m_pOwnerWeaponRPart->Get_Collide_Center();
+		effectdesc.vRotFactorX = _float2(-15.f, 15.f);
+
+		if (true == m_bParryLeftUp)
+			effectdesc.vRotFactorZ = _float2(60.f, 80.f);
+
+		else if (true == m_bParryLeftDown)
+			effectdesc.vRotFactorZ = _float2(100.f, 120.f);	
+
+		else if (true == m_bParryRightUp)
+			effectdesc.vRotFactorZ = _float2(-60.f, -80.f);
+
+		else if (true == m_bParryRightDown)
+			effectdesc.vRotFactorZ = _float2(-100.f, -120.f);
+
+
+		effectdesc.eEffectType = CEffectObject::TYPE::RECT;
+
+		pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYER_EFFECT, TEXT("Prototype_GameObject_ParrySpark"), &effectdesc);
+
+		RELEASE_INSTANCE(CGameInstance);
+
+		m_IsParry = false;
+	}
+
+	
 
 	return eState;
 }
 
 void CState_Lockon_ParrySuccess::Reset_State()
 {
-	
+	m_IsParry = false;
+	m_bParryLeftUp = false;
+	m_bParryRightUp = false;
+	m_bParryLeftDown = false;
+	m_bParryRightDown = false;
 }
 
 void CState_Lockon_ParrySuccess::Enter_State()
@@ -85,10 +122,12 @@ void CState_Lockon_ParrySuccess::Enter_State()
 		if (true == pGameInstance->Random_Coin(0.5f))
 		{
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 111, 3.5f);
+			m_bParryLeftDown = true;
 		}
 		else
 		{
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 113, 3.5f);
+			m_bParryLeftUp = true;
 		}
 
 		m_bParryRight = true;
@@ -100,14 +139,20 @@ void CState_Lockon_ParrySuccess::Enter_State()
 		if (true == pGameInstance->Random_Coin(0.5f))
 		{
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 115, 3.5f);
+			m_bParryRightDown = true;
 		}
 		else
 		{
 			m_pOwnerBodyPart->Set_AnimationIndex(false, 116, 3.5f);
+			m_bParryRightUp = true;
 		}
 
 		m_bParryLeft = true;
 	}
+
+	m_IsParry = true;
+
+	pGameInstance->PlaySoundFile(TEXT("ParrySuc_03_01.ogg"), CHANNELID::CHANNEL_2, 1.f);
 
 	RELEASE_INSTANCE(CGameInstance);
 }

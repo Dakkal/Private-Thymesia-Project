@@ -21,6 +21,8 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
+	_bool					m_IsParry = { false };
+
 	_bool					m_bParryEnd = { false };
 
 	_bool					m_bParryLeft1 = { false };

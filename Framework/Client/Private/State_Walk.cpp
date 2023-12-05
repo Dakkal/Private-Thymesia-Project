@@ -68,8 +68,13 @@ STATE CState_Walk::Tick(const _float& fTimeDelta)
 	{
 		eState = Key_Input(fTimeDelta);
 	}
-	
-	
+
+
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(0))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Leather_01.ogg"), CHANNELID::CHANNEL_1, 1.f);
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(12))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_Leather_02.ogg"), CHANNELID::CHANNEL_1, 1.f);
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return eState;
@@ -96,6 +101,14 @@ STATE CState_Walk::LateTick(const _float& fTimeDelta)
 
 void CState_Walk::Enter_State()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->PlaySoundFile(TEXT("FootStep_Leather_01.ogg"), CHANNELID::CHANNEL_1, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	
+
 	m_pRealOwner->Set_Move(true);
 
 	dynamic_cast<CPlayer*>(m_pRealOwner)->Reset_TargetEnemy();
@@ -110,6 +123,12 @@ void CState_Walk::Reset_State()
 
 	m_fMouseMoveTime = 0.f;
 	m_bIsMouseMove = false;
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	pGameInstance->StopSound(CHANNELID::CHANNEL_1);
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 STATE CState_Walk::Key_Input(const _float& fTimeDelta)

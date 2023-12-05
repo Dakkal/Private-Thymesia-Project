@@ -43,6 +43,15 @@ STATE CState_Walk_GreatSword::Tick(const _float& fTimeDelta)
 
 	if(nullptr == dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Get_PlayerTransform())
 		return STATE::IDLE;
+	
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(8))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_FullPlateA_01.ogg"), CHANNELID::CHANNEL_3, 1.f);
+	if (true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(27))
+		pGameInstance->CheckPlaySoundFile(TEXT("FootStep_FullPlateA_02.ogg"), CHANNELID::CHANNEL_3, 1.f);
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	eState = WalkState(fTimeDelta);
 

@@ -107,6 +107,8 @@ void CState_Lockon_Avoid::Enter_State()
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	pGameInstance->PlaySoundFile(TEXT("WhooshClothSoft_01_01.ogg"), CHANNELID::CHANNEL_1, 1.f);
+
 	if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
 	{
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 61, 2.f);
