@@ -37,6 +37,16 @@ void CLeft_BossDoor::Tick(_float fTimeDelta)
 {
 	if (true == g_OpenDoor)
 	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		if (false == m_bPlayOnce)
+		{
+			pGameInstance->PlaySoundFile(TEXT("Fortress_GateOpen.ogg"), CHANNELID::CHANNEL_18, 1.f);
+			m_bPlayOnce = true;
+		}
+	
+		RELEASE_INSTANCE(CGameInstance);
+
 		m_vAngle = _float3::Lerp(m_vAngle, _float3(80.f, 0.f, 0.f), fTimeDelta);
 		m_pTransformCom->Fix_Rotation(AXIS::Y, XMConvertToRadians(-m_vAngle.x));
 

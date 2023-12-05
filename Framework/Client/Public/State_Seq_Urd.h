@@ -21,6 +21,8 @@ public:
 	virtual STATE			Key_Input(const _float& fTimeDelta);
 
 private:
+	_bool					m_bPlayOnce1 = { false };
+	_bool					m_bPlayOnce2 = { false };
 
 public:
 	static CState_Seq_Urd* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CStateMachine* pOwner, STATE eState);

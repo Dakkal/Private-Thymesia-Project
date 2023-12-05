@@ -30,6 +30,8 @@ public:
 
 
 private:
+	_bool		m_bPlayOnce = { false };
+
 	CCollider* m_pColliderCom = { nullptr };
 	CRenderer* m_pRendererCom = { nullptr };
 	CTransform* m_pTransformCom = { nullptr };

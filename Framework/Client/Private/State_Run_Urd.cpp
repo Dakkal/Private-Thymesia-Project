@@ -63,14 +63,17 @@ STATE CState_Run_Urd::Tick(const _float& fTimeDelta)
 
 				if (0 == iRandom)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 34, 1.2f);
 				}
 				else if (1 == iRandom)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-001.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 33, 1.2f);
 				}
 				else if (2 == iRandom)
 				{
+					pGameInstance->PlaySoundFile(TEXT("Urd_MagicMoveC-002.ogg"), CHANNELID::CHANNEL_13, 1.f);
 					m_pOwnerBodyPart->Set_AnimationIndex(false, 35, 1.2f);
 				}
 			}

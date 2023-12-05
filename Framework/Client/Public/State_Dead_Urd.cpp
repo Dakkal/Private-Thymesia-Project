@@ -27,18 +27,34 @@ HRESULT CState_Dead_Urd::Initialize()
 
 STATE CState_Dead_Urd::Tick(const _float& fTimeDelta)
 {
-	
-
 	STATE eState = m_eState;
 
-	if (false == m_bExcuted && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (false == m_bExcuted && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(40))
 	{
+		pGameInstance->CheckPlaySoundFile(TEXT("ParrySuc_02_01.ogg"), CHANNELID::CHANNEL_20, 1.f);
+	}
+	else if (false == m_bExcuted && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(100))
+	{
+		pGameInstance->CheckPlaySoundFile(TEXT("Parry_01_01.ogg"), CHANNELID::CHANNEL_20, 1.f);
+
 		dynamic_cast<CBoss_Urd*>(m_pRealOwner)->Set_LookPlayer(false);
 		m_pOwnerBodyPart->Set_CurAnimSpeed(0.5f);
 	}
 	else if (false == m_bExcuted && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(115))
 	{
 		m_pOwnerBodyPart->Set_CurAnimSpeed(1.8f);
+	}
+	else if (false == m_bExcuted && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(135))
+	{
+		pGameInstance->CheckPlaySoundFile(TEXT("CV_Urd_Dead_03.ogg"), CHANNELID::CHANNEL_18, 1.f);
+		pGameInstance->CheckPlaySoundFile(TEXT("Stab_01_01.ogg"), CHANNELID::CHANNEL_21, 1.f);
+	}
+	else if (false == m_bExcuted && true == m_pOwnerBodyPart->Is_AnimCurKeyFrame(200))
+	{
+		pGameInstance->CheckPlaySoundFile(TEXT("CV_Urd_Dead_05.ogg"), CHANNELID::CHANNEL_19, 1.f);
+		pGameInstance->CheckPlaySoundFile(TEXT("SwordSlice_01.ogg"), CHANNELID::CHANNEL_22, 1.f);
 	}
 
 	if (false == m_bExcuted && m_pOwnerBodyPart->Is_AnimOverKeyFrame(220))
@@ -48,11 +64,12 @@ STATE CState_Dead_Urd::Tick(const _float& fTimeDelta)
 		m_pOwnerBodyPart->Set_AnimationIndex(false, 10, 1.2f);
 	}
 
-
 	if (true == m_bExcuted && m_pOwnerBodyPart->IsAnimationEnd())
 	{
 		m_pRealOwner->Set_Dead(true);
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return eState;
 }

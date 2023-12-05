@@ -55,17 +55,17 @@ STATE CState_Idle_Urd::Tick(const _float& fTimeDelta)
 
 			_int iRandom = pGameInstance->Random_Int(0, 6);
 
-			if (0 == iRandom || 1 == iRandom || 5 == iRandom || 6 == iRandom)
+			if (0 == iRandom ||  6 == iRandom)
 			{
 				RELEASE_INSTANCE(CGameInstance);
 				return STATE::WALK;
 			}
-			else if (2 == iRandom || 4 == iRandom)
+			else if (1 == iRandom || 5 == iRandom || 4 == iRandom)
 			{
 				RELEASE_INSTANCE(CGameInstance);
 				return STATE::ATTACK;
 			}
-			else if (3 == iRandom)
+			else if (3 == iRandom || 2 == iRandom)
 			{
 				RELEASE_INSTANCE(CGameInstance);
 				return STATE::AVOID;
