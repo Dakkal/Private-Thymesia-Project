@@ -27,6 +27,11 @@ HRESULT CFont::Render(const wstring& strText, const _float2& vPos, FXMVECTOR col
 	return S_OK;
 }
 
+_float2 CFont::Get_Texsize(const wstring& strText)
+{
+	return m_pFont->MeasureString(strText.c_str());
+}
+
 CFont* CFont::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strFontFilePath)
 {
 	CFont* pInstance = new CFont(pDevice, pContext);

@@ -28,7 +28,12 @@ HRESULT CFont_Manager::Render(const wstring& strFontTag, const wstring& strText,
 	if (nullptr == pFont)
 		return E_FAIL;
 
-	return pFont->Render(strText, vPos, color, rotation, origin, scale);
+	_float2 textSize = pFont->Get_Texsize(strText);
+
+	// 화면 중앙 위치를 계산합니다.
+	_float2 centerPos = vPos - 0.5f * textSize * scale;
+
+	return pFont->Render(strText, centerPos, color, rotation, origin, scale);
 }
 
 CFont* CFont_Manager::Find_Font(const wstring& strFontTag)

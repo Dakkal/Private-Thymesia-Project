@@ -78,8 +78,11 @@
     <ClCompile Include="..\Private\HitBox_TwinSword.cpp" />
     <ClCompile Include="..\Private\Left_BossDoor.cpp" />
     <ClCompile Include="..\Private\Left_Shaft.cpp" />
+    <ClCompile Include="..\Private\Loading.cpp" />
+    <ClCompile Include="..\Private\LoadingSymbol.cpp" />
     <ClCompile Include="..\Private\Npc_Kid.cpp" />
     <ClCompile Include="..\Private\ParrySpark.cpp" />
+    <ClCompile Include="..\Private\PartUI.cpp" />
     <ClCompile Include="..\Private\Right_BossDoor.cpp" />
     <ClCompile Include="..\Private\Right_Shaft.cpp" />
     <ClCompile Include="..\Private\Seq_Camera_Player.cpp" />
@@ -227,8 +230,11 @@
     <ClInclude Include="..\Public\HitBox_TwinSword.h" />
     <ClInclude Include="..\Public\Left_BossDoor.h" />
     <ClInclude Include="..\Public\Left_Shaft.h" />
+    <ClInclude Include="..\Public\Loading.h" />
+    <ClInclude Include="..\Public\LoadingSymbol.h" />
     <ClInclude Include="..\Public\Npc_Kid.h" />
     <ClInclude Include="..\Public\ParrySpark.h" />
+    <ClInclude Include="..\Public\PartUI.h" />
     <ClInclude Include="..\Public\Right_BossDoor.h" />
     <ClInclude Include="..\Public\Right_Shaft.h" />
     <ClInclude Include="..\Public\Seq_Camera_Player.h" />

@@ -5,6 +5,9 @@
 #include "Imgui_Manager.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Loading.h"
+#include "LoadingSymbol.h"
+
 #include "FbxExporter.h"
 
 
@@ -68,7 +71,7 @@ void CMainApp::Tick(_float fTimeDelta)
 
 HRESULT CMainApp::Render()
 {
-	m_pGameInstance->Clear_BackBuffer_View(_vector(0.5f, 0.5f, 0.5f, 1.f));
+	m_pGameInstance->Clear_BackBuffer_View(_vector(0.f, 0.f, 0.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 	
 	m_pRenderer->Draw_RenderObject();
@@ -131,6 +134,20 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform")
 		, CTransform::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Loading"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Loading/TexUI_LoadingScreen_Tutorial_01.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Loading_Symbol"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Loading/TexUI_LoadingIcon.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Loading"), CLoading::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_LoadingSymbol"), CLoadingSymbol::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

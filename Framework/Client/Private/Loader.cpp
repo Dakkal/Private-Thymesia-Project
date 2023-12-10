@@ -367,6 +367,11 @@ HRESULT CLoader::Loading_Texture()
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_BackGround"),
 			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
 			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/GameLogo2.png"), 1))))
+			return E_FAIL;
+
 		break;
 	case Client::LEVEL_GAMEPLAY:
 		/* For.Prototype_Component_Texture_Dissolve */
@@ -377,6 +382,18 @@ HRESULT CLoader::Loading_Texture()
 		/* For.Prototype_Component_Texture_Dissolve */
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_ParryFlare"),
 			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/ParryFlare/ParryFlare.dds"), 1))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_UI_Key"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Dialog/TexUI_PuzzleIcon_Key02.png"), 1))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_UI_Back"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Dialog/TexUI_DialogueReplyWindowBackground.png"), 1))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_UI_Line"),
+			CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Dialog/TexUI_PauseMenuBackground_05.png"), 1))))
 			return E_FAIL;
 
 		break;

@@ -124,7 +124,7 @@ protected:
     _float      m_fDissolveDuraton = { 0.f };
     _bool       m_bDissolveSound = { false };
 
-    _uint       m_iHp = { 5 };
+    _uint       m_iHp = { 10 };
 
 protected:
     HRESULT Add_Component(_uint iLevelIndex, const wstring & strPrototypeTag, const wstring & strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);

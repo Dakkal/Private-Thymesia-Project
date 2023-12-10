@@ -277,6 +277,9 @@
     <Filter Include="02.GameObject\Object\Effect\ParrySpark">
       <UniqueIdentifier>{ec2aa38b-e18e-4253-96c7-997a76b7c45e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Loading">
+      <UniqueIdentifier>{531a4e17-8942-47e5-bbdf-36f786bc7d5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -680,6 +683,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\ParrySpark.cpp">
       <Filter>02.GameObject\Object\Effect\ParrySpark</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loading.cpp">
+      <Filter>02.GameObject\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingSymbol.cpp">
+      <Filter>02.GameObject\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PartUI.cpp">
+      <Filter>02.GameObject\Object\Monster\Npc_Kid\Part</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1099,6 +1111,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\ParrySpark.h">
       <Filter>02.GameObject\Object\Effect\ParrySpark</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loading.h">
+      <Filter>02.GameObject\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LoadingSymbol.h">
+      <Filter>02.GameObject\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PartUI.h">
+      <Filter>02.GameObject\Object\Monster\Npc_Kid\Part</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

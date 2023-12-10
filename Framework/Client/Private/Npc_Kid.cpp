@@ -7,6 +7,7 @@
 
 #include "State_Idle_Kid.h"
 
+#include "PartUI.h"
 
 #include "Collider.h"
 #include "Bounding_Sphere.h"
@@ -522,6 +523,9 @@ HRESULT CNpc_Kid::Ready_Parts()
 	m_Parts.emplace(CGameObject::PARTS::BODY, pParts);
 
 
+	m_pPartUI = CPartUI::Create(m_pDevice, m_pContext);
+
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -573,6 +577,8 @@ CGameObject* CNpc_Kid::Clone(void* pArg)
 void CNpc_Kid::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pPartUI);
 
 	for (auto& iter : m_Parts)
 		Safe_Release(iter.second);

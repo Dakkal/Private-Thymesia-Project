@@ -17,6 +17,9 @@ public:
 	virtual HRESULT LateTick(_float fTimeDelta) override;
 
 private:
+	HRESULT Ready_Layer_Loading(const _uint& iLayerIndex);
+
+private:
 	LEVELID			m_eNextLevel = { LEVEL_END };
 	class CLoader*	m_pLoader = { nullptr };
 

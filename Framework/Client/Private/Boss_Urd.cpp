@@ -62,6 +62,8 @@ HRESULT CBoss_Urd::Initialize(void* pArg)
 
 	m_iSkillActive = iRandom;
 
+	m_iHp = 20;
+
 	RELEASE_INSTANCE(CGameInstance);
 		
 

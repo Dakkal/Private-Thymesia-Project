@@ -2,6 +2,7 @@
 #include "..\Public\Body_Npc_Kid.h"
 
 #include "GameInstance.h"
+#include "Npc_Kid.h"
 #include "LandObject.h"
 #include "Navigation.h"
 #include "BinMesh.h"
@@ -217,6 +218,12 @@ void CBody_Npc_Kid::OnCollision_Part_Enter(CGameObject* _pColObj, _float fTimeDe
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
 				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
+			if (false == m_bGetKey)
+			{
+				pGameInstance->PlaySoundFile(TEXT("Fantasy_Game_UI_Arcane_Select.ogg"), CHANNELID::CHANNEL_25, 1.f);
+
+				dynamic_cast<CNpc_Kid*>(m_pOwner)->Get_PartUI()->LateTick(fTimeDelta);
+			}
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -271,6 +278,10 @@ void CBody_Npc_Kid::OnCollision_Part_Stay(CGameObject* _pColObj, _float fTimeDel
 		case Engine::CGameObject::BODY:
 			if (true == m_pOwner->Is_Move())
 				pGameInstance->Detrude_Sphere_Collide(_pColObj, m_pColliderCom, m_pParentTransform, pNavigation);
+			if (false == m_bGetKey)
+			{
+				dynamic_cast<CNpc_Kid*>(m_pOwner)->Get_PartUI()->LateTick(fTimeDelta);
+			}
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;
@@ -318,6 +329,10 @@ void CBody_Npc_Kid::OnCollision_Part_Exit(CGameObject* _pColObj, _float fTimeDel
 		switch (ePart)
 		{
 		case Engine::CGameObject::BODY:
+			if (false == m_bGetKey)
+			{
+				m_bGetKey = true;
+			}
 			break;
 		case Engine::CGameObject::WEAPON_R:
 			break;

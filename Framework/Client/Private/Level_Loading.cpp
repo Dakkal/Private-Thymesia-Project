@@ -16,17 +16,23 @@ CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 HRESULT CLevel_Loading::Initialize(LEVELID eNextLevel)
 {
+	if (FAILED(Ready_Layer_Loading(LAYER_BACKGROUND)))
+		return E_FAIL;
+
 	m_eNextLevel = eNextLevel;
 
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, m_eNextLevel);
 	if (nullptr == m_pLoader)
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
 HRESULT CLevel_Loading::Tick(_float fTimeDelta)
 {
+
+
 	return S_OK;
 }
 
@@ -74,6 +80,21 @@ HRESULT CLevel_Loading::LateTick(_float fTimeDelta)
 	}
 
 	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Loading::Ready_Layer_Loading(const _uint& iLayerIndex)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOADING, iLayerIndex, TEXT("Prototype_GameObject_Loading"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOADING, iLayerIndex, TEXT("Prototype_GameObject_LoadingSymbol"))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }

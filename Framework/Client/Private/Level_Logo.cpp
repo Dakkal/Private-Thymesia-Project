@@ -20,10 +20,7 @@ HRESULT CLevel_Logo::Initialize()
 
 HRESULT CLevel_Logo::Tick(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-
-	RELEASE_INSTANCE(CGameInstance);
+	
 
 	return S_OK;
 }
@@ -37,7 +34,9 @@ HRESULT CLevel_Logo::LateTick(_float fTimeDelta)
 	
 	if (pGameInstance->Key_Down(VK_RETURN))
 	{
-	
+		pGameInstance->StopSoundAll();
+		pGameInstance->PlaySoundFile(TEXT("Fantasy_Game_Organic_Magic_Accept_Quest_Drum_Impact_1.ogg"), CHANNELID::CHANNEL_13, 0.8f);
+		
 
 #ifdef _DEBUG
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))

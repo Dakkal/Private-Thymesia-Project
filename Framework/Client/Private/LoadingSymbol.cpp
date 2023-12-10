@@ -1,92 +1,84 @@
 #include "pch.h"
-#include "BackGround.h"
+#include "LoadingSymbol.h"
 #include "GameInstance.h"
 
-CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLoadingSymbol::CLoadingSymbol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject(pDevice, pContext)
 {
 }
 
-CBackGround::CBackGround(const CBackGround& rhs)
+CLoadingSymbol::CLoadingSymbol(const CLoadingSymbol& rhs)
     : CGameObject(rhs)
 {
 }
 
-HRESULT CBackGround::Initialize_Prototype(const wstring& strProtoTag)
+HRESULT CLoadingSymbol::Initialize_Prototype(const wstring& strProtoTag)
 {
-    m_strObjectName = TEXT("Object_BackGround");
+    m_strObjectName = TEXT("Object_Loading");
 
     return S_OK;
 }
 
-HRESULT CBackGround::Initialize(void* pArg)
+HRESULT CLoadingSymbol::Initialize(void* pArg)
 {
     __super::Initialize(pArg);
 
     if (FAILED(Ready_Component(pArg)))
         return E_FAIL;
 
-    m_fSizeX = g_iWinSizeX * 0.9f;
-    m_fSizeY = g_iWinSizeY * 0.6f;
+    m_fSizeX = 214 * 0.2f;
+    m_fSizeY = 592 * 0.2f;
     m_fX = g_iWinSizeX * 0.5f;
     m_fY = g_iWinSizeY * 0.5f;
 
     m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
     m_pTransformCom->Set_State(CTransform::STATE_POS,
-        _vector(m_fX - g_iWinSizeX * 0.5f + 20.f, 100.f, 0.f, 1.f));
+        _vector(m_fX - g_iWinSizeX * 0.5f + 550.f, -m_fY + g_iWinSizeY * 0.5f - 270.f, 0.f, 1.f));
 
     m_ViewMatrix = XMMatrixIdentity();
     m_ProjMatrix = XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f);
 
-    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-    pGameInstance->CheckPlaySoundFile(TEXT("Main_Theme_-_Intro.ogg"), CHANNELID::CHANNEL_22, 0.3f);
-
-    RELEASE_INSTANCE(CGameInstance);
-
     return S_OK;
 }
 
-void CBackGround::Tick(_float fTimeDelta)
+void CLoadingSymbol::Tick(_float fTimeDelta)
 {
-    /* Move */
-    m_fTime += fTimeDelta * 0.2f;
+    m_fTime += 0.5f * fTimeDelta;
 
+    if (true == m_IsAlpha)
+        m_fAlpha = _vector::Lerp(_vector(0.0f, 0.0f, 0.0f, 0.0f), _vector(1.0f, 1.0f, 1.0f, 1.0f), m_fTime).x;
+    if (false == m_IsAlpha)
+        m_fAlpha = _vector::Lerp(_vector(1.0f, 1.0f, 1.0f, 1.0f), _vector(0.0f, 0.0f, 0.0f, 0.0f), m_fTime).x;
 
-    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-    pGameInstance->CheckPlaySoundFile(TEXT("Main_Theme_-_Loop_LiveInstruments-violin.ogg"), CHANNELID::CHANNEL_22, 0.3f);
-
-    RELEASE_INSTANCE(CGameInstance);
-  
+    if (1.f <= m_fAlpha)
+    {
+        m_IsAlpha = false;
+        m_fTime = 0.f;
+    }
+    else if (0.f >= m_fAlpha)
+    {
+        m_IsAlpha = true;
+        m_fTime = 0.f;
+    }
 }
 
-void CBackGround::LateTick(_float fTimeDelta)
+void CLoadingSymbol::LateTick(_float fTimeDelta)
 {
     m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RG_UI, this);
 }
 
-HRESULT CBackGround::Render()
+HRESULT CLoadingSymbol::Render()
 {
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 
-    m_pShaderCom->Begin(2);
+    m_pShaderCom->Begin(3);
     m_pVIBufferCom->Render();
-
-    CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-    wstring strLogo = TEXT("Enter키를 눌러 게임 시작");
-
-    pGameInstance->Render_Font(TEXT("Font_Default"), strLogo, _float2(g_iWinSizeX * 0.5f, g_iWinSizeY * 0.5f + 130.f), _vector(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.6f);
-
-    RELEASE_INSTANCE(CGameInstance);
-
 
     return S_OK;
 }
 
-HRESULT CBackGround::Ready_Component(void* pArg)
+HRESULT CLoadingSymbol::Ready_Component(void* pArg)
 {
     /* Com.Renderer */
     if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer")
@@ -104,36 +96,28 @@ HRESULT CBackGround::Ready_Component(void* pArg)
         return E_FAIL;
 
     /* Com_Texture*/
-    if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
+    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Loading_Symbol"),
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
         return E_FAIL;
 
-    /* Com_Transform */
-    CTransform::TRANSFORM_DESC      tTransformDesc;
-    ZeroMemory(&tTransformDesc, sizeof(tTransformDesc));
-
-    tTransformDesc.fSpeedPerSec = 5.f;
-    tTransformDesc.fRotRadianPerSec = XMConvertToRadians(90.f);
-
     if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-        TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &tTransformDesc)))
+        TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom))))
         return E_FAIL;
 
     return S_OK;
 }
 
-HRESULT CBackGround::Bind_ShaderResources()
+HRESULT CLoadingSymbol::Bind_ShaderResources()
 {
 
     if (FAILED(m_pTransformCom->Bind_ShaderResources(m_pShaderCom, "g_WorldMatrix")))
         return E_FAIL;
-
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
         return E_FAIL;
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
         return E_FAIL;
 
-    if (FAILED(m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTime, sizeof(float))))
+    if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(float))))
         return E_FAIL;
 
     if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
@@ -142,35 +126,35 @@ HRESULT CBackGround::Bind_ShaderResources()
     return S_OK;
 }
 
-CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
+CLoadingSymbol* CLoadingSymbol::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag)
 {
-    CBackGround* pInstance = new CBackGround(pDevice, pContext);
+    CLoadingSymbol* pInstance = new CLoadingSymbol(pDevice, pContext);
 
     if (FAILED(pInstance->Initialize_Prototype(strProtoTag)))
     {
-        MSG_BOX("Failed to Created : CBackGround");
+        MSG_BOX("Failed to Created : CLoadingSymbol");
         Safe_Release(pInstance);
     }
 
     return pInstance;
 }
 
-CGameObject* CBackGround::Clone(void* pArg)
+CGameObject* CLoadingSymbol::Clone(void* pArg)
 {
     __super::Clone(pArg);
 
-    CBackGround* pInstance = new CBackGround(*this);
+    CLoadingSymbol* pInstance = new CLoadingSymbol(*this);
 
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX("Failed to Cloned : CBackGround");
+        MSG_BOX("Failed to Cloned : CLoadingSymbol");
         Safe_Release(pInstance);
     }
 
     return pInstance;
 }
 
-void CBackGround::Free()
+void CLoadingSymbol::Free()
 {
     __super::Free();
 

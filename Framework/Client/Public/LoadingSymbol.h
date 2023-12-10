@@ -13,12 +13,12 @@ END
 
 BEGIN(Client)
 
-class CBackGround final : public CGameObject
+class CLoadingSymbol final : public CGameObject
 {
 private:
-	CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBackGround(const CBackGround& rhs);
-	virtual ~CBackGround() = default;
+	CLoadingSymbol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CLoadingSymbol(const CLoadingSymbol& rhs);
+	virtual ~CLoadingSymbol() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strProtoTag) override;
@@ -28,16 +28,18 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CRenderer*			m_pRendererCom = { nullptr };
-	CTexture*			m_pTextureCom = { nullptr };
-	CShader*			m_pShaderCom = { nullptr };
-	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
-	CTransform*			m_pTransformCom = { nullptr };
+	CRenderer* m_pRendererCom = { nullptr };
+	CTexture* m_pTextureCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CTransform* m_pTransformCom = { nullptr };
 
 private:
+	_bool		m_IsAlpha = { true };
+	_float		m_fAlpha = { 0.f };
 	_float		m_fTime = { 0.f };
 
-	_float				m_fX = { 0.f }, m_fY = { 0.f }, m_fSizeX = { 0.f }, m_fSizeY = { 0.f };
+	_float		m_fX = { 0.f }, m_fY = { 0.f }, m_fSizeX = { 0.f }, m_fSizeY = { 0.f };
 	_matrix		m_ViewMatrix, m_ProjMatrix;
 
 
@@ -47,7 +49,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
+	static CLoadingSymbol* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

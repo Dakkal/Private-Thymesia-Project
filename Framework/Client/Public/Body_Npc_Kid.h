@@ -42,6 +42,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 private:
+	_bool	m_bGetKey = { false } ;
 
 public:
 	static CBody_Npc_Kid* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strProtoTag = TEXT(""));

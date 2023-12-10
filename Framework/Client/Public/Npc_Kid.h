@@ -47,7 +47,11 @@ public:
 	void	Set_PlayerTransform();
 	_float	Get_PlayerDistance();
 
+	CGameObject* Get_PartUI() { return m_pPartUI; }
+
 private:
+	CGameObject* m_pPartUI = { nullptr };
+
 	CTransform* m_pPlayerTransform = { nullptr };
 	CRenderer* m_pRendererCom = { nullptr };
 	CTransform* m_pTransformCom = { nullptr };

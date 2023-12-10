@@ -15,6 +15,8 @@ public:
 		const _float2& vPos, FXMVECTOR color,
 		_float rotation, XMFLOAT2 const& origin, _float scale);
 
+public:
+	_float2 Get_Texsize(const wstring& strText);
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
