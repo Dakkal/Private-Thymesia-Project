@@ -58,6 +58,17 @@ void CCollideManager::Check_Collision(const _uint iLevel, const LAYER_TAG& _eTyp
 				}
 				continue;
 			}
+			else
+			{
+				pCol1->OnCollision_Exit(pObj2, fTimedelta);
+				pCol2->OnCollision_Exit(pObj1, fTimedelta);
+				iter->second = false;
+
+				if (0 < pObj1->Get_Parts_Size() || 0 < pObj2->Get_Parts_Size())
+				{
+					Check_Part_Collision(pObj1, pObj2, pCol1, pCol2, fTimedelta);
+				}
+			}
 			
 
 			if (pCol1->IsCollision(pCol2)) // 面倒
@@ -133,9 +144,13 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 			}
 			continue;
 		}
-		
-
-		
+		else
+		{
+			_pObj1Col->OnCollision_Exit(pPart2.second, fTimedelta);
+			pCol2->OnCollision_Exit(_pObj1, fTimedelta);
+			iter->second = false;
+		}
+	
 
 		if (_pObj1Col->IsCollision(pCol2)) // 面倒
 		{
@@ -193,8 +208,12 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 			}
 			continue;
 		}
-		
-
+		else
+		{
+			_pObj2Col->OnCollision_Exit(pPart1.second, fTimedelta);
+			pCol1->OnCollision_Exit(_pObj2, fTimedelta);
+			iter->second = false;
+		}
 		
 
 		if (_pObj2Col->IsCollision(pCol1)) // 面倒
@@ -256,6 +275,12 @@ void CCollideManager::Check_Part_Collision(CGameObject* _pObj1, CGameObject* _pO
 					iter->second = false;
 				}
 				continue;
+			}
+			else
+			{
+				pCol1->OnCollision_Exit(pPart2.second, fTimedelta);
+				pCol2->OnCollision_Exit(pPart1.second, fTimedelta);
+				iter->second = false;
 			}
 			
 			if (pCol1->IsCollision(pCol2)) // 面倒

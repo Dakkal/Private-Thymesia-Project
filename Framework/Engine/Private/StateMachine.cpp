@@ -31,7 +31,6 @@ HRESULT CStateMachine::Tick(const _float& fTimeDelta)
 	// 현재 상태와 다른상태가 반환되면 반환된 상태로 변경
 	if (eState != m_eCurState)
 	{
-		m_pCurState->Reset_State();
 		Set_State(eState);
 	}
 
@@ -53,8 +52,11 @@ HRESULT CStateMachine::LateTick(const _float& fTimeDelta)
 
 HRESULT CStateMachine::Set_State(STATE eState)
 {
-	auto	iter = find_if(m_StateMap.begin(), m_StateMap.end(), [&](const pair<STATE, CState*>& pair) {
-		return eState == pair.first;
+	auto	iter = find_if(
+		m_StateMap.begin(), m_StateMap.end(), 
+		[&](const pair<STATE, CState*>& pair) 
+		{
+			return eState == pair.first;
 		});
 
 	if (iter == m_StateMap.end())
@@ -64,6 +66,9 @@ HRESULT CStateMachine::Set_State(STATE eState)
 		m_ePreState = eState;
 	else
 		m_ePreState = m_eCurState;
+
+	if(nullptr != m_pCurState)
+		m_pCurState->Reset_State();
 
 	m_pCurState = iter->second;
 	m_eCurState = eState;

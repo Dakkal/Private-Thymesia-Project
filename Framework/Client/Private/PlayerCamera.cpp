@@ -35,6 +35,13 @@ HRESULT CPlayerCamera::Initialize(void* pArg)
 
     RELEASE_INSTANCE(CGameInstance);
 
+    m_fCamOffsetY[(_uint)CAMSET::FREE] = 2.5f;
+    m_fCamOffsetY[(_uint)CAMSET::LOCK] = 3.0f;
+
+    m_fOffsetY[(_uint)CAMSET::FREE] = 1.5f;
+    m_fOffsetY[(_uint)CAMSET::LOCK] = 0.5f;
+
+
     return S_OK;
 }
 
@@ -45,28 +52,28 @@ void CPlayerCamera::Enter_Object()
 
     vCamDir = { 0.f, 1.f, -1.f, 0.f };
     vCamOffset = vCamDir * m_fOffsetDis;
-    vCamOffset.y -= 2.5f;
+    vCamOffset.y -= m_fCamOffsetY[(_uint)CAMSET::FREE];
 
     _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
     _vector vOffsetPos = vPlayerPos + vCamOffset;
 
     _vector vCamPos = vOffsetPos;
-    if (vPlayerPos.y + 0.3f >= vCamPos.y)
-        vCamPos.y = vPlayerPos.y + 0.3f;
+    if (vPlayerPos.y + m_fPlayerLimitY >= vCamPos.y)
+        vCamPos.y = vPlayerPos.y + m_fPlayerLimitY;
 
     m_pTransform->Set_State(CTransform::STATE_POS, vCamPos);
 
-    vPlayerPos.y += 1.5f;
+    vPlayerPos.y += m_fOffsetY[(_uint)CAMSET::FREE];
     m_vAt = vPlayerPos;
     m_pTransform->LookAt(m_vAt);
 }
 
 void CPlayerCamera::Tick(_float fTimeDelta)
 {
+    __super::Tick(fTimeDelta);
+
     if(nullptr == m_pTargetTransform)
         MouseMove(fTimeDelta);
-
-    __super::Tick(fTimeDelta);
 }
 
 void CPlayerCamera::LateTick(_float fTimeDelta)
@@ -83,18 +90,18 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
         vCamDir = XMVector3TransformNormal(vCamDir, matX);
         vCamDir = XMVector3TransformNormal(vCamDir, matY);
         vCamOffset = vCamDir * m_fOffsetDis;
-        vCamOffset.y -= 2.5f;
+        vCamOffset.y -= m_fCamOffsetY[(_uint)CAMSET::FREE];
 
         _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
         _vector vOffsetPos = vPlayerPos + vCamOffset;
 
         _vector vCamPos = _vector::Lerp(m_pTransform->Get_State(CTransform::STATE_POS), vOffsetPos, 10.f * fTimeDelta);
-        if (vPlayerPos.y + 0.3f >= vCamPos.y)
-            vCamPos.y = vPlayerPos.y + 0.3f;
+        if (vPlayerPos.y + m_fPlayerLimitY >= vCamPos.y)
+            vCamPos.y = vPlayerPos.y + m_fPlayerLimitY;
 
         m_pTransform->Set_State(CTransform::STATE_POS, vCamPos);
 
-        vPlayerPos.y += 1.5f;
+        vPlayerPos.y += m_fOffsetY[(_uint)CAMSET::FREE];
         m_vAt = _vector::Lerp(m_vAt, vPlayerPos, 4.f * fTimeDelta);
         m_pTransform->LookAt(m_vAt);
     }
@@ -107,21 +114,20 @@ void CPlayerCamera::LateTick(_float fTimeDelta)
         vCamDir.Normalize();
         vCamDir.x *= -1.f; vCamDir.y = 1;  vCamDir.z *= -1.f;
         vCamOffset = vCamDir * m_fTargetOffsetDis;
-        vCamOffset.y -= 3.f;
+        vCamOffset.y -= m_fCamOffsetY[(_uint)CAMSET::LOCK];
 
         _vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
         _vector vOffsetPos = vPlayerPos + vCamOffset;
-        if (vOffsetPos.y >= vPlayerPos.y + 3.f)
-            vOffsetPos.y = vPlayerPos.y + 3.f;
-
+        if (vOffsetPos.y >= vPlayerPos.y + m_fCamOffsetY[(_uint)CAMSET::LOCK])
+            vOffsetPos.y = vPlayerPos.y + m_fCamOffsetY[(_uint)CAMSET::LOCK];
       
         _vector vCamPos = _vector::Lerp(m_pTransform->Get_State(CTransform::STATE_POS), vOffsetPos, 4.f * fTimeDelta);
-        if (vPlayer_Pos.y + 0.3f >= vCamPos.y)
-            vCamPos.y = vPlayer_Pos.y + 0.3f;
+        if (vPlayer_Pos.y + m_fPlayerLimitY >= vCamPos.y)
+            vCamPos.y = vPlayer_Pos.y + m_fPlayerLimitY;
 
         m_pTransform->Set_State(CTransform::STATE_POS, vCamPos);
 
-        vTarget_Pos.y += 0.5f;
+        vTarget_Pos.y += m_fOffsetY[(_uint)CAMSET::LOCK];
         m_vAt = _vector::Lerp(m_vAt, vTarget_Pos, 4.f * fTimeDelta);
         m_pTransform->LookAt(m_vAt);
     }  

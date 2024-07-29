@@ -4,6 +4,8 @@
 
 BEGIN(Client)
 
+enum class CAMSET { FREE, LOCK, _END };
+
 class CPlayerCamera final : public CCamera
 {
 public:
@@ -33,6 +35,12 @@ public:
 private:
 	_float			m_fOffsetDis = 5.5f;
 	_float			m_fTargetOffsetDis = 6.f;
+	
+	_float			m_fCamOffsetY[(_uint)CAMSET::_END];
+	_float			m_fOffsetY[(_uint)CAMSET::_END];
+
+	_float			m_fPlayerLimitY = 0.3f;
+	
 	_vector			m_vOffset;
 	_vector			m_vAngle;
 

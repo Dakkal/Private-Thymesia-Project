@@ -116,7 +116,10 @@ _vector CCalculator::Picking_Object(RECT rc, POINT pt, CTransform* pTransform, C
 
     _ulong	dwVtxIdx[3]{};
 
-    _float	fDist = 0.f;
+    _float fDist = 99.f;
+    _float fCloseDist = 99.f;
+    _bool  bPick = false;
+    _vector vPick;
 
     for (size_t iIndex = 0; iIndex < Indicies.size(); )
     {
@@ -126,19 +129,27 @@ _vector CCalculator::Picking_Object(RECT rc, POINT pt, CTransform* pTransform, C
 
         if (true == ray.Intersects(pBufferPos[dwVtxIdx[0]], pBufferPos[dwVtxIdx[1]], pBufferPos[dwVtxIdx[2]], fDist))
         {
-            RELEASE_INSTANCE(CGameInstance);
-
-            _vector vPick = _vector(ray.position.x + (ray.direction.x * fDist),
-                ray.position.y + (ray.direction.y * fDist),
-                ray.position.z + (ray.direction.z * fDist), 1.f);
-
-            return vPick;
-        }
+            if (fCloseDist > fDist)
+            {
+                fDist = fCloseDist;
+                bPick = true;
+                vPick = _vector(ray.position.x + (ray.direction.x * fDist),
+                    ray.position.y + (ray.direction.y * fDist),
+                    ray.position.z + (ray.direction.z * fDist), 1.f);
+            }
+        } 
     }
 
     RELEASE_INSTANCE(CGameInstance);
 
-    return _vector(-1.f, -1.f, -1.f, -1.f);
+    if (true == bPick)
+    {
+        return vPick;
+    }
+    else
+    {
+        return _vector(-1.f, -1.f, -1.f, -1.f);
+    }
 }
 
 HRESULT CCalculator::Detrude_Collide(CGameObject* pColObj, CCollider* pObjCol, CTransform* pObjTransform, CNavigation* pNavigation)
