@@ -47,6 +47,8 @@ private:
 	HRESULT Render_LightDepth();
 	HRESULT	Render_NonBlend();
 	HRESULT Render_LightAcc();
+	HRESULT Render_Blur();
+	HRESULT Render_Shadow();
 	HRESULT Render_Deferred();
 	HRESULT	Render_Blend();
 	HRESULT	Render_UI();
@@ -66,6 +68,8 @@ private:
 private:
 	class CVIBuffer_Rect*	m_pVIBuffer = { nullptr };
 	class CShader*			m_pShader = { nullptr };
+	class CShader*			m_pShaderBlur = { nullptr };
+	class CShader*			m_pShaderShadow = { nullptr };
 
 	_matrix					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 

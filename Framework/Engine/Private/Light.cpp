@@ -27,7 +27,7 @@ HRESULT CLight::Calculate_ShadowLight()
 	_vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
 
 	m_LightDesc.vLightPos = m_vLightPos_Origin + vPlayerPos;
-	m_LightDesc.vLightAt = m_vLightAt_Origin + vPlayerPos;;
+	m_LightDesc.vLightAt = m_vLightAt_Origin + vPlayerPos;
 
 
 	return S_OK;
@@ -43,8 +43,7 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 			return E_FAIL;
 		iPassIndex = 1;
 	}
-
-	else if (LIGHT_DESC::TYPE::POINT == m_LightDesc.eLightType)
+	else if (LIGHT_DESC::TYPE::POINT == m_LightDesc.eLightType || LIGHT_DESC::TYPE::SHADOW == m_LightDesc.eLightType)
 	{
 		if (FAILED(pShader->Bind_RawValue("g_vLightPos", &m_LightDesc.vLightPos, sizeof(_vector))))
 			return E_FAIL;

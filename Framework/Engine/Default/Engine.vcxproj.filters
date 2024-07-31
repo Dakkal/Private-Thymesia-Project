@@ -631,6 +631,12 @@
     <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsl">
       <Filter>01.Utility\07.Shader_Files</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Blur.hlsl">
+      <Filter>01.Utility\07.Shader_Files</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Shadow.hlsl">
+      <Filter>01.Utility\07.Shader_Files</Filter>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
       <Filter>01.Utility\07.Shader_Files</Filter>
     </FxCompile>

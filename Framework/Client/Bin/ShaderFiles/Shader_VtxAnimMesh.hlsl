@@ -227,7 +227,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 
     float Depth_Color = In.vProjPos.w / 1000.0f;
     
-    Out.vLightDepth = vector(Depth_Color, Depth_Color, Depth_Color, 1.f);
+    Out.vLightDepth = vector(Depth_Color, Depth_Color * Depth_Color, 0, 1.f);
 
     return Out;
 }

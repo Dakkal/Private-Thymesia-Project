@@ -24,6 +24,7 @@ texture2D       g_DepthTexture;
 texture2D		g_ShadeTexture;
 texture2D		g_SpecularTexture;
 texture2D		g_LightDepthTexture;
+texture2D       g_BlurTarget;
 
 texture2D		g_Texture;
 
@@ -170,47 +171,11 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-	
-    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
-    float fViewZ = vDepthDesc.y * 1000.f;
-
-    vector vWorldPos;
-	/* 투영스페이스 상의 위치를 구한다. */
-    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
-    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
-    vWorldPos.z = vDepthDesc.x;
-    vWorldPos.w = 1.f;
-
-	/* 뷰스페이스 상의 위치를 구한다. */
-    vWorldPos = vWorldPos * fViewZ;
-    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-    /* 월드상의 위치 */
-    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
     
-	/* 광원기준의 뷰랑 투영행렬을 곱한다. */
-    vector vPosition = mul(vWorldPos, g_LightViewMatrix);
-    vPosition = mul(vPosition, g_LightProjMatrix);
+    float4 vShadowColor = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
     
-    float2 vUV;
-    vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
-    vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
-    
-    vector vLightDepthDesc = g_LightDepthTexture.Sample(PointSampler, vUV);
-    
-    float fragDepth = vPosition.w;
-    float LightDepth = (vLightDepthDesc.x * 1000.f);
-    
-    float2 Moments = ComputeMoments(LightDepth);
-    Moments = DistributePrecision(Moments);
-    float p = ChebyshevUpperBound(Moments, fragDepth);
-    float fLit = ReduceLightBleeding(p, 0.3f);
-    fLit = saturate(fLit + 0.5f);
-    
-
-    vector vShadowColor = vector(fLit, fLit, fLit, 1.f);
-
-    vector vDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    if (vDiffuse.a == 0.f)
+    vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vDiffuse.a == 0.0f)
         discard;
 
     vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);

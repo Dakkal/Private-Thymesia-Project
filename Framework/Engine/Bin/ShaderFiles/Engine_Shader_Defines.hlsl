@@ -17,6 +17,14 @@ sampler PointSampler = sampler_state
     AddressV = wrap;
 };
 
+sampler LinearBorderSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = BORDER;
+    AddressV = BORDER;
+    AddressW = BORDER;
+};
+
 /* 레스터 */
 RasterizerState RS_Edit
 {
@@ -150,6 +158,28 @@ float4x4 RotateAroundVector(float3 vLook, float angle)
 }
 
 /* Moment 계산 */
+/* SAVSM */
+float g_DistributeFactor = 512;
+float2 RecombinePrecision(float4 Value)
+{
+    float FactorInv = 1 / g_DistributeFactor;
+    float Compute = Value.zw * FactorInv + Value.xy;
+    return Compute;
+}
+float2 DistributePrecision(float2 Moments)
+{
+    float FactorInv = 1 / g_DistributeFactor;
+    // Split precision    
+    float2 IntPart;
+    float2 FracPart = modf(Moments * g_DistributeFactor, IntPart);
+    // Compose outputs to make reconstruction cheap.   
+    float2 Compute = IntPart * FactorInv;
+    float4 Value = float4(Compute.x, Compute.y, FracPart.x, FracPart.y);
+    
+    float2 ComputeMoment = RecombinePrecision(Value);
+    
+    return ComputeMoment;
+}
 float2 ComputeMoments(float LightDepth)
 {
     float2 Moments; 
@@ -160,55 +190,37 @@ float2 ComputeMoments(float LightDepth)
     float dy = ddy(LightDepth);
     // Compute second moment over the pixel extents.   
     Moments.y = LightDepth * LightDepth + 0.25 * (dx * dx + dy * dy);
+    
+    Moments = DistributePrecision(Moments);
+    
     return Moments; 
 } 
 
+/* 라이트 블리딩 */
+float LineStep(float a, float b, float v)
+{
+    return saturate((v - a) / (b - a));
+}
+float ReduceLightBleeding(float p_max, float Amount)
+{ // Remove the [0, Amount] tail and linearly rescale (Amount, 1].    
+    return LineStep(Amount, 1, p_max);
+}
 /* VSM */
 float ChebyshevUpperBound(float2 Moments, float Depth)
 {
-    // One-tailed inequality valid if t > Moments.x    
-    float p = (Depth <= Moments.x);
     // Compute variance.    
     float Variance = Moments.y - (Moments.x * Moments.x);
-    Variance = max(Variance, 0.0005f);
+    Variance = max(Variance, 0.00002f);
     // Compute probabilistic upper bound.    
     float d = Depth - Moments.x;
     float p_max = Variance / (Variance + d * d);
     
-    return max(p, p_max);
-}
-
-/* 라이트 블리딩 */
-float linstep(float minValue, float maxValue, float v)
-{
-    return clamp((v - minValue) / (maxValue - minValue), 0, 1);
-}
-
-float ReduceLightBleeding(float p_max, float Amount)
-{ // Remove the [0, Amount] tail and linearly rescale (Amount, 1].    
-    return linstep(Amount, 1, p_max);
-}
-
-/* SAVSM */
-float g_DistributeFactor = 256;
-float2 RecombinePrecision(float4 Value)
-{
-    float FactorInv = 1 / g_DistributeFactor;
-    float Compute = Value.zw * FactorInv + Value.xy;
-    return Compute;
-}
-float2 DistributePrecision(float2 Moments) 
-{   float FactorInv = 1 / g_DistributeFactor;   
-    // Split precision    
-    float2 IntPart;  
-    float2 FracPart = modf(Moments * g_DistributeFactor, IntPart);
-    // Compose outputs to make reconstruction cheap.   
-    float2 Compute = IntPart * FactorInv;
-    float4 Value = float4(Compute.x, Compute.y, FracPart.x, FracPart.y);
-    float2 ComputeMoment = RecombinePrecision(Value);
+    p_max = ReduceLightBleeding(p_max, 0.2f);
     
-    return ComputeMoment;
+    return (Depth <= Moments.x ? 1.0f : p_max);
 }
+
+
 
 //PCF
 float PCF_ShadowCalculation(float4 fragPosLightSpace, texture2D LightDepthImg)
@@ -240,7 +252,7 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace, texture2D LightDepthImg)
     {
         for (int y = -3; y <= 3; ++y)
         {
-            float pcfDepth = LightDepthImg.Sample(PointSampler, projCoords.xy + float2(x, y) * texelSize).x;
+            float pcfDepth = LightDepthImg.Sample(PointSampler, projCoords.xy + float2(x, y) * texelSize).x * 1000.f;
             shadow += currentDepth > pcfDepth ? 0.5f : 1.0f;
         }
     }

@@ -169,6 +169,13 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </EntryPointName>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Shadow.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Blur.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
   </ItemGroup>

@@ -382,8 +382,8 @@ HRESULT CLevel_GamePlay::Ready_Light()
 
 	ZeroMemory(&LightDesc, sizeof LightDesc);
 	LightDesc.eLightType = LIGHT_DESC::TYPE::SHADOW;
-	LightDesc.vLightPos = _vector(-30.f, 30.f, -30.f, 1.f);
-	LightDesc.vLightAt = _vector(10.f, 0.f, 10.f, 1.f);
+	LightDesc.vLightPos = _vector(-10.f, 14.f, -10.f, 1.f);
+	LightDesc.vLightAt = _vector(3.f, 0.f, 3.f, 1.f);
 	LightDesc.fLightFOV = 45.f;
 
 	CTransform* pPlayerTransform = dynamic_cast<CTransform*>(pGameInstance->Get_Player(LEVEL_GAMEPLAY)->Get_Component(TEXT("Com_Transform")));
