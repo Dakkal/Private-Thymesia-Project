@@ -125,11 +125,11 @@ void CTransform::Go_Dir(_vector vDir, _float fTimeDelta, CNavigation* pNavi)
 	{
 		_int iMove = pNavi->IsMove(vPosition);
 
-		if (0 == iMove)
+		if ((_int)OUTSTATUS::NAVIIN == iMove)
 		{
 			Set_State(STATE_POS, vPosition);
 		}
-		else if (-2 == iMove)
+		else if ((_int)OUTSTATUS::NAVIEXIT == iMove)
 		{
 			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
 			{
@@ -153,25 +153,27 @@ void CTransform::Go_Forward(_float fTimeDelta, CNavigation* pNavi)
 	{
 		_int iMove = pNavi->IsMove(vPosition);
 
-		if (0 == iMove)
+		if ((_int)OUTSTATUS::NAVIIN == iMove)
 		{
 			Set_State(STATE_POS, vPosition);
 		}
-		else if (-2 == iMove)
+		else if ((_int)OUTSTATUS::NAVIEXIT == iMove)
 		{
 			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
 			{
 				Set_State(STATE_POS, vPosition);
 			}
 		}
-		else if (-1 == iMove)
+		else if ((_int)OUTSTATUS::NAVIOUT == iMove)
 		{
 			_vector vSlider = pNavi->Get_Cell_SliderVec(vLook);
 
 			if (-1 != vSlider.w)
+			{
 				m_vSlide = vSlider;
 
-			Go_Dir(m_vSlide, fTimeDelta, pNavi);
+				Go_Dir(m_vSlide, fTimeDelta, pNavi);
+			}	
 		}
 
 	}
@@ -191,11 +193,11 @@ void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNavi)
 	{
 		_int iMove = pNavi->IsMove(vPosition);
 
-		if (0 == iMove)
+		if ((_int)OUTSTATUS::NAVIIN == iMove)
 		{
 			Set_State(STATE_POS, vPosition);
 		}
-		else if (-2 == iMove)
+		else if ((_int)OUTSTATUS::NAVIEXIT == iMove)
 		{
 			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
 			{
@@ -242,11 +244,11 @@ void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNavi)
 	{
 		_int iMove = pNavi->IsMove(vPosition);
 
-		if (0 == iMove)
+		if ((_int)OUTSTATUS::NAVIIN == iMove)
 		{
 			Set_State(STATE_POS, vPosition);
 		}
-		else if (-2 == iMove)
+		else if ((_int)OUTSTATUS::NAVIEXIT == iMove)
 		{
 			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
 			{
@@ -271,11 +273,11 @@ void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavi)
 	{
 		_int iMove = pNavi->IsMove(vPosition);
 
-		if (0 == iMove)
+		if ((_int)OUTSTATUS::NAVIIN == iMove)
 		{
 			Set_State(STATE_POS, vPosition);
 		}
-		else if (-2 == iMove)
+		else if ((_int)OUTSTATUS::NAVIEXIT == iMove)
 		{
 			if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
 			{
@@ -393,18 +395,18 @@ _bool CTransform::Chase(_vector vPoint, _float fTimeDelta, _float fDis, CNavigat
 		{
 			_int iMove = pNavi->IsMove(vPosition);
 
-			if (0 == iMove)
+			if ((_int)OUTSTATUS::NAVIIN == iMove)
 			{
 				Set_State(STATE_POS, vPosition);
 			}
-			else if (-2 == iMove)
+			else if ((_int)OUTSTATUS::NAVIEXIT == iMove)
 			{
 				if (true == dynamic_cast<CLandObject*>(m_pOwner)->Find_NaviMesh(vPosition))
 				{
 					Set_State(STATE_POS, vPosition);
 				}
 			}
-			else if (-1 == iMove)
+			else if ((_int)OUTSTATUS::NAVIOUT == iMove)
 			{
 				_vector vSlider = pNavi->Get_Cell_SliderVec(vLook);
 

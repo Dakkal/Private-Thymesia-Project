@@ -195,22 +195,17 @@ float2 ComputeMoments(float LightDepth)
     
     return Moments; 
 } 
-
 /* 라이트 블리딩 */
-float LineStep(float a, float b, float v)
-{
-    return saturate((v - a) / (b - a));
-}
 float ReduceLightBleeding(float p_max, float Amount)
-{ // Remove the [0, Amount] tail and linearly rescale (Amount, 1].    
-    return LineStep(Amount, 1, p_max);
+{   
+    return smoothstep(Amount, 1, p_max);
 }
 /* VSM */
 float ChebyshevUpperBound(float2 Moments, float Depth)
 {
     // Compute variance.    
     float Variance = Moments.y - (Moments.x * Moments.x);
-    Variance = max(Variance, 0.00002f);
+    Variance = max(Variance, 0.0005f);
     // Compute probabilistic upper bound.    
     float d = Depth - Moments.x;
     float p_max = Variance / (Variance + d * d);

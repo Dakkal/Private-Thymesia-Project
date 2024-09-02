@@ -198,8 +198,6 @@ PS_OUT PS_MAIN_DISSOLVE_NORMAL(PS_IN In)
     vNormal = normalize(mul(vNormal, TangentMatrix));
     
     float fDissolveAlpha = saturate(-g_Time / g_DissolveDuration + vMtrlDissolve.r);
- 
-    
     
     if (fDissolveAlpha < 0.1f)
         discard;
@@ -227,7 +225,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 
     float Depth_Color = In.vProjPos.w / 1000.0f;
     
-    Out.vLightDepth = vector(Depth_Color, Depth_Color * Depth_Color, 0, 1.f);
+    Out.vLightDepth = vector(Depth_Color, 0, 0, 1.f);
 
     return Out;
 }

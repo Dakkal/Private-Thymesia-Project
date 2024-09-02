@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+enum class OUTSTATUS { NAVIIN = 0, NAVIOUT = -1, NAVIEXIT = -2, _END = 3 };
+
 class ENGINE_DLL CNavigation final : public CComponent
 {
 public:
@@ -39,7 +41,7 @@ public:
 	void			Set_CurIndex(const _uint& iIndex) {  m_iCurrentIndex = iIndex; }
 	HRESULT			Set_toCell(_uint iIndex, class CTransform* pTransform);
 	HRESULT			Set_CelltoPassage(_uint iIndex);
-	HRESULT			Set_All_CelltoPassage();
+	HRESULT			Set_NaviPassage();
 
 public:
 	_vector			Get_Cell_SliderVec(_vector vLook);

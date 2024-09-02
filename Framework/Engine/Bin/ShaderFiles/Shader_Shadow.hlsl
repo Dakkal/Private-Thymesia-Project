@@ -111,14 +111,14 @@ PS_OUT PS_MAIN_SHADOW(PS_IN In)
     vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
     vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
     
-    vector vLightDepthDesc = g_LightDepthTexture.Sample(LinearSampler, vUV);
+    vector vLightDepthDesc = g_LightDepthTexture.Sample(PointSampler, vUV);
     
     float fragDepth = vPosition.w;
     float LightDepth = (vLightDepthDesc.x * 1000.f);
     
     float2 Moments = ComputeMoments(LightDepth);
     float fShadow = ChebyshevUpperBound(Moments, fragDepth);
-    fShadow = saturate(fShadow + 0.4f);
+    fShadow = saturate(fShadow + 0.5f);
   
     Out.vColor = fShadow;
     

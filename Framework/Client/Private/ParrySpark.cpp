@@ -30,6 +30,7 @@ HRESULT CParrySpark::Initialize(void* pArg)
 		return E_FAIL;
 
 	Create_RandomRotMatrix(m_vRotFactorX, m_vRotFactorY, m_vRotFactorZ);
+	m_pTransformCom->Set_State(CTransform::STATE_POS, m_vTargetPos);
 
 	return S_OK;
 }
@@ -58,7 +59,7 @@ void CParrySpark::LateTick(_float fTimeDelta)
 
 	
 	m_pTransformCom->LookAt_NoYaw(pGameInstance->Get_CamPosition_Vector());
-	m_pTransformCom->Set_State(CTransform::STATE_POS, m_vTargetPos);
+	
 
 	RELEASE_INSTANCE(CGameInstance);
 

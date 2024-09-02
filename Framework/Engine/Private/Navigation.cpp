@@ -65,7 +65,7 @@ HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationDataFiles)
 		m_Passages.push_back(iPassage);
 	}
 
-	if (FAILED(Set_All_CelltoPassage()))
+	if (FAILED(Set_NaviPassage()))
 		return E_FAIL;
 
 #ifdef _DEBUG
@@ -120,27 +120,23 @@ void CNavigation::Update(_matrix WorldMatrix)
 
 _int CNavigation::IsMove(_vector vPoint)
 {
-	_int iNeighborIndex = 0;
+	_int iNeighborIndex = (_int)OUTSTATUS::NAVIIN;
 
 	if (true == m_Cells[m_iCurrentIndex]->IsOut(vPoint, m_NaviWorldMatrix[m_iNaviIndex], iNeighborIndex))
 	{
-		if (-2 == iNeighborIndex)
+		if ((_int)OUTSTATUS::NAVIEXIT == iNeighborIndex)
 		{
-			return -2;
+			return (_int)OUTSTATUS::NAVIEXIT;
 		}
-		else if (-1 != iNeighborIndex)
+		else if ((_int)OUTSTATUS::NAVIOUT != iNeighborIndex)
 		{
-			_uint iGetOut = 0;
 			while (true)
 			{
-				if (60 <= iGetOut)
-					return -1;
-				iGetOut++;
+				if ((_int)OUTSTATUS::NAVIEXIT == iNeighborIndex)
+					return (_int)OUTSTATUS::NAVIEXIT;
 
-				if (-2 == iNeighborIndex)
-					return -2;
-				if (-1 == iNeighborIndex)
-					return -1;
+				if ((_int)OUTSTATUS::NAVIOUT == iNeighborIndex)
+					return (_int)OUTSTATUS::NAVIOUT;
 
 				if (false == m_Cells[iNeighborIndex]->IsOut(vPoint, m_NaviWorldMatrix[m_iNaviIndex], iNeighborIndex))
 				{
@@ -148,14 +144,14 @@ _int CNavigation::IsMove(_vector vPoint)
 					break;
 				}
 			}
-			return 0;
+			return (_int)OUTSTATUS::NAVIIN;
 		}
 		else
-			return -1;
+			return (_int)OUTSTATUS::NAVIOUT;
 	
 	}
 	else
-		return 0;
+		return (_int)OUTSTATUS::NAVIIN;
 
 }
 
@@ -203,7 +199,8 @@ _vector CNavigation::Get_Cell_SliderVec(_vector vLook)
 	if (-1 == vContactNormal.w)
 		return vContactNormal;
 
-	_vector vSlider = vLook - vLook.Dot(vContactNormal) * vContactNormal;
+
+	_vector vSlider = vLook - (vLook.Dot(vContactNormal) * vContactNormal);
 
 	return vSlider;
 }
@@ -260,7 +257,7 @@ HRESULT CNavigation::Set_CelltoPassage(_uint iIndex)
 	return S_OK;
 }
 
-HRESULT CNavigation::Set_All_CelltoPassage()
+HRESULT CNavigation::Set_NaviPassage()
 {
 	for (auto& Passage : m_Passages)
 	{

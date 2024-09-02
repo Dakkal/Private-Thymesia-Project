@@ -66,7 +66,6 @@ VS_OUT VS_MAIN( /* 정점 */VS_IN In, uint instanceID : SV_InstanceID)
 	
     float4x4 newWorld = float4x4(vRight, vUp, vLook, vPos);
 	
-	/* mul : 모든(곱하기가 가능한) 행렬의 곱하기를 수행한다. */
 	matrix			matWV, matWVP;
 
     matWV = mul(newWorld, g_ViewMatrix);

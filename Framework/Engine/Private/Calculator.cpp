@@ -248,7 +248,7 @@ HRESULT CCalculator::Detrude_Sphere_Collide(CGameObject* pColObj, CCollider* pOb
     {
         _int iMove = pNavigation->IsMove(vPos);
 
-        if (0 == iMove)
+        if ((_int)OUTSTATUS::NAVIIN == iMove)
         {
             pObjTransform->Set_State(CTransform::STATE_POS, vPos);
         }

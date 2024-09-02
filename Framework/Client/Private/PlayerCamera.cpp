@@ -167,7 +167,6 @@ void CPlayerCamera::MouseMove(_float fTimeDelta)
             m_vAngle.y = 360.f;
     }
 
-
     RELEASE_INSTANCE(CGameInstance)
 }
 

@@ -27,7 +27,10 @@ HRESULT CLight::Calculate_ShadowLight()
 	_vector vPlayerPos = m_pPlayerTransform->Get_State(CTransform::STATE_POS);
 
 	m_LightDesc.vLightPos = m_vLightPos_Origin + vPlayerPos;
-	m_LightDesc.vLightAt = m_vLightAt_Origin + vPlayerPos;
+
+	_float fDist = m_vLightAt_Origin.Length();
+	m_vLightAt_Origin.Normalize();
+	m_LightDesc.vLightAt = (m_vLightAt_Origin * fDist) + vPlayerPos;
 
 
 	return S_OK;

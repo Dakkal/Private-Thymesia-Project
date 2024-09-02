@@ -45,6 +45,7 @@ void CState_Dead_GreatSword::Reset_State()
 void CState_Dead_GreatSword::Enter_State()
 {
 	m_pRealOwner->Set_Move(false);
+	m_pRealOwner->Get_Component(TEXT("Com_Colider"))->Set_Active(false);
 	
 	dynamic_cast<CEnemy_GreatSword*>(m_pRealOwner)->Set_LookPlayer(false);
 

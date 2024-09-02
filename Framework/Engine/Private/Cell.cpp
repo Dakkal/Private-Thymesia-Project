@@ -1,6 +1,7 @@
 #include "..\Public\Cell.h"
 #include "VIBuffer_Cell.h"
 #include "Transform.h"
+#include "Navigation.h"
 
 CCell::CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -95,9 +96,9 @@ _bool CCell::IsOut(_vector vPoint, _matrix WorldMatrix, _int& pNeighborIndex)
 		vSour.Normalize();
 		vDest.Normalize();
 
-		if (0 < XMVectorGetX(XMVector3Dot(vSour, vDest)))
+		if (FLT_EPSILON < XMVectorGetX(XMVector3Dot(vSour, vDest)))
 		{
-			if (-1 == m_iNeighborIndicies[i])
+			if ((_int)OUTSTATUS::NAVIOUT == m_iNeighborIndicies[i])
 			{
 				m_vSlideNormal = vDest;
 			}

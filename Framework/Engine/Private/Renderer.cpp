@@ -82,14 +82,14 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Specular"), 300.0f, 300.0f, 200.0f, 200.0f)))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_LightDepth"), m_ClientViewPort.Width - 250.0f, 250.0f, 500.0f, 500.0f)))
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_LightDepth"), m_ClientViewPort.Width - 200.0f, 200.0f, 400.0f, 400.0f)))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Blur_V"), 300.0f, 500.0f, 200.0f, 200.0f)))
+	/*if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Blur_V"), 300.0f, 500.0f, 200.0f, 200.0f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Blur_H"), 500.0f, 500.0f, 200.0f, 200.0f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Shadow"), 700.0f, 500.0f, 200.0f, 200.0f)))
-		return E_FAIL;
+		return E_FAIL;*/
 #endif
 	/* For.MRT_GameObjects */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
